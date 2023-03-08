@@ -1,0 +1,508 @@
+@use "@/styles/variables/config/color" as *;
+
+/*** Regular */
+.display-regular-2xl {
+  color: $color-gray-900;
+
+  /* Display 2xl/Regular */
+  font-family: Inter, sans-serif;
+  font-size: 72px;
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 90px;
+}
+
+.display-regular-xl {
+  color: $color-gray-900;
+
+  /* Display xl/Regular */
+  font-family: Inter, sans-serif;
+  font-size: 60px;
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 72px;
+}
+
+.display-regular-lg {
+  color: $color-gray-900;
+
+  /* Display lg/Regular */
+  font-family: Inter, sans-serif;
+  font-size: 48px;
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 60px;
+}
+
+.display-regular-md {
+  color: $color-gray-900;
+
+  /* Display md/Regular */
+  font-family: Inter, sans-serif;
+  font-size: 36px;
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 44px;
+}
+
+.display-regular-sm {
+  color: $color-gray-900;
+
+  /* Display sm/Regular */
+  font-family: Inter, sans-serif;
+  font-size: 30px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 38px;
+}
+
+.display-regular-xs {
+  color: $color-gray-900;
+
+  /* Display xs/Regular */
+  font-family: Inter, sans-serif;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 32px;
+}
+
+.text-regular-xl {
+  color: $color-gray-900;
+
+  /* Text xl/Regular */
+  font-family: Inter, sans-serif;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 30px;
+}
+
+.text-regular-lg {
+  color: $color-gray-900;
+
+  /* Text lg/Regular */
+  font-family: Inter, sans-serif;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 28px;
+}
+
+.text-regular-md {
+  color: $color-gray-900;
+
+  /* Text md/Regular */
+  font-family: Inter, sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+}
+
+.text-regular-sm {
+  color: $color-gray-900;
+
+  /* Text sm/Regular */
+  font-family: Inter, sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+}
+
+.text-regular-xs {
+  color: $color-gray-900;
+
+  /* Text xs/Regular */
+  font-family: Inter, sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 18px;
+}
+
+/*** Medium */
+
+.display-medium-2xl {
+  color: $color-gray-900;
+
+  /* Display 2xl/Medium */
+  font-family: Inter, sans-serif;
+  font-size: 72px;
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 90px;
+}
+
+.display-medium-xl {
+  color: $color-gray-900;
+
+  /* Display xl/Medium */
+  font-family: Inter, sans-serif;
+  font-size: 60px;
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 72px;
+}
+
+.display-medium-lg {
+  color: $color-gray-900;
+
+  /* Display lg/Medium */
+  font-family: Inter, sans-serif;
+  font-size: 48px;
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 60px;
+}
+
+.display-medium-md {
+  color: $color-gray-900;
+
+  /* Display md/Medium */
+  font-family: Inter, sans-serif;
+  font-size: 36px;
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 44px;
+}
+
+.display-medium-sm {
+  color: $color-gray-900;
+
+  /* Display sm/Medium */
+  font-family: Inter, sans-serif;
+  font-size: 30px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 38px;
+}
+
+.display-medium-xs {
+  color: $color-gray-900;
+
+  /* Display xs/Medium */
+  font-family: Inter, sans-serif;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 32px;
+}
+
+.text-medium-xl {
+  color: $color-gray-900;
+
+  /* Text xl/Medium */
+  font-family: Inter, sans-serif;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 30px;
+}
+
+.text-medium-lg {
+  color: $color-gray-900;
+
+  /* Text lg/Medium */
+  font-family: Inter, sans-serif;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 28px;
+}
+
+.text-medium-md {
+  color: $color-gray-900;
+
+  /* Text md/Medium */
+  font-family: Inter, sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px;
+}
+
+.text-medium-sm {
+  color: $color-gray-900;
+
+  /* Text sm/Medium */
+  font-family: Inter, sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500 !important;
+  line-height: 20px;
+}
+
+.text-medium-xs {
+  color: $color-gray-900;
+
+  /* Text xs/Medium */
+  font-family: Inter, sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18px;
+}
+
+/*** semibold */
+
+.display-semibold-2xl {
+  color: $color-gray-900;
+
+  /* Display 2xl/semibold */
+  font-family: Inter, sans-serif;
+  font-size: 72px;
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 90px;
+}
+
+.display-semibold-xl {
+  color: $color-gray-900;
+
+  /* Display xl/semibold */
+  font-family: Inter, sans-serif;
+  font-size: 60px;
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 72px;
+}
+
+.display-semibold-lg {
+  color: $color-gray-900;
+
+  /* Display lg/semibold */
+  font-family: Inter, sans-serif;
+  font-size: 48px;
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 60px;
+}
+
+.display-semibold-md {
+  color: $color-gray-900;
+
+  /* Display md/semibold */
+  font-family: Inter, sans-serif;
+  font-size: 36px;
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 44px;
+}
+
+.display-semibold-sm {
+  color: $color-gray-900;
+
+  /* Display sm/semibold */
+  font-family: Inter, sans-serif;
+  font-size: 30px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 38px;
+}
+
+.display-semibold-xs {
+  color: $color-gray-900;
+
+  /* Display xs/semibold */
+  font-family: Inter, sans-serif;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 32px;
+}
+
+.text-semibold-xl {
+  color: $color-gray-900;
+
+  /* Text xl/semibold */
+  font-family: Inter, sans-serif;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 30px;
+}
+
+.text-semibold-lg {
+  color: $color-gray-900;
+
+  /* Text lg/semibold */
+  font-family: Inter, sans-serif;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 28px;
+}
+
+.text-semibold-md {
+  color: $color-gray-900;
+
+  /* Text md/semibold */
+  font-family: Inter, sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+}
+
+.text-semibold-sm {
+  color: $color-gray-900;
+
+  /* Text sm/semibold */
+  font-family: Inter, sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px;
+}
+
+.text-semibold-xs {
+  color: $color-gray-900;
+
+  /* Text xs/semibold */
+  font-family: Inter, sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 18px;
+}
+
+/*** bold */
+
+.display-bold-2xl {
+  color: $color-gray-900;
+
+  /* Display 2xl/bold */
+  font-family: Inter, sans-serif;
+  font-size: 72px;
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 90px;
+}
+
+.display-bold-xl {
+  color: $color-gray-900;
+
+  /* Display xl/bold */
+  font-family: Inter, sans-serif;
+  font-size: 60px;
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 72px;
+}
+
+.display-bold-lg {
+  color: $color-gray-900;
+
+  /* Display lg/bold */
+  font-family: Inter, sans-serif;
+  font-size: 48px;
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 60px;
+}
+
+.display-bold-md {
+  color: $color-gray-900;
+
+  /* Display md/bold */
+  font-family: Inter, sans-serif;
+  font-size: 36px;
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 44px;
+}
+
+.display-bold-sm {
+  color: $color-gray-900;
+
+  /* Display sm/bold */
+  font-family: Inter, sans-serif;
+  font-size: 30px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 38px;
+}
+
+.display-bold-xs {
+  color: $color-gray-900;
+
+  /* Display xs/bold */
+  font-family: Inter, sans-serif;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 32px;
+}
+
+.text-bold-xl {
+  color: $color-gray-900;
+
+  /* Text xl/bold */
+  font-family: Inter, sans-serif;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 30px;
+}
+
+.text-bold-lg {
+  color: $color-gray-900;
+
+  /* Text lg/bold */
+  font-family: Inter, sans-serif;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 28px;
+}
+
+.text-bold-md {
+  color: $color-gray-900;
+
+  /* Text md/bold */
+  font-family: Inter, sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 24px;
+}
+
+.text-bold-sm {
+  color: $color-gray-900;
+
+  /* Text sm/bold */
+  font-family: Inter, sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 20px;
+}
+
+.text-bold-xs {
+  color: $color-gray-900;
+
+  /* Text xs/bold */
+  font-family: Inter, sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 18px;
+}

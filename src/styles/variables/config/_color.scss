@@ -1,0 +1,45 @@
+/**  white */
+$color-white: #fff;
+
+/**  gray */
+$color-gray-25: #fcfcfd;
+$color-gray-50: #f9fafb;
+$color-gray-100: #f2f4f7;
+$color-gray-200: #eaecf0;
+$color-gray-300: #d0d5dd;
+$color-gray-400: #98a2b3;
+$color-gray-500: #667085;
+$color-gray-600: #475467;
+$color-gray-700: #344054;
+$color-gray-800: #1d2939;
+$color-gray-900: #101828;
+
+/** primary */
+$color-primary-25: #f5faff;
+$color-primary-50: #eff8ff;
+$color-primary-100: #d1e9ff;
+$color-primary-200: #b2ddff;
+$color-primary-300: #84caff;
+$color-primary-400: #53b1fd;
+$color-primary-500: #2e90fa;
+$color-primary-600: #1570ef;
+$color-primary-700: #175cd3;
+$color-primary-800: #1849a9;
+$color-primary-900: #194185;
+
+/** color general */
+$color-default: #1849a9; // càu chủ đạo
+$color-line-default: #eaecf0; // màu các đường kẻ, border
+
+/**  color text */
+$color-text-default: #344054; // màu chữ mặc định
+$color-text-bold-default: #101828;  // màu chữ in đậm
+
+/** checkbox */
+
+// checkbox
+$color-checkbox-selected: $color-primary-600;
+$color-checkbox-indeterminate: $color-primary-600;
+
+/** icon */
+$color-icon-default: #344054;

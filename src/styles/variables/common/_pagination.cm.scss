@@ -1,0 +1,11 @@
+@use "@/styles/variables/global" as *;
+
+/** Phần chung pagination */
+$pagination-btn-border: $border-xs solid $color-gray-300;
+$pagination-btn-border-type: solid;
+$pagination-btn-border-radius: $border-radius-xs;
+$pagination-btn-bg: $color-white;
+$pagination-btn-box-shadow: $box-shadow-xs;
+$pagination-btn-text-size: $box-shadow-xs;
+$pagination-border: $border-xs $pagination-btn-border-type $color-gray-300;
+$pagination-btn-padding: 8px 14px;

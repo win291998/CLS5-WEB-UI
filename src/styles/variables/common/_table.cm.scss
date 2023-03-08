@@ -1,0 +1,44 @@
+@use "@/styles/variables/global" as *;
+
+/** Phần chung table */
+
+/* ---border--- */
+$table-border: $border-xs solid $color-line-default;
+$table-border-radius-size: $border-radius-xs;
+$table-box-shadow: $box-shadow-md;
+
+/* ---header--- */
+$table-header-font-size: 12px;  // kích thước chữ header
+$table-header-font-weight: $weight-sm;  // độ đậm chữ header
+$table-header-height: auto;     // chiều cao header
+$table-header-font-color: $color-text-default;  // màu chữ header
+$table-header-background-color: $color-primary-50;  // màu nền header
+$table-header-item-padding: $padding-lg $padding-4xl;  // padding header
+
+// phần body table
+$table-row-border: $border-xs solid $color-line-default; // màu các row của phần body
+$table-body-even-row-font-color: $color-text-bold-default;  // màu chữ các hàng chẵn phần body
+$table-body-even-row-background-color: none; // màu nền các hàng chẵn phần body
+$table-body-row-font-color: $color-text-bold-default;  // màu chữ các hàng lẻ phần body
+$table-body-row-background-color: none;  // màu nền các hàng lẻ phần body
+$table-body-row-height: auto; // chiều cao các hàng phần body
+$table-body-row-font-size: $size-sm-small;  // kích thước chữ phần body
+$table-body-row-hover-font-color: unset; // màu chữ khi hover vào các row phần body
+$table-body-row-hover-background-color: $color-gray-200; // màu nền khi hover vào các row phần body
+$table-body-item-padding: $padding-xl $padding-4xl; // padding các row phần body
+
+// Phần footer table
+$table-footer-background-color: $color-white; // màu nền phần footer
+$table-footer-font-color: $color-text-default;  // màu chữ phần footer
+$table-footer-font-size: $size-sm-small;  // kích thước chữ phần footer
+$table-footer-padding: $padding-md $padding-4xl;  // padding phần footer
+$table-footer-height: auto; // chiều cao phần footer
+$table-rows-per-page-selector-width: auto; // chiều dài phần select số lượng phần tử trên trang
+$table-rows-per-page-selector-option-padding: $padding-sm; // padding các option trong select số lượng phần tử
+$table-rows-per-page-selector-z-index: 1; // z-inder phần option bên trong select số lượng phần tử
+
+// scroll
+$table-scrollbar-track-color: $color-line-default; // màu track của thanh scroll ngang table footer
+$table-scrollbar-color: $color-line-default;
+$table-scrollbar-thumb-color: $color-default; // màu thanh scroll
+$table-scrollbar-corner-color: $color-line-default;
