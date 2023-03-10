@@ -55,15 +55,15 @@ const items = reactive ([
 ])
 
 const handleClickRow = (e: any) => {
-  console.log(e)
+  // console.log(e)
 }
 
 const selectedRows = (e: any) => {
-  console.log(e)
+  // console.log(e)
 }
 
 const splitRow = () => {
-  console.log(headers)
+  // console.log(headers)
   headers.splice(1, 1)
 }
 </script>

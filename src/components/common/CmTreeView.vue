@@ -1,136 +1,200 @@
-<script setup>
+<script setup lang="ts">
 import Treeview from 'vue3-treeview'
+import CmCheckBox from '@/components/common/CmCheckBox.vue'
 import 'vue3-treeview/dist/style.css'
 
-const modeBool = ref(false)
+interface Props {
+  config?: Config
+  nodes?: NodeTree
+  isOrg: boolean
+}
+interface Emit {
+  (e: 'nodeOpened', value: any): void
+  (e: 'nodeClosed', value: any): void
+  (e: 'nodeFocus', value: any): void
+  (e: 'nodeToggle', value: any): void
+  (e: 'nodeBlur', value: any): void
+  (e: 'nodeEdit', value: any): void
+  (e: 'nodeChecked', value: any): void
+  (e: 'nodeUnchecked', value: any): void
+  (e: 'nodeDragstart', value: any): void
+  (e: 'nodeDragenter', value: any): void
+  (e: 'nodeDragleave', value: any): void
+  (e: 'nodeDragend', value: any): void
+  (e: 'nodeOver', value: any): void
+  (e: 'nodeDrop', value: any): void
+}
 
-const config = reactive({
-  roots: ['id1', 'id2', 'id3'],
-  keyboardNavigation: false,
-  dragAndDrop: false,
-  checkboxes: true,
-  editable: false,
-  disabled: false,
-  padding: 25,
-})
+interface Config {
+  roots: Array<string>
+  keyboardNavigation: boolean
+  dragAndDrop: boolean
+  checkboxes: boolean
+  editable: boolean
+  disabled: boolean
+  padding: number
+  checkMode: number
+}
+interface NodeTree {
+  [NodeTree: string]: Node
+}
+interface Node {
+  [x: string]: any
+  text?: string
+  children?: Array<string>
+}
 
-const nodes = reactive({
-  id1: {
-    text: 'text1',
-    children: ['id11', 'id12', 'id13'],
-  },
-  id11: {
-    text: 'text11',
-    children: ['id111', 'id112', 'id113'],
-  },
-  id111: {
-    text: 'id111',
-  },
-  id112: {
-    text: 'id112',
-  },
-  id113: {
-    text: 'id113',
-  },
-  id12: {
-    text: 'text12',
-    children: [],
-  },
-  id13: {
-    text: 'text13',
-    children: ['id131', 'id132'],
-  },
-  id131: {
-    text: 'text131',
-  },
-  id132: {
-    text: 'text132',
-  },
-  id2: {
-    text: 'text2',
-    children: ['id21', 'id22'],
-  },
-  id21: {
-    text: 'text21',
-    children: ['id211', 'id212'],
-  },
-  id211: {
-    text: 'id211',
-  },
-  id212: {
-    text: 'id212',
-  },
-  id22: {
-    text: 'text12',
-    children: [],
-  },
-  id3: {
-    text: 'text3',
-  },
-})
+/** ** Khởi tạo prop emit */
+const props = withDefaults(defineProps<Props>(), ({
+  config: () => ({
+    roots: [],
+    keyboardNavigation: false,
+    dragAndDrop: false,
+    checkboxes: true,
+    editable: false,
+    disabled: false,
+    padding: 0,
+    checkMode: 0,
+  }),
+  nodes: () => (reactive({})),
+  isOrg: false,
 
-const changeMode = () => {
-  modeBool.value = !modeBool.value
-  config.checkMode = modeBool.value ? 0 : 1
+}))
+
+const emit = defineEmits<Emit>()
+
+const handleNodeOpened = (event: any) => {
+  emit('nodeOpened', event)
+}
+
+const handleNodeClosed = (event: any) => {
+  emit('nodeClosed', event)
+}
+
+const handleNodeFocus = (event: any) => {
+  emit('nodeFocus', event)
+}
+
+const handleNodeToggle = (event: any) => {
+  emit('nodeToggle', event)
+}
+
+const handleNodeBlur = (event: any) => {
+  emit('nodeBlur', event)
+}
+
+const handleNodeEdit = (event: any) => {
+  emit('nodeEdit', event)
+}
+
+const handleNodeChecked = (event: any) => {
+  emit('nodeChecked', event)
+}
+
+const handleNodeUnchecked = (event: any) => {
+  emit('nodeUnchecked', event)
+}
+
+const handleNodeDragstart = (event: any) => {
+  emit('nodeDragstart', event)
+}
+
+const handleNodeDragenter = (event: any) => {
+  emit('nodeDragenter', event)
+}
+
+const handleNodeDragleave = (event: any) => {
+  emit('nodeDragleave', event)
+}
+
+const handleNodeDragend = (event: any) => {
+  emit('nodeDragend', event)
+}
+
+const handleNodeOver = (event: any) => {
+  emit('nodeOver', event)
+}
+
+const handleNodeDrop = (event: any) => {
+  emit('nodeDrop', event)
+}
+
+const onChangeOrgChecked = (val: any, node: any) => {
+  node.orgPermissionValue = val ? node.orgPermission : 0
+  if (node.ids === 0) {
+    // eslint-disable-next-line vue/no-mutating-props
+    props.nodes[node.parent].orgPermissionValue += (val ? node.orgPermission : -node.orgPermission)
+
+    return
+  }
+  node.children.forEach((childeNode: any) => {
+    childeNode.orgPermissionValue = val ? childeNode.orgPermission : 0
+  })
 }
 </script>
 
 <template>
-  <p>
-    <label for="showCheckBoxes">Checkboxes</label>
-    <input
-      id="showCheckBoxes"
-      v-model="config.checkboxes"
-      type="checkbox"
-    >
-
-    <label for="padding"> | Padding</label>
-    <input
-      id="padding"
-      v-model.number="config.padding"
-      type="number"
-    >
-
-    <label for="editable"> | Editable</label>
-    <input
-      id="editable"
-      v-model="config.editable"
-      type="checkbox"
-    >
-
-    <label for="disabled"> | Disabled</label>
-    <input
-      id="disabled"
-      v-model="config.disabled"
-      type="checkbox"
-    >
-
-    <label for="keyboardNavigation"> | Keyboard Navigation</label>
-    <input
-      id="keyboardNavigation"
-      v-model="config.keyboardNavigation"
-      type="checkbox"
-    >
-
-    <label for="DragandDrop"> | DragandDrop</label>
-    <input
-      id="DragandDrop"
-      v-model="config.dragAndDrop"
-      type="checkbox"
-    >
-
-    <label for="checkMode"> | Checkmode auto</label>
-    <input
-      id="checkMode"
-      type="checkbox"
-      :value="modeBool"
-      @input="changeMode"
-    >
-  </p>
-
   <Treeview
-    :config="config"
-    :nodes="nodes"
-  />
+    :config="props.config"
+    :nodes="props.nodes"
+    class="tree-view"
+    @node-opened="handleNodeOpened"
+    @node-closed="handleNodeClosed"
+    @node-focus="handleNodeFocus"
+    @node-toggle="handleNodeToggle"
+    @node-blur="handleNodeBlur"
+    @node-edit="handleNodeEdit"
+    @node-checked="handleNodeChecked"
+    @node-unchecked="handleNodeUnchecked"
+    @node-dragstart="handleNodeDragstart"
+    @node-dragenter="handleNodeDragenter"
+    @node-dragleave="handleNodeDragleave"
+    @node-dragend="handleNodeDragend"
+    @node-over="handleNodeOver"
+    @node-drop="handleNodeDrop"
+  >
+    <template
+      v-if="isOrg"
+      #after-input="{ node }"
+    >
+      <div
+        v-if="node.orgPermission > 0"
+        class="content-after"
+      >
+        <CmCheckBox
+          tooltip-label="Phân quyền theo cơ cấu tổ chức"
+          :model-value="node.orgPermissionValue
+            && (node.orgPermissionValue & node.orgPermission) === node.orgPermission"
+          color="#F44336"
+          :disabled="!(node.state?.checked || node.state?.indeterminate)"
+          :indeterminate="!!(node.orgId
+            && node.orgPermissionValue
+            && node.orgPermissionValue < node.orgPermission)"
+          @update:model-value="onChangeOrgChecked($event, node)"
+        />
+      </div>
+    </template>
+    <template #loading-slot>
+      <div class="progress">
+        <div class="indeterminate" />
+      </div>
+    </template>
+  </Treeview>
 </template>
+
+<style lang="scss">
+.content-after {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: 0;
+}
+
+.tree-view {
+  .tree-node {
+    .node-wrapper {
+      position: relative;
+    }
+  }
+}
+</style>
 

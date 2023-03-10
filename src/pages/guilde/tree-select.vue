@@ -24,7 +24,8 @@ const treeModel = ref<Array<any>>([])
 
 const handleChangeSelect = () => {
   treeModel.value = ['c']
-  console.log(treeModel)
+
+  // console.log(treeModel)
 }
 </script>
 

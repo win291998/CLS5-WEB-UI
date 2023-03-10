@@ -1,6 +1,8 @@
+import axios from 'axios';
+import _ from 'lodash';
 import { Ref } from "vue";
-import _ from 'lodash'
-import { useI18n } from 'vue-i18n'
+import { useI18n } from 'vue-i18n';
+
 //Cài đặt cố định
 declare global {
   interface Window extends propertyGlobal {
@@ -14,11 +16,10 @@ interface propertyGlobal {
   reactive1?: number,
   reactive2?: Ref<string>,
   token?: Ref<string>,
+  //const
   _?: _.LoDashStatic,
   i18n?: any,
-  //const
-  const1?:  any,
-  const2?: number,
+  axios?: any
 }
 
 //Định nghĩa biến toàn cục (reactvie) có thể thay đổi dữ liệu
@@ -33,10 +34,9 @@ const windowDefineReactiveProperty = (app: any)=> {
 //Định nghĩa biến toàn cục (const) không thể thay đổi dữ liệu
 const windowDefineConstProperty = ()=> {
   const global: propertyGlobal = {
-    const1: 555,
-    const2: 123,
     _: _,
-    i18n: useI18n
+    i18n: useI18n,
+    axios: axios
   }
   defineProperty(global, 'const')
 }
@@ -58,6 +58,5 @@ const windowDefineProperty=(app: any)=> {
   windowDefineReactiveProperty(app)
   windowDefineConstProperty()
 }
-console.log(window);
 
 export default windowDefineProperty
