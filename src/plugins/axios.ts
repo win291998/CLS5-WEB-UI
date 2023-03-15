@@ -6,9 +6,10 @@ const axiosIns = axios.create({
   // timeout: 1000,
   // headers: {'X-Custom-Header': 'foobar'}
   baseURL: 'https://apiv4.cloudlms.top/api',
-  headers: {
-    'Content-Type': 'application/json',
-  },
+
+  // headers: {
+  //   'Content-Type': 'application/json',
+  // },
 })
 
 axiosIns.interceptors.request.use(

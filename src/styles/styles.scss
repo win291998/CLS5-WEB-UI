@@ -1,2 +1,10 @@
-// Write your overrides
-@forward "/src/styles/variables/global";
+@use "./variables/global" as *;
+
+// Màu icon error
+.color-icon-error {
+  color: $color-error-600;
+}
+
+.color-text-error {
+  color: $color-error-600;
+}

@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from '@axios';
 import _ from 'lodash';
 import { Ref } from "vue";
 import { useI18n } from 'vue-i18n';

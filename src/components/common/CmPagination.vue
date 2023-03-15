@@ -130,11 +130,11 @@ watch([() => props.currentPage], ([newValue]) => {
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @use "@/styles/variables/common/pagination.cm" as *;
 @use "@/styles/variables/common/table.cm" as *;
 @use "@/styles/font-size";
-@use "@/styles/variables/config/color" as *;
+@use "@/styles/variables/global" as *;
 
 .color-icon-default {
   color: $color-icon-default !important;

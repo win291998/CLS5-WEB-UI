@@ -18,6 +18,7 @@ export default [
       { title: 'table', to: 'guilde-table' },
       { title: 'tree', to: { name: 'guilde-tree' } },
       { title: 'treeSelect', to: { name: 'guilde-tree-select' } },
+      { title: 'importFile', to: { name: 'guilde-import-file' } },
     ],
   },
 ] as VerticalNavItems

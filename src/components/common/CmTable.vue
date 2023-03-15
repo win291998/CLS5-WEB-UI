@@ -17,12 +17,15 @@ interface Props {
   items?: Item[]
   rowClassName?: string
   pageSize?: number
+  isEditing?: boolean
 }
 interface Emit {
   (e: 'handleClickRow', dataRow: object): void
   (e: 'selectedRows', dataRow: object): void
   (e: 'itemSelected', dataRow: object): void
   (e: 'checkedAll', checkedAll: boolean, data: object): void
+  (e: 'changeCellvalue', field: string, key: number): void
+
 }
 
 const props = withDefaults(defineProps<Props>(), ({
@@ -33,6 +36,7 @@ const props = withDefaults(defineProps<Props>(), ({
     collapsable: false,
     enabled: false,
   }),
+  isEditing: false,
   rowClassName: '',
   pageSize: Globals.PAGINATION_PAGE_SIZE_DEFAULT,
 }))
@@ -90,20 +94,26 @@ const indeterminate = computed(() => {
   )
 })
 
+const pageSize = ref(props.pageSize) // số lượng item trên 1 page
+const currentPage = ref<number>(Globals.PAGINATION_CURRENT_PAGE) // item hiện tại
+
 /** method */
+// click chọn tất cả hoặc bỏ tất cả
 const checkedAll = (value: any) => {
   selectedRows.value = []
+
   if (props.groupOptions.enabled === true) {
     if (!value) {
       props.items?.forEach(element => {
         if (element.children) {
           element.children?.forEach((child: any) => {
             child.isSelected = true
-            selectedRows.value.push(child.customId)
+            selectedRows.value.push(child.id)
           })
         }
         else {
-          selectedRows.value.push(element.customId)
+          element.isSelected = true
+          selectedRows.value.push(element.id)
         }
       })
     }
@@ -112,38 +122,54 @@ const checkedAll = (value: any) => {
     }
   }
   else {
-    selectedRows.value = !value ? props.items.map(item => item.customId) : []
+    selectedRows.value = !value ? props.items.map(item => item.id) : []
+    props.items?.forEach(element => {
+      if (!(element.isDisabled && element.isDisabled === true))
+        element.isSelected = !value
+    })
   }
 
   emit('checkedAll', !value, selectedRows)
 }
 
-// event
+/** event */
+// sự kiện click vào hàng
 const showRow = (item: ClickRowArgument) => {
   emit('handleClickRow', item)
 }
 
-const checkedItem = (item: any) => {
+// sự kiện click chọn item
+const checkedItem = (event: boolean, item: any) => {
   emit('itemSelected', item)
   emit('selectedRows', selectedRows)
 }
 
-const pageSize = ref(props.pageSize)
-const currentPage = ref<number>(Globals.PAGINATION_CURRENT_PAGE)
-
+// Cập nhật table theo pagination
 const updatePage = (paginationNumber: number) => {
   dataTable.value.updatePage(paginationNumber)
 }
 
+// Cập nhật số lượng item trên  table theo pagination
 const updateRowsPerPageSelect = (e: number) => {
   dataTable.value.updateRowsPerPageActiveOption(e)
 }
 
+// thay đổi số lượng item trên trang
 const pageSizeChange = (page: number, size: number) => {
   currentPage.value = page
   pageSize.value = size
   updatePage(page)
   updateRowsPerPageSelect(size)
+}
+
+// kiểm tra cột lỗi
+const isErrorcell = (field: string, data: any) => {
+  return data.errors?.filter(x => x.location.toLowerCase() === field.toLowerCase()).length > 0
+}
+
+// thay đổi dữ liệu trên bảng
+const changeCellvalue = (event: any, field: string, rowData: object) => {
+  emit('changeCellvalue', event, field, rowData)
 }
 </script>
 
@@ -157,7 +183,7 @@ const pageSizeChange = (page: number, size: number) => {
       :items="items"
       :rows-per-page="pageSize"
       theme-color="#1849a9"
-      item-key="customId"
+      item-key="id"
       fixed-expand
       hide-footer
       :body-row-class-name="rowClassName"
@@ -186,19 +212,64 @@ const pageSizeChange = (page: number, size: number) => {
         </div>
       </template>
 
-      <template #item-checkbox="context">
-        <div class="player-wrapper">
+      <template #header-select />
+      <!--
+        header => nội dung cột
+        context  => nội dung hàng
+      -->
+      <template
+        v-for="(items, id) in headers"
+        #[`item-${items.value}`]="context"
+        :key="id"
+      >
+        <span
+          v-if="items.value === 'select' && context.isSuccess === false"
+        >
+          <VueFeather
+            type="alert-triangle"
+            size="18"
+            class="color-icon-error"
+          />
+          <VTooltip
+            activator="parent"
+            location="bottom"
+          >
+            {{ context.messageErr }}
+          </VTooltip>
+        </span>
+
+        <div
+          v-else-if="items.value === 'checkbox'"
+          class="player-wrapper"
+        >
           <VCheckbox
             v-if="!context?.children?.length"
             v-model="selectedRows"
             multiple
-            :value="context.customId"
+            :value="context.id"
             :true-icon="() => {
               return h('div', { innerHTML: svgChecked })
             }"
-            @change="checkedItem(context)"
+            @change="checkedItem(selectedRows, context)"
           />
         </div>
+        <VTextField
+          v-else-if="isErrorcell(items.value, context) && isEditing"
+          v-model="context[items.value]"
+          class="input-edit-cell"
+          type="text"
+          :error="context.errors.length"
+          @update:modelValue="changeCellvalue($event, items.value, context.key)"
+        />
+
+        <span
+          v-else
+          :class="{
+            'color-text-error': isErrorcell(items.value, context),
+          }"
+        >
+          {{ context[items.value] }}
+        </span>
       </template>
     </EasyDataTable>
     <div class="customize-footer">
@@ -211,9 +282,9 @@ const pageSizeChange = (page: number, size: number) => {
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @use "@/styles/variables/common/table.cm" as *;
-@use "@/styles/variables/config/color" as *;
+@use "@/styles/style-global.scss" as *;
 
 // *****************************emplement**********************************************************//
 .customize-table {

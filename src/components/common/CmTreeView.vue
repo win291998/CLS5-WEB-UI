@@ -57,7 +57,7 @@ const props = withDefaults(defineProps<Props>(), ({
     checkMode: 0,
   }),
   nodes: () => (reactive({})),
-  isOrg: false,
+  isOrg: true,
 
 }))
 
@@ -128,7 +128,8 @@ const onChangeOrgChecked = (val: any, node: any) => {
     return
   }
   node.children.forEach((childeNode: any) => {
-    childeNode.orgPermissionValue = val ? childeNode.orgPermission : 0
+    // eslint-disable-next-line vue/no-mutating-props
+    props.nodes[childeNode].orgPermissionValue = val ? props.nodes[childeNode].orgPermission : 0
   })
 }
 </script>
@@ -185,6 +186,7 @@ const onChangeOrgChecked = (val: any, node: any) => {
 <style lang="scss">
 .content-after {
   position: absolute;
+  z-index: 99;
   inset-block: 0;
   inset-inline-end: 0;
 }

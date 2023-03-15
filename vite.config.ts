@@ -1,3 +1,4 @@
+import fs from 'fs'
 import { fileURLToPath } from 'url'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
@@ -9,8 +10,17 @@ import Pages from 'vite-plugin-pages'
 import Layouts from 'vite-plugin-vue-layouts'
 import vuetify from 'vite-plugin-vuetify'
 
+const host = 'kinhdoanh.cloudlms.top'
+
 // https://vitejs.dev/config/
 export default defineConfig({
+  server: {
+    host,
+    https: {
+      key: fs.readFileSync(`./cert/${host}-key.pem`),
+      cert: fs.readFileSync(`./cert/${host}.pem`),
+    },
+  },
   plugins: [
     vue(),
     vueJsx(),

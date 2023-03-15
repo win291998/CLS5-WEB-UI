@@ -65,6 +65,7 @@ module.exports = {
     'array-bracket-newline': ['error', 'consistent'],
 
     'vue/multi-word-component-names': 'off',
+    'vue/no-template-shadow': 'off',
 
     'padding-line-between-statements': [
       'error',
