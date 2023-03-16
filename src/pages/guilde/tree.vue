@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import CmTreeView from '@/components/common/CmTreeView.vue';
-import { flatMapTree, formatTreeData } from '@/utils/ArrayUtil';
+import CmTreeView from '@/components/common/CmTreeView.vue'
+import ArraysUtil from '@/utils/ArrayUtil'
 
 const modeBool = ref(true)
 
@@ -27,7 +27,7 @@ const getRoleFeature = async () => {
     .then((value: any) => value)
     .catch((error: any) => error)
 
-  const result = formatTreeData(flatMapTree([res.data[0]], 'permissions'), config.roots)
+  const result = ArraysUtil.formatTreeData(ArraysUtil.flatMapTree([res.data[0]], 'permissions'), config.roots)
 
   nodes.value = reactive(result)
 }

@@ -18,13 +18,13 @@ $table-header-item-padding: $padding-lg $padding-4xl;  // padding header
 // phần body table
 $table-row-border: $border-xs solid $color-line-default; // màu các row của phần body
 $table-body-even-row-font-color: $color-text-bold-default;  // màu chữ các hàng chẵn phần body
-$table-body-even-row-background-color: none; // màu nền các hàng chẵn phần body
+$table-body-even-row-background-color: $color-white; // màu nền các hàng chẵn phần body
 $table-body-row-font-color: $color-text-bold-default;  // màu chữ các hàng lẻ phần body
-$table-body-row-background-color: none;  // màu nền các hàng lẻ phần body
+$table-body-row-background-color: $color-white;  // màu nền các hàng lẻ phần body
 $table-body-row-height: auto; // chiều cao các hàng phần body
 $table-body-row-font-size: $size-sm-small;  // kích thước chữ phần body
 $table-body-row-hover-font-color: unset; // màu chữ khi hover vào các row phần body
-$table-body-row-hover-background-color: $color-gray-200; // màu nền khi hover vào các row phần body
+$table-body-row-hover-background-color: none; // màu nền khi hover vào các row phần body
 $table-body-item-padding: $padding-xl $padding-4xl; // padding các row phần body
 
 // Phần footer table
@@ -42,3 +42,48 @@ $table-scrollbar-track-color: $color-line-default; // màu track của thanh scr
 $table-scrollbar-color: $color-line-default;
 $table-scrollbar-thumb-color: $color-default; // màu thanh scroll
 $table-scrollbar-corner-color: $color-line-default;
+
+/***************** SUB TABLE****************************   */
+
+/** Phần chung table */
+
+/* ---border--- */
+$table-sub-border: none;
+$table-sub-border-radius-size: none;
+$table-sub-box-shadow: $box-shadow-md;
+
+/* ---header--- */
+$table-sub-header-font-size: 12px;  // kích thước chữ header
+$table-sub-header-font-weight: $weight-sm;  // độ đậm chữ header
+$table-sub-header-height: auto;     // chiều cao header
+$table-sub-header-font-color: $color-text-default;  // màu chữ header
+$table-sub-header-background-color: none;  // màu nền header
+$table-sub-header-item-padding: $padding-lg $padding-4xl;  // padding header
+
+// phần body table-sub
+$table-sub-row-border: none; // màu các row của phần body
+$table-sub-body-even-row-font-color: $color-text-bold-default;  // màu chữ các hàng chẵn phần body
+$table-sub-body-even-row-background-color: none; // màu nền các hàng chẵn phần body
+$table-sub-body-row-font-color: $color-text-bold-default;  // màu chữ các hàng lẻ phần body
+$table-sub-body-row-background-color: none;  // màu nền các hàng lẻ phần body
+$table-sub-body-row-height: auto; // chiều cao các hàng phần body
+$table-sub-body-row-font-size: $size-sm-small;  // kích thước chữ phần body
+$table-sub-body-row-hover-font-color: unset; // màu chữ khi hover vào các row phần body
+$table-sub-body-row-hover-background-color: none; // màu nền khi hover vào các row phần body
+$table-sub-body-item-padding: $padding-xs $padding-4xl; // padding các row phần body
+
+// Phần footer table-sub
+$table-sub-footer-background-color: $color-white; // màu nền phần footer
+$table-sub-footer-font-color: $color-text-default;  // màu chữ phần footer
+$table-sub-footer-font-size: $size-sm-small;  // kích thước chữ phần footer
+$table-sub-footer-padding: $padding-md $padding-4xl;  // padding phần footer
+$table-sub-footer-height: auto; // chiều cao phần footer
+$table-sub-rows-per-page-selector-width: auto; // chiều dài phần select số lượng phần tử trên trang
+$table-sub-rows-per-page-selector-option-padding: $padding-sm; // padding các option trong select số lượng phần tử
+$table-sub-rows-per-page-selector-z-index: 1; // z-inder phần option bên trong select số lượng phần tử
+
+// scroll
+$table-sub-scrollbar-track-color: $color-line-default; // màu track của thanh scroll ngang table-sub footer
+$table-sub-scrollbar-color: $color-line-default;
+$table-sub-scrollbar-thumb-color: $color-default; // màu thanh scroll
+$table-sub-scrollbar-corner-color: $color-line-default;
