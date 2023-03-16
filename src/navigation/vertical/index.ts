@@ -16,6 +16,7 @@ export default [
     icon: { icon: 'tabler-file' },
     children: [
       { title: 'table', to: 'guilde-table' },
+      { title: 'tableGroup', to: { name: 'guilde-table-group' } },
       { title: 'tree', to: { name: 'guilde-tree' } },
       { title: 'treeSelect', to: { name: 'guilde-tree-select' } },
       { title: 'importFile', to: { name: 'guilde-import-file' } },

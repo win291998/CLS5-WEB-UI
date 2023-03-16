@@ -7,6 +7,7 @@ interface ListItem {
   icon?: string
   colorClass?: string
   action?: Action
+  event?: string
 }
 interface Action {
   type: string
@@ -21,11 +22,17 @@ const props = withDefaults(defineProps<Props>(), ({
 }))
 
 const emit = defineEmits<Emit>()
+
+const handleChange = (event: any) => {
+  emit('change', event)
+}
 </script>
 
 <template>
   <div class="text-center">
-    <VMenu>
+    <VMenu
+      @update:model-value="handleChange"
+    >
       <template #activator="{ props }">
         <div v-bind="props">
           <VueFeather
@@ -44,11 +51,11 @@ const emit = defineEmits<Emit>()
           <VListItemTitle @click="item?.action?.event ? item?.action?.event() : ''">
             <VueFeather
               :type="item?.icon"
-              :size="18"
-              class="mr-2"
+              :size="12"
+              class="mr-2 color-dark"
               :class="[item.colorClass]"
             />
-            {{ item.title }}
+            <span class="text-medium-sm">{{ item.title }}</span>
           </VListItemTitle>
         </VListItem>
       </VList>
