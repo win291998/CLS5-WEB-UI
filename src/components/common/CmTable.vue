@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import type { ClickRowArgument, Header, Item } from 'vue3-easy-data-table'
+import CpTableSub from '../page/gereral/CpTableSub.vue'
 import CmPagination from './CmPagination.vue'
 import svgChecked from '@/assets/images/svg/checkbox-tick.svg?raw'
 import svgIndeterminate from '@/assets/images/svg/indeterminate.svg?raw'
+import CmDropDown from '@/components/common/CmDropDown.vue'
 import Globals from '@/constant/Globals'
+import ArrayUtil from '@/utils/ArrayUtil'
 
 interface groupOptions {
   allowEmptySelect?: boolean
@@ -18,13 +21,15 @@ interface Props {
   rowClassName?: string
   pageSize?: number
   isEditing?: boolean
+  customId?: string
+  isExpand?: boolean
 }
 interface Emit {
   (e: 'handleClickRow', dataRow: object): void
   (e: 'selectedRows', dataRow: object): void
   (e: 'itemSelected', dataRow: object): void
   (e: 'checkedAll', checkedAll: boolean, data: object): void
-  (e: 'changeCellvalue', field: string, key: number): void
+  (e: 'changeCellvalue', value: string, field: string, key: number): void
 
 }
 
@@ -37,8 +42,10 @@ const props = withDefaults(defineProps<Props>(), ({
     enabled: false,
   }),
   isEditing: false,
+  isExpand: false,
   rowClassName: '',
   pageSize: Globals.PAGINATION_PAGE_SIZE_DEFAULT,
+  customId: 'id',
 }))
 
 const emit = defineEmits<Emit>()
@@ -108,12 +115,12 @@ const checkedAll = (value: any) => {
         if (element.children) {
           element.children?.forEach((child: any) => {
             child.isSelected = true
-            selectedRows.value.push(child.id)
+            selectedRows.value.push(child[props.customId])
           })
         }
         else {
           element.isSelected = true
-          selectedRows.value.push(element.id)
+          selectedRows.value.push(element[props.customId])
         }
       })
     }
@@ -122,7 +129,8 @@ const checkedAll = (value: any) => {
     }
   }
   else {
-    selectedRows.value = !value ? props.items.map(item => item.id) : []
+    selectedRows.value = !value ? props.items.map(item => item[props.customId]) : []
+
     props.items?.forEach(element => {
       if (!(element.isDisabled && element.isDisabled === true))
         element.isSelected = !value
@@ -139,9 +147,17 @@ const showRow = (item: ClickRowArgument) => {
 }
 
 // sự kiện click chọn item
-const checkedItem = (event: boolean, item: any) => {
+const checkedItem = (rows: any, item: any) => {
   emit('itemSelected', item)
-  emit('selectedRows', selectedRows)
+  emit('selectedRows', rows)
+
+  const value = rows.includes(item[props.customId])
+
+  const action = props.items?.findIndex(element => element[props.customId] === item[props.customId])
+
+  if (action > -1)
+    // eslint-disable-next-line vue/no-mutating-props
+    props.items[action].isSelected = value
 }
 
 // Cập nhật table theo pagination
@@ -168,8 +184,10 @@ const isErrorcell = (field: string, data: any) => {
 }
 
 // thay đổi dữ liệu trên bảng
-const changeCellvalue = (event: any, field: string, rowData: object) => {
-  emit('changeCellvalue', event, field, rowData)
+const changeCellvalue = (event: any, field: string, key: number) => {
+  console.log(event, field, key)
+
+  emit('changeCellvalue', event, field, key)
 }
 </script>
 
@@ -183,7 +201,7 @@ const changeCellvalue = (event: any, field: string, rowData: object) => {
       :items="items"
       :rows-per-page="pageSize"
       theme-color="#1849a9"
-      item-key="id"
+      :item-key="props.customId"
       fixed-expand
       hide-footer
       :body-row-class-name="rowClassName"
@@ -213,14 +231,22 @@ const changeCellvalue = (event: any, field: string, rowData: object) => {
       </template>
 
       <template #header-select />
+      <template
+        v-if="isExpand"
+        #expand="item"
+      >
+        <div>
+          <CpTableSub />
+        </div>
+      </template>
       <!--
         header => nội dung cột
         context  => nội dung hàng
       -->
       <template
         v-for="(items, id) in headers"
-        #[`item-${items.value}`]="context"
         :key="id"
+        #[`item-${items.value}`]="context"
       >
         <span
           v-if="items.value === 'select' && context.isSuccess === false"
@@ -228,7 +254,7 @@ const changeCellvalue = (event: any, field: string, rowData: object) => {
           <VueFeather
             type="alert-triangle"
             size="18"
-            class="color-icon-error"
+            class="color-error"
           />
           <VTooltip
             activator="parent"
@@ -246,12 +272,45 @@ const changeCellvalue = (event: any, field: string, rowData: object) => {
             v-if="!context?.children?.length"
             v-model="selectedRows"
             multiple
-            :value="context.id"
+            :value="context[props.customId]"
             :true-icon="() => {
               return h('div', { innerHTML: svgChecked })
             }"
-            @change="checkedItem(selectedRows, context)"
+            @input="checkedItem(selectedRows, context)"
           />
+        </div>
+        <div
+          v-else-if="items.value === 'action'"
+          class="player-wrapper d-flex justify-end"
+        >
+          <template v-for="(actionItem, idKey) in context.action ">
+            <div
+              v-if="idKey < 2"
+              :key="idKey"
+              class="px-2 "
+            >
+              <VueFeather
+                :type="actionItem.icon"
+                :size="actionItem.size || 18"
+                class="color-error align-middle"
+                @click="actionItem?.action?.event ? actionItem?.action?.event() : ''"
+              />
+              <VTooltip
+                activator="parent"
+                location="top"
+              >
+                {{ actionItem.action.type }}
+              </VTooltip>
+            </div>
+            <div
+              v-if="idKey >= 2"
+              :key="idKey"
+            >
+              <div class="action-more px-2">
+                <CmDropDown :list-item="ArrayUtil.sliceArray(context.action, 2)" />
+              </div>
+            </div>
+          </template>
         </div>
         <VTextField
           v-else-if="isErrorcell(items.value, context) && isEditing"
@@ -259,13 +318,13 @@ const changeCellvalue = (event: any, field: string, rowData: object) => {
           class="input-edit-cell"
           type="text"
           :error="context.errors.length"
-          @update:modelValue="changeCellvalue($event, items.value, context.key)"
+          @update:modelValue="changeCellvalue($event, items.value, context.id)"
         />
 
         <span
           v-else
           :class="{
-            'color-text-error': isErrorcell(items.value, context),
+            'color-error': isErrorcell(items.value, context),
           }"
         >
           {{ context[items.value] }}
