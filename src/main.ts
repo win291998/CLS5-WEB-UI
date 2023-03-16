@@ -12,11 +12,15 @@ import { globals } from '@/typescript/global/property'
 import { globalsReadOnly } from '@/typescript/global/property.read'
 import windowDefineProperty from '@/typescript/global/public/propertyGlobal.public'
 import '@core/scss/template/index.scss'
-import { createPinia } from 'pinia'
+
+// import { createPinia } from 'pinia'
+
 import { createApp } from 'vue'
 import VueFeather from 'vue-feather'
 import Vue3EasyDataTable from 'vue3-easy-data-table'
 import 'vue3-easy-data-table/dist/style.css'
+
+const pinia = createPinia()
 
 loadFonts()
 
@@ -31,12 +35,14 @@ windowDefineProperty(app)
 
 // Use plugins
 app.use(vuetify)
-app.use(createPinia())
-app.use(router)
+app.use(pinia)
+
 app.use(layoutsPlugin)
 app.use(lodash)
 app.use(i18n)
 app.component('EasyDataTable', Vue3EasyDataTable)
+
+app.use(router)
 
 // Mount vue app
 app.mount('#app')

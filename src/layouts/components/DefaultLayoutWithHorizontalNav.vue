@@ -13,6 +13,8 @@ import NavbarThemeSwitcher from '@/layouts/components/NavbarThemeSwitcher.vue'
 import UserProfile from '@/layouts/components/UserProfile.vue'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 
+import CmBreadcrumb from '@/components/common/CmBreadcrumb.vue'
+
 const { appRouteTransition } = useThemeConfig()
 const { layoutAttrs, injectSkinClasses } = useSkins()
 
@@ -45,6 +47,7 @@ injectSkinClasses()
 
     <!-- 👉 Pages -->
     <RouterView v-slot="{ Component, route }">
+      <CmBreadcrumb />
       <Transition
         :name="appRouteTransition"
         mode="out-in"
