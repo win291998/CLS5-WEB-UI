@@ -170,10 +170,3 @@ const rememberMe = ref(false)
 @use "@core/scss/template/pages/page-auth.scss";
 </style>
 
-<route lang="yaml">
-meta:
-  layout: blank
-  action: read
-  subject: Auth
-  redirectIfLoggedIn: true
-</route>
