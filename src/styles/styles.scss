@@ -2,26 +2,79 @@
 
 // Màu error
 .color-error {
-  color: $color-error-600;
+  color: $color-error-600 !important;
 }
 
 .color-warning {
-  color: $color-warning-600;
+  color: $color-warning-600 !important;
 }
 
 .color-success {
-  color: $color-success-600;
+  color: $color-success-600 !important;
 }
 
 .color-dark {
-  color: $color-gray-700;
+  color: $color-gray-700 !important;
 }
 
 .color-primary {
-  color: $color-primary-600;
+  color: $color-primary-600!important;
 }
 
 // icon
 .vue-feather {
   vertical-align: middle;
 }
+
+.btn {
+  &-primary {
+    color: $color-white !important;
+    background-color: $color-primary-600;
+    border-color: $color-primary-600;
+  }
+  
+  &-error {
+    color: $color-white !important;
+    background-color: $color-error-600;
+    border-color: $color-error-600;
+  }
+  
+  &-warning {
+    color: $color-white !important;
+    background-color: $color-warning-600;
+    border-color: $color-warning-600;
+  }
+  
+  &-success {
+    color: $color-white !important;
+    background-color: $color-success-600;
+    border-color: $color-success-600;
+  }
+  
+  &-dark {
+    color: $color-white !important;
+    background-color: $color-gray-700;
+    border-color: $color-gray-700;
+  }
+}
+
+// outline
+// .outline-primary {
+//   outline-color: $color-primary-600 !important;
+// }
+
+// .outline-error {
+//   background-color: $color-error-600;
+// }
+
+// .outline-warning {
+//   background-color: $color-warning-600;
+// }
+
+// .outline-success {
+//   background-color: $color-success-600;
+// }
+
+// .outline-dark {
+//   background-color: $color-gray-700;
+// }
