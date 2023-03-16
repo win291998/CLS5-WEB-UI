@@ -9,6 +9,7 @@ import { useThemeConfig } from '@core/composable/useThemeConfig'
 import Footer from '@/layouts/components/Footer.vue'
 import NavbarThemeSwitcher from '@/layouts/components/NavbarThemeSwitcher.vue'
 import UserProfile from '@/layouts/components/UserProfile.vue'
+import CmBreadcrumb from '@/components/common/CmBreadcrumb.vue'
 
 // @layouts plugin
 import { VerticalNavLayout } from '@layouts'
@@ -56,6 +57,7 @@ injectSkinClasses()
 
     <!-- 👉 Pages -->
     <RouterView v-slot="{ Component }">
+      <CmBreadcrumb />
       <Transition
         :name="appRouteTransition"
         mode="out-in"
