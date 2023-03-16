@@ -10,7 +10,7 @@ interface ListItem {
 }
 interface Action {
   type: string
-  event: string
+  event: any
 }
 interface Emit {
   (e: 'change', data: any): void
@@ -41,13 +41,12 @@ const emit = defineEmits<Emit>()
           v-for="(item, i) in props.listItem"
           :key="i"
         >
-          <VListItemTitle>
+          <VListItemTitle @click="item?.action?.event ? item?.action?.event() : ''">
             <VueFeather
               :type="item?.icon"
               :size="18"
               class="mr-2"
               :class="[item.colorClass]"
-              @click="item?.action?.event ? item?.action?.event() : ''"
             />
             {{ item.title }}
           </VListItemTitle>
