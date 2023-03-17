@@ -18,7 +18,7 @@
 }
 
 .color-primary {
-  color: $color-primary-600!important;
+  color: $color-primary-600 !important;
 }
 
 // icon
@@ -28,33 +28,33 @@
 
 .btn {
   &-primary {
-    color: $color-white !important;
-    background-color: $color-primary-600;
     border-color: $color-primary-600;
+    background-color: $color-primary-600;
+    color: $color-white !important;
   }
-  
+
   &-error {
-    color: $color-white !important;
-    background-color: $color-error-600;
     border-color: $color-error-600;
+    background-color: $color-error-600;
+    color: $color-white !important;
   }
-  
+
   &-warning {
-    color: $color-white !important;
-    background-color: $color-warning-600;
     border-color: $color-warning-600;
+    background-color: $color-warning-600;
+    color: $color-white !important;
   }
-  
+
   &-success {
-    color: $color-white !important;
-    background-color: $color-success-600;
     border-color: $color-success-600;
-  }
-  
-  &-dark {
+    background-color: $color-success-600;
     color: $color-white !important;
-    background-color: $color-gray-700;
+  }
+
+  &-dark {
     border-color: $color-gray-700;
+    background-color: $color-gray-700;
+    color: $color-white !important;
   }
 }
 
@@ -78,3 +78,25 @@
 // .outline-dark {
 //   background-color: $color-gray-700;
 // }
+
+/** cusor */
+.cusor-pointer {
+  cursor: pointer;
+}
+
+// group tree
+.group-child-1 {
+  padding-inline-start: 20px;
+}
+
+.group-child-2 {
+  padding-inline-start: 40px;
+}
+
+.group-child-3 {
+  padding-inline-start: 60px;
+}
+
+.group-child-4 {
+  padding-inline-start: 80px;
+}
