@@ -6,11 +6,13 @@ export default [
     to: { name: 'user' },
     icon: { icon: 'tabler-smart-home' },
   },
-  {
-    title: 'Second page',
-    to: { name: 'second-page' },
-    icon: { icon: 'tabler-file' },
-  },
+
+  // {
+  //   title: 'Second page',
+  //   to: { name: 'second-page' },
+  //   icon: { icon: 'tabler-file' },
+  // },
+
   {
     title: 'Guilde',
     icon: { icon: 'tabler-file' },
