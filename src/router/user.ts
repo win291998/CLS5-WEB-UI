@@ -92,5 +92,30 @@ export default [
     },
     component: () => import('@/pages/login.vue'),
   },
+  {
+    path: '/guilde/tree-select',
+    name: 'guilde-tree-select',
+    component: () => import('@/pages/guilde/tree-select.vue'),
+  },
+  {
+    path: '/guilde/import-file',
+    name: 'guilde-import-file',
+    component: () => import('@/pages/guilde/import-file.vue'),
+  },
+  {
+    path: '/guilde/tree',
+    name: 'guilde-tree',
+    component: () => import('@/pages/guilde/tree.vue'),
+  },
+  {
+    path: '/guilde/table',
+    name: 'guilde-table',
+    component: () => import('@/pages/guilde/table.vue'),
+  },
+  {
+    path: '/guilde/table-group',
+    name: 'guilde-table-group',
+    component: () => import('@/pages/guilde/table-group.vue'),
+  },
 
 ]

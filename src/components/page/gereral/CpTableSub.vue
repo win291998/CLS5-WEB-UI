@@ -16,9 +16,12 @@ const props = withDefaults(defineProps<Props>(), ({
   customId: 'id',
 }))
 
-const headers = reactive([
+const headersLeft = reactive([
   { text: 'Thông tin chi tiết', value: 'label' },
   { text: '', value: 'content' },
+])
+
+const headersRight = reactive([
   { text: 'Tổ chức', value: 'option_1', width: 300 },
   { text: 'Học tập', value: 'option_2' },
 ])
@@ -89,50 +92,63 @@ const showRow = (item: ClickRowArgument) => {
 </script>
 
 <template>
-  <EasyDataTable
-    ref="dataTable"
-    alternating
-    table-class-name="customize-table-sub"
-    :headers="headers"
-    :items="items"
-    theme-color="#1849a9"
-    fixed-expand
-    hide-footer
-    @click-row="showRow"
-  >
-    <template
-      #item-option_1="context"
+  <div class="d-flex">
+    <EasyDataTable
+      ref="dataTable"
+      alternating
+      table-class-name="customize-table-sub"
+      :headers="headersLeft"
+      :items="items"
+      theme-color="#1849a9"
+      fixed-expand
+      hide-footer
+      @click-row="showRow"
+    />
+    <EasyDataTable
+      ref="dataTable"
+      alternating
+      table-class-name="customize-table-sub"
+      :headers="headersRight"
+      :items="items"
+      theme-color="#1849a9"
+      fixed-expand
+      hide-footer
+      @click-row="showRow"
     >
-      <CmAccodion
-        v-if="context?.option_1"
-        :data="context?.option_1"
-      />
-    </template>
-    <template
-      #item-option_2="context"
-    >
-      <div class="d-flex align-center">
-        <div>
-          <VAvatar
-            v-if="context?.option_2?.icon"
-            size="32"
-            class="mr-2"
-            :class="[context?.option_2?.colorClass]"
-            variant="tonal"
-          >
-            <VueFeather
-              :type="context?.option_2?.icon"
-              size="14"
-              class="color-dark"
-            />
-          </VAvatar>
+      <template
+        #item-option_1="context"
+      >
+        <CmAccodion
+          v-if="context?.option_1"
+          :data="context?.option_1"
+        />
+      </template>
+      <template
+        #item-option_2="context"
+      >
+        <div class="d-flex align-center">
+          <div>
+            <VAvatar
+              v-if="context?.option_2?.icon"
+              size="32"
+              class="mr-2"
+              :class="[context?.option_2?.colorClass]"
+              variant="tonal"
+            >
+              <VueFeather
+                :type="context?.option_2?.icon"
+                size="14"
+                class="color-dark"
+              />
+            </VAvatar>
+          </div>
+          <div>
+            {{ context?.option_2?.label }}
+          </div>
         </div>
-        <div>
-          {{ context?.option_2?.label }}
-        </div>
-      </div>
-    </template>
-  </EasyDataTable>
+      </template>
+    </EasyDataTable>
+  </div>
 </template>
 
 <style scoped lang="scss">

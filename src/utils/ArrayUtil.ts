@@ -45,5 +45,33 @@ export default class ArraysUtil {
   static sliceArray = (array: Array<any>, startIndex?: number, endIndex?: number) => {
     return window._.slice(array, startIndex, endIndex)
   }
+
+  static checkParentNode = (parent: any, objChild: any, obj: any, key: string) => {
+    if (parent.parent) {
+      objChild.parent.parent = { [key]: parent.parent[key] }
+      obj.level++
+      ArraysUtil.checkParentNode(parent.parent, objChild.parent, obj, key)
+    }
+  }
+
+  static formatTreeTable = (items: Array<any>, key: string) => {
+    const result: any = []
+
+    window._.transform(items, (acc, obj: any) => {
+      const parent = acc.find((item: any) => item.children && item.children.find((child: any) => child[key] === obj[key]))
+
+      obj.level = 0
+      if (parent) {
+        obj.parent = { [key]: parent[key] }
+        obj.level++
+        ArraysUtil.checkParentNode(parent, obj, obj, key)
+      }
+      acc.push(obj)
+
+      return acc
+    }, result)
+
+    return result
+  }
 }
 
