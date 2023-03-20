@@ -166,7 +166,6 @@ const onChangeOrgChecked = (val: any, node: any) => {
           tooltip-label="Phân quyền theo cơ cấu tổ chức"
           :model-value="node.orgPermissionValue
             && (node.orgPermissionValue & node.orgPermission) === node.orgPermission"
-          color="#F44336"
           :disabled="!(node.state?.checked || node.state?.indeterminate)"
           :indeterminate="!!(node.orgId
             && node.orgPermissionValue

@@ -130,8 +130,8 @@ watch(() => props.modelValue, value => {
       :flatten-search-results="props.flattenSearchResults"
       :search-nested="props.searchNested"
       :normalizer="normalizer"
-      @update:modelValue="handleUpdate"
     >
+      <!-- @update:modelValue="handleUpdate" -->
       <template
         v-if="props.customLable"
         #value-label="{ node }"
@@ -152,34 +152,35 @@ watch(() => props.modelValue, value => {
 }
 
 .vue-treeselect__checkbox--checked {
-  border: 1px solid #1570ef !important;
-  background: #eff8ff !important;
+  border: 1px solid #eff8ff !important;
+  background: #1570ef !important;
 
   .vue-treeselect__check-mark {
     box-sizing: border-box;
-    border: 2px solid #1570ef !important;
-    border-radius: 4px !important;
-    block-size: 0.3em;
+    border: 1px solid #eff8ff !important;
+
+    // border-radius: 4px !important;
+    block-size: 0.2em;
     border-block-start-style: none !important;
     border-inline-end-style: none !important;
-    inline-size: 0.5em;
+    inline-size: 0.6em;
     transform: translate(0, 1px) rotate(-45deg);
   }
 }
 
 .vue-treeselect__checkbox--indeterminate {
-  border: 1px solid #1570ef !important;
-  background: #eff8ff !important;
+  border: 1px solid #eff8ff !important;
+  background: #1570ef !important;
 
   .vue-treeselect__minus-mark {
     box-sizing: border-box;
-    border: 2px solid #1570ef !important;
+    border: 2px solid #eff8ff !important;
     block-size: 0.1em;
     border-block-start-style: none !important;
     border-inline-end-style: none !important;
     border-inline-start-style: none !important;
     inline-size: 0.35em;
-    transform: translate(0.1em, 0.2em);
+    transform: translate(0.05em, 0.2em);
   }
 }
 
