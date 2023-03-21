@@ -7,11 +7,14 @@ import lodash from '@/plugins/lodash'
 import vuetify from '@/plugins/vuetify'
 import { loadFonts } from '@/plugins/webfontloader'
 import router from '@/router'
-import '@/styles/styles.scss'
 import { globals } from '@/typescript/global/property'
 import { globalsReadOnly } from '@/typescript/global/property.read'
 import windowDefineProperty from '@/typescript/global/public/propertyGlobal.public'
+import Toast from 'vue-toastification'
+
+// Import the CSS or use your own!
 import '@core/scss/template/index.scss'
+import '@/styles/styles.scss'
 
 // import { createPinia } from 'pinia'
 
@@ -27,6 +30,32 @@ loadFonts()
 // Create vue app
 const app = createApp(App)
 
+const options = {
+  // You can set your default options here
+  position: 'top-right',
+  timeout: 500000,
+  closeOnClick: true,
+  pauseOnFocusLoss: true,
+  pauseOnHover: true,
+
+  // draggable: true,
+  // draggablePercent: 0.6,
+  showCloseButtonOnHover: false,
+  hideProgressBar: true,
+  closeButton: 'button',
+  icon: true,
+  rtl: false,
+  filterBeforeCreate: (toast: any, toasts: any) => {
+    if (toasts.filter((item: any) => item.type === toast.type).length !== 0) {
+      // Returning false discards the toast
+      return false
+    }
+
+    // You can modify the toast if you want
+    return toast
+  },
+}
+
 app.provide('globals', globals)
 app.provide('globalsReadOnly', globalsReadOnly)
 app.component(VueFeather.name, VueFeather)
@@ -36,7 +65,7 @@ windowDefineProperty(app)
 // Use plugins
 app.use(vuetify)
 app.use(pinia)
-
+app.use(Toast, options)
 app.use(layoutsPlugin)
 app.use(lodash)
 app.use(i18n)

@@ -1,8 +1,8 @@
+import { isEmpty } from './../../../@core/utils/index';
 import axios from '@axios';
 import _ from 'lodash';
 import { Ref } from "vue";
 import { useI18n } from 'vue-i18n';
-
 //Cài đặt cố định
 declare global {
   interface Window extends propertyGlobal {
@@ -19,7 +19,7 @@ interface propertyGlobal {
   //const
   _?: _.LoDashStatic,
   i18n?: any,
-  axios?: any
+  axios?: any,
 }
 
 //Định nghĩa biến toàn cục (reactvie) có thể thay đổi dữ liệu
@@ -36,7 +36,7 @@ const windowDefineConstProperty = ()=> {
   const global: propertyGlobal = {
     _: _,
     i18n: useI18n,
-    axios: axios
+    axios: axios,
   }
   defineProperty(global, 'const')
 }

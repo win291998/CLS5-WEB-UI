@@ -1,0 +1,33 @@
+@use "@/styles/variables/config/color" as *;
+
+// Override the variables or import a file that overrides them
+$vt-namespace: "Vue-Toastification" !default;
+$vt-toast-min-width: 326px !default;
+$vt-toast-max-width: 600px !default;
+$vt-toast-background: #fff !default;
+$vt-toast-min-height: 64px !default;
+$vt-toast-max-height: 800px !default;
+$vt-color-default: $color-primary-25 !default;
+$vt-text-color-default: $color-primary-700 !default;
+$vt-color-info: $color-primary-25 !default;
+$vt-text-color-info: $color-primary-700 !default;
+$vt-color-success: $color-success-25 !default;
+$vt-text-color-success: $color-success-700 !default;
+$vt-color-warning: $color-warning-25 !default;
+$vt-text-color-warning: $color-warning-700 !default;
+$vt-color-error: $color-error-25 !default;
+$vt-text-color-error: $color-error-700 !default;
+$vt-color-progress-default: linear-gradient(to right, #4cd964, #5ac8fa, #007aff, #34aadc, #5856d6, #ff2d55) !default;
+$vt-mobile: "only screen and (max-width : 600px)" !default;
+$vt-not-mobile: "only screen and (min-width : 600px)" !default;
+$vt-font-family: "Lato", helvetica, "Roboto", arial, sans-serif !default;
+$vt-z-index: 9999 !default;
+
+// Import the regular Vue Toastification stylesheets (or create your own)
+@import "vue-toastification/src/scss/_variables";
+@import "vue-toastification/src/scss/_toastContainer";
+@import "vue-toastification/src/scss/_toast";
+@import "vue-toastification/src/scss/_closeButton";
+@import "vue-toastification/src/scss/_progressBar";
+@import "vue-toastification/src/scss/_icon";
+@import "vue-toastification/src/scss/animations/_bounce";

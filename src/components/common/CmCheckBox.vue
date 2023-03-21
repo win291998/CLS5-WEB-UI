@@ -78,7 +78,6 @@ watch(() => propsValue.modelValue, value => {
   <VTooltip
     :text="propsValue.tooltipLabel"
     offset="10"
-
     location="start"
     :disabled="!propsValue.tooltip"
   >
