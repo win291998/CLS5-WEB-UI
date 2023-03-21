@@ -36,7 +36,7 @@ export default class MethodsUtil {
       language: localStorage.getItem('lang') === null ? 'vi' : localStorage.getItem('lang'),
     }
 
-    const data = method === 'GET' ? model : payload || model
+    const data = method === 'GET' ? model : !window._.isEmpty(payload) ? payload : model
     const params = method === 'GET' ? payload : null
 
     const response = await window.axios({
@@ -49,6 +49,8 @@ export default class MethodsUtil {
 
     const fileURL = window.URL.createObjectURL(new Blob([response]))
 
+    console.log(fileURL)
+
     const fileLink = document.createElement('a')
 
     fileLink.href = fileURL
@@ -57,6 +59,13 @@ export default class MethodsUtil {
     fileLink.click()
   }
 
+  /**
+   * @name: Request API
+   * @param {string} url => Đường dẫn api
+   * @param {string} method => Phương thức 'POST', 'GET'
+   * @param {any} payload =>  Dữ liệu đính kèm api
+   * @return {object}
+   */
   static requestApiCustom = async (url = '', method = 'GET', payload?: any) => {
     if (url === undefined)
       return

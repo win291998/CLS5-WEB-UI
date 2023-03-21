@@ -1,4 +1,4 @@
-import type { typeCardImage, typeCardImageEnum } from '@/typescript/enums/enums'
+import type { typeCardImage, typeCardImageEnum, typeStatusToast } from '@/typescript/enums/enums'
 
 export interface globaleInterface {
   isRender: boolean
@@ -22,3 +22,5 @@ export interface infImageCard {
   type: typeCardImageEnum
   src: string
 }
+
+export type typeToast = typeof typeStatusToast[number]

@@ -11,7 +11,13 @@ export interface ImportFile {
   urlFileDefault: string
   method: string
 }
+export interface tableImport {
+  header: Array<any>
+}
 export interface Config {
+  customId?: string
+  routerBack?: string
+  table: tableImport
   dowloadSample?: DowloadSample
   importFile?: ImportFile
 }
