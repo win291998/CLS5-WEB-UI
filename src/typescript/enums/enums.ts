@@ -9,3 +9,4 @@ export enum TYPE_REQUEST {
   PUT = 'PUT',
   UPDATE = 'UPDATE',
 }
+export const size = ['x-small', 'small', 'default', 'large', 'x-large'] as const

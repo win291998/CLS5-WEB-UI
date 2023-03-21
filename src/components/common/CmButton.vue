@@ -16,16 +16,12 @@ import { loadButton } from '@/store/button'
 interface Props {
   isLoad: boolean
   block: boolean
-  text?: string
   color?: string
   rounded?: string
   icon?: string
   variant?: string
   size?: string
   disabled?: boolean
-}
-interface Emit {
-  (e: 'click', idxBtn: number): void
 }
 
 const props = withDefaults(defineProps<Props>(), ({
@@ -36,7 +32,9 @@ const props = withDefaults(defineProps<Props>(), ({
 }))
 
 const emit = defineEmits<Emit>()
-
+interface Emit {
+  (e: 'click', idxBtn: number): void
+}
 const store = loadButton()
 const indexLoad = ref(0)
 const { addButton, buttonLoading } = store
@@ -47,12 +45,6 @@ onMounted(() => {
   indexLoad.value = store.countButton - 1
   buttons.value.push(false)
 })
-
-// rounded: Không truyền, lg, 0, pill
-// const rounded = ''
-
-// size: x-small, small, Không truyền  , large, x-large
-// const size = 'x-small'
 
 const handleClick = () => {
   buttonLoading(indexLoad.value)
@@ -76,8 +68,18 @@ const isDisabled = computed(() => {
     :class="props.color"
     @click="handleClick"
   >
-    <span v-if="text">{{ text }}</span>
-    <slot v-else />
+    <template #prepend>
+      <slot name="prepend" />
+    </template>
+
+    <template
+      #default
+    >
+      <slot />
+    </template>
+    <template #append>
+      <slot name="append" />
+    </template>
   </VBtn>
 </template>
 

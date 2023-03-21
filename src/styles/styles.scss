@@ -29,51 +29,76 @@
 .btn {
   &-primary {
     border-color: $color-primary-600;
-    background-color: $color-primary-600;
+    background-color: $color-primary-600 !important;
     color: $color-white !important;
   }
 
   &-error {
     border-color: $color-error-600;
-    background-color: $color-error-600;
+    background-color: $color-error-600!important;
     color: $color-white !important;
   }
 
   &-warning {
     border-color: $color-warning-600;
-    background-color: $color-warning-600;
+    background-color: $color-warning-600!important;
     color: $color-white !important;
   }
 
   &-success {
     border-color: $color-success-600;
-    background-color: $color-success-600;
+    background-color: $color-success-600!important;
     color: $color-white !important;
   }
 
   &-dark {
     border-color: $color-gray-700;
-    background-color: $color-gray-700;
+    background-color: $color-gray-700!important;
     color: $color-white !important;
   }
 }
+/* shadow*/ 
+.shadow-lg {
+  box-shadow: $box-shadow-lg !important;
+}
 
-// outline
-// .outline-primary {
-//   outline-color: $color-primary-600 !important;
-// }
+.shadow-md {
+  box-shadow: $box-shadow-md !important;
+}
+.shadow-xs {
+  box-shadow: $box-shadow-xs !important;
+}
+.shadow-sm {
+  box-shadow: $box-shadow-sm !important;
+}
+.shadow-xl {
+  box-shadow: $box-shadow-xl !important;
+}
+.shadow-2xl {
+  box-shadow: $box-shadow-2xl !important;
+}
+.shadow-3xl {
+  box-shadow: $box-shadow-3xl !important;
+}
 
-// .outline-error {
-//   background-color: $color-error-600;
-// }
 
-// .outline-warning {
-//   background-color: $color-warning-600;
-// }
+/*background card*/ 
+.bg-primary-50 {
+  background-color: $color-primary-50!important;
+}
+.bg-success-50 {
+  background-color: $color-success-50!important;
+}
+.bg-warning-50 {
+  background-color: $color-warning-50!important;
+}
+.bg-pink-50 {
+  background-color: $color-pink-50!important;
+}
+.bg-error-50 {
+  background-color: $color-error-50!important;
+}
 
-// .outline-success {
-//   background-color: $color-success-600;
-// }
 
 // .outline-dark {
 //   background-color: $color-gray-700;
@@ -99,4 +124,71 @@
 
 .group-child-4 {
   padding-inline-start: 80px;
+}
+
+.border-left-primary {
+  border-left: 1px solid $color-primary-700;
+}
+.border-left-error {
+  border-left: 1px solid $color-error-700;
+}
+.border-left-warning {
+  border-left: 1px solid $color-warning-700;
+}
+.border-left-success {
+  border-left: 1px solid $color-success-700;
+}
+.border-left-dark {
+  border-left: 1px solid $color-gray-700;
+}
+
+
+.btn-primary:hover {
+  background-color: $color-primary-700 !important;
+  box-shadow: unset;
+}
+.btn-error:hover {
+  background-color: $color-error-700 !important;
+  box-shadow: unset;
+}
+.btn-success:hover {
+  background-color: $color-success-700 !important; 
+  box-shadow: unset;
+}
+.btn-dark:hover {
+  background-color: $color-gray-700 !important;
+  box-shadow: unset;
+}
+.btn-warning:hover {
+  background-color: $color-warning-700 !important;
+  box-shadow: unset;
+}
+
+
+[class$=primary]:focus {
+  z-index: 999;
+  box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05), 0px 0px 0px 4px $color-primary-100;
+}
+[class$=warning]:focus {
+  z-index: 999;
+  box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05), 0px 0px 0px 4px $color-warning-100;
+}
+[class$=dark]:focus {
+  z-index: 999;
+  box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05), 0px 0px 0px 4px $color-gray-100;
+}
+[class$=success]:focus {
+  z-index: 999;
+  box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05), 0px 0px 0px 4px $color-success-100 ;
+}
+
+[class$=error]:focus {
+  z-index: 999;
+  box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05), 0px 0px 0px 4px $color-error-100;
+}
+
+
+
+.cursor-pointer {
+  cursor: pointer;
 }
