@@ -5,6 +5,8 @@ const Globals = Object.freeze({
   PAGINATION_PAGE_SIZE_LARGE_OPTION: [10, 20, 50, 100, 200, 500, 1000, 2000, 4000], // Các option lựa chọn số lượng một page table lớn
   PAGINATION_TOTAL_VISIABLE: 6,
   PAGINATION_CURRENT_PAGE: 1,
+  MAX_ITEM_SELECT_MULT: 3,
+  MAX_ITEM_ACTION: 2,
 
   /** File */
   documentExtention: '.doc, .docx, .pptx, .pptm, .ppt, .pdf, application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document',

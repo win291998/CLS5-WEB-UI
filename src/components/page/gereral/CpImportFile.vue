@@ -1,10 +1,10 @@
 <script setup lang="ts">
+import { useRouter } from 'vue-router'
 import CmButton from '@/components/common/CmButton.vue'
 import CmTable from '@/components/common/CmTable.vue'
 import Globals from '@/constant/Globals'
 import { useImportFileStore } from '@/stores/ImportFile'
 import MethodsUtil from '@/utils/MethodsUtil'
-
 import type { Config } from '@/typescript/interface/import'
 
 // interface
@@ -15,11 +15,17 @@ interface Props {
 
 /** ** Khởi tạo prop emit */
 const props = withDefaults(defineProps<Props>(), ({
-  config: () => ({}),
+  config: () => ({
+    customId: 'id',
+    table: {
+      header: [],
+    },
+  }),
 }))
 
 /** ** Khởi tạo store */
 const store = useImportFileStore()
+const router = useRouter()
 const { paramsImport } = store
 const { checkInvalidData, fileChange, updateFromFile } = store
 
@@ -27,8 +33,7 @@ const isEditing = ref(false)
 
 const headers = reactive([
   { text: '', value: 'checkbox' },
-  { text: 'Thông Tin Người Dùng', value: 'infor' },
-  { text: 'Mã Người Dùng Mới', value: 'newEmail' },
+  ...props?.config?.table?.header,
 ])
 
 const headersInvalid = computed(() => {
@@ -76,10 +81,13 @@ const handleEditTable = () => {
   isEditing.value = !isEditing.value
 }
 
-const itemSelected = (status, item) => {
-  const checked = paramsImport.validData.find((row: any) => row.key = item.key)
-  if (checked)
-    (checked as any).isSelected = item.value
+const updateFromFileHandle = async () => {
+  const back = await updateFromFile()
+  if (back === 'back' && props?.config?.routerBack)
+    router.push({ name: props.config.routerBack })
+}
+
+const handleSelectedRows = (listSelected: any) => {
 }
 </script>
 
@@ -114,7 +122,9 @@ const itemSelected = (status, item) => {
         <CmTable
           :headers="headers"
           :items="paramsImport.validData"
-          @itemSelected="itemSelected"
+          return-object
+          is-import-file
+          @selectedRows="handleSelectedRows"
         />
       </div>
     </div>
@@ -141,6 +151,7 @@ const itemSelected = (status, item) => {
           :headers="headersInvalid"
           :items="paramsImport.invalidData"
           :is-editing="isEditing"
+          is-import-file
           @changeCellvalue="changeCellvalue"
         />
       </div>
@@ -151,7 +162,7 @@ const itemSelected = (status, item) => {
           </CmButton>
         </div>
         <div class="cp-import-file-btn-footer">
-          <CmButton @click="updateFromFile">
+          <CmButton @click="updateFromFileHandle">
             Thêm người dùng
           </CmButton>
         </div>

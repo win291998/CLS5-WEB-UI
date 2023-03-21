@@ -6,9 +6,14 @@ import CmPagination from './CmPagination.vue'
 import svgChecked from '@/assets/images/svg/checkbox-tick.svg?raw'
 import svgIndeterminate from '@/assets/images/svg/indeterminate.svg?raw'
 import CmDropDown from '@/components/common/CmDropDown.vue'
+import CmSelect from '@/components/common/CmSelect.vue'
 import Globals from '@/constant/Globals'
 import ArrayUtil from '@/utils/ArrayUtil'
 
+interface HeaderCustom extends Header {
+  type?: string
+  combobox?: any
+}
 interface groupOptions {
   allowEmptySelect?: boolean
   collapsable?: boolean
@@ -16,13 +21,15 @@ interface groupOptions {
 }
 interface Props {
   groupOptions?: groupOptions
-  headers: Header[]
+  headers: HeaderCustom[]
   items?: Item[]
   rowClassName?: string
   pageSize?: number
   isEditing?: boolean
   customId?: string
   isExpand?: boolean
+  returnObject?: boolean
+  isImportFile?: boolean
 }
 interface Emit {
   (e: 'handleClickRow', dataRow: object): void
@@ -43,6 +50,8 @@ const props = withDefaults(defineProps<Props>(), ({
   }),
   isEditing: false,
   isExpand: false,
+  returnObject: false,
+  isImportFile: false,
   rowClassName: '',
   pageSize: Globals.PAGINATION_PAGE_SIZE_DEFAULT,
   customId: 'id',
@@ -56,44 +65,10 @@ const dataTable = ref()
 const selectedRows = ref<any>([])
 
 const selectedAll = computed(() => {
-  if (props?.groupOptions?.enabled === true) {
-    let count = 0
-    props.items?.forEach(element => {
-      if (element.children)
-        count += element?.children?.length
-
-      else
-        count += 1
-    })
-
-    return (
-      selectedRows.value
-          && selectedRows.value?.length > 0
-          && selectedRows.value?.length === count
-    )
-  }
-
   return (selectedRows.value && selectedRows.value.length > 0 && selectedRows.value.length === props.items.length)
 })
 
 const indeterminate = computed(() => {
-  if (props.groupOptions.enabled === true) {
-    let count = 0
-    props.items?.forEach(element => {
-      if (element.children)
-        count += element?.children?.length
-
-      else
-        count += 1
-    })
-
-    return (
-      selectedRows.value
-          && selectedRows.value.length > 0
-          && selectedRows.value.length < count
-    )
-  }
-
   return (
     selectedRows.value
         && selectedRows.value.length > 0
@@ -101,10 +76,26 @@ const indeterminate = computed(() => {
   )
 })
 
+const keyid = computed(() => {
+  return props?.isImportFile ? 'key' : props.customId
+})
+
+console.log(props?.isImportFile)
+console.log(keyid)
+
 const pageSize = ref(props.pageSize) // số lượng item trên 1 page
 const currentPage = ref<number>(Globals.PAGINATION_CURRENT_PAGE) // item hiện tại
 
 /** method */
+// cập nhật selectedRows
+const updateSelectedRows = () => {
+  selectedRows.value = []
+  props.items.forEach((item: any) => {
+    if (item.isSelected)
+      selectedRows.value.push(item[keyid.value])
+  })
+}
+
 // click chọn tất cả hoặc bỏ tất cả
 const checkedAll = (value: any) => {
   selectedRows.value = []
@@ -115,12 +106,12 @@ const checkedAll = (value: any) => {
         if (element.children) {
           element.children?.forEach((child: any) => {
             child.isSelected = true
-            selectedRows.value.push(child[props.customId])
+            selectedRows.value.push(child[keyid.value])
           })
         }
         else {
           element.isSelected = true
-          selectedRows.value.push(element[props.customId])
+          selectedRows.value.push(element[keyid.value])
         }
       })
     }
@@ -129,7 +120,7 @@ const checkedAll = (value: any) => {
     }
   }
   else {
-    selectedRows.value = !value ? props.items.map(item => item[props.customId]) : []
+    selectedRows.value = !value ? props.items.map(item => item[keyid.value]) : []
 
     props.items?.forEach(element => {
       if (!(element.isDisabled && element.isDisabled === true))
@@ -148,12 +139,24 @@ const showRow = (item: ClickRowArgument) => {
 
 // sự kiện click chọn item
 const checkedItem = (rows: any, item: any) => {
+  if (props.returnObject) {
+    const selectItemsObject = rows.map((key: any) => {
+      const objectItem = props.items.find(itemProp => itemProp[keyid.value] === key)
+
+      return objectItem || {}
+    })
+
+    emit('selectedRows', selectItemsObject)
+  }
+  else {
+    emit('selectedRows', rows)
+  }
   emit('itemSelected', item)
-  emit('selectedRows', rows)
+  console.log(rows, item)
 
-  const value = rows.includes(item[props.customId])
+  const value = rows.includes(item[keyid.value])
 
-  const action = props.items?.findIndex(element => element[props.customId] === item[props.customId])
+  const action = props.items?.findIndex(element => element[keyid.value] === item[keyid.value])
 
   if (action > -1)
     // eslint-disable-next-line vue/no-mutating-props
@@ -189,6 +192,11 @@ const changeCellvalue = (event: any, field: string, key: number) => {
 
   emit('changeCellvalue', event, field, key)
 }
+
+// watch
+watch(() => props.items, value => {
+  updateSelectedRows()
+}, { deep: true })
 </script>
 
 <template>
@@ -201,7 +209,8 @@ const changeCellvalue = (event: any, field: string, key: number) => {
       :items="items"
       :rows-per-page="pageSize"
       theme-color="#1849a9"
-      :item-key="props.customId"
+      table-min-height="100"
+      :item-key="keyid"
       fixed-expand
       hide-footer
       :body-row-class-name="rowClassName"
@@ -244,12 +253,12 @@ const changeCellvalue = (event: any, field: string, key: number) => {
         context  => nội dung hàng
       -->
       <template
-        v-for="(items, id) in headers"
+        v-for="(itemsHeader, id) in headers"
+        #[`item-${itemsHeader.value}`]="context"
         :key="id"
-        #[`item-${items.value}`]="context"
       >
         <span
-          v-if="items.value === 'select' && context.isSuccess === false"
+          v-if="itemsHeader.value === 'select' && context.isSuccess === false"
         >
           <VueFeather
             type="alert-triangle"
@@ -260,19 +269,19 @@ const changeCellvalue = (event: any, field: string, key: number) => {
             activator="parent"
             location="bottom"
           >
-            {{ context.messageErr }}
+            <div v-html="context.messageErr" />
           </VTooltip>
         </span>
 
         <div
-          v-else-if="items.value === 'checkbox'"
+          v-else-if="itemsHeader.value === 'checkbox'"
           class="player-wrapper"
         >
           <VCheckbox
             v-if="!context?.children?.length"
             v-model="selectedRows"
             multiple
-            :value="context[props.customId]"
+            :value="context[keyid]"
             :true-icon="() => {
               return h('div', { innerHTML: svgChecked })
             }"
@@ -280,7 +289,7 @@ const changeCellvalue = (event: any, field: string, key: number) => {
           />
         </div>
         <div
-          v-else-if="items.value === 'action'"
+          v-else-if="itemsHeader.value === 'action'"
           class="player-wrapper d-flex justify-end"
         >
           <template v-for="(actionItem, idKey) in context.action ">
@@ -293,7 +302,7 @@ const changeCellvalue = (event: any, field: string, key: number) => {
                 :type="actionItem.icon"
                 :size="actionItem.size || 18"
                 class="color-error align-middle"
-                @click="actionItem?.action?.event ? actionItem?.action?.event() : ''"
+                @click="actionItem?.action?.event ? actionItem?.action() : ''"
               />
               <VTooltip
                 activator="parent"
@@ -303,31 +312,41 @@ const changeCellvalue = (event: any, field: string, key: number) => {
               </VTooltip>
             </div>
             <div
-              v-if="idKey >= 2"
+              v-if="idKey >= Globals.MAX_ITEM_ACTION"
               :key="idKey"
             >
               <div class="action-more px-2">
-                <CmDropDown :list-item="ArrayUtil.sliceArray(context.action, 2)" />
+                <CmDropDown :list-item="ArrayUtil.sliceArray(context.action, Globals.MAX_ITEM_ACTION)" />
               </div>
             </div>
           </template>
         </div>
+        <div v-else-if="isErrorcell(itemsHeader.value, context) && isEditing && itemsHeader?.type === 'combobox'">
+          <CmSelect
+            :max-item="Globals.MAX_ITEM_SELECT_MULT"
+            :items="itemsHeader?.combobox?.data"
+            :item-title="itemsHeader?.combobox?.key"
+            :item-value="itemsHeader?.combobox?.value"
+            :multiple="itemsHeader?.combobox?.multiple"
+            @change="changeCellvalue($event, itemsHeader.value, context.key)"
+          />
+        </div>
         <VTextField
-          v-else-if="isErrorcell(items.value, context) && isEditing"
-          v-model="context[items.value]"
+          v-else-if="isErrorcell(itemsHeader.value, context) && isEditing"
+          v-model="context[itemsHeader.value]"
           class="input-edit-cell"
           type="text"
           :error="context.errors.length"
-          @update:modelValue="changeCellvalue($event, items.value, context.id)"
+          @update:modelValue="changeCellvalue($event, itemsHeader.value, context.key)"
         />
 
         <span
           v-else
           :class="{
-            'color-error': isErrorcell(items.value, context),
+            'color-error': isErrorcell(itemsHeader.value, context),
           }"
         >
-          {{ context[items.value] }}
+          {{ context[itemsHeader.value] }}
         </span>
       </template>
     </EasyDataTable>

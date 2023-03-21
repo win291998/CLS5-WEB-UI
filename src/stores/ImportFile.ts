@@ -1,14 +1,17 @@
 import { defineStore } from 'pinia'
 import readXlsxFile from 'read-excel-file'
 import type { Config } from '@/typescript/interface/import'
-
+import toast from '@/plugins/toast'
 import MethodsUtil from '@/utils/MethodsUtil'
+import ObjectUtil from '@/utils/ObjectUtil'
 
 export const useImportFileStore = defineStore('importFile', () => {
   /** variable */
   const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
-  const type = ref()
-  const config = reactive<Config>({})
+  const type = ref(2)
+  const config = reactive<Config>({ table: { header: [] } })
+
+  console.log(type.value)
 
   const paramsImport = reactive({
     validData: [],
@@ -36,28 +39,28 @@ export const useImportFileStore = defineStore('importFile', () => {
 
   const getValidData = async (listData: Array<object>, paramExtend?: object) => {
     const model = {
-      listLocal: paramsImport.validData,
+      listLocal: [],
       listExcel: listData,
       isSave: false,
       type: 2,
       ...paramExtend,
     }
 
-    const res = await window.axios.put('/User/update-email-excel', model).then((value: any) => value)
+    const res = await MethodsUtil.requestApiCustom(config.importFile?.urlFileDefault, config.importFile?.method, model).then((value: any) => value)
 
     checkDataError(res.data)
 
     const validData = res.data.filter((item: any) => item.isSuccess === true)
     if (validData) {
       validData.forEach((element: never, id: number) => {
-        (element as any).id = id
-        paramsImport.validData.push(element)
+        (element as any).key = id
       })
+      paramsImport.validData = validData
     }
     const inValidData = res.data.filter((item: any) => item.isSuccess === false)
     if (inValidData) {
       inValidData.forEach((element: never, id: number) => {
-        (element as any).id = id
+        (element as any).key = id
       })
       paramsImport.invalidData = inValidData
     }
@@ -84,13 +87,13 @@ export const useImportFileStore = defineStore('importFile', () => {
         paramsImport.validData.push(element)
       })
       paramsImport.validData.forEach((element: any, id: number) => {
-        (element as any).id = id
+        (element as any).key = id
       })
     }
     const inValidData = res.data.filter((item: any) => item.isSuccess === false)
     if (inValidData) {
       inValidData.forEach((element: never, id: number) => {
-        (element as any).id = id
+        (element as any).key = id
       })
       paramsImport.invalidData = inValidData
     }
@@ -127,31 +130,46 @@ export const useImportFileStore = defineStore('importFile', () => {
       listData: <any[]>[],
     })
 
+    console.log(paramsImport.validData)
     paramsImport.validData.forEach((item: any, index: number) => {
+      console.log(item)
+
       if (item.isSelected) {
         list.listIndex.push(index)
         list.listData.push(item)
       }
     })
-    if (!list.listIndex.length) {
-      list.listIndex = paramsImport.validData.map((item, id) => id)
-      list.listData = paramsImport.validData
+    console.log(list)
+
+    let model = {
+      listExcel: list.listData,
+      isSave: true,
+      typeUpdate: 2,
     }
 
-    // const model = {
-    //   listExcel: listData,
-    //   isSave: true,
-    //   type: this.type,
-    //   typeUpdate: 2,
-    // }
+    if (!ObjectUtil.isEmpty(type.value)) {
+      model = {
+        ...model,
+        ...{
+          type: type.value,
+        },
+      }
+    }
 
-    // const { data } = await this.$store.dispatch(`${USER_STORE_MODULE}/updateMailFromFile`, model)
+    const res = await MethodsUtil.requestApiCustom(config.importFile?.urlFileDefault, config.importFile?.method, model).then((value: any) => value)
 
-    // if (data) {
-    //   listIndex.reverse().forEach(item => {
-    //     this.validData.splice(item, 1)
-    //   })
-    // }
+    if (res?.data && res?.code === 200) {
+      toast('SUCCESS', res?.message)
+
+      list.listIndex.reverse().forEach(item => {
+        paramsImport.validData.splice(item, 1)
+      })
+      if (paramsImport.validData.length === 0 && paramsImport.invalidData.length === 0)
+        return 'back'
+    }
+    else {
+      toast('ERROR', res?.message)
+    }
   }
 
   return { getValidData, checkInvalidData, checkDataError, paramsImport, fileChange, config, type, updateFromFile }
