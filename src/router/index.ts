@@ -1,10 +1,10 @@
 import { setupLayouts } from 'virtual:generated-layouts'
 import { createRouter, createWebHistory } from 'vue-router'
-import user from './user'
+import admin from '@/router/admin/admin.router'
 import { loadButton } from '@/store/button'
 
 const generalRoutes = [
-  ...user,
+  ...admin,
 ]
 
 const router = createRouter({
