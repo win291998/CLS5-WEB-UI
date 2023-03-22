@@ -30,3 +30,7 @@ dist-ssr
 
 # iconify dist files
 src/@iconify/*.js
+auto-imports.d.ts
+components.d.ts
+
+cert
