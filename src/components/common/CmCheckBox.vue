@@ -43,7 +43,7 @@ const propsValue = withDefaults(defineProps<Props>(), ({
   falseIcon: undefined,
   falseValue: undefined,
   focused: false,
-  hideDetails: undefined,
+  hideDetails: true,
   id: undefined,
   indeterminateIcon: undefined,
   trueIcon: undefined,
@@ -57,8 +57,8 @@ const propsValue = withDefaults(defineProps<Props>(), ({
   theme: undefined,
   trueValue: undefined,
   type: undefined,
-  tooltip: true,
-  tooltipLabel: 'Tooltip',
+  tooltip: false,
+  tooltipLabel: '',
 }))
 
 const emit = defineEmits<Emit>()
@@ -86,7 +86,7 @@ watch(() => propsValue.modelValue, value => {
         <VCheckbox
           :id="propsValue.id"
           v-model="checkbox"
-          :color="propsValue.color"
+          :class="propsValue.color"
           :disabled="propsValue.disabled"
           :indeterminate="propsValue.indeterminate"
           :error="propsValue.error"
@@ -117,4 +117,33 @@ watch(() => propsValue.modelValue, value => {
     </template>
   </VTooltip>
 </template>
+
+<style lang="scss">
+@use "/src/styles/style-global" as *;
+.color-error {
+  .v-selection-control__input {
+    color: $color-error-600;
+  }
+}
+.color-primary {
+  .v-selection-control__input {
+    color: $color-primary-600;
+  }
+}
+.color-warning {
+  .v-selection-control__input {
+    color: $color-warning-600;
+  }
+}
+.color-gray {
+  .v-selection-control__input {
+    color: $color-gray-600;
+  }
+}
+.color-success {
+  .v-selection-control__input {
+    color: $color-success-600;
+  }
+}
+</style>
 
