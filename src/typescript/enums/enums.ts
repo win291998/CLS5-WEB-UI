@@ -1,5 +1,6 @@
 export const typeCardImage = ['full', 'head', undefined] as const
 export const typeStatusToast = ['DEFAULT', 'INFO', 'SUCCESS', 'ERROR', 'WARNING'] as const
+export const typeVariant = ['tonal', 'flat', 'text', 'elevated', 'outlined', 'plain', undefined] as const
 export enum typeCardImageEnum {
   full, head, undefined,
 }

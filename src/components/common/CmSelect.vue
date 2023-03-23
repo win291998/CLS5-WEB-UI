@@ -7,6 +7,8 @@ interface Props {/** ** Interface */
   itemTitle?: string
   itemValue?: string
   label?: string
+  bgColor?: string
+  text?: string
   placeholder?: string
 }
 interface Emit {
@@ -22,6 +24,8 @@ const props = withDefaults(defineProps<Props>(), ({
   itemTitle: 'key',
   itemValue: 'value',
   label: undefined,
+  bgColor: 'white',
+  text: undefined,
   placeholder: 'Chọn',
 }))
 
@@ -38,7 +42,12 @@ const handleChangeValue = event => {
 </script>
 
 <template>
-  <VContainer fluid>
+  <div class="mb-1">
+    <label
+      class="text-medium-sm color-dark"
+    >{{ props.text }}</label>
+  </div>
+  <div>
     <VSelect
       v-model="value"
       class="v-select-limit-width"
@@ -48,6 +57,7 @@ const handleChangeValue = event => {
       :label="label"
       :multiple="multiple"
       :placeholder="placeholder"
+      :bg-color="bgColor"
       :menu-props="{
         maxHeight: '300px',
         maxWidth: '100px',
@@ -67,11 +77,6 @@ const handleChangeValue = event => {
         </span>
       </template>
     </VSelect>
-  </VContainer>
+  </div>
 </template>
 
-<!--
-  <style lang="scss" scoped>
-
-  </style>
--->

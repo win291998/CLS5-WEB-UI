@@ -1,10 +1,25 @@
 import { setupLayouts } from 'virtual:generated-layouts'
 import { createRouter, createWebHistory } from 'vue-router'
-import user from './user'
+import admin from '@/router/admin/admin.router'
 import { loadButton } from '@/store/button'
 
 const generalRoutes = [
-  ...user,
+  {
+    path: '/',
+    name: 'login',
+    meta: {
+      layout: 'blank',
+      parent: '',
+      pageTitle: 'Quản lí người dùng',
+      auth: {
+        permissionKey: 'UserManaging',
+        permissionValue: 1,
+      },
+
+    },
+    component: () => import('@/pages/login.vue'),
+  },
+  ...admin,
 ]
 
 const router = createRouter({

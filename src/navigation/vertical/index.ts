@@ -3,7 +3,7 @@ import type { VerticalNavItems } from '@/@layouts/types'
 export default [
   {
     title: 'Home',
-    to: { name: 'user' },
+    to: { name: 'admin' },
     icon: { icon: 'tabler-smart-home' },
   },
 
@@ -14,7 +14,7 @@ export default [
   // },
   // {
   //   title: 'Guilde',
-  //   icon: { icon: 'tabler-file' },
+  //   icon: { icon: 'tabler-users' },
   //   children: [
   //     { title: 'table', to: 'guilde-table' },
   //     { title: 'tableGroup', to: { name: 'guilde-table-group' } },
@@ -23,4 +23,17 @@ export default [
   //     { title: 'importFile', to: { name: 'guilde-import-file' } },
   //   ],
   // },
+
+  {
+    title: 'Quản lý tổ chức',
+    icon: { icon: 'tabler-file' },
+    children: [
+      { title: 'Phân quyền người dùng', to: { name: 'admin-organization-permistion' } },
+      { title: 'Người dùng', to: { name: 'admin-organization-users' } },
+      { title: 'Nhóm người dùng', to: { name: 'admin-organization-user-groups' } },
+      { title: 'Cơ cấu tổ chức', to: { name: 'admin-organization-org-struct' } },
+      { title: 'Vị trí chức danh', to: { name: 'admin-organization-position-title' } },
+      { title: 'Năng lực', to: { name: 'admin-organization-capacity' } },
+    ],
+  },
 ] as VerticalNavItems
