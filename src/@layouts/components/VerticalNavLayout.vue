@@ -148,6 +148,7 @@ export default defineComponent({
 @use "@configured-variables" as variables;
 @use "@layouts/styles/placeholders";
 @use "@layouts/styles/mixins";
+@use "@/styles/variables/config/color" as *;
 
 .layout-wrapper.layout-nav-type-vertical {
   // TODO(v2): Check why we need height in vertical nav & min-height in horizontal nav
@@ -157,6 +158,7 @@ export default defineComponent({
     display: flex;
     flex-direction: column;
     flex-grow: 1;
+    background-color: $color-vertical-layout;
     min-block-size: calc(var(--vh, 1vh) * 100);
     transition: padding-inline-start 0.2s ease-in-out;
     will-change: padding-inline-start;
