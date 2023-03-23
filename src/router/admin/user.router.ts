@@ -78,21 +78,6 @@ export default [
     component: () => import('@/pages/UserChilChilChilChil.vue'),
   },
   {
-    path: '/',
-    name: 'login',
-    meta: {
-      layout: 'blank',
-      parent: '',
-      pageTitle: 'Quản lí người dùng',
-      auth: {
-        permissionKey: 'UserManaging',
-        permissionValue: 1,
-      },
-
-    },
-    component: () => import('@/pages/login.vue'),
-  },
-  {
     path: '/guilde/tree-select',
     name: 'guilde-tree-select',
     component: () => import('@/pages/guilde/tree-select.vue'),
@@ -127,17 +112,32 @@ export default [
       {
         path: 'permistion',
         name: 'admin-organization-permistion',
-        component: () => import('@/pages/admin/organization/permistion/Index.vue'),
+        component: () => import('@/pages/admin/organization/permission/Permission.vue'),
       },
       {
         path: 'users',
         name: 'admin-organization-users',
-        component: () => import('@/pages/admin/organization/users/Index.vue'),
+        component: () => import('@/pages/admin/organization/users/Users.vue'),
       },
       {
         path: 'user-groups',
         name: 'admin-organization-user-groups',
-        component: () => import('@/pages/admin/organization/user-groups/Index.vue'),
+        component: () => import('@/pages/admin/organization/user-groups/UserGroups.vue'),
+      },
+      {
+        path: 'org-struct',
+        name: 'admin-organization-org-struct',
+        component: () => import('@/pages/admin/organization/org-struct/OrgStruct.vue'),
+      },
+      {
+        path: 'position-title',
+        name: 'admin-organization-position-title',
+        component: () => import('@/pages/admin/organization/position-title/PositionTitle.vue'),
+      },
+      {
+        path: 'capacity',
+        name: 'admin-organization-capacity',
+        component: () => import('@/pages/admin/organization/capacity/Capacity.vue'),
       },
     ],
   },

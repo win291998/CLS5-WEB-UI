@@ -4,6 +4,21 @@ import admin from '@/router/admin/admin.router'
 import { loadButton } from '@/store/button'
 
 const generalRoutes = [
+  {
+    path: '/',
+    name: 'login',
+    meta: {
+      layout: 'blank',
+      parent: '',
+      pageTitle: 'Quản lí người dùng',
+      auth: {
+        permissionKey: 'UserManaging',
+        permissionValue: 1,
+      },
+
+    },
+    component: () => import('@/pages/login.vue'),
+  },
   ...admin,
 ]
 

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { loadButton } from '@/store/button'
+import type { typeVariant } from '@/typescript/enums/enums'
 
 /*
   isLoad: boolean cho phép button loading hay không
@@ -17,18 +18,25 @@ interface Props {
   isLoad: boolean
   block: boolean
   color?: string
+  bgColor?: string
   rounded?: string
   icon?: string
-  variant?: string
+  variant?: typeof typeVariant[number]
   size?: string
+  textColor?: string
   disabled?: boolean
+  className?: string
 }
 
 const props = withDefaults(defineProps<Props>(), ({
   isLoad: false,
   block: false,
   disabled: false,
-  color: 'btn-primary',
+  color: '',
+  textColor: '',
+  bgColor: '',
+  className: '',
+  variant: 'tonal',
 }))
 
 const emit = defineEmits<Emit>()
@@ -52,20 +60,22 @@ const handleClick = () => {
 }
 
 const isDisabled = computed(() => {
-  return props.disabled || buttons[indexLoad.value]
+  return props.disabled
 })
 </script>
 
 <template>
   <VBtn
     :loading="props.isLoad ? buttons[indexLoad] : false"
-    variant="outlined"
-    :block="props.block"
+    :variant="props.variant"
+    :block="block"
     :disabled="isDisabled"
-    :icon="props.icon"
-    :size="props.size"
-    :rounded="props.rounded"
-    :class="props.color"
+    :icon="icon"
+    :size="size"
+    :rounded="rounded"
+    color="white"
+    class="text-style-btn"
+    :class="[color, bgColor, className]"
     @click="handleClick"
   >
     <template #prepend>
@@ -75,7 +85,9 @@ const isDisabled = computed(() => {
     <template
       #default
     >
-      <slot />
+      <div :class="[textColor]">
+        <slot />
+      </div>
     </template>
     <template #append>
       <slot name="append" />
@@ -85,43 +97,53 @@ const isDisabled = computed(() => {
 
 <style lang="scss">
 @use "/src/styles/style-global" as *;
-//
 
- @-moz-keyframes loader {
-    from {
-      transform: rotate(0);
-    }
-    to {
-      transform: rotate(360deg);
-    }
+.text-style-btn {
+  text-transform: inherit;
+}
+
+@keyframes loader {
+  from {
+    transform: rotate(0);
   }
 
-  .custom-loader {
-    animation: loader 1s infinite;
-    display: flex;
+  to {
+    transform: rotate(360deg);
   }
-  @-webkit-keyframes loader {
-    from {
-      transform: rotate(0);
-    }
-    to {
-      transform: rotate(360deg);
-    }
+}
+
+.custom-loader {
+  display: flex;
+  animation: loader 1s infinite;
+}
+
+@keyframes loader {
+  from {
+    transform: rotate(0);
   }
-  @-o-keyframes loader {
-    from {
-      transform: rotate(0);
-    }
-    to {
-      transform: rotate(360deg);
-    }
+
+  to {
+    transform: rotate(360deg);
   }
-  @keyframes loader {
-    from {
-      transform: rotate(0);
-    }
-    to {
-      transform: rotate(360deg);
-    }
+}
+
+@keyframes loader {
+  from {
+    transform: rotate(0);
   }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes loader {
+  from {
+    transform: rotate(0);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
 </style>

@@ -1,17 +1,16 @@
-<script lang="ts" setup>
+<script setup lang="ts">
+import CpHeaderAction from '@/components/page/gereral/CpHeaderAction.vue'
+import CpPermisstionFilter from '@/components/page/Admin/organization/permission/CpPermisstionFilter.vue'
 import CmTable from '@/components/common/CmTable.vue'
 
-const groupOptions = {
-  allowEmptySelect: false,
-  collapsable: false,
-  enabled: false,
-}
+/** params */
+const disabledDelete = ref(true)
+const isShowFilter = ref(true)
 
 const headers = reactive([
   { text: '', value: 'checkbox' },
   { text: 'PLAYER', value: 'player' },
   { text: 'TEAM', value: 'team' },
-  { text: 'ORG', value: 'org' },
   { text: 'NUMBER', value: 'number' },
   { text: 'POSITION', value: 'position' },
   { text: 'HEIGHT', value: 'height' },
@@ -89,30 +88,40 @@ const items = reactive ([
   { customId: 21, isSelected: false, player: 'Giannis Antetokounmpo', team: 'MIL', number: 34, position: 'F', indicator: { height: '6-11', weight: 242 }, lastAttended: 'Filathlitikos', country: 'Greece' },
 ])
 
-const handleClickRow = (e: any) => {
-  // console.log(e)
-}
+/** Method */
+const handleClickBtn = (type: string) => {
+  console.log(type)
+  switch (type) {
+    case 'fillter':
+      isShowFilter.value = !isShowFilter.value
+      break
 
-const selectedRows = (e: any) => {
-  // console.log(e)
-}
-
-const splitRow = () => {
-  // console.log(headers)
-  headers.splice(1, 1)
+    default:
+      break
+  }
 }
 </script>
 
 <template>
+  <div
+    v-if="isShowFilter"
+    class="filter-action"
+  >
+    <CpPermisstionFilter />
+  </div>
+  <div>
+    <CpHeaderAction
+      is-delete
+      :disabled-delete="disabledDelete"
+      is-fillter
+      @click="handleClickBtn"
+    />
+  </div>
   <div>
     <CmTable
-      :group-options="groupOptions"
       :headers="headers"
       :items="items"
-      custom-id="customId"
-      is-expand
-      @handleClickRow="handleClickRow"
-      @selectedRows="selectedRows"
     />
   </div>
 </template>
+
