@@ -11,8 +11,6 @@ export const useImportFileStore = defineStore('importFile', () => {
   const type = ref(2)
   const config = reactive<Config>({ table: { header: [] } })
 
-  console.log(type.value)
-
   const paramsImport = reactive({
     validData: [],
     invalidData: [],
@@ -130,16 +128,12 @@ export const useImportFileStore = defineStore('importFile', () => {
       listData: <any[]>[],
     })
 
-    console.log(paramsImport.validData)
     paramsImport.validData.forEach((item: any, index: number) => {
-      console.log(item)
-
       if (item.isSelected) {
         list.listIndex.push(index)
         list.listData.push(item)
       }
     })
-    console.log(list)
 
     let model = {
       listExcel: list.listData,

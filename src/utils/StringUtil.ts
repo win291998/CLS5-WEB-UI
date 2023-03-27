@@ -19,4 +19,16 @@ export default class StringUtil {
 
     return str
   }
+
+  static formatFullName = (firstName: string, lastName: string) => {
+    const lang = localStorage.getItem('lang') === null ? 'vi' : localStorage.getItem('lang')
+    switch (lang) {
+      case 'vi':
+        return `${lastName || '-'} ${firstName || '-'}`
+      case 'en':
+        return `${firstName || '-'} ${lastName || '-'}`
+      default:
+        return `${lastName || '-'} ${firstName || '-'}`
+    }
+  }
 }

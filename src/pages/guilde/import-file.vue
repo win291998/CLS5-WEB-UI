@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import ApiUser from '@/api/user/index'
-import ApiCombobox from '@/api/combobox/index'
+import ComboboxService from '@/api/combobox/index'
 import CpImportFile from '@/components/page/gereral/CpImportFile.vue'
 import type { Config } from '@/typescript/interface/import'
 import MethodsUtil from '@/utils/MethodsUtil'
@@ -20,14 +20,11 @@ import { TYPE_REQUEST } from '@/typescript/enums/enums'
 // }
 // Cập nhật năng lực
 const dataColumnExcel = (rowData: Array<any>) => {
-  console.log(rowData)
-
   // eslint-disable-next-line prefer-const
   let [name, groupProficiency, levelProficiencies, description] = rowData
 
   levelProficiencies = levelProficiencies?.split(',')
   levelProficiencies = levelProficiencies.map((level: any) => level.trim())
-  console.log(name, groupProficiency, levelProficiencies, description)
 
   return { name, groupProficiency, levelProficiencies, description }
 }
@@ -40,10 +37,7 @@ const combobox = reactive({
 // method
 
 const getComboboxGroupProficiency = async () => {
-  const res = await MethodsUtil.requestApiCustom(ApiCombobox.GroupProficiency, TYPE_REQUEST.GET).then((value: any) => value)
-
-  console.log(res)
-  console.log(window._.isEmpty(res.data))
+  const res = await MethodsUtil.requestApiCustom(ComboboxService.GroupProficiency, TYPE_REQUEST.GET).then((value: any) => value)
 
   if (!window._.isEmpty(res?.data))
     combobox.comboboxGroupProficiency = res.data
@@ -56,10 +50,7 @@ const getComboboxProficiencyLevel = async () => {
     pageSize: 10000,
   }
 
-  const res = await MethodsUtil.requestApiCustom(ApiCombobox.ProficiencyLevel, TYPE_REQUEST.POST, params).then((value: any) => value)
-
-  console.log(res)
-  console.log(window._.isEmpty(res.data))
+  const res = await MethodsUtil.requestApiCustom(ComboboxService.ProficiencyLevel, TYPE_REQUEST.POST, params).then((value: any) => value)
 
   if (!window._.isEmpty(res?.data?.pageLists))
     combobox.comboboxLevel = res.data.pageLists

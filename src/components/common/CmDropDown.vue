@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import CmCheckBox from './CmCheckBox.vue'
+import MethodsUtil from '@/utils/MethodsUtil'
 
 /**
  * listItem: danh sách các item
@@ -15,20 +16,22 @@ import CmCheckBox from './CmCheckBox.vue'
 
 interface Props {
   listItem: item[]
-  icon: string
+  icon?: string
   multiple?: boolean
+  customKey: string
+  type?: number
 }
 interface item {
-  title: string
   icon?: string
   colorClass?: string
   action?: any
   appendItem?: appendItem
   prependItem?: prependItem
+  [key: string]: any
 }
 interface appendItem {
   icon?: string
-  title?: string
+  [key: string]: any
 }
 interface prependItem {
   isShow: boolean
@@ -39,9 +42,11 @@ interface prependItem {
 
 const propsValue = withDefaults(defineProps<Props>(), ({
   listItem: () => ([]),
-  icon: 'more-vertical',
+  icon: 'tabler:dots-vertical',
   checkbox: true,
   multiple: false,
+  customKey: 'title',
+  type: undefined,
 }))
 
 const emit = defineEmits<Emit>()
@@ -68,9 +73,10 @@ const handleClickItem = (event: any) => {
     >
       <template #activator="{ props }">
         <div v-bind="props">
-          <VueFeather
+          <VIcon
+            v-if="propsValue.icon"
             v-bind="props"
-            :type="propsValue.icon"
+            :icon="propsValue.icon "
             :size="18"
           />
         </div>
@@ -81,6 +87,7 @@ const handleClickItem = (event: any) => {
           v-for="(item, i) in propsValue.listItem"
           :key="i"
           class="border-bottom-item cursor-pointer"
+          :value="item"
           @click="handleClickItem($event)"
         >
           <template
@@ -94,27 +101,28 @@ const handleClickItem = (event: any) => {
             />
           </template>
           <VListItemTitle
-            @click="item?.action ? item?.action() : ''"
+            @click="item?.action ? propsValue.type === 1 ? item?.action(MethodsUtil.checlActionKey(item?.id)) : item?.action() : ''"
           >
-            <VueFeather
-              :type="item?.icon"
-              :size="12"
+            <VIcon
+              v-if="item?.icon"
+              :icon="item?.icon"
+              :size="18"
               class="mr-2 color-dark"
               :class="[item.colorClass]"
             />
-            <span class="text-medium-sm">{{ item.title }}</span>
+            <span class="text-medium-sm">{{ item[customKey] }}</span>
           </VListItemTitle>
           <template #append>
-            <VueFeather
+            <VIcon
               v-if="item?.appendItem?.icon"
-              :type="item?.appendItem?.icon"
+              :icon="item?.appendItem?.icon"
               :size="12"
               class="mr-2 color-dark"
               :class="[item.colorClass]"
             />
             <span
-              v-if="item?.appendItem?.title"
-            > {{ item?.appendItem?.title }}</span>
+              v-if="item?.appendItem?.[customKey] "
+            > {{ item?.appendItem[customKey] }}</span>
           </template>
         </VListItem>
       </VList>
@@ -128,8 +136,8 @@ const handleClickItem = (event: any) => {
 .cm-drop-down {
   .border-bottom-item {
     border-radius: 0 !important;
-    border-bottom: 1px solid $color-gray-100;
-    margin-inline: 0!important;
+    border-block-end: 1px solid $color-gray-100;
+    margin-inline: 0 !important;
   }
 }
 </style>

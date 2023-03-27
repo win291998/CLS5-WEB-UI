@@ -31,8 +31,6 @@ const props = withDefaults(defineProps<Props>(), ({
 
 const emit = defineEmits<Emit>()
 
-console.log(props.items)
-
 const value = ref([])
 
 /** method */

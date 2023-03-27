@@ -11,15 +11,15 @@ import CmDropDown from '@/components/common/CmDropDown.vue'
 import CmButtonGroup from '@/components/common/CmButtonGroup.vue'
 
 const handleItem1 = value => {
-  console.log(value)
+  // console.log(value)
 }
 
 const handleItem2 = value => {
-  console.log(value)
+  // console.log(value)
 }
 
 const handleItem3 = (value: any) => {
-  console.log(value)
+  // console.log(value)
 }
 
 const action = [{
@@ -49,12 +49,12 @@ const action = [{
 }]
 
 const handleClick = (value: any) => {
-  console.log(action)
+  // console.log(action)
 }
 
 // action.value =
 watch(action, () => {
-  console.log(action)
+  // console.log(action)
 }, { deep: true })
 
 const store = loadButton()

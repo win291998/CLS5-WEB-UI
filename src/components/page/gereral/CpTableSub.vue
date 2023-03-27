@@ -87,7 +87,7 @@ const items = reactive([
 ])
 
 const showRow = (item: ClickRowArgument) => {
-  console.log(item)
+  // console.log(item)
 }
 </script>
 
@@ -135,8 +135,8 @@ const showRow = (item: ClickRowArgument) => {
               :class="[context?.option_2?.colorClass]"
               variant="tonal"
             >
-              <VueFeather
-                :type="context?.option_2?.icon"
+              <VIcon
+                :icon="context?.option_2?.icon"
                 size="14"
                 class="color-dark"
               />
