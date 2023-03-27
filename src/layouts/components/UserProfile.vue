@@ -1,5 +1,20 @@
 <script setup lang="ts">
 import avatar1 from '@/assets/images/avatars/avatar-1.png'
+
+// import { userData } from '@/store/button'
+
+import jwtDefaultConfig from '@/auth/jwtDefaultConfig'
+
+const router = useRouter()
+
+function handleLogout() {
+  localStorage.removeItem(jwtDefaultConfig.storageTokenKeyName)
+  localStorage.removeItem(jwtDefaultConfig.storageRefreshTokenKeyName)
+  localStorage.removeItem(jwtDefaultConfig.menuItems)
+  localStorage.removeItem(jwtDefaultConfig.role)
+  localStorage.removeItem(jwtDefaultConfig.userData)
+  router.push('/')
+}
 </script>
 
 <template>
@@ -111,7 +126,7 @@ import avatar1 from '@/assets/images/avatars/avatar-1.png'
           <VDivider class="my-2" />
 
           <!-- 👉 Logout -->
-          <VListItem to="/login">
+          <VListItem @click="handleLogout">
             <template #prepend>
               <VIcon
                 class="me-2"

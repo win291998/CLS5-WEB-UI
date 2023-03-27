@@ -4,6 +4,11 @@ import { useGenerateImageVariant } from '@core/composable/useGenerateImageVarian
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 import { themeConfig } from '@themeConfig'
 import { emailValidator, requiredValidator } from '@validators'
+import jwtDefaultConfig from '@/auth/jwtDefaultConfig'
+import { getHomeRouteForLoggedInUser } from '@/auth/utils'
+import systemService from '@/api/system-service/index'
+import MethodsUtil from '@/utils/MethodsUtil'
+import AuthUtil from '@/auth'
 
 import authV2LoginIllustrationBorderedDark from '@/assets/images/pages/auth-v2-login-illustration-bordered-dark.png'
 import authV2LoginIllustrationBorderedLight from '@/assets/images/pages/auth-v2-login-illustration-bordered-light.png'
@@ -16,11 +21,175 @@ const authThemeImg = useGenerateImageVariant(authV2LoginIllustrationLight, authV
 
 const authThemeMask = useGenerateImageVariant(authV2MaskLight, authV2MaskDark)
 
+const router = useRouter()
+
 const isPasswordVisible = ref(false)
 
-const email = ref('admin@demo.com')
-const password = ref('admin')
+const email = ref('sinhtv')
+const password = ref('123123')
 const rememberMe = ref(false)
+const captcha = ref({})
+
+const handleLogin = () => {
+  const userData = {
+    email: email.value,
+    password: password.value,
+    captcha: '',
+    remember: rememberMe,
+  }
+
+  AuthUtil.login(userData)
+    .then((res: any) => {
+      console.log(res)
+      handleAfterLogin(res)
+    })
+
+    .catch((error: any) => {
+      const err = error?.response?.data
+
+      // this.$hideLoading()
+      if (err?.message) {
+        //
+      }
+    })
+}
+
+// eslint-disable-next-line sonarjs/cognitive-complexity
+function handleAfterLogin(response: any) {
+  // this.$hideLoading()
+  if (response?.code === 200) {
+    if (response.data?.securityCode) {
+      router.push({ name: 'auth-reset-password', params: { id: response.data.securityCode } })
+
+      return
+    }
+    const userData = response.data.userProfile
+
+    AuthUtil.setToken(response.data.accessToken)
+    AuthUtil.setRefreshToken(response.data.refreshToken)
+
+    const userProfile = {
+      id: userData.id,
+      fullName: MethodsUtil.formatFullName(userData.firstName, userData.lastName),
+      firstName: userData.firstName,
+      lastName: userData.lastName,
+      userName: userData.userName,
+      avatar: userData.avatar,
+      role: 'admin',
+      ability: [{ action: 'manage', subject: 'all' }],
+      roles: userData.roles,
+      logo: response.data.logo,
+      smallLogo: response.data.icon,
+      languageCode: userData.languageCode,
+    }
+
+    localStorage.setItem(jwtDefaultConfig.userData, JSON.stringify(userProfile))
+
+    // this.$store.commit('app/UPDATE_USERDATA', userProfile)
+    // this.$ability.update([{ action: 'manage', subject: 'all' }])
+
+    // lưu danh sách phân quyền
+    // store.commit('app/UPDATE_PERMISSION', parseJwt(response.data.accessToken))
+    if (userData.roles.length > 0)
+      localStorage.setItem(jwtDefaultConfig.role, userData.roles[0].name)
+
+    // this.requestPermissionNotifications()
+    // this.$store.dispatch(`${CONNECTION_MODULE_STORE}/updateLoginConnection`)
+    // this.$store.dispatch(`${CONNECTION_MODULE_STORE}/getGeneralNotificationSetting`)
+
+    const urlParams = new URLSearchParams(window.location.search)
+    if (['casperlms.cls.vn', 'stavian.cls.vn', 'daotaoyody.cls.vn'].includes(window.location.hostname)) {
+      window.axios.get(`${systemService.GetListWidget}`)
+        .then((data: any) => {
+          if (data?.data?.length > 0) {
+            router.push({ name: 'home-page' })
+          }
+          else {
+            router.push(urlParams.has('redirect') ? urlParams.get('redirect') : getHomeRouteForLoggedInUser(userData.roles))
+              .finally(() => {
+                //
+              })
+          }
+        }).catch(() => {
+          router.push(urlParams.has('redirect') ? urlParams.get('redirect') : getHomeRouteForLoggedInUser(userData.roles))
+            .finally(() => {
+              //
+            })
+        })
+    }
+    else {
+      router.push({ name: 'user' })
+
+      // router.push(urlParams.has('redirect') ? urlParams.get('redirect') : getHomeRouteForLoggedInUser(userData.roles))
+        .then(() => {
+          //
+        })
+        .catch(() => {
+          // this.$refs.loginForm.setErrors(error.response.data.error)
+        })
+    }
+  }
+  else if (response.errors !== null) {
+    // response.errors.forEach((element: any) => {
+    //   if (captcha)
+    //     captcha.reset()
+
+    //   switch (element.location) {
+    //     case 'Password':
+    //       this.$refs.password.setErrors([this.$t(element.message)])
+    //       break
+    //     case 'Email':
+    //       this.$refs.userName.setErrors([this.$t(element.message)])
+    //       break
+    //     case 'Captcha':
+    //       if (!captcha && window) {
+    //         captcha.value = window.captcha
+
+    //         const captchaElement = document.getElementById('recaptcha-element')
+    //         if (captcha && captcha.render && captchaElement) {
+    //           captcha.render(captchaElement, {
+    //             sitekey: '6LcShtwhAAAAAP6CApkGjB3ZUzpLwCTsu1W_S0p_',
+
+    //             // // eslint-disable-next-line no-undef
+    //             // if (grecaptcha) {
+    //             //   if (!this.captcha) {
+    //             //     // eslint-disable-next-line no-undef
+    //             //     this.captcha = grecaptcha
+    //             //     this.captcha.ready(() => {
+    //             //       this.captcha.execute('6LefuYciAAAAAFFZYo76FgG8n2mrgnfPIXmPCKfv', { action: 'submit' }).then(token => {
+    //             //         this.captchaToken = token
+    //             //       })
+    //           })
+    //         }
+
+    //         // this.captcha.execute('6LefuYciAAAAAFFZYo76FgG8n2mrgnfPIXmPCKfv', { action: 'submit' }).then(token => {
+    //         //   this.captchaToken = token
+    //         // })
+    //       }
+    //       else {
+    //         console.log(element.message)
+
+    //         // this.$bvToast.toast(this.$t(element.message), {
+    //         //   title: this.$t('common.notification'),
+    //         //   variant: 'danger',
+    //         //   toaster: this.$toastPosition,
+    //         //   solid: true,
+    //         // })
+    //       }
+    //       break
+    //     default:
+    //       break
+    //   }
+    // })
+  }
+  else {
+    console.log(response.message)
+
+    // this.$bvToast.toast(this.$t(response.message), {
+    //   title: this.$t('common.notification'), variant: 'danger', toaster: this.$toastPosition, solid: true,
+    // })
+  }
+}
 </script>
 
 <template>
@@ -71,29 +240,31 @@ const rememberMe = ref(false)
             Please sign-in to your account and start the adventure
           </p>
         </VCardText>
-        <VCardText>
+        <!--
+          <VCardText>
           <VAlert
-            color="primary"
-            variant="tonal"
+          color="primary"
+          variant="tonal"
           >
-            <p class="text-caption mb-2">
-              Admin Email: <strong>admin@demo.com</strong> / Pass: <strong>admin</strong>
-            </p>
-            <p class="text-caption mb-0">
-              Client Email: <strong>client@demo.com</strong> / Pass: <strong>client</strong>
-            </p>
+          <p class="text-caption mb-2">
+          Admin Email: <strong>admin@demo.com</strong> / Pass: <strong>admin</strong>
+          </p>
+          <p class="text-caption mb-0">
+          Client Email: <strong>client@demo.com</strong> / Pass: <strong>client</strong>
+          </p>
           </VAlert>
-        </VCardText>
+          </VCardText>
+        -->
         <VCardText>
-          <VForm @submit.prevent="() => {}">
+          <VForm @submit.prevent="handleLogin">
             <VRow>
               <!-- email -->
               <VCol cols="12">
                 <VTextField
                   v-model="email"
-                  label="Email"
-                  type="email"
-                  :rules="[requiredValidator, emailValidator]"
+                  label="Tên đăng nhập"
+                  type="text"
+                  :rules="[requiredValidator]"
                 />
               </VCol>
 
