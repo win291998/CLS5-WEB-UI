@@ -8,7 +8,7 @@ export default [
     redirect: { name: 'dashboard' },
     children: [
       {
-        path: '/dashboard',
+        path: 'dashboard',
         name: 'dashboard',
         component: () => import('@/pages/admin/dashboard/index.vue'),
       },
@@ -17,4 +17,6 @@ export default [
       ...user,
     ],
   },
+
+  // quản lý admin khác layout
 ]
