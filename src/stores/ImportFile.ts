@@ -63,7 +63,7 @@ export const useImportFileStore = defineStore('importFile', () => {
       paramsImport.invalidData = inValidData
     }
 
-    // showAddButton = validData.length > 0
+    // showaddComponent = validData.length > 0
   }
 
   const checkInvalidData = async () => {
@@ -96,7 +96,7 @@ export const useImportFileStore = defineStore('importFile', () => {
       paramsImport.invalidData = inValidData
     }
 
-    // this.showAddButton = this.validData.length > 0
+    // this.showaddComponent = this.validData.length > 0
   }
 
   const fileChange = (event: any) => {

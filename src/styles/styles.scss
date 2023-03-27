@@ -20,6 +20,18 @@
 .color-dark-300 {
   color: $color-gray-300 !important;
 }
+.color-success-300 {
+  color: $color-success-300 !important;
+}
+.color-error-300 {
+  color: $color-error-300 !important;
+}
+.color-primary-300 {
+  color: $color-primary-300 !important;
+}
+.color-warning-300 {
+  color: $color-warning-300 !important;
+}
 
 .color-primary {
   color: $color-primary-600 !important;
@@ -234,3 +246,11 @@
 .cursor-pointer {
   cursor: pointer;
 }
+
+
+
+.font-weight-600 {
+  font-weight: $weight-md;
+}
+
+

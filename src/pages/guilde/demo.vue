@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 import { useToast } from 'vue-toastification'
-import { loadButton } from '@/store/button'
+import { load } from '@/stores/loadComponent'
 import CmButton from '@/components/common/CmButton.vue'
 
 import CmDateStage from '@/components/common/CmDateStage.vue'
@@ -9,6 +9,29 @@ import CmCheckBox from '@/components/common/CmCheckBox.vue'
 import CmCard from '@/components/common/CmCard.vue'
 import CmDropDown from '@/components/common/CmDropDown.vue'
 import CmButtonGroup from '@/components/common/CmButtonGroup.vue'
+import CmSwitch from '@/components/common/CmSwitch.vue'
+
+const showToast = () => {
+  console.log(button123.value)
+
+  // console.log(button123.value.unLoadButton())
+  button123?.value.unLoadButton()
+
+  toast('win hello', {
+    position: 'top-right',
+    timeout: 5000,
+    closeOnClick: true,
+    pauseOnFocusLoss: true,
+    pauseOnHover: true,
+    draggable: true,
+    draggablePercent: 0.6,
+    showCloseButtonOnHover: true,
+    hideProgressBar: true,
+    closeButton: false,
+    icon: true,
+    rtl: true,
+  })
+}
 
 const handleItem1 = value => {
   // console.log(value)
@@ -40,9 +63,18 @@ const action = [{
   },
 },
 {
+  title: 'Tải file',
+  icon: 'download',
+  action: handleItem2,
+  prependItem: {
+    value: true,
+    action: () => { console.log(action) },
+  },
+},
+{
   title: 'Chỉnh sửa',
   icon: 'edit',
-  action: handleItem3,
+  action: showToast,
   prependItem: {
     value: true,
   },
@@ -57,10 +89,10 @@ watch(action, () => {
   // console.log(action)
 }, { deep: true })
 
-const store = loadButton()
+const store = load()
 
-const { countButton } = storeToRefs(store)
-const { loadMultipleButtons, buttonUnLoading } = store
+const { countComponent } = storeToRefs(store)
+const { loadMultiplecomponents, unLoadComponent } = store
 
 const router = useRouter()
 
@@ -70,29 +102,17 @@ const handlerPreButton = () => {
 
 const toast = useToast()
 
-const showToast = () => {
-  toast('win hello', {
-    position: 'top-right',
-    timeout: 5000,
-    closeOnClick: true,
-    pauseOnFocusLoss: true,
-    pauseOnHover: true,
-    draggable: true,
-    draggablePercent: 0.6,
-    showCloseButtonOnHover: true,
-    hideProgressBar: true,
-    closeButton: false,
-    icon: true,
-    rtl: true,
-  })
-}
+const button123 = ref(null)
 </script>
 
 <template>
   <h1>Quản lí người dùng chil</h1>
+  <CmSwitch
+    :list-item="action"
+    color="dark"
+  />
   <CmDropDown
     :list-item="action"
-    multiple
   />
   <CmButtonGroup
     :list-item="action"
@@ -101,12 +121,13 @@ const showToast = () => {
     hello win
   </CmButtonGroup>
 
-  <VBtn @click="loadMultipleButtons([1, 2, 3])">
+  <VBtn @click="loadMultiplecomponents([1, 2, 3])">
     loading
   </VBtn>
   <CmButton
-    text="button "
+    ref="button123"
     is-load
+    color="primary"
     @click="handleClick"
   >
     <template #append>
@@ -118,43 +139,47 @@ const showToast = () => {
     </template>
   </CmButton>
   <CmButton
+    title=""
+    icon="activity"
     text="button "
-    color="color-success"
+    is-load
+    color="success"
     @click="handleClick"
   />
   <CmButton
     text="button"
     is-load
-    color="btn-success"
+    color="success"
     variant="outlined"
     @click="handleClick"
   >
     hello222
   </CmButton>
   <CmButton
+    is-load
     text="button "
     variant="outlined"
-    color="color-error"
+    color="error"
     @click="handleClick"
   >
     hello123
   </CmButton>
   <CmButton
     text="button "
-    color="btn-error"
+    color="error"
     @click="showToast"
   >
     hello
   </CmButton>
   <CmCheckBox
-    color="color-error"
+    color="error"
     @click="showToast"
   />
-  <CmCheckBox color="color-primary" />
-  <CmCheckBox color="color-warning" />
-  <CmCheckBox color="color-success" />
+  <CmCheckBox color="primary" />
+  <CmCheckBox color="warning" />
+  <CmCheckBox color="success" />
   <CmCheckBox
-    color="color-gray"
+    color="gray"
     @click="showToast"
   />
 

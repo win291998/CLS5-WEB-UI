@@ -1,12 +1,11 @@
 import { defineStore } from 'pinia'
 import { useRoute } from 'vue-router'
+import AuthUtil from '@/auth'
 
-export const usersStore = defineStore({
-  id: 'userDetails',
+export const userData = defineStore({
+  id: 'userData',
   state: () => ({
-    name: '',
-    age: 0,
-    email: '',
+    userData: AuthUtil.getUserData(),
   }),
   actions: {
     loadUserDetails() {

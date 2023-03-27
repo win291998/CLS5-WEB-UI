@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { loadButton } from '@/store/button'
+import { load } from '@/stores/loadComponent.js'
 import type { typeVariant } from '@/typescript/enums/enums'
 
 /*
@@ -15,6 +15,7 @@ import type { typeVariant } from '@/typescript/enums/enums'
 */
 
 interface Props {
+  title?: string
   isLoad?: boolean
   block?: boolean
   color?: string
@@ -26,56 +27,73 @@ interface Props {
   textColor?: string
   disabled?: boolean
   className?: string
+  positionIcon?: string
+  colorIcon?: string
 }
 
 const props = withDefaults(defineProps<Props>(), ({
   isLoad: false,
   block: false,
   disabled: false,
-  color: '',
+  color: 'primary',
   textColor: '',
   bgColor: '',
   className: '',
   variant: 'tonal',
+  positionIcon: '',
 }))
 
 const emit = defineEmits<Emit>()
 interface Emit {
   (e: 'click', idxBtn: number): void
 }
-const store = loadButton()
+const store = load()
 const indexLoad = ref(0)
-const { addButton, buttonLoading } = store
-const { buttons } = storeToRefs(store)
+const { addComponent, loadComponent, unLoadComponent } = store
+const { components } = storeToRefs(store)
 
 onMounted(() => {
-  addButton()
-  indexLoad.value = store.countButton - 1
-  buttons.value.push(false)
+  addComponent()
+  indexLoad.value = store.countComponent - 1
+  components.value.push(false)
 })
 
 const handleClick = () => {
-  buttonLoading(indexLoad.value)
+  loadComponent(indexLoad.value)
   emit('click', indexLoad.value)
+}
+
+const unLoadButton = () => {
+  unLoadComponent(indexLoad.value)
 }
 
 const isDisabled = computed(() => {
   return props.disabled
 })
+
+const prefixColor = computed(() => {
+  if (props.variant === 'outlined')
+    return 'color'
+
+  return 'btn'
+})
+
+defineExpose({
+  unLoadButton,
+})
 </script>
 
 <template>
   <VBtn
-    :loading="props.isLoad ? buttons[indexLoad] : false"
+    :loading="props.isLoad ? components[indexLoad] : false"
     :variant="props.variant"
     :block="block"
     :disabled="isDisabled"
-    :icon="icon"
     :size="size"
     :rounded="rounded"
     color="white"
     class="text-style-btn"
-    :class="[color, bgColor, className]"
+    :class="[`${prefixColor}-${color}`, bgColor, className]"
     @click="handleClick"
   >
     <template #prepend>
@@ -86,7 +104,16 @@ const isDisabled = computed(() => {
       #default
     >
       <div :class="[textColor]">
-        <slot />
+        <slot v-if="!title && !icon" />
+        <div v-if="props.title || props.icon">
+          <VueFeather
+            v-if="props.icon"
+            :type="props.icon"
+            size="14"
+            :class="[props.colorIcon]"
+          />
+          <span>{{ title }}</span>
+        </div>
       </div>
     </template>
     <template #append>
@@ -95,55 +122,10 @@ const isDisabled = computed(() => {
   </VBtn>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @use "/src/styles/style-global" as *;
 
 .text-style-btn {
   text-transform: inherit;
-}
-
-@keyframes loader {
-  from {
-    transform: rotate(0);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.custom-loader {
-  display: flex;
-  animation: loader 1s infinite;
-}
-
-@keyframes loader {
-  from {
-    transform: rotate(0);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes loader {
-  from {
-    transform: rotate(0);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes loader {
-  from {
-    transform: rotate(0);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
 }
 </style>
