@@ -10,7 +10,6 @@ import CmSelect from '@/components/common/CmSelect.vue'
 import Globals from '@/constant/Globals'
 import ArrayUtil from '@/utils/ArrayUtil'
 import MethodsUtil from '@/utils/MethodsUtil'
-import { load } from '@/stores/loadComponent.js'
 
 interface HeaderCustom extends Header {
   type?: string
@@ -63,30 +62,6 @@ const props = withDefaults(defineProps<Props>(), ({
 }))
 
 const emit = defineEmits<Emit>()
-
-const store = load()
-const indexLoad = ref(0)
-const { addComponent, loadComponent, unLoadComponent } = store
-const { components } = storeToRefs(store)
-
-onMounted(() => {
-  addComponent()
-  indexLoad.value = store.countComponent - 1
-  components.value.push(false)
-})
-
-const loadTable = () => {
-  loadComponent(indexLoad.value)
-}
-
-const unLoadTable = () => {
-  unLoadComponent(indexLoad.value)
-}
-
-defineExpose({
-  loadTable,
-  unLoadTable,
-})
 
 // $ref dataTable
 const dataTable = ref()
@@ -226,7 +201,6 @@ watch(() => props.items, value => {
     <EasyDataTable
       ref="dataTable"
       alternating
-      :loading="components[indexLoad]"
       table-class-name="customize-table"
       :headers="headers"
       :items="items"
