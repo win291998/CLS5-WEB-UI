@@ -39,13 +39,13 @@ const orgModels = {
   content: [],
 }
 
-onMounted(() => {
-  TablePer.value.loadTable()
+// onMounted(() => {
+//   TablePer.value.loadTable()
 
-  setTimeout(() => {
-    TablePer.value.unLoadTable()
-  }, 5000)
-})
+//   setTimeout(() => {
+//     TablePer.value.unLoadTable()
+//   }, 5000)
+// })
 
 const actionItemView = () => {
   console.log('view')
@@ -94,9 +94,9 @@ const queryParam = reactive({
 /** Method */
 // Get list Users
 const fectchListUsers = async () => {
-  const res = await MethodsUtil.requestApiCustom(ApiUser.UsersList, TYPE_REQUEST.POST, queryParam).then((value: any) => value)
+  // const res = await MethodsUtil.requestApiCustom(ApiUser.UsersList, TYPE_REQUEST.POST, queryParam).then((value: any) => value)
 
-  // const res = await fetchData(ApiUser.UsersList, TYPE_REQUEST.POST, queryParam).then((value: any) => value)
+  const res = await fetchData(ApiUser.UsersList, TYPE_REQUEST.POST, queryParam).then((value: any) => value)
 
   if (res?.code === 200 && res?.data?.pageLists.length) {
     res.data.pageLists.forEach((item: any) => {
