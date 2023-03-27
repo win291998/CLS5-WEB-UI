@@ -139,7 +139,7 @@ export default {
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @use "/src/styles/style-global" as *;
 
 .pick-date-type {
@@ -164,12 +164,8 @@ export default {
   .pick-date-type-wrapper {
     display: flex;
     color: $color-gray-300;
-    font-family: Montserrat;
-    font-size: 14px;
-    font-weight: 500;
-    margin-inline-end: 2px;
-
-    .first-section {
+    margin-right: 2px;
+    .first-section{
       .item {
         &:first-of-type {
           border: 1px solid  $color-gray-300;
