@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import ApiUser from '@/api/user/index'
 import MethodsUtil from '@/utils/MethodsUtil'
+import DateUtil from '@/utils/DateUtil'
 import { TYPE_REQUEST } from '@/typescript/enums/enums'
 import StringUtil from '@/utils/StringUtil'
 
@@ -14,6 +15,7 @@ const CmTable = defineAsyncComponent(() => import('@/components/common/CmTable.v
 const CmAccodion = defineAsyncComponent(() => import('@/components/common/CmAccodion.vue'))
 
 /** params */
+const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 const disabledDelete = ref(true)
 const isShowFilter = ref(true)
 const route = useRoute()
@@ -22,8 +24,8 @@ const headers = reactive([
   { text: '', value: 'checkbox' },
   { text: 'Họ và tên', value: 'fullName' },
   { text: 'Vai trò', value: 'userTypeName' },
-  { text: 'Trạng thái', value: 'statusName' },
-  { text: 'Ngày tham gia', value: 'registeredDate' },
+  { text: 'Trạng thái', value: 'statusName', type: 'custom' },
+  { text: 'Ngày tham gia', value: 'registeredDate', type: 'custom' },
   { text: 'Tổ chức', value: 'organization', type: 'menu', width: 300 },
   { text: '', value: 'actions', width: 150 },
 ])
@@ -53,23 +55,38 @@ const titleModels = {
 }
 
 // hàm trả về các loại action khi click
-const actionItem = type => {
+const actionItem = (type: any) => {
   // console.log(type)
 }
 
 const items = ref ([])
 const totalRecord = ref (0)
 
-const queryParam = reactive({})
+const queryParam = reactive({
+  groupUser: [],
+  keyword: '',
+  modeAdd: null,
+  orStructure: [],
+  pageNumber: 1,
+  pageSize: 10,
+  role: 1,
+  sort: ['-createdDate'],
+  statusList: null,
+  timeFrom: '',
+  timeTo: '',
+  titleList: [],
+  userTypeList: null,
+})
 
 /** Method */
 // Get list Users
-const fectchListUsers = async (queryParam: any) => {
-  // const res = await MethodsUtil.requestApiCustom(ApiUser.UsersList, TYPE_REQUEST.POST, queryParam).then((value: any) => value)
-  const res = await fetchData(ApiUser.UsersList, TYPE_REQUEST.POST, queryParam).then((value: any) => value)
+const fectchListUsers = async () => {
+  const res = await MethodsUtil.requestApiCustom(ApiUser.UsersList, TYPE_REQUEST.POST, queryParam).then((value: any) => value)
+
+  // const res = await fetchData(ApiUser.UsersList, TYPE_REQUEST.POST, queryParam).then((value: any) => value)
 
   if (res?.code === 200 && res?.data?.pageLists.length) {
-    res.data.pageLists.forEach(item => {
+    res.data.pageLists.forEach((item: any) => {
       const titleData = window._.clone(item.orgModels)
 
       item.orgModels = {
@@ -93,6 +110,11 @@ const fectchListUsers = async (queryParam: any) => {
   totalRecord.value = res?.data?.totalRecord
 }
 
+const handlePageClick = async page => {
+  queryParam.pageNumber = page
+  await fectchListUsers()
+}
+
 const handleClickBtn = (type: string) => {
   switch (type) {
     case 'fillter':
@@ -110,7 +132,7 @@ watch(() => route.path, value => {
 }, { immediate: true })
 
 // created
-fectchListUsers(queryParam)
+fectchListUsers()
 </script>
 
 <template>
@@ -133,6 +155,7 @@ fectchListUsers(queryParam)
       :headers="headers"
       :items="items"
       :total-record="totalRecord"
+      @handlePageClick="handlePageClick"
     >
       <template #rowItem="{ col, context }">
         <div v-if="col === 'fullName'">
@@ -158,6 +181,22 @@ fectchListUsers(queryParam)
             custom-key="titleName"
             is-open
           />
+        </div>
+        <div v-if="col === 'registeredDate'">
+          <span>{{ DateUtil.formatDateToDDMM(context.registeredDate) }}</span>
+        </div>
+        <div v-if="col === 'statusName'">
+          <VChip
+            class="ma-2"
+            :class="MethodsUtil.checkStatusTypeUser(context.statusName)?.color"
+          >
+            <VIcon
+              start
+              icon="carbon:dot-mark"
+              size="12"
+            />
+            <span>{{ t(MethodsUtil.checkStatusTypeUser(context.statusName)?.name) }}</span>
+          </VChip>
         </div>
       </template>
     </CmTable>

@@ -39,6 +39,7 @@ interface Emit {
   (e: 'itemSelected', dataRow: object): void
   (e: 'checkedAll', checkedAll: boolean, data: object): void
   (e: 'changeCellvalue', value: string, field: string, key: number): void
+  (e: 'handlePageClick', page: number): void
 
 }
 
@@ -172,8 +173,11 @@ const updateRowsPerPageSelect = (e: number) => {
 const pageSizeChange = (page: number, size: number) => {
   currentPage.value = page
   pageSize.value = size
-  updatePage(page)
+  emit('handlePageClick', page)
   updateRowsPerPageSelect(size)
+
+  // phân trang local
+  // updatePage(page)
 }
 
 // kiểm tra cột lỗi
@@ -325,6 +329,7 @@ watch(() => props.items, value => {
           </div>
         </div>
         <div v-else-if="itemsHeader?.type === 'menu'" />
+        <div v-else-if="itemsHeader?.type === 'custom'" />
         <div v-else-if="isErrorcell(itemsHeader.value, context) && isEditing && itemsHeader?.type === 'combobox'">
           <CmSelect
             :max-item="Globals.MAX_ITEM_SELECT_MULT"
