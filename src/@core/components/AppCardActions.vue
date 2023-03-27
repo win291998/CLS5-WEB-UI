@@ -76,7 +76,7 @@ const triggeredRemove = () => {
             <div>
               <slot name="before-actions" />
 
-              <!-- SECTION Actions buttons -->
+              <!-- SECTION Actions components -->
 
               <!-- 👉 Collapse button -->
               <VBtn

@@ -19,12 +19,12 @@ import type { size } from '@/typescript/enums/enums'
 
 interface Props {
   listItem: ListItem[]
-  icon: string
+  icon?: string
   color?: string
-  isBorder: boolean
-  isDiabledPrepend: boolean
-  isDiabledAppend: boolean
-  size: typeof size[number]
+  isBorder?: boolean
+  isDiabledPrepend?: boolean
+  isDiabledAppend?: boolean
+  size?: typeof size[number]
 }
 interface ListItem {
   title: string
@@ -118,7 +118,7 @@ const clickItem = (item: object) => {
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @use "/src/styles/style-global" as *;
 
 .button-group-prepend {
