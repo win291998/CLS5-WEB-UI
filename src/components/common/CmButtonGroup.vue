@@ -25,6 +25,7 @@ interface Props {
   isDiabledPrepend?: boolean
   isDiabledAppend?: boolean
   size?: typeof size[number]
+  title: string
 }
 interface ListItem {
   title: string
@@ -90,9 +91,10 @@ const clickItem = (item: object) => {
         activator="parent"
       >
         <template #activator>
-          <VIcon
-            :icon="props.icon"
-            :size="18"
+          <VueFeather
+            v-if="icon"
+            :type="icon"
+            size="18"
           />
         </template>
         <VList>
@@ -104,12 +106,13 @@ const clickItem = (item: object) => {
             @click="item?.action ? item?.action(item) : clickItem(item)"
           >
             <VListItemTitle class="jutify-content-center">
-              <VIcon
+              <VueFeather
                 v-if="item.icon"
-                :icon="item.icon"
+                :type="item.icon"
                 size="14"
                 :class="[item.colorClass]"
-              /> <span class="ml-25">{{ item.title }}</span>
+              />
+              <span class="ml-25">{{ item.title }}</span>
             </VListItemTitle>
           </VListItem>
         </VList>

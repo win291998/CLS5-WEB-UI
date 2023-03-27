@@ -26,6 +26,12 @@ export default [
   },
   {
     path: '/guilde/demo',
+    meta: {
+      layout: 'blank',
+      permission: {
+        key: '123',
+      },
+    },
     name: 'guilde-demo',
     component: () => import('@/pages/guilde/demo.vue'),
   },
@@ -34,6 +40,12 @@ export default [
   {
     path: '/organization',
     name: 'admin-organization',
+    meta: {
+      layout: 'blank',
+      permission: {
+        key: '',
+      },
+    },
     redirect: { name: 'admin-organization-permistion' },
     children: [
       {
@@ -43,6 +55,11 @@ export default [
       },
       {
         path: 'users',
+        meta: {
+          requireAuth: {
+            permission: 'UserManaging',
+          },
+        },
         name: 'admin-organization-users',
         component: () => import('@/pages/admin/organization/users/Users.vue'),
       },
