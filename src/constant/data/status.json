@@ -1,0 +1,72 @@
+{
+    "StatusTypeUser": [
+        {
+            "id": 1,
+            "name": "IdentityService_Pending",
+            "color": "color-warning",
+            "note": "Đang chờ"
+        },
+        {
+            "id": 2,
+            "name": "IdentityService_Active",
+            "color": "color-success",
+            "note": "Hoạt động"
+        },
+        {
+            "id": 3,
+            "name": "IdentityService_Inactive",
+            "color": "color-dark",
+            "note": "Tạm nghỉ"
+        },
+        {
+            "id": 4,
+            "name": "IdentityService_Deleted",
+            "color": "color-error",
+            "note": "Đã xóa"
+        },
+        {
+            "id": 5,
+            "name": "IdentityService_Quitted",
+            "color": "color-error",
+            "note": "Đã nghỉ"
+        }
+    ],
+    "StatusTypeCourse": [
+        {
+            "id": 1,
+            "name": "QuestionService.ExamEditing",
+            "color": "color-dark",
+            "note": "Đang chỉnh sửa"
+        },
+        {
+            "id": 2,
+            "name": "QuestionService.ExamPending",
+            "color": "color-primary",
+            "note": "Chờ duyệt"
+        },
+        {
+            "id": 3,
+            "name": "QuestionService.ExamUpcoming",
+            "color": "color-warning",
+            "note": "Sắp diễn ra"
+        },
+        {
+            "id": 4,
+            "name": "QuestionService.ExamActive",
+            "color": "color-success",
+            "note": "Đang diễn ra"
+        },
+        {
+            "id": 5,
+            "name": "QuestionService.ExamDeclined",
+            "color": "color-error",
+            "note": "Trả lại"
+        },
+        {
+            "id": 6,
+            "name": "QuestionService.ExamEnd",
+            "color": "color-error",
+            "note": "Kết thúc"
+        }
+    ]
+}

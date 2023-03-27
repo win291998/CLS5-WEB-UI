@@ -20,6 +20,21 @@ export default class StringUtil {
     return str
   }
 
+  /**
+   * @name: Format làm tròn số
+   * @param number: số cần làm tròn
+   * @param numFixed: làm tròn đến bao nhiêu số thập phân
+   * @return {string}
+   */
+  static decimalToFixed = (numberFix = 0, numFixed: number) => {
+    const num = numberFix.toFixed(numFixed)
+    const arrNum = num.split('.')
+    if (Number(arrNum[1]) === 0)
+      return Number(arrNum[0])
+
+    return Number(Number(num).toString())
+  }
+
   static formatFullName = (firstName: string, lastName: string) => {
     const lang = localStorage.getItem('lang') === null ? 'vi' : localStorage.getItem('lang')
     switch (lang) {

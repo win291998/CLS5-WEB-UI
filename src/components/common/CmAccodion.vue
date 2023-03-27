@@ -38,27 +38,6 @@ const panel = props.isOpen ? ref(checkAllValue()) : ref([])
 
 <template>
   <div>
-    <!--
-      <div class="text-center d-flex pb-4">
-      <VBtn
-      class="ma-2"
-      @click="all"
-      >
-      All
-      </VBtn>
-      <VBtn
-      class="ma-2"
-      @click="none"
-      >
-      None
-      </VBtn>
-      </div>
-
-      <div class="pb-4">
-      v-model {{ panel }}
-      </div>
-    -->
-
     <VExpansionPanels
       v-model="panel"
       class="no-background"

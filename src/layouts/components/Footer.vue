@@ -12,11 +12,11 @@
         class="mx-1"
       />
       By <a
-        href="https://pixinvent.com"
+        href="https://cls.vn/"
         target="_blank"
         rel="noopener noreferrer"
         class="text-primary ms-1"
-      >Pixinvent</a>
+      >cls.vn</a>
     </span>
     <!-- 👉 Footer: right content -->
     <span class="d-md-flex gap-x-4 text-primary d-none">
@@ -25,7 +25,7 @@
         target="noopener noreferrer"
       >License</a>
       <a
-        href="https://pixinvent.com/"
+        href="https://cls.vn//"
         target="noopener noreferrer"
       >More Themes</a>
       <a

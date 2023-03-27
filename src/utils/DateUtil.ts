@@ -1,3 +1,5 @@
+import moment from 'moment'
+
 export default class DateUtil {
   /**
    * @name: get message error
@@ -31,5 +33,13 @@ export default class DateUtil {
     }
 
     return serial
+  }
+
+  // format date to DD/MM/YYYY
+  static formatDateToDDMM = (value: any) => {
+    if (!value)
+      return ''
+
+    return moment(String(value)).format('DD/MM/YYYY')
   }
 }

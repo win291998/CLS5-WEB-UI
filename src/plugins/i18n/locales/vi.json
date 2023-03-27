@@ -3,5 +3,10 @@
   "table-btn-prev": "Trước",
   "of": "của",
   "items": "mục",
-  "USR_ValueInvalid": "Giá trị không hợp lệ"
+  "USR_ValueInvalid": "Giá trị không hợp lệ",
+  "IdentityService_Pending": "Đang chờ",
+  "IdentityService_Active": "Hoạt động",
+  "IdentityService_Inactive": "Tạm nghỉ",
+  "IdentityService_Deleted": "Đã xóa",
+  "IdentityService_Quitted": "Đã nghỉ"
 }

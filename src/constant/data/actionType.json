@@ -1,0 +1,100 @@
+{
+  "ActionType": [
+    {
+      "id": 1,
+      "name": "ActionEdit",
+      "icon": "mdi-pencil",
+      "color": "color-dark"
+    },
+    {
+      "id": 2,
+      "name": "ActionDelete",
+      "icon": "fe:trash",
+      "color": "color-dark"
+    },
+    {
+      "id": 3,
+      "name": "ActionSendAgree",
+      "icon": "tabler:send",
+      "color": "color-dark"
+    },
+    {
+      "id": 4,
+      "name": "ActionViewDetail",
+      "icon": "tabler:eye",
+      "color": "color-primary"
+    },
+    {
+      "id": 5,
+      "name": "ActionViewFeedBack",
+      "icon": "tabler:eye",
+      "color": "color-dark"
+    },
+    {
+      "id": 6,
+      "name": "ActionRecallRequest",
+      "icon": "tabler:circle-minus",
+      "color": "color-dark"
+    },
+    {
+      "id": 7,
+      "name": "ActionAcceptRecallRequest",
+      "icon": "prime-check-circle",
+      "color": "color-success"
+    },
+    {
+      "id": 8,
+      "name": "ActionViewReport",
+      "icon": "fe:pie-chart",
+      "color": "color-success"
+    },
+    {
+      "id": 9,
+      "name": "ActionAgree",
+      "icon": "prime-check-circle",
+      "color": "color-success"
+    },
+    {
+      "id": 10,
+      "name": "ActionCreatingTestCode",
+      "icon": "mdi-pencil",
+      "color": "color-dark"
+    },
+    {
+      "id": 11,
+      "name": "ActionRollCallOffline",
+      "icon": "mdi:checkbox-marked-outline",
+      "color": "color-success"
+    },
+    {
+      "id": 12,
+      "name": "ActionUpdatePointOffline",
+      "icon": "mdi-pencil",
+      "color": "color-dark"
+    },
+    {
+      "id": 13,
+      "name": "issuePasswords",
+      "icon": "fe:lock",
+      "color": "color-dark"
+    },
+    {
+      "id": 14,
+      "name": "changeStatus",
+      "icon": "tabler:refresh",
+      "color": "color-dark"
+    },
+    {
+      "id": 15,
+      "name": "RestoreCourse",
+      "icon": "tabler:refresh",
+      "color": "color-dark"
+    },
+    {
+      "id": 16,
+      "name": "AddOrStructure",
+      "icon": "tabler:circle-plus",
+      "color": "color-dark"
+    }
+  ]
+}
