@@ -90,8 +90,8 @@ const clickItem = (item: object) => {
         activator="parent"
       >
         <template #activator>
-          <VueFeather
-            :type="props.icon"
+          <VIcon
+            :icon="props.icon"
             :size="18"
           />
         </template>
@@ -104,9 +104,9 @@ const clickItem = (item: object) => {
             @click="item?.action ? item?.action(item) : clickItem(item)"
           >
             <VListItemTitle class="jutify-content-center">
-              <VueFeather
+              <VIcon
                 v-if="item.icon"
-                :type="item.icon"
+                :icon="item.icon"
                 size="14"
                 :class="[item.colorClass]"
               /> <span class="ml-25">{{ item.title }}</span>
@@ -122,12 +122,12 @@ const clickItem = (item: object) => {
 @use "/src/styles/style-global" as *;
 
 .button-group-prepend {
-  border-top-right-radius: unset;
-  border-bottom-right-radius: unset;
+  border-end-end-radius: unset;
+  border-start-end-radius: unset;
 }
 
 .button-group-append {
-  border-top-left-radius: unset;
-  border-bottom-left-radius: unset;
+  border-end-start-radius: unset;
+  border-start-start-radius: unset;
 }
 </style>

@@ -22,11 +22,11 @@ const headers = reactive([
 ])
 
 const actionItemView = () => {
-  console.log('view')
+  // console.log('view')
 }
 
 const actionItemEdit = () => {
-  console.log('edit')
+  // console.log('edit')
 }
 
 const items = reactive ([

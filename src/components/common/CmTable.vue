@@ -9,6 +9,7 @@ import CmDropDown from '@/components/common/CmDropDown.vue'
 import CmSelect from '@/components/common/CmSelect.vue'
 import Globals from '@/constant/Globals'
 import ArrayUtil from '@/utils/ArrayUtil'
+import MethodsUtil from '@/utils/MethodsUtil'
 
 interface HeaderCustom extends Header {
   type?: string
@@ -30,6 +31,7 @@ interface Props {
   isExpand?: boolean
   returnObject?: boolean
   isImportFile?: boolean
+  totalRecord?: number
 }
 interface Emit {
   (e: 'handleClickRow', dataRow: object): void
@@ -55,6 +57,7 @@ const props = withDefaults(defineProps<Props>(), ({
   rowClassName: '',
   pageSize: Globals.PAGINATION_PAGE_SIZE_DEFAULT,
   customId: 'id',
+  totalRecord: 0,
 }))
 
 const emit = defineEmits<Emit>()
@@ -80,9 +83,6 @@ const keyid = computed(() => {
   return props?.isImportFile ? 'key' : props.customId
 })
 
-console.log(props?.isImportFile)
-console.log(keyid)
-
 const pageSize = ref(props.pageSize) // số lượng item trên 1 page
 const currentPage = ref<number>(Globals.PAGINATION_CURRENT_PAGE) // item hiện tại
 
@@ -99,7 +99,6 @@ const updateSelectedRows = () => {
 // click chọn tất cả hoặc bỏ tất cả
 const checkedAll = (value: any) => {
   selectedRows.value = []
-
   if (props.groupOptions.enabled === true) {
     if (!value) {
       props.items?.forEach(element => {
@@ -115,13 +114,10 @@ const checkedAll = (value: any) => {
         }
       })
     }
-    else {
-      selectedRows.value = []
-    }
+    else { selectedRows.value = [] }
   }
   else {
     selectedRows.value = !value ? props.items.map(item => item[keyid.value]) : []
-
     props.items?.forEach(element => {
       if (!(element.isDisabled && element.isDisabled === true))
         element.isSelected = !value
@@ -152,7 +148,6 @@ const checkedItem = (rows: any, item: any) => {
     emit('selectedRows', rows)
   }
   emit('itemSelected', item)
-  console.log(rows, item)
 
   const value = rows.includes(item[keyid.value])
 
@@ -188,8 +183,6 @@ const isErrorcell = (field: string, data: any) => {
 
 // thay đổi dữ liệu trên bảng
 const changeCellvalue = (event: any, field: string, key: number) => {
-  console.log(event, field, key)
-
   emit('changeCellvalue', event, field, key)
 }
 
@@ -209,7 +202,7 @@ watch(() => props.items, value => {
       :items="items"
       :rows-per-page="pageSize"
       theme-color="#1849a9"
-      table-min-height="100"
+      :table-min-height="100"
       :item-key="keyid"
       fixed-expand
       hide-footer
@@ -242,7 +235,7 @@ watch(() => props.items, value => {
       <template #header-select />
       <template
         v-if="isExpand"
-        #expand="item"
+        #expand
       >
         <div>
           <CpTableSub />
@@ -257,11 +250,16 @@ watch(() => props.items, value => {
         #[`item-${itemsHeader.value}`]="context"
         :key="id"
       >
+        <slot
+          name="rowItem"
+          :col="itemsHeader.value"
+          :context="context"
+        />
         <span
           v-if="itemsHeader.value === 'select' && context.isSuccess === false"
         >
-          <VueFeather
-            type="alert-triangle"
+          <VIcon
+            icon="tabler:alert-triangle"
             size="18"
             class="color-error"
           />
@@ -289,38 +287,44 @@ watch(() => props.items, value => {
           />
         </div>
         <div
-          v-else-if="itemsHeader.value === 'action'"
+          v-else-if="itemsHeader.value === 'actions'"
           class="player-wrapper d-flex justify-end"
         >
-          <template v-for="(actionItem, idKey) in context.action ">
+          <template v-for="(actionItem, idKey) in context?.actions ">
             <div
               v-if="idKey < 2"
               :key="idKey"
               class="px-2 "
             >
-              <VueFeather
-                :type="actionItem.icon"
-                :size="actionItem.size || 18"
-                class="color-error align-middle"
-                @click="actionItem?.action?.event ? actionItem?.action() : ''"
+              <VIcon
+                v-if="actionItem?.icon"
+                :icon="actionItem?.icon"
+                :size="actionItem?.size || 18"
+                class="align-middle"
+                :class="[actionItem.color]"
+                @click="actionItem?.action ? actionItem?.action(MethodsUtil.checlActionKey(actionItem?.id)) : ''"
               />
               <VTooltip
                 activator="parent"
                 location="top"
               >
-                {{ actionItem.action.type }}
+                {{ actionItem?.name }}
               </VTooltip>
             </div>
-            <div
-              v-if="idKey >= Globals.MAX_ITEM_ACTION"
-              :key="idKey"
-            >
-              <div class="action-more px-2">
-                <CmDropDown :list-item="ArrayUtil.sliceArray(context.action, Globals.MAX_ITEM_ACTION)" />
-              </div>
-            </div>
           </template>
+          <div
+            v-if="context?.actions.length >= Globals.MAX_ITEM_ACTION"
+          >
+            <div class="action-more px-2">
+              <CmDropDown
+                :list-item="ArrayUtil.sliceArray(context.actions, Globals.MAX_ITEM_ACTION)"
+                custom-key="name"
+                :type="1"
+              />
+            </div>
+          </div>
         </div>
+        <div v-else-if="itemsHeader?.type === 'menu'" />
         <div v-else-if="isErrorcell(itemsHeader.value, context) && isEditing && itemsHeader?.type === 'combobox'">
           <CmSelect
             :max-item="Globals.MAX_ITEM_SELECT_MULT"
@@ -352,7 +356,7 @@ watch(() => props.items, value => {
     </EasyDataTable>
     <div class="customize-footer">
       <CmPagination
-        :total-items="items.length"
+        :total-items="totalRecord"
         :current-page="currentPage"
         @pageClick="pageSizeChange"
       />

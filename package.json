@@ -23,6 +23,7 @@
     "feather-icons": "4",
     "jwt-decode": "^3.1.2",
     "lodash": "^4.17.21",
+    "moment": "^2.29.4",
     "pinia": "^2.0.22",
     "prismjs": "^1.29.0",
     "read-excel-file": "^5.6.1",

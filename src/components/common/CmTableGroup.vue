@@ -234,8 +234,8 @@ const bodyRowClassName = computed(() => {
               :key="idKey"
               class="px-2 "
             >
-              <VueFeather
-                :type="actionItem.icon"
+              <VIcon
+                :icon="actionItem.icon"
                 :size="actionItem.size || 18"
                 class="color-error align-middle"
                 @click="actionItem?.action?.event ? actionItem?.action?.event() : ''"
@@ -263,10 +263,10 @@ const bodyRowClassName = computed(() => {
         >
           <div class="d-flex">
             <div class="mr-4">
-              <VueFeather
+              <VIcon
                 v-if="items.key && context?.children?.length "
                 class="cusor-pointer"
-                :type="!context.isShow ? 'chevron-down' : 'chevron-up'"
+                :icon="!context.isShow ? 'chevron-down' : 'chevron-up'"
                 size="18"
                 @click="toggleRowSelection(context)"
               />

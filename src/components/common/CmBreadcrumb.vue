@@ -14,9 +14,9 @@ const items = route?.meta?.breadcrumb
     >
       <template #title="{ item }">
         <div>
-          <VueFeather
+          <VIcon
             v-if="item.icon"
-            :type="item.icon"
+            :icon="item.icon"
             :size="24"
             class="color-icon-default"
           />
@@ -35,11 +35,13 @@ const items = route?.meta?.breadcrumb
 
 <style lang="scss">
 @use "/src/styles/variables/global" as *;
+
 .breadcrumb {
-  padding-left: 0 !important;
+  padding-inline-start: 0 !important;
+
   .v-breadcrumbs-item--disabled {
-    opacity: 1 !important;
     color: $color-primary-700;
+    opacity: 1 !important;
   }
 }
 </style>

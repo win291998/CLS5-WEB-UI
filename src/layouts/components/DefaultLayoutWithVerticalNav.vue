@@ -62,7 +62,9 @@ injectSkinClasses()
         :name="appRouteTransition"
         mode="out-in"
       >
-        <Component :is="Component" />
+        <div>
+          <Component :is="Component" />
+        </div>
       </Transition>
     </RouterView>
 
