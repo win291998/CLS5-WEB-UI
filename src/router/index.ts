@@ -1,7 +1,8 @@
 import { setupLayouts } from 'virtual:generated-layouts'
 import { createRouter, createWebHistory } from 'vue-router'
+import * as token from './token.Json'
 import admin from '@/router/admin/admin.router'
-import { loadButton } from '@/store/button'
+import { load } from '@/stores/loadComponent'
 
 const generalRoutes = [
   {
@@ -33,7 +34,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  const store = loadButton()
+  const store = load()
 
   // eslint-disable-next-line no-unused-expressions
   store.$reset

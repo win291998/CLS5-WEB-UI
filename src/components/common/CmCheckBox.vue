@@ -86,7 +86,7 @@ watch(() => propsValue.modelValue, value => {
         <VCheckbox
           :id="propsValue.id"
           v-model="checkbox"
-          :class="propsValue.color"
+          :class="`color-${propsValue.color}`"
           :disabled="propsValue.disabled"
           :indeterminate="propsValue.indeterminate"
           :error="propsValue.error"
@@ -118,7 +118,7 @@ watch(() => propsValue.modelValue, value => {
   </VTooltip>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @use "/src/styles/style-global" as *;
 .color-error {
   .v-selection-control__input {

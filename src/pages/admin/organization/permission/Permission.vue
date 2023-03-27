@@ -19,6 +19,7 @@ const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 const disabledDelete = ref(true)
 const isShowFilter = ref(true)
 const route = useRoute()
+const TablePer = ref(null)
 
 const headers = reactive([
   { text: '', value: 'checkbox' },
@@ -36,6 +37,18 @@ const orgModels = {
   icon: 'tabler-briefcase',
   colorClass: 'color-error',
   content: [],
+}
+
+onMounted(() => {
+  TablePer.value.loadTable()
+
+  setTimeout(() => {
+    TablePer.value.unLoadTable()
+  }, 5000)
+})
+
+const actionItemView = () => {
+  console.log('view')
 }
 
 const groupModels = {
@@ -152,6 +165,7 @@ fectchListUsers()
   </div>
   <div>
     <CmTable
+      ref="TablePer"
       :headers="headers"
       :items="items"
       :total-record="totalRecord"
