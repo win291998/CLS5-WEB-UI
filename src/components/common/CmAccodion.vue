@@ -2,7 +2,10 @@
 import GlobalUtil from '@/utils/Global'
 
 interface Props {
-  data: dataAccodion
+  data: dataAccodion[]
+  customKey?: string
+  classNameLabel?: Array<any>
+  isOpen?: boolean
 }
 interface dataAccodion {
   label: string
@@ -16,16 +19,21 @@ interface Emit {
 }
 
 const props = withDefaults(defineProps<Props>(), ({
-  data: () => ({
+  data: () => ([{
     label: 'Title',
     content: 'Content',
-  }),
+  }]),
+  customKey: 'content',
+  classNameLabel: () => ([]),
+  isOpen: false,
 }))
 
 const emit = defineEmits<Emit>()
-const panel = ref([])
 
-console.log(window._.isArray({}))
+const checkAllValue = () =>
+  props.data.map(item => item.value)
+
+const panel = props.isOpen ? ref(checkAllValue()) : ref([])
 </script>
 
 <template>
@@ -57,24 +65,30 @@ console.log(window._.isArray({}))
       multiple
     >
       <VExpansionPanel
-        :value="props.data?.value || props.data?.label"
+        v-for="(item, index) in data"
+        :key="index"
+        :value="item.value || item.label"
       >
         <template #title>
           <div>
             <VAvatar
               size="32"
               class="mr-2"
-              :class="[props.data?.colorClass]"
+              :class="[item.colorClass]"
               variant="tonal"
             >
-              <VueFeather
-                :type="props.data?.icon"
+              <VIcon
+                v-if="item.icon"
+                :icon="item.icon"
                 size="14"
-                :class="[props.data?.colorClass]"
+                :class="[item.colorClass]"
               />
             </VAvatar>
           </div>
-          <span class="text-regular-sm">{{ props.data?.label }}</span>
+          <span
+            :class="[props.classNameLabel[0]]"
+            class="text-regular-sm"
+          >{{ item.label }}</span>
           <slot
             class="text-regular-sm"
             name="title"
@@ -82,10 +96,10 @@ console.log(window._.isArray({}))
         </template>
         <template #text>
           <div
-            v-if="GlobalUtil.checkTypeContent(props.data.content) === 'array'"
+            v-if="GlobalUtil.checkTypeContent(item.content) === 'array'"
           >
             <div
-              v-for="(listItem, idItem) in props.data.content"
+              v-for="(listItem, idItem) in item.content"
               :key="idItem"
               class="mb-2"
             >
@@ -93,17 +107,18 @@ console.log(window._.isArray({}))
                 v-if="listItem?.icon"
                 class="icon-item"
               >
-                <VueFeather
-                  :type="listItem?.icon"
+                <VIcon
+                  :icon="listItem?.icon"
                   size="14"
-                  :class="[props.data?.colorClass]"
+                  :class="[item?.colorClass]"
                 />
               </div>
               <div
-                v-if="listItem.content"
+                v-if="listItem[customKey]"
                 class="content-item text-regular-sm"
+                :class="[props.classNameLabel[1]]"
               >
-                {{ listItem.content }}
+                {{ listItem[customKey] }}
               </div>
             </div>
           </div>
@@ -111,7 +126,7 @@ console.log(window._.isArray({}))
             v-else
             class="text-regular-sm mb-2"
           >
-            {{ props.data?.content }}
+            {{ item?.content }}
           </div>
           <slot
             name="text"

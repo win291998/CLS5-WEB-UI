@@ -68,7 +68,6 @@ export default {
       }
 
       // this.$emit('change', this.date, null, this.section)
-      console.log(this.date, null, this.section)
     },
 
     swapToPickTime() {
@@ -142,102 +141,119 @@ export default {
 
 <style lang="scss">
 @use "/src/styles/style-global" as *;
+
 .pick-date-type {
   position: relative;
   z-index: 1;
   display: flex;
-  user-select: none;
   justify-content: flex-end;
+  user-select: none;
+
   .date-time-container {
     .pick-date-input {
-      width: 200px;
+      inline-size: 200px;
       outline: none;
+
       &::placeholder {
         color: $color-gray-300;
         text-align: center;
       }
     }
   }
+
   .pick-date-type-wrapper {
     display: flex;
-    font-size: 14px;
-    font-weight: 500;
     color: $color-gray-300;
     font-family: Montserrat;
-    margin-right: 2px;
-    .first-section{
+    font-size: 14px;
+    font-weight: 500;
+    margin-inline-end: 2px;
+
+    .first-section {
       .item {
         &:first-of-type {
           border: 1px solid  $color-gray-300;
-          border-top-left-radius: 6px;
-          border-bottom-left-radius: 6px;
+          border-end-start-radius: 6px;
+          border-start-start-radius: 6px;
         }
+
         &:not(:first-of-type) {
-        border-top: 1px solid  $color-gray-300;
-        border-right: 1px solid  $color-gray-300;
-        border-bottom: 1px solid  $color-gray-300;
-      }
+          border-block-end: 1px solid  $color-gray-300;
+          border-block-start: 1px solid  $color-gray-300;
+          border-inline-end: 1px solid  $color-gray-300;
+        }
       }
     }
+
     .second-section {
       .item {
-        border-top: 1px solid  $color-gray-300;
-        border-right: 1px solid  $color-gray-300;
-        border-bottom: 1px solid  $color-gray-300;
+        border-block-end: 1px solid  $color-gray-300;
+        border-block-start: 1px solid  $color-gray-300;
+        border-inline-end: 1px solid  $color-gray-300;
+
         &:last-of-type {
-          border-top-right-radius: 6px;
-          border-bottom-right-radius: 6px;
+          border-end-end-radius: 6px;
+          border-start-end-radius: 6px;
         }
       }
     }
+
     .item {
       display: inline-block;
       cursor: pointer;
-      padding: 8px 20px;
-      transition: .1s;
+      padding-block: 8px;
+      padding-inline: 20px;
+      transition: 0.1s;
     }
   }
+
   .active-pick-date {
-    color: $color-gray-700;
     background-color: $color-gray-50;
+    color: $color-gray-700;
   }
 }
+
 @media all and (max-width: 692px) {
   .pick-date-type {
     display: block;
+
     .date-time-container {
       .pick-date-input {
-        margin-top: 12px;
+        margin-block-start: 12px;
       }
     }
   }
 }
+
 @media all and (max-width: 460px) {
   .pick-date-type {
     .pick-date-type-wrapper {
       display: block;
+
       .first-section {
-        margin-bottom: 10px;
+        margin-block-end: 10px;
+
         .item {
           &:last-of-type {
-            border-top-right-radius: 6px;
-            border-bottom-right-radius: 6px;
+            border-end-end-radius: 6px;
+            border-start-end-radius: 6px;
           }
         }
       }
+
       .second-section {
         display: flex;
         justify-content: center;
+
         .item {
           &:first-of-type {
-            border-top-left-radius: 6px;
-            border-bottom-left-radius: 6px;
-            border-left: 1px solid  $color-gray-300;
+            border-end-start-radius: 6px;
+            border-inline-start: 1px solid  $color-gray-300;
+            border-start-start-radius: 6px;
           }
         }
       }
     }
   }
-
 }
 </style>

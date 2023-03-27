@@ -103,9 +103,9 @@ watch([() => props.currentPage], ([newValue]) => {
               @click="onClick"
             >
               <span class="mr-1 text-btn">{{ t('table-btn-next') }}</span>
-              <VueFeather
-                type="arrow-right"
-                size="12"
+              <VIcon
+                icon="tabler:arrow-right"
+                size="20"
                 class="color-icon-default"
               />
             </button>
@@ -116,9 +116,9 @@ watch([() => props.currentPage], ([newValue]) => {
               class="btn-pagination"
               @click="onClick"
             >
-              <VueFeather
-                type="arrow-left"
-                size="12"
+              <VIcon
+                icon="tabler:arrow-left"
+                size="20"
                 class="color-icon-default mr-1"
               />
               <span class="text-medium-sm text-btn">{{ t('table-btn-prev') }}</span>

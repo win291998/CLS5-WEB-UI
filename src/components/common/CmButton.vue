@@ -15,8 +15,8 @@ import type { typeVariant } from '@/typescript/enums/enums'
 */
 
 interface Props {
-  isLoad: boolean
-  block: boolean
+  isLoad?: boolean
+  block?: boolean
   color?: string
   bgColor?: string
   rounded?: string

@@ -14,7 +14,9 @@ const UserService = {
   /// user type
   RoleFeaturePermission: '/usertype/get-feature-permission-by-portal',
 
-  /// Proficiency:  năng lực
+  /// get danh sách:
+
+  UsersList: '/User/get-all-users-paging', // danh sách người dùng
 
 }
 

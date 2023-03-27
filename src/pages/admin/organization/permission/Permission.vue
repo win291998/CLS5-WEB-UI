@@ -1,96 +1,99 @@
 <script setup lang="ts">
-import CpHeaderAction from '@/components/page/gereral/CpHeaderAction.vue'
-import CpPermisstionFilter from '@/components/page/Admin/organization/permission/CpPermisstionFilter.vue'
-import CmTable from '@/components/common/CmTable.vue'
+import ApiUser from '@/api/user/index'
+import MethodsUtil from '@/utils/MethodsUtil'
+import { TYPE_REQUEST } from '@/typescript/enums/enums'
+import StringUtil from '@/utils/StringUtil'
+
+// mock api
+
+import { fetchData } from '@/mock/users/index'
+
+const CpHeaderAction = defineAsyncComponent(() => import('@/components/page/gereral/CpHeaderAction.vue'))
+const CpPermisstionFilter = defineAsyncComponent(() => import('@/components/page/Admin/organization/permission/CpPermisstionFilter.vue'))
+const CmTable = defineAsyncComponent(() => import('@/components/common/CmTable.vue'))
+const CmAccodion = defineAsyncComponent(() => import('@/components/common/CmAccodion.vue'))
 
 /** params */
 const disabledDelete = ref(true)
 const isShowFilter = ref(true)
+const route = useRoute()
 
 const headers = reactive([
   { text: '', value: 'checkbox' },
-  { text: 'PLAYER', value: 'player' },
-  { text: 'TEAM', value: 'team' },
-  { text: 'NUMBER', value: 'number' },
-  { text: 'POSITION', value: 'position' },
-  { text: 'HEIGHT', value: 'height' },
-  { text: 'WEIGHT (lbs)', value: 'weight', sortable: true },
-  { text: 'LAST ATTENDED', value: 'lastAttended', width: 200 },
-  { text: 'COUNTRY', value: 'country' },
-  { text: '', value: 'action', width: 150 },
+  { text: 'Họ và tên', value: 'fullName' },
+  { text: 'Vai trò', value: 'userTypeName' },
+  { text: 'Trạng thái', value: 'statusName' },
+  { text: 'Ngày tham gia', value: 'registeredDate' },
+  { text: 'Tổ chức', value: 'organization', type: 'menu', width: 300 },
+  { text: '', value: 'actions', width: 150 },
 ])
 
-const actionItemView = () => {
-  console.log('view')
+const orgModels = {
+  value: 1,
+  label: 'Cơ cấu tổ chức',
+  icon: 'tabler-briefcase',
+  colorClass: 'color-error',
+  content: [],
 }
 
-const actionItemEdit = () => {
-  console.log('edit')
+const groupModels = {
+  value: 1,
+  label: 'Nhóm người dùng',
+  icon: 'lucide:users',
+  colorClass: 'color-warning',
+  content: [],
 }
 
-const items = reactive ([
-  {
-    customId: 0,
-    isSelected: false,
-    player: 'Stephen Curry',
-    team: 'GSW',
-    number: 30,
-    position: 'G',
-    indicator: { height: '6-2', weight: 185 },
-    lastAttended: 'DavcustomIdson',
-    country: 'USA',
-    action: [
-      {
-        title: 'Xem chi tiết',
-        icon: 'eye',
-        action: {
-          type: 'view',
-          event: actionItemView,
-        },
-      },
-      {
-        title: 'Tải file',
-        icon: 'download',
-        action: {
-          type: 'download',
-        },
-      },
-      {
-        title: 'Chỉnh sửa',
-        icon: 'edit',
-        action: {
-          type: 'edit',
-          event: actionItemEdit,
-        },
-      },
-    ],
-  },
-  { customId: 1, isSelected: false, player: 'Lebron James', team: 'LAL', number: 6, position: 'F', indicator: { height: '6-9', weight: 250 }, lastAttended: 'St. Vincent-St. Mary HS (OH)', country: 'USA' },
-  { customId: 2, isSelected: false, player: 'Kevin Durant', team: 'BKN', number: 7, position: 'F', indicator: { height: '6-10', weight: 240 }, lastAttended: 'Texas-Austin', country: 'USA' },
-  { customId: 3, isSelected: false, player: 'Giannis Antetokounmpo', team: 'MIL', number: 34, position: 'F', indicator: { height: '6-11', weight: 242 }, lastAttended: 'Filathlitikos', country: 'Greece' },
-  { customId: 4, isSelected: false, player: 'Lebron James', team: 'LAL', number: 6, position: 'F', indicator: { height: '6-9', weight: 250 }, lastAttended: 'St. Vincent-St. Mary HS (OH)', country: 'USA' },
-  { customId: 5, isSelected: false, player: 'Kevin Durant', team: 'BKN', number: 7, position: 'F', indicator: { height: '6-10', weight: 240 }, lastAttended: 'Texas-Austin', country: 'USA' },
-  { customId: 6, isSelected: false, player: 'Giannis Antetokounmpo', team: 'MIL', number: 34, position: 'F', indicator: { height: '6-11', weight: 242 }, lastAttended: 'Filathlitikos', country: 'Greece' },
-  { customId: 7, isSelected: false, player: 'Lebron James', team: 'LAL', number: 6, position: 'F', indicator: { height: '6-9', weight: 250 }, lastAttended: 'St. Vincent-St. Mary HS (OH)', country: 'USA' },
-  { customId: 8, isSelected: false, player: 'Kevin Durant', team: 'BKN', number: 7, position: 'F', indicator: { height: '6-10', weight: 240 }, lastAttended: 'Texas-Austin', country: 'USA' },
-  { customId: 9, isSelected: false, player: 'Giannis Antetokounmpo', team: 'MIL', number: 34, position: 'F', indicator: { height: '6-11', weight: 242 }, lastAttended: 'Filathlitikos', country: 'Greece' },
-  { customId: 10, isSelected: false, player: 'Lebron James', team: 'LAL', number: 6, position: 'F', indicator: { height: '6-9', weight: 250 }, lastAttended: 'St. Vincent-St. Mary HS (OH)', country: 'USA' },
-  { customId: 11, isSelected: false, player: 'Kevin Durant', team: 'BKN', number: 7, position: 'F', indicator: { height: '6-10', weight: 240 }, lastAttended: 'Texas-Austin', country: 'USA' },
-  { customId: 12, isSelected: false, player: 'Giannis Antetokounmpo', team: 'MIL', number: 34, position: 'F', indicator: { height: '6-11', weight: 242 }, lastAttended: 'Filathlitikos', country: 'Greece' },
-  { customId: 13, isSelected: false, player: 'Lebron James', team: 'LAL', number: 6, position: 'F', indicator: { height: '6-9', weight: 250 }, lastAttended: 'St. Vincent-St. Mary HS (OH)', country: 'USA' },
-  { customId: 14, isSelected: false, player: 'Kevin Durant', team: 'BKN', number: 7, position: 'F', indicator: { height: '6-10', weight: 240 }, lastAttended: 'Texas-Austin', country: 'USA' },
-  { customId: 15, isSelected: false, player: 'Giannis Antetokounmpo', team: 'MIL', number: 34, position: 'F', indicator: { height: '6-11', weight: 242 }, lastAttended: 'Filathlitikos', country: 'Greece' },
-  { customId: 16, isSelected: false, player: 'Lebron James', team: 'LAL', number: 6, position: 'F', indicator: { height: '6-9', weight: 250 }, lastAttended: 'St. Vincent-St. Mary HS (OH)', country: 'USA' },
-  { customId: 17, isSelected: false, player: 'Kevin Durant', team: 'BKN', number: 7, position: 'F', indicator: { height: '6-10', weight: 240 }, lastAttended: 'Texas-Austin', country: 'USA' },
-  { customId: 18, isSelected: false, player: 'Giannis Antetokounmpo', team: 'MIL', number: 34, position: 'F', indicator: { height: '6-11', weight: 242 }, lastAttended: 'Filathlitikos', country: 'Greece' },
-  { customId: 19, isSelected: false, player: 'Lebron James', team: 'LAL', number: 6, position: 'F', indicator: { height: '6-9', weight: 250 }, lastAttended: 'St. Vincent-St. Mary HS (OH)', country: 'USA' },
-  { customId: 20, isSelected: false, player: 'Kevin Durant', team: 'BKN', number: 7, position: 'F', indicator: { height: '6-10', weight: 240 }, lastAttended: 'Texas-Austin', country: 'USA' },
-  { customId: 21, isSelected: false, player: 'Giannis Antetokounmpo', team: 'MIL', number: 34, position: 'F', indicator: { height: '6-11', weight: 242 }, lastAttended: 'Filathlitikos', country: 'Greece' },
-])
+const titleModels = {
+  value: 1,
+  label: 'Chức danh',
+  icon: 'prime-check-circle',
+  colorClass: 'color-success',
+  content: [],
+}
+
+// hàm trả về các loại action khi click
+const actionItem = type => {
+  // console.log(type)
+}
+
+const items = ref ([])
+const totalRecord = ref (0)
+
+const queryParam = reactive({})
 
 /** Method */
+// Get list Users
+const fectchListUsers = async (queryParam: any) => {
+  // const res = await MethodsUtil.requestApiCustom(ApiUser.UsersList, TYPE_REQUEST.POST, queryParam).then((value: any) => value)
+  const res = await fetchData(ApiUser.UsersList, TYPE_REQUEST.POST, queryParam).then((value: any) => value)
+
+  if (res?.code === 200 && res?.data?.pageLists.length) {
+    res.data.pageLists.forEach(item => {
+      const titleData = window._.clone(item.orgModels)
+
+      item.orgModels = {
+        ...orgModels,
+        content: window._.clone(item.orgModels),
+      }
+      item.groupModels = {
+        ...groupModels,
+        content: window._.clone(item.groupModels),
+      }
+      item.titleModels = {
+        ...titleModels,
+        content: titleData,
+      }
+      item.actions = item.actions.map((el: any) => {
+        return MethodsUtil.checkActionType(el, actionItem)
+      })
+    })
+  }
+  items.value = res.data.pageLists
+  totalRecord.value = res?.data?.totalRecord
+}
+
 const handleClickBtn = (type: string) => {
-  console.log(type)
   switch (type) {
     case 'fillter':
       isShowFilter.value = !isShowFilter.value
@@ -100,6 +103,14 @@ const handleClickBtn = (type: string) => {
       break
   }
 }
+
+// watch
+watch(() => route.path, value => {
+  // console.log(value)
+}, { immediate: true })
+
+// created
+fectchListUsers(queryParam)
 </script>
 
 <template>
@@ -121,7 +132,35 @@ const handleClickBtn = (type: string) => {
     <CmTable
       :headers="headers"
       :items="items"
-    />
+      :total-record="totalRecord"
+    >
+      <template #rowItem="{ col, context }">
+        <div v-if="col === 'fullName'">
+          {{ StringUtil.formatFullName(context.firstName, context.lastName) }}
+        </div>
+        <div v-if="col === 'organization'">
+          <CmAccodion
+            v-if="context.orgModels?.content?.length"
+            :data="[context.orgModels]"
+            custom-key="name"
+            is-open
+          />
+          <CmAccodion
+            v-if="context.groupModels?.content?.length"
+            :data="[context.groupModels]"
+            custom-key="name"
+            is-open
+          />
+
+          <CmAccodion
+            v-if="context.titleModels?.content?.length"
+            :data="[context.titleModels]"
+            custom-key="titleName"
+            is-open
+          />
+        </div>
+      </template>
+    </CmTable>
   </div>
 </template>
 

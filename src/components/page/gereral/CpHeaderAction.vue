@@ -7,14 +7,14 @@ import CmTextField from '@/components/common/CmTextField.vue'
   disabledDelete:  Disable button delete
 */
 interface Props {
-  isDelete: boolean
-  disabledDelete: boolean
-  isBack: boolean
-  disabledBack: boolean
-  isApprove: boolean
-  disabledApprove: boolean
-  isFillter: boolean
-  disabledFillter: boolean
+  isDelete?: boolean
+  disabledDelete?: boolean
+  isBack?: boolean
+  disabledBack?: boolean
+  isApprove?: boolean
+  disabledApprove?: boolean
+  isFillter?: boolean
+  disabledFillter?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), ({
@@ -35,7 +35,6 @@ interface Emit {
 }
 
 const handleClickBtn = (type: string) => {
-  console.log(type)
   emit('click', type)
 }
 </script>
