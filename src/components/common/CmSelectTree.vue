@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import Treeselect from 'vue3-treeselect'
 import 'vue3-treeselect/dist/vue3-treeselect.css'
+import { defaultSetting } from '@/constant/data/settingDefault.json'
+import Globals from '@/constant/Globals'
 
 /** ** Interface */
 interface Options {
@@ -20,6 +22,8 @@ interface Props {
   openOnClick?: boolean // true:  mở bảng chọn option khi click v-select
   openOnFocus?: boolean
   clearOnSelect?: boolean
+  maxItem?: number // giới hạn hiện thị
+  maxHeight?: number // giới hạn chiều cao
   closeOnSelect?: boolean
   alwaysOpen?: boolean // true: luôn mở bảng chọn option
   appendToBody?: boolean
@@ -56,17 +60,21 @@ const props = withDefaults(defineProps<Props>(), ({
   appendToBody: false,
   rtl: false,
   valueFormat: 'id',
-  flat: false,
+  flat: !!defaultSetting?.[0]?.value,
+  limitText: count => `và ${count} lựa chọn`,
   disableBranchNodes: false,
   sortValueBy: null,
   flattenSearchResults: false,
   searchNested: true,
   customLable: false,
-  valueConsistsOf: 'BRANCH_PRIORITY',
+  valueConsistsOf: 'ALL',
+  maxItem: Globals.MAX_ITEM_SELECT_MULT,
+  maxHeight: undefined,
   normalizerCustomType: () => ['id', 'label', 'children'],
 }))
 
 const emit = defineEmits<Emit>()
+const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 
 /** ** Chuẩn hóa dữ liệu */
 const normalizer = (node: any) => {
@@ -94,13 +102,19 @@ const updateValue = () => {
 
 /** ** function: xử lý khi tao tác trên node */
 const handleUpdate = (value: any, instanceId: any) => {
+  console.log(value)
+
   emit('update:modelValue', value)
 }
 
+const limitText = (count: any) => {
+  return t('and-count-more', { count })
+}
+
 /** ** watch: check value thay đổi từ bên ngoài */
-watch(() => props.modelValue, value => {
-  updateValue()
-})
+// watch(() => props.modelValue, value => {
+//   updateValue()
+// })
 </script>
 
 <template>
@@ -125,13 +139,16 @@ watch(() => props.modelValue, value => {
       :append-to-body="props.appendToBody"
       :flat="props.flat"
       :sort-value-by="props.sortValueBy"
+      :limit="props.maxItem"
+      :limit-text="limitText"
       :value-consists-of="props.valueConsistsOf"
       :disable-branch-nodes="props.disableBranchNodes"
       :flatten-search-results="props.flattenSearchResults"
       :search-nested="props.searchNested"
+      :max-height="props.maxHeight"
       :normalizer="normalizer"
+      @update:modelValue="handleUpdate"
     >
-      <!-- @update:modelValue="handleUpdate" -->
       <template
         v-if="props.customLable"
         #value-label="{ node }"
@@ -143,6 +160,9 @@ watch(() => props.modelValue, value => {
 </template>
 
 <style lang="scss">
+@use "@/styles/variables/common/input.cm" as *;
+@use "@/styles/variables/global" as *;
+
 .vue-treeselect__minus-mark {
   background-image: none !important;
 }
@@ -186,5 +206,11 @@ watch(() => props.modelValue, value => {
 
 .vue-treeselect__checkbox {
   border-radius: 4px;
+}
+
+.vue-treeselect__control {
+  border: $border-xs solid $color-gray-300;
+  block-size: $height-min-select;
+  box-shadow: $box-shadow-xs;
 }
 </style>

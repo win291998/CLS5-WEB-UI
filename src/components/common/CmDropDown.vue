@@ -17,6 +17,7 @@ import MethodsUtil from '@/utils/MethodsUtil'
 interface Props {
   listItem: item[]
   icon?: string
+  data?: any
   multiple?: boolean
   customKey: string
   type?: number
@@ -47,6 +48,7 @@ const propsValue = withDefaults(defineProps<Props>(), ({
   multiple: false,
   customKey: 'title',
   type: undefined,
+  data: undefined,
 }))
 
 const emit = defineEmits<Emit>()
@@ -101,7 +103,7 @@ const handleClickItem = (event: any) => {
             />
           </template>
           <VListItemTitle
-            @click="item?.action ? propsValue.type === 1 ? item?.action(MethodsUtil.checlActionKey(item?.id)) : item?.action() : ''"
+            @click="item?.action ? propsValue.type === 1 ? item?.action(MethodsUtil.checlActionKey(item, data)) : item?.action() : ''"
           >
             <VIcon
               v-if="item?.icon"

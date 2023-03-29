@@ -86,7 +86,7 @@ watch([() => props.currentPage], ([newValue]) => {
           single-line
           @update:modelValue="handlePageSizeChange"
         />
-        <span class="text-nowrap text-regular-sm ">{{ `${t('of')} ${totalItems} ${t('items')}` }}</span>
+        <span class="text-nowrap text-regular-sm ">{{ `${t('of')} ${totalItems} ${t('pagination.item')}` }}</span>
       </div>
       <div class="page-number">
         <VPagination

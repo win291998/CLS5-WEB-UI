@@ -1,0 +1,110 @@
+{
+  "orgStructCb": {
+    "code": 200,
+    "data": [
+      {
+        "code": "TTEST3",
+        "description": "",
+        "id": 5699,
+        "name": "CCTC thinhtest3",
+        "parentId": 0,
+        "left": 155,
+        "right": 156,
+        "amountUser": 2,
+        "actions": [
+          {
+            "id": 4,
+            "name": "QuestionService.ActionViewDetail"
+          },
+          {
+            "id": 8,
+            "name": "QuestionService.ActionViewReport"
+          }
+        ]
+      },
+      {
+        "code": "TTEST2",
+        "description": "",
+        "id": 5698,
+        "name": "CCTC thinhtest2",
+        "parentId": 5697,
+        "left": 152,
+        "right": 153,
+        "amountUser": 2,
+        "actions": [
+          {
+            "id": 4,
+            "name": "QuestionService.ActionViewDetail"
+          },
+          {
+            "id": 8,
+            "name": "QuestionService.ActionViewReport"
+          }
+        ]
+      },
+      {
+        "code": "TTEST4",
+        "description": "",
+        "id": 5666,
+        "name": "CCTC thinhtest322",
+        "parentId": 5697,
+        "left": 155,
+        "right": 156,
+        "amountUser": 2,
+        "actions": [
+          {
+            "id": 4,
+            "name": "QuestionService.ActionViewDetail"
+          },
+          {
+            "id": 8,
+            "name": "QuestionService.ActionViewReport"
+          }
+        ]
+      },
+      {
+        "code": "TTEST1",
+        "description": "",
+        "id": 5697,
+        "name": "CCTC thinhtest1",
+        "parentId": 0,
+        "left": 151,
+        "right": 154,
+        "amountUser": 5,
+        "actions": [
+          {
+            "id": 4,
+            "name": "QuestionService.ActionViewDetail"
+          },
+          {
+            "id": 8,
+            "name": "QuestionService.ActionViewReport"
+          }
+        ]
+      },
+      {
+        "code": "",
+        "description": "",
+        "id": 5696,
+        "name": "Chuppyy sẽ xóa",
+        "parentId": 5698,
+        "left": 149,
+        "right": 150,
+        "amountUser": 2,
+        "actions": [
+          {
+            "id": 4,
+            "name": "QuestionService.ActionViewDetail"
+          },
+          {
+            "id": 8,
+            "name": "QuestionService.ActionViewReport"
+          }
+        ]
+      }
+    ],
+    "errors": null,
+    "message": "",
+    "params": []
+  }
+}
