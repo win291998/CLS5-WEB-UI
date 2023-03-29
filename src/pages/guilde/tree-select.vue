@@ -4,14 +4,16 @@ import CmSelectTree from '@/components/common/CmSelectTree.vue'
 const options = [{
   id: 'a',
   label: 'a',
-  children: [{
-    id: 'aa',
-    label: 'aa',
-    customLabel: 'Custom Label aaa',
-  }, {
-    id: 'ab',
-    label: 'ab',
-  }],
+  children: [
+    {
+      id: 'aa',
+      label: 'aa',
+      customLabel: 'Custom Label aaa',
+    }, {
+      id: 'ab',
+      label: 'ab',
+    },
+  ],
 }, {
   id: 'success',
   label: 'b',

@@ -49,6 +49,9 @@ const dataTable = ref()
 
 // Chuyển đổi mảng items sang định dạng yêu cầu
 const items = ArrayUtil.formatTreeTable(props.items, props.customId)
+
+console.log(items)
+
 const pageSize = ref(props.pageSize) // số lượng item trên 1 page
 const currentPage = ref<number>(Globals.PAGINATION_CURRENT_PAGE) // item hiện tại
 const selectedRows = ref<any>([])// Những row được checked

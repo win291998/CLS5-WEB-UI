@@ -35,7 +35,7 @@ const props = withDefaults(defineProps<Props>(), ({
   isLoad: false,
   block: false,
   disabled: false,
-  color: 'primary',
+  color: '',
   textColor: '',
   bgColor: '',
   className: '',
@@ -91,7 +91,6 @@ defineExpose({
     :disabled="isDisabled"
     :size="size"
     :rounded="rounded"
-    color="white"
     class="text-style-btn"
     :class="[`${prefixColor}-${color}`, bgColor, className]"
     @click="handleClick"

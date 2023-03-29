@@ -4,6 +4,8 @@ import MethodsUtil from '@/utils/MethodsUtil'
 import DateUtil from '@/utils/DateUtil'
 import { TYPE_REQUEST } from '@/typescript/enums/enums'
 import StringUtil from '@/utils/StringUtil'
+import CpConfirmDialog from '@/components/page/gereral/CpConfirmDialog.vue'
+import toast from '@/plugins/toast'
 
 // mock api
 
@@ -16,7 +18,7 @@ const CmAccodion = defineAsyncComponent(() => import('@/components/common/CmAcco
 
 /** params */
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
-const disabledDelete = ref(true)
+const disabledDelete = ref(false)
 const isShowFilter = ref(true)
 const route = useRoute()
 
@@ -60,11 +62,18 @@ const titleModels = {
 
 // hàm trả về các loại action khi click
 const actionItem = (type: any) => {
-  // console.log(type)
+  console.log(type)
 }
 
 const items = ref ([])
-const totalRecord = ref (0)
+const totalRecord = ref(0)
+const modalContent = ref('')
+const isShowDialogNoti = ref(false)
+
+const data = reactive({
+  deleteIds: [], // list id các row table muốn xóa
+  listId: [], // list id các row table được chọn
+})
 
 const queryParam = reactive({
   groupUser: [],
@@ -85,9 +94,9 @@ const queryParam = reactive({
 /** Method */
 // Get list Users
 const fectchListUsers = async () => {
-  // const res = await MethodsUtil.requestApiCustom(ApiUser.UsersList, TYPE_REQUEST.POST, queryParam).then((value: any) => value)
+  const res = await MethodsUtil.requestApiCustom(ApiUser.UsersList, TYPE_REQUEST.POST, queryParam).then((value: any) => value)
 
-  const res = await fetchData(ApiUser.UsersList, TYPE_REQUEST.POST, queryParam).then((value: any) => value)
+  // const res = await fetchData(ApiUser.UsersList, TYPE_REQUEST.POST, queryParam).then((value: any) => value)
 
   if (res?.code === 200 && res?.data?.pageLists.length) {
     res.data.pageLists.forEach((item: any) => {
@@ -119,15 +128,58 @@ const handlePageClick = async page => {
   await fectchListUsers()
 }
 
+// click  multi delete btn to show modal confirm
+const deleteItems = () => {
+  data.deleteIds = data.listId
+  modalContent.value = t('users.user.action-modal.delete')
+  isShowDialogNoti.value = true
+}
+
+// delete action
+const deleteAction = async () => {
+  const params = {
+    listId: data.deleteIds,
+  }
+
+  const res = await MethodsUtil.requestApiCustom(ApiUser.UsersDelete, TYPE_REQUEST.POST, params).then((value: any) => value)
+
+  if (res.code === 200) {
+    toast('SUCCESS', res?.message)
+    await fectchListUsers()
+  }
+  else { toast('ERROR', res?.message) }
+}
+
+const updateDialogVisible = (event: any) => {
+  isShowDialogNoti.value = event
+}
+
+const confirmDialog = (event: any) => {
+  console.log(event)
+  if (event)
+    deleteAction()
+}
+
 const handleClickBtn = (type: string) => {
   switch (type) {
     case 'fillter':
       isShowFilter.value = !isShowFilter.value
       break
+    case 'delete':
+      deleteItems()
+      break
 
     default:
       break
   }
+}
+
+const handleFilterCombobox = (dataFilter: any) => {
+  console.log(dataFilter)
+}
+
+const selectedRows = (e: any) => {
+  data.listId = e
 }
 
 // watch
@@ -144,7 +196,7 @@ fectchListUsers()
     v-if="isShowFilter"
     class="filter-action"
   >
-    <CpPermisstionFilter />
+    <CpPermisstionFilter @update="handleFilterCombobox" />
   </div>
   <div>
     <CpHeaderAction
@@ -160,6 +212,7 @@ fectchListUsers()
       :items="items"
       :total-record="totalRecord"
       @handlePageClick="handlePageClick"
+      @selectedRows="selectedRows"
     >
       <template #rowItem="{ col, context }">
         <div v-if="col === 'fullName'">
@@ -205,5 +258,14 @@ fectchListUsers()
       </template>
     </CmTable>
   </div>
+  <CpConfirmDialog
+    :type="2"
+    variant="outlined"
+    :confirmation-msg-sub-title="t('users.user.action-modal.delete')"
+    :confirmation-msg="t('users.branch.deleteUser')"
+    :is-dialog-visible="isShowDialogNoti"
+    @update:isDialogVisible="updateDialogVisible"
+    @confirm="confirmDialog"
+  />
 </template>
 

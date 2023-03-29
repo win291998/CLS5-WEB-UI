@@ -1,10 +1,12 @@
 <script setup lang="ts">
+import Globals from '@/constant/Globals'
+
 interface Props {/** ** Interface */
   items?: Array<any>
   maxItem?: number
   multiple?: boolean
   returnObject?: boolean
-  itemTitle?: string
+  customKey?: string
   itemValue?: string
   label?: string
   bgColor?: string
@@ -12,16 +14,16 @@ interface Props {/** ** Interface */
   placeholder?: string
 }
 interface Emit {
-  (e: 'change', value: any): void
+  (e: 'update:modelValue', value: any): void
 }
 
 /** ** Khởi tạo prop emit */
 const props = withDefaults(defineProps<Props>(), ({
   items: () => ([]),
-  maxItem: undefined,
+  maxItem: Globals.MAX_ITEM_SELECT_MULT,
   multiple: false,
   returnObject: false,
-  itemTitle: 'key',
+  customKey: 'key',
   itemValue: 'value',
   label: undefined,
   bgColor: 'white',
@@ -30,12 +32,12 @@ const props = withDefaults(defineProps<Props>(), ({
 }))
 
 const emit = defineEmits<Emit>()
-
+const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 const value = ref([])
 
 /** method */
 const handleChangeValue = event => {
-  emit('change', event)
+  emit('update:modelValue', event)
 }
 </script>
 
@@ -50,7 +52,7 @@ const handleChangeValue = event => {
       v-model="value"
       class="v-select-limit-width"
       :items="items"
-      :item-title="itemTitle"
+      :item-title="customKey"
       :item-value="itemValue"
       :label="label"
       :multiple="multiple"
@@ -63,18 +65,26 @@ const handleChangeValue = event => {
       :return-object="returnObject"
       @update:modelValue="handleChangeValue"
     >
-      <template #selection="{ item, index }">
+      <template
+        v-if="multiple"
+        #selection="{ item, index }"
+      >
         <VChip v-if="maxItem ? index < maxItem : true">
-          <span>{{ item.title }}</span>
+          <span>{{ t(item.title) }}</span>
         </VChip>
         <span
           v-if="maxItem ? index === maxItem : false"
           class="text-grey text-caption align-self-center"
         >
-          (+{{ value.length - (maxItem || 0) }} others)
+          {{ t('and-count-more', { count: value.length - (maxItem || 0) }) }}
         </span>
       </template>
     </VSelect>
   </div>
 </template>
 
+<style lang="scss">
+.v-chip.v-chip--size-small {
+  // margin-block: 5px;
+}
+</style>

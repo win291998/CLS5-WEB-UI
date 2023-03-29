@@ -306,7 +306,7 @@ watch(() => props.items, value => {
                 :size="actionItem?.size || 18"
                 class="align-middle"
                 :class="[actionItem.color]"
-                @click="actionItem?.action ? actionItem?.action(MethodsUtil.checlActionKey(actionItem?.id)) : ''"
+                @click="actionItem?.action ? actionItem?.action(MethodsUtil.checlActionKey(actionItem, context)) : ''"
               />
               <VTooltip
                 activator="parent"
@@ -322,6 +322,7 @@ watch(() => props.items, value => {
             <div class="action-more px-2">
               <CmDropDown
                 :list-item="ArrayUtil.sliceArray(context.actions, Globals.MAX_ITEM_ACTION)"
+                :data="context"
                 custom-key="name"
                 :type="1"
               />
@@ -337,7 +338,7 @@ watch(() => props.items, value => {
             :item-title="itemsHeader?.combobox?.key"
             :item-value="itemsHeader?.combobox?.value"
             :multiple="itemsHeader?.combobox?.multiple"
-            @change="changeCellvalue($event, itemsHeader.value, context.key)"
+            @update:modelValue="changeCellvalue($event, itemsHeader.value, context.key)"
           />
         </div>
         <VTextField

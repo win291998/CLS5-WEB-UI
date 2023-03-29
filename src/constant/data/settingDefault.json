@@ -1,0 +1,52 @@
+{
+  "defaultSetting": [
+    {
+      "id": 0,
+      "typeId": 1,
+      "value": 0,
+      "note": "Ràng buộc cha con"
+    },
+    {
+      "id": 0,
+      "typeId": 2,
+      "value": 0,
+      "note": "Cài đặt trạng thái khi đăng bài diễn đàn"
+    },
+    {
+      "id": 0,
+      "typeId": 3,
+      "value": 0,
+      "note": "Hiện thị tốc độ phát video"
+    },
+    {
+      "id": 0,
+      "typeId": 4,
+      "value": 0,
+      "note": "Hoàn thành khi đạt tỉ lệ điểm"
+    },
+    {
+      "id": 0,
+      "typeId": 5,
+      "value": 0,
+      "note": "đăng nhập 1 thiết bị"
+    },
+    {
+      "id": 0,
+      "typeId": 6,
+      "value": 0,
+      "note": "Vẫn đếm thời gian khi chuyển tab"
+    },
+    {
+      "id": 0,
+      "typeId": 7,
+      "value": 0,
+      "note": "Tự động gán người dùng vào nội dung"
+    },
+    {
+      "id": 0,
+      "typeId": 8,
+      "value": 0,
+      "note": "Thứ tự săp xếp khóa học"
+    }
+  ]
+}
