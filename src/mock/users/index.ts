@@ -1,4 +1,6 @@
 import ApiUser from '@/api/user/index'
+import ComboboxService from '@/api/combobox/index'
+import { orgStructCb } from '@/mock/dataApi/combobox.json'
 
 export const listUser: any = {
   code: 200,
@@ -470,6 +472,9 @@ export const fetchData = async (url = '', method = 'GET', payload?: any) => {
   switch (url) {
     case ApiUser.UsersList:
       return await window._.cloneDeep(listUser)
+      break
+    case ComboboxService.AllOrgStruct:
+      return await window._.cloneDeep(orgStructCb)
       break
 
     default:

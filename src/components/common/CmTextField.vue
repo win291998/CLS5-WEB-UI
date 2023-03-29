@@ -15,19 +15,24 @@ const props = withDefaults(defineProps<Props>(), ({
   bgColor: 'white',
 }))
 
-const rules = [
-  (value: any) => !!value || 'Required.',
-  (value: any) => (value && value.length >= 3) || 'Min 3 characters',
-]
+const formFilter = reactive({
+  search: null,
+})
+
+/** Method */
+const handleChangeText = () => {
+  console.log(formFilter)
+}
 </script>
 
 <template>
   <VTextField
+    v-model="formFilter.search"
     :prepend-inner-icon="props.prependInnerIcon"
     :label="props.label"
-    :rules="rules"
     :bg-color="bgColor"
     hide-details="auto"
+    @update:modelValue="handleChangeText"
   />
 </template>
 

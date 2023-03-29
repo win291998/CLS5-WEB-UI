@@ -15,8 +15,8 @@ const UserService = {
   RoleFeaturePermission: '/usertype/get-feature-permission-by-portal',
 
   /// get danh sách:
-
   UsersList: '/User/get-all-users-paging', // danh sách người dùng
+  UsersDelete: '/user/delete',
 
 }
 

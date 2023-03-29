@@ -20,7 +20,7 @@ export default [
     component: () => import('@/pages/guilde/table.vue'),
   },
   {
-    path: '/guilde/table-group',
+    path: 'guilde/table-group',
     name: 'guilde-table-group',
     component: () => import('@/pages/guilde/table-group.vue'),
   },

@@ -1,6 +1,19 @@
 <script setup lang="ts">
-import CmButton from '@/components/common/CmButton.vue'
-import CmTextField from '@/components/common/CmTextField.vue'
+const props = withDefaults(defineProps<Props>(), ({
+  isDelete: false,
+  disabledDelete: false,
+  isBack: false,
+  disabledBack: false,
+  isApprove: false,
+  disabledApprove: false,
+  isFillter: true,
+  disabledFillter: false,
+}))
+
+const emit = defineEmits<Emit>()
+const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
+const CmButton = defineAsyncComponent(() => import('@/components/common/CmButton.vue'))
+const CmTextField = defineAsyncComponent(() => import('@/components/common/CmTextField.vue'))
 
 /*
   isDelete: Hiện thị button delete
@@ -17,24 +30,22 @@ interface Props {
   disabledFillter?: boolean
 }
 
-const props = withDefaults(defineProps<Props>(), ({
-  isDelete: false,
-  disabledDelete: false,
-  isBack: false,
-  disabledBack: false,
-  isApprove: false,
-  disabledApprove: false,
-  isFillter: false,
-  disabledFillter: false,
-}))
-
-const emit = defineEmits<Emit>()
-
 interface Emit {
   (e: 'click', type: string): void
 }
 
+const isShowFilter = ref(props.isFillter)
+
 const handleClickBtn = (type: string) => {
+  switch (type) {
+    case 'fillter':
+      isShowFilter.value = !isShowFilter.value
+      break
+
+    default:
+      break
+  }
+
   emit('click', type)
 }
 </script>
@@ -50,39 +61,36 @@ const handleClickBtn = (type: string) => {
         <CmButton
           v-if="isDelete"
           size="40"
-          color="bg-error"
+          color="error"
           class="mr-3"
           :disabled="disabledDelete"
           @click="handleClickBtn('delete')"
         >
           <VIcon
             icon="tabler:trash"
-            color="#fff"
           />
         </CmButton>
         <CmButton
           v-if="isBack"
           :disabled="disabledBack"
           size="40"
-          color="bg-error"
+          color="error"
           class="mr-3"
           @click="handleClickBtn('back')"
         >
           <VIcon
             icon="tabler:corner-down-left"
-            color="#fff"
           />
         </CmButton>
         <CmButton
           v-if="isApprove"
           :disabled="disabledApprove"
           size="40"
-          color="bg-success"
+          color="success"
           @click="handleClickBtn('approve')"
         >
           <VIcon
             icon="mdi-checkbox-marked-circle-outline"
-            color="#fff"
           />
         </CmButton>
       </div>
@@ -109,7 +117,7 @@ const handleClickBtn = (type: string) => {
             text-color="color-dark"
             @click="handleClickBtn('fillter')"
           >
-            Ẩn lọc
+            {{ isShowFilter ? t('hide-filter') : t('show-filter') }}
           </CmButton>
         </VCol>
       </VRow>

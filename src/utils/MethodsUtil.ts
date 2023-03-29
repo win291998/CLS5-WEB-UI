@@ -83,10 +83,10 @@ export default class MethodsUtil {
     })
   }
 
-  static checlActionKey = (id: number) => {
-    const action = ActionType.find(item => item.id === id)
+  static checlActionKey = (itemRow: any, data: any) => {
+    const action = ActionType.find((item: any) => item.id === itemRow.id)
 
-    return action ? action.name : id
+    return [action || itemRow, data]
   }
 
   static checkActionType = (data: any, callback: CallbackFunction) => {
