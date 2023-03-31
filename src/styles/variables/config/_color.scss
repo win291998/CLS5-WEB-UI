@@ -80,7 +80,7 @@ $color-default: #1849a9; // càu chủ đạo
 $color-line-default: #eaecf0; // màu các đường kẻ, border
 
 /**  color text */
-$color-text-default: #344054; // màu chữ mặc định
+$color-text-default: $color-gray-700; // màu chữ mặc định
 $color-text-bold-default: #101828;  // màu chữ in đậm
 
 /** checkbox */
@@ -90,4 +90,7 @@ $color-checkbox-selected: $color-primary-600;
 $color-checkbox-indeterminate: $color-primary-600;
 
 /** icon */
-$color-icon-default: #344054;
+$color-icon-default: $color-gray-700;
+
+/** color border default */
+$color-icon-default: $color-gray-700;

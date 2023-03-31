@@ -125,6 +125,8 @@ defineExpose({
 @use "/src/styles/style-global" as *;
 
 .text-style-btn {
+  padding-block: 10px;
+  padding-inline: 16px;
   text-transform: inherit;
 }
 </style>

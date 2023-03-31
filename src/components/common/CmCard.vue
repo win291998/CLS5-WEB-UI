@@ -35,7 +35,6 @@ const props = withDefaults(defineProps<Props>(), ({
     :href="props.href"
     :rounded="props.rounded"
     :variant="props.variant"
-    style="width: 500px;"
     :class="`${props.shadow} ${props.backgroud}`"
   >
     <template #image>
@@ -53,9 +52,17 @@ const props = withDefaults(defineProps<Props>(), ({
     <template #text>
       <slot name="text" />
     </template>
+    <template #actions>
+      <slot name="actions" />
+    </template>
   </VCard>
 </template>
 
 <style lang="scss">
 @use "/src/styles/style-global" as *;
+
+.v-card-title {
+  color: $color-gray-900;
+  font-weight: $weight-md;
+}
 </style>

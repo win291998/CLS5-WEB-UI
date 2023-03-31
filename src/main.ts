@@ -33,7 +33,7 @@ const app = createApp(App)
 const options = {
   // You can set your default options here
   position: 'top-right',
-  timeout: 500000,
+  timeout: 1000,
   closeOnClick: true,
   pauseOnFocusLoss: true,
   pauseOnHover: true,

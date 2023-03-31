@@ -56,6 +56,7 @@ const emit = defineEmits<Emit>()
 interface Emit {
   (e: 'change', data: any): void
 }
+const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 
 const handleChange = (event: any) => {
   emit('change', event)
@@ -112,7 +113,8 @@ const handleClickItem = (event: any) => {
               class="mr-2 color-dark"
               :class="[item.colorClass]"
             />
-            <span class="text-medium-sm">{{ item[customKey] }}</span>
+            <span class="text-medium-sm">{{ t(item[customKey]) }}
+            </span>
           </VListItemTitle>
           <template #append>
             <VIcon
