@@ -32,6 +32,7 @@ interface Props {
 
 interface Emit {
   (e: 'click', type: string): void
+  (e: 'search', type: any): void
 }
 
 const isShowFilter = ref(props.isFillter)
@@ -47,6 +48,10 @@ const handleClickBtn = (type: string) => {
   }
 
   emit('click', type)
+}
+
+const handleSearch = (value: any) => {
+  emit('search', value)
 }
 </script>
 
@@ -107,6 +112,7 @@ const handleClickBtn = (type: string) => {
             label="Tìm kiếm"
             class="mr-3 header-action-field"
             prepend-inner-icon="tabler-search"
+            @change="handleSearch"
           />
           <CmButton
             v-if="isFillter"

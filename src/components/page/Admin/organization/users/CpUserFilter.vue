@@ -4,6 +4,7 @@ import MethodsUtil from '@/utils/MethodsUtil'
 import ComboboxService from '@/api/combobox/index'
 import { TYPE_REQUEST } from '@/typescript/enums/enums'
 import CpOrganizationSelect from '@/components/page/gereral/CpOrganizationSelect.vue'
+import { comboboxStore } from '@/stores/combobox'
 
 /** ** Interface */
 interface Emit {
@@ -11,6 +12,10 @@ interface Emit {
 }
 const emit = defineEmits<Emit>()
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
+/** ** Khởi tạo store */
+const store = comboboxStore()
+const { combobox } = store
+const { fetchStatusUsersCombobox, fetchTypeUsersCombobox, fetchTOrgStructCombobox } = store
 
 const LABEL = Object.freeze({
   FILLTER1: 'Tình trạng hoạt động',
@@ -26,36 +31,7 @@ const formFilter = reactive({
   userTypeList: null,
 })
 
-const comboboxFilter = reactive({
-  statuses: [],
-  organizations: [],
-  userType: [],
-})
-
 // method
-// Lấy danh sách trạng thái người dùng
-const fetchStatusUsers = async () => {
-  const params = { statusList: [1, 2, 3, 5] }
-  const res = await MethodsUtil.requestApiCustom(ComboboxService.StatusUser, TYPE_REQUEST.POST, params).then((value: any) => value)
-
-  if (res.code === 200) {
-    comboboxFilter.statuses = res?.data?.map(item => {
-      return {
-        ...item,
-        value: t(item.value),
-      }
-    })
-  }
-  console.log(comboboxFilter)
-}
-
-// Lấy danh sách kiểu người dùng
-const fetchTypeUsers = async () => {
-  const res = await MethodsUtil.requestApiCustom(ComboboxService.TypeUsers, TYPE_REQUEST.GET).then((value: any) => value)
-  if (res.code === 200)
-    comboboxFilter.userType = res?.data || []
-  console.log(res)
-}
 
 const change = () => {
   console.log(formFilter)
@@ -63,8 +39,13 @@ const change = () => {
 }
 
 // created
-fetchStatusUsers()
-fetchTypeUsers()
+
+if (window._.isEmpty(combobox.statuses))
+  fetchStatusUsersCombobox()
+if (window._.isEmpty(combobox.userType))
+  fetchTypeUsersCombobox()
+if (window._.isEmpty(combobox.organizations))
+  fetchTOrgStructCombobox()
 </script>
 
 <template>
@@ -76,7 +57,7 @@ fetchTypeUsers()
     >
       <CmSelect
         v-model="formFilter.statusList"
-        :items="comboboxFilter?.statuses"
+        :items="combobox?.statuses"
         multiple
         item-value="key"
         custom-key="value"
@@ -92,7 +73,7 @@ fetchTypeUsers()
     >
       <CpOrganizationSelect
         v-model="formFilter.structures"
-        :items="comboboxFilter?.statuses"
+        :items="combobox?.organizations"
         :text="LABEL.FILLTER2"
         :placeholder="LABEL.FILLTER2"
         @update:modelValue="change"
@@ -105,7 +86,7 @@ fetchTypeUsers()
     >
       <CmSelect
         v-model="formFilter.userTypeList"
-        :items="comboboxFilter?.userType"
+        :items="combobox?.userType"
         :text="LABEL.FILLTER3"
         item-value="id"
         multiple
