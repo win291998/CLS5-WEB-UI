@@ -13,6 +13,7 @@ interface Props {
   className?: string
   buttonOkName?: string
   buttonCancleName?: string
+  isHideFooter?: boolean
 }
 
 interface Emit {
@@ -25,6 +26,7 @@ const props = withDefaults(defineProps<Props>(), ({
   variant: 'outlined',
   buttonOkName: 'common.ok-title',
   buttonCancleName: 'common.cancel-title',
+  isHideFooter: false,
 }))
 
 const emit = defineEmits<Emit>()
@@ -92,10 +94,14 @@ const onCancel = () => {
         </div>
         <div class="text-regular-sm text-title-sub-noti">
           {{ props.confirmationMsgSubTitle }}
+          <slot name="sub-title" />
         </div>
       </VCardText>
 
-      <VCardActions class="align-center justify-center gap-2">
+      <VCardActions
+        v-if="!isHideFooter"
+        class="align-center justify-center gap-2"
+      >
         <CmButton
           variant="outlined"
           bg-color="bg-white"

@@ -1,10 +1,7 @@
 <script setup lang="ts">
 import CmSelectTree from '@/components/common/CmSelectTree.vue'
-import MethodsUtil from '@/utils/MethodsUtil'
 import ArrayUtil from '@/utils/ArrayUtil'
-import ComboboxService from '@/api/combobox/index'
-import { TYPE_REQUEST } from '@/typescript/enums/enums'
-import { fetchData } from '@/mock/users/index'
+import { comboboxStore } from '@/stores/combobox'
 
 interface Props {/** ** Interface */
   value?: any
@@ -26,7 +23,6 @@ interface Emit {
 
 /** ** Khởi tạo prop emit */
 const props = withDefaults(defineProps<Props>(), ({
-  items: () => ([]),
   multiple: false,
   customKey: 'id',
   label: undefined,
@@ -36,24 +32,27 @@ const props = withDefaults(defineProps<Props>(), ({
 }))
 
 const emit = defineEmits<Emit>()
+
+/** ** Khởi tạo store */
+const store = comboboxStore()
+const { combobox } = store
+const { fetchTOrgStructCombobox } = store
 const organizations = ref<Array<any>>([])
 
 const options = ref()
 
 const getAllOrgStruct = async () => {
-  const res = await MethodsUtil.requestApiCustom(ComboboxService.AllOrgStruct, TYPE_REQUEST.GET).then((value: any) => value)
+  if (!window._.isEmpty(combobox?.organizations)) {
+    console.log(combobox.organizations)
 
-  // const res = await fetchData(ComboboxService.AllOrgStruct, TYPE_REQUEST.GET).then((value: any) => value)
-  if (res.code === 200 && res.data) {
-    let data = res.data
+    const data = window._.cloneDeep(combobox.organizations)
     if (props.excludeId) {
       const positionExclude = data.findIndex((item: any) => item[props.customKey] === props.excludeId)
 
-      data = window._.pullAt(data, 10)
-      console.log(positionExclude)
+      combobox.organizations = window._.pullAt(data, positionExclude)
     }
 
-    options.value = ArrayUtil.formatSelectTree(res.data, 'parentId', props.customKey)
+    options.value = ArrayUtil.formatSelectTree(combobox.organizations, 'parentId', props.customKey)
   }
 }
 
@@ -61,7 +60,15 @@ const handleChangeSelect = (data: any) => {
   emit('update:modelValue', data)
 }
 
-getAllOrgStruct()
+onMounted(async () => {
+  if (window._.isEmpty(combobox.organizations)) {
+    await fetchTOrgStructCombobox()
+    await getAllOrgStruct()
+  }
+  else {
+    await getAllOrgStruct()
+  }
+})
 </script>
 
 <template>

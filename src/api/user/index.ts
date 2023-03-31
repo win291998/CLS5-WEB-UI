@@ -16,7 +16,8 @@ const UserService = {
 
   /// get danh sách:
   UsersList: '/User/get-all-users-paging', // danh sách người dùng
-  UsersDelete: '/user/delete',
+  UsersDelete: '/user/delete', // Xóa người dùng
+  ResetPassword: '/user/set-password', // Cập nhật mật khẩu
 
 }
 

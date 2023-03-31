@@ -5,7 +5,7 @@ export default [
     component: () => import('@/pages/guilde/tree-select.vue'),
   },
   {
-    path: '/guilde/import-file',
+    path: 'guilde/import-file',
     name: 'guilde-import-file',
     component: () => import('@/pages/guilde/import-file.vue'),
   },
@@ -56,9 +56,9 @@ export default [
       {
         path: 'users',
         meta: {
-          requireAuth: {
-            permission: 'UserManaging',
-          },
+          // requireAuth: {
+          //   permission: 'UserManaging',
+          // },
         },
         name: 'admin-organization-users',
         component: () => import('@/pages/admin/organization/users/Users.vue'),
