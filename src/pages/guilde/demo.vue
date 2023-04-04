@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 import { useToast } from 'vue-toastification'
+import login from '../login.vue'
+import Permission from '../admin/organization/permission/Permission.vue'
+import treeSelect from './tree-select.vue'
 import { load } from '@/stores/loadComponent'
 import CmButton from '@/components/common/CmButton.vue'
 
@@ -10,6 +13,7 @@ import CmCard from '@/components/common/CmCard.vue'
 import CmDropDown from '@/components/common/CmDropDown.vue'
 import CmButtonGroup from '@/components/common/CmButtonGroup.vue'
 import CmSwitch from '@/components/common/CmSwitch.vue'
+import CmTab from '@/components/common/CmTab.vue'
 
 const showToast = () => {
   console.log(button123.value)
@@ -44,6 +48,30 @@ const handleItem2 = value => {
 const handleItem3 = (value: any) => {
   // console.log(value)
 }
+
+const listTab = [
+  {
+    key: 'infor1',
+    title: 'win hello',
+    icon: 'mdi-check-circle',
+    component: login,
+    isRendered: false,
+  },
+  {
+    key: 'infor2',
+    title: 'win hello',
+    icon: 'mdi-check-circle',
+    component: treeSelect,
+    isRendered: false,
+  },
+  {
+    key: 'infor3',
+    title: 'win hello',
+    icon: 'mdi-check-circle',
+    component: Permission,
+    isRendered: false,
+  },
+]
 
 const action = [{
   title: 'Xem chi tiết',
@@ -116,6 +144,7 @@ const button123 = ref(null)
   />
   <CmButtonGroup
     :list-item="action"
+    title="hello"
     @click-prepend="handlerPreButton"
   >
     hello win
@@ -218,4 +247,13 @@ const button123 = ref(null)
       </VChipGroup>
     </div>
   </CmCard>
+  <div
+    class="d-flex justify-content-center"
+    style="margin-top: 20px; "
+  >
+    <CmTab
+      :list-tab="listTab"
+      type="underline"
+    />
+  </div>
 </template>

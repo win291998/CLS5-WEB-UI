@@ -11,3 +11,5 @@ export enum TYPE_REQUEST {
   UPDATE = 'UPDATE',
 }
 export const size = ['x-small', 'small', 'default', 'large', 'x-large'] as const
+export const typeTab = ['button', 'underline'] as const
+

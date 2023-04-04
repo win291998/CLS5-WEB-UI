@@ -30,6 +30,7 @@ export const load = defineStore('load', () => {
   // clear component
   const $reset = () => {
     components.value = []
+    countComponent.value = 0
   }
 
   const loadMultiplecomponents = (array: number[]) => {
