@@ -3,7 +3,7 @@ import { useRoute } from 'vue-router'
 
 const route = useRoute()
 
-const items = route?.meta?.breadcrumb
+const items = route?.meta?.breadcrumb as any
 </script>
 
 <template>
@@ -38,7 +38,6 @@ const items = route?.meta?.breadcrumb
 
 .breadcrumb {
   padding-inline-start: 0 !important;
-
   .v-breadcrumbs-item--disabled {
     color: $color-primary-700;
     opacity: 1 !important;

@@ -24,7 +24,7 @@ interface Props {
   isBorder?: boolean
   isDiabledPrepend?: boolean
   isDiabledAppend?: boolean
-  size?: typeof size[number]
+  size?: typeof size[any]
   title: string
 }
 interface ListItem {

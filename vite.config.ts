@@ -42,9 +42,9 @@ export default defineConfig(({ mode }) => {
 
       // https://github.com/vuetifyjs/vuetify-loader/tree/next/packages/vite-plugin
       vuetify({
-        styles: {
-          configFile: 'src/styles/variables/_vuetify.scss',
-        },
+        // styles: {
+        //   configFile: 'src/styles/variables/_vuetify.scss',
+        // },
       }),
       Layouts({
         // layoutsDirs: 'src/layouts',

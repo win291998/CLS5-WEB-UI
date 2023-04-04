@@ -1,75 +1,61 @@
 import { setupLayouts } from 'virtual:generated-layouts'
+import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router'
 import { createRouter, createWebHistory } from 'vue-router'
-import * as token from './token.json'
-import { getHomeRouteForLoggedInUser, parseJwt } from './utils'
+import { getHomeRouteForLoggedInUser, getUserData, parseJwt } from './utils'
+import error from './errors/error.router'
 import admin from '@/router/admin/admin.router'
+import MethodsUtil from '@/utils/MethodsUtil'
 import { load } from '@/stores/loadComponent'
+import { TYPE_REQUEST } from '@/typescript/enums/enums'
 
 const generalRoutes = [
+  { path: '/', redirect: { name: 'login' } },
   {
-    path: '/',
+    path: '/login',
     name: 'login',
     meta: {
       layout: 'blank',
       parent: '',
       pageTitle: 'Quản lí người dùng',
-      auth: {
-        permissionKey: 'UserManaging',
-        permissionValue: 1,
-      },
-
+      redirectIfLoggedIn: true,
     },
     component: () => import('@/pages/login.vue'),
   },
   ...admin,
+  ...error,
 ]
 
-const permission: object = parseJwt(token.token)
+const token = localStorage.getItem('accessToken')
+
+const permission: any = token ? parseJwt(token) : {}
 
 const isUserLoggedIn = () => {
   return !!permission
 }
 
-const checkPortal = async (next, to) => {
-  const checkFlag = true
-  if (checkFlag) {
-    const isLoggedIn = isUserLoggedIn()
-    if (!canNavigate(to)) {
-      // Redirect to login if not logged in
-      if (!isLoggedIn) {
-        try {
-          const { data } = await axios.get(`${process.env.VUE_APP_BASE_API}/widget/get-all`)
-          if (data?.data?.length > 0) {
-            return next({
-              name: 'home-page',
-            })
-          }
+const checkPortal: any = async (next: any, to: any) => {
+  const isLoggedIn = isUserLoggedIn()
 
-          return next({
-            name: 'auth-login',
-            query: { redirect: to.fullPath },
-          })
-        }
-        catch {
-          window.location.replace('https://cls.vn/')
-        }
+  if (!isLoggedIn) {
+    try {
+      const { data } = await MethodsUtil.requestApiCustom(`${process.env.VUE_APP_BASE_API}/widget/get-all`, TYPE_REQUEST.GET)
+      if (data?.data?.length > 0) {
+        return next({
+          name: 'home-page',
+        })
       }
 
-      // If logged in => not authorized
-      return next({ name: 'misc-not-authorized' })
+      return next({
+        name: 'auth-login',
+        query: { redirect: to.fullPath },
+      })
     }
-
-    // Redirect if logged in
-    if (to.meta.redirectIfLoggedIn && isLoggedIn) {
-      const userData = getUserData()
-
-      next(getHomeRouteForLoggedInUser(userData ? userData.roles : null))
+    catch {
+      window.location.replace('https://cls.vn/')
     }
-
-    return next()
   }
 
-  return next({ name: 'misc-error' })
+  return next()
 }
 
 const router = createRouter({
@@ -82,6 +68,7 @@ const router = createRouter({
   },
 })
 
+// reset loading button
 router.beforeEach((to, from, next) => {
   const store = load()
 
@@ -91,13 +78,25 @@ router.beforeEach((to, from, next) => {
   return next()
 })
 
-router.beforeEach((to: any, from: any, next: any) => {
-  if (to?.meta?.requireAuth) {
-    if (isLoggedIn)
-      return next({ name: 'login' })
+router.beforeEach((to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
+  if (!isUserLoggedIn())
+    return checkPortal(next, to)
 
-    if (to?.meta?.permission && permission[to.meta.permission] & 1)
+  if (to.meta.requireAuth) {
+    const requireAuth: any = to.meta.requireAuth || {}
+    const key: string = requireAuth.permissionKey || ''
+
+    // Redirect if logged in
+    if (to.meta.redirectIfLoggedIn && isUserLoggedIn()) {
+      const userData = getUserData()
+
+      next(getHomeRouteForLoggedInUser(userData ? userData.roles : null))
+    }
+
+    if (!(Number(permission[key]) & 1))
       return next({ name: 'error-403' })
+
+    return next()
   }
 
   return next()

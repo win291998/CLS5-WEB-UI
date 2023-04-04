@@ -19,17 +19,26 @@ export const getUserData = () => {
  * NOTE: If you have different pages to navigate based on user ability then this function can be useful. However, you need to update it.
  * @param {String} userRole Role of user
  */
-export const getHomeRouteForLoggedInUser = (userRole: string) => {
-  if (userRole === 'admin')
-    return '/'
-  if (userRole === 'client')
-    return { name: 'access-control' }
+// export const getHomeRouteForLoggedInUser = (userRole: string) => {
+//   if (userRole === 'admin')
+//     return '/'
+//   if (userRole === 'client')
+//     return { name: 'access-control' }
 
-  return { name: 'login' }
+//   return { name: 'login' }
+// }
+
+export const getHomeRouteForLoggedInUser = (userRoles: any) => {
+  if (userRoles.length > 0)
+    return { name: userRoles[0].router }
+
+  // if (userRole === 'admin') return '/'
+  // if (userRole === 'client') return { name: 'access-control' }
+  return { name: 'auth-login' }
 }
 
 export const parseJwt = (token: any) => {
-  const base64Url = token.split('.')[1]
+  const base64Url = token?.split('.')[1]
   const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
   const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => `%${(`00${c.charCodeAt(0).toString(16)}`).slice(-2)}`).join(''))
 
