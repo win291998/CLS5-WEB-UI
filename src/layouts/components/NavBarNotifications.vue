@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import Notifications from '@core/components/Notifications.vue'
+import Notifications from '@/components/components/Notifications.vue'
 import type { Notification } from '@layouts/types'
 
 // Images

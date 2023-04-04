@@ -121,4 +121,22 @@ export default class MethodsUtil {
         return `${lastName || '-'} ${firstName || '-'}`
     }
   }
+
+  // // kiểm tra quyền trên view
+  // const checkPermission = (key, value) => {
+  //   let permission = store.getters['app/permission']
+  //   if (permission === null) {
+  //     const token = useJwt.getToken()
+  //     if (!token)
+  //       return false
+  //     permission = parseJwt(token)
+  //     store.commit('app/UPDATE_PERMISSION', permission)
+  //   }
+  //   const propertyValue = permission[key]
+  //   if (!propertyValue)
+  //     return false
+  //   const valueNumber = parseInt(propertyValue, 10)
+
+  //   return valueNumber && (valueNumber & value) === value
+  // }
 }
