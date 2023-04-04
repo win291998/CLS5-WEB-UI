@@ -819,6 +819,7 @@
     "update-profile": "Chỉnh sửa hồ sơ",
     "upload": "Tải lên",
     "upload-file": "Tải tập tin lên",
+    "upload-file-success": "Tải lên thành công",
     "url": "Đường dẫn",
     "token": "Access Token",
     "user": "Người dùng",
@@ -4513,5 +4514,7 @@
   "NotNull": "không được bỏ trống",
   "Duplicate": "bị trùng lặp",
   "Exist": "đã tồn tại",
-  "NotExist": "không tồn tại"
+  "NotExist": "không tồn tại",
+  "success": "Thành công",
+  "USR_GetFailed": "Không lấy được giữ liệu"
 }

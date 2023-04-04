@@ -35,24 +35,22 @@ const emit = defineEmits<Emit>()
 
 /** ** Khởi tạo store */
 const store = comboboxStore()
-const { combobox } = store
+const { organizations } = storeToRefs(store)
 const { fetchTOrgStructCombobox } = store
-const organizations = ref<Array<any>>([])
+const organizationsValue = ref<Array<any>>([])
 
 const options = ref()
 
 const getAllOrgStruct = async () => {
-  if (!window._.isEmpty(combobox?.organizations)) {
-    console.log(combobox.organizations)
-
-    const data = window._.cloneDeep(combobox.organizations)
+  if (!window._.isEmpty(organizations.value)) {
+    const data = window._.cloneDeep(organizations.value)
     if (props.excludeId) {
       const positionExclude = data.findIndex((item: any) => item[props.customKey] === props.excludeId)
 
-      combobox.organizations = window._.pullAt(data, positionExclude)
+      organizations.value = window._.pullAt(data, positionExclude)
     }
 
-    options.value = ArrayUtil.formatSelectTree(combobox.organizations, 'parentId', props.customKey)
+    options.value = ArrayUtil.formatSelectTree(organizations.value, 'parentId', props.customKey)
   }
 }
 
@@ -61,7 +59,7 @@ const handleChangeSelect = (data: any) => {
 }
 
 onMounted(async () => {
-  if (window._.isEmpty(combobox.organizations)) {
+  if (window._.isEmpty(organizations.value)) {
     await fetchTOrgStructCombobox()
     await getAllOrgStruct()
   }
@@ -79,7 +77,7 @@ onMounted(async () => {
   </div>
   <div>
     <CmSelectTree
-      v-model="organizations"
+      v-model="organizationsValue"
       :options="options"
       :placeholder="props.text"
       value-format="id"

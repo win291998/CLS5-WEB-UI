@@ -33,7 +33,7 @@ const app = createApp(App)
 const options = {
   // You can set your default options here
   position: 'top-right',
-  timeout: 1000,
+  timeout: 3000,
   closeOnClick: true,
   pauseOnFocusLoss: true,
   pauseOnHover: true,
@@ -66,9 +66,9 @@ windowDefineProperty(app)
 app.use(vuetify)
 app.use(pinia)
 app.use(Toast, options)
-app.use(layoutsPlugin)
 app.use(lodash)
 app.use(i18n)
+app.use(layoutsPlugin)
 app.component('EasyDataTable', Vue3EasyDataTable)
 
 app.use(router)

@@ -55,6 +55,7 @@ const onCancel = () => {
     <VDialog
       :model-value="props.isDialogVisible"
       width="800"
+      close-on-back
       @update:model-value="updateModelValue"
     >
       <CmCard backgroud="bg-white">

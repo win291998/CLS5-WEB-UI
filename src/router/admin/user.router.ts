@@ -61,7 +61,35 @@ export default [
           // },
         },
         name: 'admin-organization-users',
-        component: () => import('@/pages/admin/organization/users/Users.vue'),
+        component: () => import('@/pages/admin/organization/users/Index.vue'),
+        redirect: { name: 'admin-organization-users-manager' },
+        children: [
+          {
+            path: '',
+            name: 'admin-organization-users-manager',
+            component: () => import('@/pages/admin/organization/users/Users.vue'),
+          },
+          {
+            path: 'profile',
+            name: 'admin-organization-users-profile',
+            meta: {
+              parent: 'users',
+              pageTitle: 'users.add-user.title',
+              breadcrumb: [
+                {
+                  title: 'users.user.title-table.user-list',
+                  to: { name: 'admin-organization-users' },
+                },
+                {
+                  title: 'common.add',
+
+                  active: true,
+                },
+              ],
+            },
+            component: () => import('@/pages/admin/organization/users/profile/Profile.vue'),
+          },
+        ],
       },
       {
         path: 'user-groups',

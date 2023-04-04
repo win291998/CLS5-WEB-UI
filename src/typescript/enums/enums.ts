@@ -11,3 +11,8 @@ export enum TYPE_REQUEST {
   UPDATE = 'UPDATE',
 }
 export const size = ['x-small', 'small', 'default', 'large', 'x-large'] as const
+declare const block: readonly ['top', 'bottom']
+declare const inline: readonly ['start', 'end', 'left', 'right']
+declare type Tblock = typeof block[number]
+declare type Tinline = typeof inline[number]
+export type Anchor = Tblock | Tinline | 'center' | 'center center' | `${Tblock} ${Tinline | 'center'}` | `${Tinline} ${Tblock | 'center'}`

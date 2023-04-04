@@ -24,7 +24,7 @@ h6,
 .text-button,
 .text-overline,
 .v-card-title {
-  color: rgba(var(--v-theme-on-background), var(--v-high-emphasis-opacity));
+  color: rgba(var(--v-color-text-primary));
 }
 
 .v-application,
@@ -32,7 +32,7 @@ h6,
 .text-body-2,
 .text-subtitle-1,
 .text-subtitle-2 {
-  color: rgba(var(--v-theme-on-background), var(--v-medium-emphasis-opacity));
+  color: rgba(var(--v-color-text-primary));
 }
 
 // 👉 Grid

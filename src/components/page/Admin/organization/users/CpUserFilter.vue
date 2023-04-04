@@ -1,8 +1,5 @@
 <script setup lang="ts">
 import CmSelect from '@/components/common/CmSelect.vue'
-import MethodsUtil from '@/utils/MethodsUtil'
-import ComboboxService from '@/api/combobox/index'
-import { TYPE_REQUEST } from '@/typescript/enums/enums'
 import CpOrganizationSelect from '@/components/page/gereral/CpOrganizationSelect.vue'
 import { comboboxStore } from '@/stores/combobox'
 
@@ -14,7 +11,8 @@ const emit = defineEmits<Emit>()
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 /** ** Khởi tạo store */
 const store = comboboxStore()
-const { combobox } = store
+const { statuses, organizations, userType } = storeToRefs(store)
+
 const { fetchStatusUsersCombobox, fetchTypeUsersCombobox, fetchTOrgStructCombobox } = store
 
 const LABEL = Object.freeze({
@@ -40,11 +38,11 @@ const change = () => {
 
 // created
 
-if (window._.isEmpty(combobox.statuses))
+if (window._.isEmpty(statuses.value))
   fetchStatusUsersCombobox()
-if (window._.isEmpty(combobox.userType))
+if (window._.isEmpty(userType.value))
   fetchTypeUsersCombobox()
-if (window._.isEmpty(combobox.organizations))
+if (window._.isEmpty(organizations.value))
   fetchTOrgStructCombobox()
 </script>
 
@@ -57,7 +55,7 @@ if (window._.isEmpty(combobox.organizations))
     >
       <CmSelect
         v-model="formFilter.statusList"
-        :items="combobox?.statuses"
+        :items="statuses"
         multiple
         item-value="key"
         custom-key="value"
@@ -73,7 +71,6 @@ if (window._.isEmpty(combobox.organizations))
     >
       <CpOrganizationSelect
         v-model="formFilter.structures"
-        :items="combobox?.organizations"
         :text="LABEL.FILLTER2"
         :placeholder="LABEL.FILLTER2"
         @update:modelValue="change"
@@ -86,7 +83,7 @@ if (window._.isEmpty(combobox.organizations))
     >
       <CmSelect
         v-model="formFilter.userTypeList"
-        :items="combobox?.userType"
+        :items="userType"
         :text="LABEL.FILLTER3"
         item-value="id"
         multiple

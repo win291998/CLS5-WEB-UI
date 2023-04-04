@@ -7,6 +7,9 @@ const Globals = Object.freeze({
   PAGINATION_CURRENT_PAGE: 1,
   MAX_ITEM_SELECT_MULT: 3,
   MAX_ITEM_ACTION: 2,
+  SIZE_AVATAR_DEFAULT: 40,
+  SIZE_ICON_DEFAULT: 16,
+  VARIANT_DEFAULT: 'tonal',
 
   /** File */
   documentExtention: '.doc, .docx, .pptx, .pptm, .ppt, .pdf, application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document',

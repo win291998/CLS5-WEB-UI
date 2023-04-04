@@ -3,47 +3,59 @@ import type { JSXComponent, PropType } from 'vue'
 
 type IconValue = string | JSXComponent
 
-/** ** Interface */
-
-interface Props {
-  prependInnerIcon?: IconValue
-  label?: string
-  bgColor?: string
-}
-interface Emit {
-  (e: 'update:modelValue', value: any): void
-  (e: 'change', value: any): void
-}
-
 const props = withDefaults(defineProps<Props>(), ({
   prependInnerIcon: '',
   label: '',
   bgColor: 'white',
 }))
 
-const emit = defineEmits<Emit>()
+const emit = defineEmits<Emit>(); const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
+/** ** Interface */
 
-const formFilter = reactive({
-  search: null,
-})
+interface Props {
+  modelValue?: any
+  prependInnerIcon?: IconValue
+  label?: string
+  bgColor?: string
+  errors?: any
+  field?: any
+  placeholder?: any
+}
+interface Emit {
+  (e: 'update:modelValue', value: any): void
+  (e: 'change', value: any): void
+}
+
+const formModelValue = ref(props.modelValue)
 
 /** Method */
 const handleChangeText = () => {
-  emit('change', formFilter)
+  emit('change', formModelValue.value)
 }
 
 const handleUpdateText = () => {
-  emit('update:modelValue', formFilter)
+  emit('update:modelValue', formModelValue.value)
 }
+
+const messageError = computed(() => {
+  if (props.errors.length)
+    return t(props.errors[0])
+
+  return ''
+})
 </script>
 
 <template>
   <VTextField
-    v-model="formFilter.search"
+    v-model="formModelValue"
+    v-bind="field"
     :prepend-inner-icon="props.prependInnerIcon"
     :label="props.label"
     :bg-color="bgColor"
     hide-details="auto"
+    :placeholder="placeholder"
+    :error="errors.length > 0"
+    :error-messages="messageError"
     @change="handleChangeText"
     @update:modelValue="handleUpdateText"
   />
