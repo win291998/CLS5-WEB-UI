@@ -4,8 +4,6 @@ import MethodsUtil from '@/utils/MethodsUtil'
 import DateUtil from '@/utils/DateUtil'
 import { TYPE_REQUEST } from '@/typescript/enums/enums'
 import StringUtil from '@/utils/StringUtil'
-import CpConfirmDialog from '@/components/page/gereral/CpConfirmDialog.vue'
-import CpModalUpdateStatus from '@/components/page/Admin/organization/users/CpModalUpdateStatus.vue'
 import toast from '@/plugins/toast'
 
 // mock api
@@ -16,12 +14,15 @@ const CpHeaderAction = defineAsyncComponent(() => import('@/components/page/gere
 const CpUserFilter = defineAsyncComponent(() => import('@/components/page/Admin/organization/users/CpUserFilter.vue'))
 const CmTable = defineAsyncComponent(() => import('@/components/common/CmTable.vue'))
 const CmAccodion = defineAsyncComponent(() => import('@/components/common/CmAccodion.vue'))
+const CpConfirmDialog = defineAsyncComponent(() => import('@/components/page/gereral/CpConfirmDialog.vue'))
+const CpModalUpdateStatus = defineAsyncComponent(() => import('@/components/page/Admin/organization/users/CpModalUpdateStatus.vue'))
 
 /** params */
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 const disabledDelete = ref(false)
 const isShowFilter = ref(true)
 const route = useRoute()
+const router = useRouter()
 
 const headers = reactive([
   { text: '', value: 'checkbox' },
@@ -39,10 +40,6 @@ const orgModels = {
   icon: 'tabler-briefcase',
   colorClass: 'color-error',
   content: [],
-}
-
-const actionItemView = () => {
-  console.log('view')
 }
 
 const groupModels = {
@@ -71,6 +68,7 @@ const data = reactive({
   listId: [], // list id các row table được chọn
   showPassword: false,
   isShowDialogPasword: false,
+  isShowDialogStatus: false,
   typeDialogRessetPass: 1,
   selectedItemId: 0,
   testingCode: '',
@@ -107,91 +105,20 @@ const deleteItems = () => {
   isShowDialogNoti.value = true
 }
 
-// hàm trả về các loại action khi click
-const actionItem = (type: any) => {
-  console.log(type)
-  switch (type[0]?.name) {
-    case 'ActionDelete':
-      deleteItem(type[1].id)
-      break
-    case 'issuePasswords':
-      data.showPassword = false
-      data.selectedItemId = type[1].id
-      data.isShowDialogPasword = true
-      break
-
-    default:
-      break
-  }
-}
-
-// Get list Users
-const fectchListUsers = async () => {
-  const res = await MethodsUtil.requestApiCustom(ApiUser.UsersList, TYPE_REQUEST.POST, queryParam).then((value: any) => value).catch(error => error)
-
-  // const res = await fetchData(ApiUser.UsersList, TYPE_REQUEST.POST, queryParam).then((value: any) => value)
-
-  if (res?.code === 200 && res?.data?.pageLists.length) {
-    res.data.pageLists.forEach((item: any) => {
-      const titleData = window._.clone(item.orgModels)
-
-      item.orgModels = {
-        ...orgModels,
-        content: window._.clone(item.orgModels),
-      }
-      item.groupModels = {
-        ...groupModels,
-        content: window._.clone(item.groupModels),
-      }
-      item.titleModels = {
-        ...titleModels,
-        content: titleData,
-      }
-      item.actions = item.actions.map((el: any) => {
-        return MethodsUtil.checkActionType(el, actionItem)
-      })
-    })
-  }
-  items.value = res.data.pageLists
-  totalRecord.value = res?.data?.totalRecord
-}
-
 // delete action
 const deleteAction = async () => {
   const params = {
     listId: data.deleteIds,
   }
 
-  const res = await MethodsUtil.requestApiCustom(ApiUser.UsersDelete, TYPE_REQUEST.POST, params).then((value: any) => value)
-
-  if (res.code === 200) {
-    toast('SUCCESS', res?.message)
-    await fectchListUsers()
-  }
-  else { toast('ERROR', res?.message) }
-}
-
-const selectedRows = (e: any) => {
-  data.listId = e
-  disabledDelete.value = e.length > 0
-}
-
-// click pagination
-const handlePageClick = async (page: any) => {
-  queryParam.pageNumber = page
-  await fectchListUsers()
-}
-
-// search ở fillter header
-const handleSearch = async (value: any) => {
-  queryParam.pageNumber = 1
-  queryParam.keyword = value.search
-  await fectchListUsers()
-}
-
-//  fillter header
-const handleFilterCombobox = (dataFilter: any) => {
-  console.log(dataFilter)
+  await MethodsUtil.requestApiCustom(ApiUser.UsersDelete, TYPE_REQUEST.POST, params)
+    .then(async (value: any) => {
+      toast('SUCCESS', value?.message)
+      await fectchListUsers()
+    })
+    .catch(() => {
+      toast('ERROR', t('USR_DeleteFail'))
+    })
 }
 
 // hành động của dialog
@@ -200,32 +127,27 @@ const confirmDialog = (event: any) => {
     deleteAction()
 }
 
+// cập nhật trạng thái dialog
+const updateDialogVisible = (event: any) => {
+  isShowDialogNoti.value = event
+}
+
 // reset password
 const handleRefresh = async () => {
   const params = {
     userId: data.selectedItemId,
   }
 
-  const res = await MethodsUtil.requestApiCustom(ApiUser.ResetPassword, TYPE_REQUEST.POST, params).then((value: any) => value)
-  if (res.code === 200) {
-    data.testingCode = res?.data
+  await MethodsUtil.requestApiCustom(ApiUser.ResetPassword, TYPE_REQUEST.POST, params).then((value: any) => {
+    data.testingCode = value.data
     data.showPassword = true
     data.typeDialogRessetPass = 0
-  }
-
-  // this.testingCode = res.data
-  // if (response.code === 200)
-  //   this.showPassword = false
+  })
 }
 
 const confirmDialogResetPass = (event: any) => {
   if (event)
     handleRefresh()
-}
-
-// cập nhật trạng thái dialog
-const updateDialogVisible = (event: any) => {
-  isShowDialogNoti.value = event
 }
 
 const updateDialogVisibleResset = (event: any) => {
@@ -235,19 +157,37 @@ const updateDialogVisibleResset = (event: any) => {
   }
 }
 
-// hàm trả về các loại action từ header filter
-const handleClickBtn = (type: string) => {
-  switch (type) {
-    case 'fillter':
-      isShowFilter.value = !isShowFilter.value
-      break
-    case 'delete':
-      deleteItems()
-      break
+// reset status
+const handleRefreshStatus = async (status: number) => {
+  console.log(123)
 
-    default:
-      break
+  const params = {
+    userId: data.selectedItemId,
+    statusId: status,
   }
+
+  await MethodsUtil.requestApiCustom(ApiUser.ChangeStatus, TYPE_REQUEST.POST, params)
+    .then(async (value: any) => {
+      console.log(value)
+      toast('SUCCESS', t(value?.message))
+      await fectchListUsers()
+    })
+    .catch(() => {
+      toast('ERROR', t('USR_UpdateFailed'))
+    })
+}
+
+const confirmDialogStatus = (event: any, status: any) => {
+  console.log(event)
+
+  if (event)
+    handleRefreshStatus(status)
+}
+
+const updateDialogVisibleStatus = (event: any) => {
+  console.log(event)
+
+  data.isShowDialogStatus = event
 }
 
 // coppy code
@@ -265,6 +205,104 @@ const copyTestingCode = () => {
   /* unselect the range */
   testingCodeToCopy?.setAttribute('type', 'hidden')
   window?.getSelection()?.removeAllRanges()
+}
+
+const selectedRows = (e: any) => {
+  data.listId = e
+  disabledDelete.value = e.length > 0
+}
+
+// click pagination
+const handlePageClick = async (page: any) => {
+  queryParam.pageNumber = page
+  await fectchListUsers()
+}
+
+// hàm trả về các loại action khi click
+const actionItem = (type: any) => {
+  console.log(type)
+  switch (type[0]?.name) {
+    case 'ActionDelete':
+      deleteItem(type[1].id)
+      break
+    case 'issuePasswords':
+      data.showPassword = false
+      data.selectedItemId = type[1].id
+      data.isShowDialogPasword = true
+      break
+    case 'changeStatus':
+      data.selectedItemId = type[1].id
+      data.isShowDialogStatus = true
+      break
+    case 'ActionEdit':
+      console.log('ActionEdit')
+      router.push({ name: 'admin-organization-users-profile' })
+      break
+
+    default:
+      break
+  }
+}
+
+// Get list Users
+async function fectchListUsers() {
+  // await fetchData(ApiUser.UsersList, TYPE_REQUEST.POST, queryParam)
+  await MethodsUtil.requestApiCustom(ApiUser.UsersList, TYPE_REQUEST.POST, queryParam)
+    .then((value: any) => {
+      if (value?.data?.pageLists.length) {
+        value.data.pageLists.forEach((item: any) => {
+          const titleData = window._.clone(item.orgModels)
+
+          item.orgModels = {
+            ...orgModels,
+            content: window._.clone(item.orgModels),
+          }
+          item.groupModels = {
+            ...groupModels,
+            content: window._.clone(item.groupModels),
+          }
+          item.titleModels = {
+            ...titleModels,
+            content: titleData,
+          }
+          item.actions = item.actions.map((el: any) => {
+            return MethodsUtil.checkActionType(el, actionItem)
+          })
+        })
+        items.value = value.data.pageLists
+        totalRecord.value = value?.data?.totalRecord
+      }
+    })
+    .catch(() => {
+      toast('ERROR', t('USR_GetFailed'))
+    })
+}
+
+// search ở fillter header
+const handleSearch = async (value: any) => {
+  queryParam.pageNumber = 1
+  queryParam.keyword = value.search
+  await fectchListUsers()
+}
+
+//  fillter header
+const handleFilterCombobox = (dataFilter: any) => {
+  console.log(dataFilter)
+}
+
+// hàm trả về các loại action từ header filter
+const handleClickBtn = (type: string) => {
+  switch (type) {
+    case 'fillter':
+      isShowFilter.value = !isShowFilter.value
+      break
+    case 'delete':
+      deleteItems()
+      break
+
+    default:
+      break
+  }
 }
 
 /** ***************************** end Method *****************************/
@@ -371,7 +409,7 @@ fectchListUsers()
       <div class="value-coppy">
         <span class="text-red">{{ data.testingCode }}</span>
         <span
-          :title="$t('users.user.action-modal.coppy')"
+          :title="t('users.user.action-modal.coppy')"
           class="icon-coppy"
           @click.stop.prevent="copyTestingCode"
         >
@@ -385,7 +423,12 @@ fectchListUsers()
       </div>
     </template>
   </CpConfirmDialog>
-  <CpModalUpdateStatus />
+  <CpModalUpdateStatus
+    v-if="data.isShowDialogStatus"
+    :is-dialog-visible="data.isShowDialogStatus"
+    @confirm="confirmDialogStatus"
+    @update:is-dialog-visible="updateDialogVisibleStatus"
+  />
 </template>
 
 <style lang="scss">

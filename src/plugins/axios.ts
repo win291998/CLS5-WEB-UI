@@ -6,9 +6,10 @@ const axiosIns = axios.create({
   // timeout: 1000,
   // headers: {'X-Custom-Header': 'foobar'}
   baseURL: process.env.VUE_APP_BASE_API,
-  headers: {
-    'Content-Type': 'application/json',
-  },
+
+  // headers: {
+  //   'Content-Type': 'application/json',
+  // },
 })
 
 const token = AuthUtil.getToken()

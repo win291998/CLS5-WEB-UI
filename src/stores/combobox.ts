@@ -11,11 +11,9 @@ export const comboboxStore = defineStore('combobox', () => {
   /** variable */
   const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 
-  const combobox = reactive({
-    statuses: [],
-    organizations: [],
-    userType: [],
-  })
+  const statuses = ref([])
+  const organizations = ref([])
+  const userType = ref([])
 
   /** method */
   // Lấy danh sách trạng thái người dùng
@@ -24,7 +22,7 @@ export const comboboxStore = defineStore('combobox', () => {
     const res = await MethodsUtil.requestApiCustom(ComboboxService.StatusUser, TYPE_REQUEST.POST, params).then((value: any) => value)
 
     if (res.code === 200) {
-      combobox.statuses = res?.data?.map((item: any) => {
+      statuses.value = res?.data?.map((item: any) => {
         return {
           ...item,
           value: t(item.value),
@@ -37,7 +35,7 @@ export const comboboxStore = defineStore('combobox', () => {
   const fetchTypeUsersCombobox = async () => {
     const res = await MethodsUtil.requestApiCustom(ComboboxService.TypeUsers, TYPE_REQUEST.GET).then((value: any) => value)
     if (res.code === 200)
-      combobox.userType = res?.data || []
+      userType.value = res?.data || []
   }
 
   // Lấy danh sách cơ cấu tổ chức
@@ -46,9 +44,16 @@ export const comboboxStore = defineStore('combobox', () => {
 
     // const res = await fetchData(ComboboxService.AllOrgStruct, TYPE_REQUEST.GET).then((value: any) => value)
     if (res.code === 200 && res.data)
-      combobox.organizations = res?.data || []
-    console.log(combobox)
+      organizations.value = res?.data || []
   }
 
-  return { combobox, fetchStatusUsersCombobox, fetchTypeUsersCombobox, fetchTOrgStructCombobox }
+  onMounted(() => {
+    console.log('onMounted')
+  })
+  onBeforeUnmount(() => {
+    console.log('onBeforeUnmount')
+    organizations.value = []
+  })
+
+  return { organizations, statuses, userType, fetchStatusUsersCombobox, fetchTypeUsersCombobox, fetchTOrgStructCombobox }
 })
