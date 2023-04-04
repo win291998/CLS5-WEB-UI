@@ -120,26 +120,31 @@ watch(() => propsValue.modelValue, value => {
 
 <style lang="scss">
 @use "/src/styles/style-global" as *;
+
 .color-error {
   .v-selection-control__input {
     color: $color-error-600;
   }
 }
+
 .color-primary {
   .v-selection-control__input {
     color: $color-primary-600;
   }
 }
+
 .color-warning {
   .v-selection-control__input {
     color: $color-warning-600;
   }
 }
+
 .color-gray {
   .v-selection-control__input {
     color: $color-gray-600;
   }
 }
+
 .color-success {
   .v-selection-control__input {
     color: $color-success-600;

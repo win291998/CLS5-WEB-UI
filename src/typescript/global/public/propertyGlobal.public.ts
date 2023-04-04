@@ -20,6 +20,7 @@ interface propertyGlobal {
   _?: _.LoDashStatic,
   i18n?: any,
   axios?: any,
+  SERVER_FILE?: string,
 }
 
 //Định nghĩa biến toàn cục (reactvie) có thể thay đổi dữ liệu
@@ -37,6 +38,7 @@ const windowDefineConstProperty = ()=> {
     _: _,
     i18n: useI18n,
     axios: axios,
+    SERVER_FILE: process.env.VUE_APP_BASE_SERVER_FILE,
   }
   defineProperty(global, 'const')
 }

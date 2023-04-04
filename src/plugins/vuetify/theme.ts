@@ -1,4 +1,5 @@
 import type { VuetifyOptions } from 'vuetify'
+import { color } from '@/constant/data/style.json'
 import { themeConfig } from '@themeConfig'
 
 const theme: VuetifyOptions['theme'] = {
@@ -8,7 +9,7 @@ const theme: VuetifyOptions['theme'] = {
       dark: false,
       colors: {
         'white': '#FFFFFF',
-        'primary': localStorage.getItem(`${themeConfig.app.title}-lightThemePrimaryColor`) || '#7367F0',
+        'primary': color['color-primary'],
         'on-primary': '#fff',
         'secondary': '#A8AAAE',
         'on-secondary': '#fff',
@@ -37,7 +38,8 @@ const theme: VuetifyOptions['theme'] = {
 
       variables: {
         'border-color': '#4B465C',
-        'medium-emphasis-opacity': 0.68,
+        'medium-emphasis-opacity': 1,
+        'color-text-primary': color['color-text-primary'],
 
         // Shadows
         'shadow-key-umbra-opacity': 'rgba(var(--v-theme-on-surface), 0.08)',
