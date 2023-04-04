@@ -58,15 +58,9 @@ export default [
       {
         path: 'users',
         meta: {
-<<<<<<< HEAD
-          // requireAuth: {
-          //   permission: 'UserManaging',
-          // },
-=======
           requireAuth: {
             permissionKey: 'UserManaging',
           },
->>>>>>> ef1f8bc (component tab, loading)
         },
         name: 'admin-organization-users',
         component: () => import('@/pages/admin/organization/users/Users.vue'),
