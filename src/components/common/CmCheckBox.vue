@@ -118,7 +118,7 @@ watch(() => propsValue.modelValue, value => {
   </VTooltip>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @use "/src/styles/style-global" as *;
 
 .color-error {

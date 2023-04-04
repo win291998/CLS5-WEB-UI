@@ -16,3 +16,5 @@ declare const inline: readonly ['start', 'end', 'left', 'right']
 declare type Tblock = typeof block[number]
 declare type Tinline = typeof inline[number]
 export type Anchor = Tblock | Tinline | 'center' | 'center center' | `${Tblock} ${Tinline | 'center'}` | `${Tinline} ${Tblock | 'center'}`
+export const typeTab = ['button', 'underline'] as const
+

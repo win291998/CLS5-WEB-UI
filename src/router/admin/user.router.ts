@@ -1,6 +1,6 @@
 export default [
   {
-    path: '/guilde/tree-select',
+    path: 'guilde/tree-select',
     name: 'guilde-tree-select',
     component: () => import('@/pages/guilde/tree-select.vue'),
   },
@@ -35,30 +35,32 @@ export default [
     name: 'guilde-demo',
     component: () => import('@/pages/guilde/demo.vue'),
   },
+  {
+    path: '/guilde/demo/:tabActive',
+    name: 'guilde-demo-tab',
+    component: () => import('@/pages/guilde/demo.vue'),
+  },
 
   // quản lý người dùng
   {
     path: '/organization',
     name: 'admin-organization',
-    meta: {
-      layout: 'blank',
-      permission: {
-        key: '',
-      },
-    },
     redirect: { name: 'admin-organization-permistion' },
     children: [
       {
         path: 'permistion',
         name: 'admin-organization-permistion',
+        requireAuth: {
+          permissionKey: 'UserManaging',
+        },
         component: () => import('@/pages/admin/organization/permission/Permission.vue'),
       },
       {
         path: 'users',
         meta: {
-          // requireAuth: {
-          //   permission: 'UserManaging',
-          // },
+          requireAuth: {
+            permissionKey: 'UserManaging',
+          },
         },
         name: 'admin-organization-users',
         component: () => import('@/pages/admin/organization/users/Index.vue'),

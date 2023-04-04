@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import CmSelectTree from '@/components/common/CmSelectTree.vue'
 
+let a = 1
+console.log(a++)
+
 const options = [{
   id: 'a',
   label: 'a',

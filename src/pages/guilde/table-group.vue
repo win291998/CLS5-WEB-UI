@@ -1,6 +1,9 @@
 <script lang="ts" setup>
 import CmTableGroup from '@/components/common/CmTableGroup.vue'
 
+let a = 1
+console.log(a++)
+
 const groupOptions = {
   allowEmptySelect: false,
   collapsable: false,

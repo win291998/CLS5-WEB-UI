@@ -29,6 +29,8 @@ const email = ref('sinhtv')
 const password = ref('123123')
 const rememberMe = ref(false)
 const captcha = ref({})
+let a = 1
+console.log(a++)
 
 const handleLogin = () => {
   const userData = {
