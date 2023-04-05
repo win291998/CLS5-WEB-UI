@@ -1,7 +1,11 @@
 <script setup lang="ts">
+import ISelect from 'vue-select'
+import Fuse from 'fuse.js'
 import Globals from '@/constant/Globals'
+import StringUtil from '@/utils/StringUtil'
 
 interface Props {/** ** Interface */
+  modelValue?: any
   items?: Array<any>
   maxItem?: number
   multiple?: boolean
@@ -12,16 +16,18 @@ interface Props {/** ** Interface */
   bgColor?: string
   text?: string
   placeholder?: string
+  errors?: any
 }
 interface Emit {
   (e: 'update:modelValue', value: any): void
+  (e: 'open', value: any): void
 }
 
 /** ** Khởi tạo prop emit */
 const props = withDefaults(defineProps<Props>(), ({
   items: () => ([]),
   maxItem: Globals.MAX_ITEM_SELECT_MULT,
-  multiple: false,
+  multiple: true,
   returnObject: false,
   customKey: 'key',
   itemValue: 'value',
@@ -33,58 +39,133 @@ const props = withDefaults(defineProps<Props>(), ({
 
 const emit = defineEmits<Emit>()
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
-const value = ref([])
+const stackValue = ref()
+const valueCurrent = ref()
 
 /** method */
-const handleChangeValue = event => {
-  emit('update:modelValue', event)
+
+const messageError = computed(() => {
+  if (props.errors?.length)
+    return t(props.errors[0])
+
+  return ''
+})
+
+const handleChangeValue = (e: any) => {
+  console.log(valueCurrent.value)
+
+  emit('update:modelValue', valueCurrent.value)
 }
+
+const open = (e: any) => {
+  if (!props.multiple) {
+    stackValue.value = window._.clone(valueCurrent.value)
+    valueCurrent.value = null
+  }
+  emit('open', valueCurrent)
+}
+
+const close = (e: any) => {
+  console.log(!valueCurrent.value && !props.multiple)
+
+  if (!valueCurrent.value && !props.multiple)
+    valueCurrent.value = stackValue.value
+}
+
+const optionsModel = computed(() => {
+  const optionsModels = props.items.map((item: any) => {
+    item = {
+      ...item,
+      keySearch: StringUtil.removeAccents(item.userTypeName),
+    }
+
+    return item
+  })
+
+  return optionsModels || []
+})
+
+const fetchOptions = (options: any, search: any) => {
+  const searchKey = StringUtil.removeAccents(search)
+
+  const optionsFuse = {
+    keys: ['keySearch'],
+    shouldSort: true,
+    includeScore: true,
+    threshold: 0.3,
+  }
+
+  const fuse: any = new Fuse(options, optionsFuse)
+
+  fuse.search(searchKey).map((result: any) => result.item)
+
+  return searchKey.length
+    ? fuse.search(searchKey).map((result: any) => result.item)
+    : fuse.list
+}
+
+watch(() => props.modelValue, newValue => {
+  valueCurrent.value = newValue
+  console.log(newValue)
+}, { immediate: true })
 </script>
 
 <template>
-  <div class="mb-1">
-    <label
-      class="text-medium-sm color-dark"
-    >{{ props.text }}</label>
-  </div>
   <div>
-    <VSelect
-      v-model="value"
-      class="v-select-limit-width"
-      :items="items"
-      :item-title="customKey"
-      :item-value="itemValue"
-      :label="label"
-      :multiple="multiple"
-      :placeholder="placeholder"
-      :bg-color="bgColor"
-      :menu-props="{
-        maxHeight: '300px',
-        maxWidth: '100px',
-      }"
-      :return-object="returnObject"
-      @update:modelValue="handleChangeValue"
-    >
-      <template
-        v-if="multiple"
-        #selection="{ item, index }"
+    <div>
+      <label
+        class="text-medium-sm color-dark"
+      >{{ props.text }}</label>
+    </div>
+    <div>
+      <ISelect
+        v-model="valueCurrent"
+        :options="optionsModel"
+        :label="customKey"
+        :multiple="multiple"
+        :placeholder="placeholder"
+        :reduce="(value: any) => returnObject ? value : value[itemValue]"
+        :filter="fetchOptions"
+        class="v-select-limit-width v-select-cls"
+        :class="{ 'is-invalid': !!errors.length }"
+        @open="open"
+        @close="close"
+        @update:modelValue="handleChangeValue"
       >
-        <VChip v-if="maxItem ? index < maxItem : true">
-          <span>{{ t(item.title) }}</span>
-        </VChip>
-        <span
-          v-if="maxItem ? index === maxItem : false"
-          class="text-grey text-caption align-self-center"
-        >
-          {{ t('and-count-more', { count: value.length - (maxItem || 0) }) }}
-        </span>
-      </template>
-    </VSelect>
+        <template #no-options="{ search, searching }">
+          <template v-if="searching">
+            {{ t('no-search', { search: `${search}` }) }}
+          </template>
+          <em
+            v-else
+            style="opacity: 0.5;"
+          >{{ t('start-search') }}</em>
+        </template>
+      </ISelect>
+      <div
+        v-if="errors?.length"
+        class="color-error"
+      >
+        {{ messageError }}
+      </div>
+    </div>
   </div>
 </template>
 
 <style lang="scss">
-.v-chip.v-chip--size-small {
-  // margin-block: 5px;
+@import "vue-select/dist/vue-select.css";
+
+.v-select-cls.is-invalid {
+  // Vue Select
+  &.v-select {
+    .vs__dropdown-toggle {
+      border-color: red;
+    }
+  }
+
+  // Flatpickr
+  &.flatpickr-input {
+    border-color: red;
+  }
 }
 </style>

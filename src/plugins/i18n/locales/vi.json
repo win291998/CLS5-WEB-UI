@@ -4516,5 +4516,7 @@
   "Exist": "đã tồn tại",
   "NotExist": "không tồn tại",
   "success": "Thành công",
-  "USR_GetFailed": "Không lấy được giữ liệu"
+  "USR_GetFailed": "Không lấy được giữ liệu",
+  "no-search": "Không tìm thấy kết quả cho { search }",
+  "start-search": "Bắt đầu gõ để tìm kiếm..."
 }
