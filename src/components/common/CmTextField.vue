@@ -7,6 +7,7 @@ const props = withDefaults(defineProps<Props>(), ({
   prependInnerIcon: '',
   label: '',
   bgColor: 'white',
+  type: 'text',
 }))
 
 const emit = defineEmits<Emit>(); const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
@@ -20,6 +21,7 @@ interface Props {
   errors?: any
   field?: any
   placeholder?: any
+  type?: string
 }
 interface Emit {
   (e: 'update:modelValue', value: any): void
@@ -38,7 +40,7 @@ const handleUpdateText = () => {
 }
 
 const messageError = computed(() => {
-  if (props.errors.length)
+  if (props.errors?.length)
     return t(props.errors[0])
 
   return ''
@@ -54,8 +56,8 @@ const messageError = computed(() => {
     :bg-color="bgColor"
     hide-details="auto"
     :placeholder="placeholder"
-    :error="errors.length > 0"
     :error-messages="messageError"
+    :type="type"
     @change="handleChangeText"
     @update:modelValue="handleUpdateText"
   />

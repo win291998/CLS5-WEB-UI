@@ -1,10 +1,16 @@
 <script setup lang="ts">
 import { validatorStore } from '@/stores/validatator'
+import { comboboxStore } from '@/stores/combobox'
+
+const CmTextField = defineAsyncComponent(() => import('@/components/common/CmTextField.vue'))
+const CmSelect = defineAsyncComponent(() => import('@/components/common/CmSelect.vue'))
 
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
-const store = validatorStore()
-const { schema, Field, Form } = store
-const CmTextField = defineAsyncComponent(() => import('@/components/common/CmTextField.vue'))
+const storeValidate = validatorStore()
+const storeCombobox = comboboxStore()
+const { schema, Field, Form } = storeValidate
+const { userType } = storeToRefs(storeCombobox)
+const { fetchTypeUsersCombobox } = storeCombobox
 
 // interface
 // params main
@@ -16,6 +22,16 @@ const data = reactive({
   email: '',
   userName: '',
   password: '',
+  userCode: '',
+  phoneNumber: '',
+  kpiLearn: '',
+  kpiTeach: '',
+  userTypeId: '',
+})
+
+const LABEL = Object.freeze({
+  TEXT_USER_TYPE: t('users.user.filters.user-role'),
+  PLACEHOLDER_USER_TYPE: t('users.user.filters.user-role'),
 })
 
 // method
@@ -24,6 +40,8 @@ const handleFormValue = (value: any) => {
 }
 
 // event
+if (window._.isEmpty(userType.value))
+  fetchTypeUsersCombobox()
 </script>
 
 <template>
@@ -113,6 +131,7 @@ const handleFormValue = (value: any) => {
             />
           </Field>
         </VCol>
+
         <VCol
           cols="12"
           md="4"
@@ -120,15 +139,122 @@ const handleFormValue = (value: any) => {
           <Field
             v-slot="{ field, errors }"
             name="password"
-            type="text"
+            type="password"
             :rules="schema.fields.password"
           >
             <CmTextField
               v-model="data.password"
               v-bind="field"
               :errors="errors"
+              type="password"
               :label="`${t('common.password')}*`"
               :placeholder="t('users.add-user.enter-password')"
+              @change="handleFormValue"
+            />
+          </Field>
+        </VCol>
+        <VCol
+          cols="12"
+          md="4"
+        >
+          <Field
+            v-slot="{ field, errors }"
+            name="userCode"
+            type="text"
+            :rules="schema.fields.userCode"
+          >
+            <CmTextField
+              v-model="data.userCode"
+              v-bind="field"
+              :errors="errors"
+              :label="`${t('common.employee-code')}*`"
+              :placeholder="$t('users.add-user.enter-employee-code')"
+              @change="handleFormValue"
+            />
+          </Field>
+        </VCol>
+        <VCol
+          cols="12"
+          md="4"
+        >
+          <Field
+            v-slot="{ field, errors }"
+            name="userTypeId"
+            type="number"
+            :rules="schema.fields.userTypeId"
+          >
+            <CmSelect
+              v-bind="field"
+              v-model="data.userTypeId"
+              :label="LABEL.TEXT_USER_TYPE"
+              :placeholder="LABEL.PLACEHOLDER_USER_TYPE"
+              :items="userType"
+              :errors="errors"
+              item-value="id"
+              custom-key="userTypeName"
+              @update:model-value="handleFormValue"
+            />
+          </Field>
+        </VCol>
+        <VCol
+          cols="12"
+          md="4"
+        >
+          <Field
+            v-slot="{ field, errors }"
+            name="phoneNumber"
+            type="number"
+            :rules="schema.fields.phoneNumber"
+          >
+            <CmTextField
+              v-model="data.phoneNumber"
+              v-bind="field"
+              :errors="errors"
+              :label="`${t('common.phone-number')}`"
+              :placeholder="$t('common.phone-number')"
+              type="number"
+              @change="handleFormValue"
+            />
+          </Field>
+        </VCol>
+        <VCol
+          cols="12"
+          md="4"
+        >
+          <Field
+            v-slot="{ field, errors }"
+            name="kpiLearn"
+            type="number"
+            :rules="schema.fields.kpiLearn"
+          >
+            <CmTextField
+              v-model="data.kpiLearn"
+              v-bind="field"
+              :errors="errors"
+              :label="`${t('common.kpi-learning')}`"
+              :placeholder="$t('common.kpi-learning')"
+              type="number"
+              @change="handleFormValue"
+            />
+          </Field>
+        </VCol>
+        <VCol
+          cols="12"
+          md="4"
+        >
+          <Field
+            v-slot="{ field, errors }"
+            name="kpiTeach"
+            type="number"
+            :rules="schema.fields.kpiTeach"
+          >
+            <CmTextField
+              v-model="data.kpiTeach"
+              v-bind="field"
+              :errors="errors"
+              :label="`${t('common.kpi-teaching')}`"
+              :placeholder="$t('common.kpi-teaching')"
+              type="number"
               @change="handleFormValue"
             />
           </Field>
