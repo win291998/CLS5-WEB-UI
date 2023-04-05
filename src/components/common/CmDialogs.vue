@@ -3,7 +3,7 @@ interface Props {
   title?: string
   subTitle?: string
   isDialogVisible: boolean
-  type: number
+  type?: number
   icon?: string
   variant?: string
   color?: string

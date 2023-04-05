@@ -8,18 +8,20 @@ const props = withDefaults(defineProps<Props>(), ({
   label: 'tabActive',
 }))
 
+const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
+
 interface tab {
   key: string
   title: string
-  icon: string
+  icon?: string
   component: any
   isRendered: boolean
 }
 interface Props {
   listTab: tab[]
   type?: typeof typeTab[any]
-  isSmall: boolean
-  label: string
+  isSmall?: boolean
+  label?: string
 }
 const router = useRouter()
 const route = useRoute()
@@ -60,11 +62,12 @@ const activeTab = (value: any) => {
             :size="18"
             class="mr-2"
           />
-          <span>{{ item.title }}</span>
+          <span>{{ t(item.title) }}</span>
         </VTab>
       </VTabs>
     </div>
     <div
+      v-if="tabActive.component"
       class="content-tab"
     >
       <Component
@@ -79,7 +82,7 @@ const activeTab = (value: any) => {
 .cm-tabs {
   width: fit-content;
   text-transform: capitalize !important;
-  background-color: $color-white;
+  // background-color: $color-white;
   color: $color-gray-500;
   .v-slide-group__content {
     border-bottom: 1px red solid;

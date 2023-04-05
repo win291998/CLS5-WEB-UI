@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
 
+const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
+
 const route = useRoute()
 
 const items = route?.meta?.breadcrumb as any
@@ -20,7 +22,7 @@ const items = route?.meta?.breadcrumb as any
             :size="24"
             class="color-icon-default"
           />
-          <span :to="item.to"> {{ item.title }}</span>
+          <span :to="item.to"> {{ t(item.title) }}</span>
         </div>
       </template>
       <template #divider>
