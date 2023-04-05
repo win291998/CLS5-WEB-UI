@@ -71,6 +71,7 @@ if (window._.isEmpty(organizations.value))
     >
       <CpOrganizationSelect
         v-model="formFilter.structures"
+        multiple
         :text="LABEL.FILLTER2"
         :placeholder="LABEL.FILLTER2"
         @update:modelValue="change"

@@ -32,6 +32,7 @@ interface Props {
   returnObject?: boolean
   isImportFile?: boolean
   totalRecord?: number
+  isActionFooter?: boolean
 }
 interface Emit {
   (e: 'handleClickRow', dataRow: object): void
@@ -55,6 +56,7 @@ const props = withDefaults(defineProps<Props>(), ({
   isExpand: false,
   returnObject: false,
   isImportFile: false,
+  isActionFooter: false,
   rowClassName: '',
   pageSize: Globals.PAGINATION_PAGE_SIZE_DEFAULT,
   customId: 'id',
@@ -317,7 +319,7 @@ watch(() => props.items, value => {
             </div>
           </template>
           <div
-            v-if="context?.actions.length >= Globals.MAX_ITEM_ACTION"
+            v-if="context?.actions?.length >= Globals.MAX_ITEM_ACTION"
           >
             <div class="action-more px-2">
               <CmDropDown
@@ -346,7 +348,7 @@ watch(() => props.items, value => {
           v-model="context[itemsHeader.value]"
           class="input-edit-cell"
           type="text"
-          :error="context.errors.length"
+          :error="context.errors?.length"
           @update:modelValue="changeCellvalue($event, itemsHeader.value, context.key)"
         />
 
@@ -360,6 +362,12 @@ watch(() => props.items, value => {
         </span>
       </template>
     </EasyDataTable>
+    <div
+      v-if="isActionFooter"
+      class="footer-action-container"
+    >
+      <slot name="action-footer" />
+    </div>
     <div class="customize-footer">
       <CmPagination
         :total-items="totalRecord"
@@ -450,6 +458,13 @@ watch(() => props.items, value => {
     color: #{$color-checkbox-indeterminate} !important;
     opacity: 1 !important;
   }
+}
+
+.footer-action-container {
+  padding: #{$table-footer-padding};
+  background-color: #{$table-footer-background-color};
+  border-inline-end: #{$table-border};
+  border-inline-start: #{$table-border};
 }
 
 .hide-expand .expand-icon {

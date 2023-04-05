@@ -4,13 +4,13 @@ import { comboboxStore } from '@/stores/combobox'
 
 const CmTextField = defineAsyncComponent(() => import('@/components/common/CmTextField.vue'))
 const CmSelect = defineAsyncComponent(() => import('@/components/common/CmSelect.vue'))
-
+const CpTitleTable = defineAsyncComponent(() => import('./CpTitleTable.vue'))
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 const storeValidate = validatorStore()
 const storeCombobox = comboboxStore()
 const { schema, Field, Form } = storeValidate
-const { userType } = storeToRefs(storeCombobox)
-const { fetchTypeUsersCombobox } = storeCombobox
+const { userType, statuses } = storeToRefs(storeCombobox)
+const { fetchTypeUsersCombobox, fetchStatusUsersCombobox } = storeCombobox
 
 // interface
 // params main
@@ -26,12 +26,15 @@ const data = reactive({
   phoneNumber: '',
   kpiLearn: '',
   kpiTeach: '',
-  userTypeId: '',
+  userTypeId: null,
+  statusId: null,
 })
 
 const LABEL = Object.freeze({
   TEXT_USER_TYPE: t('users.user.filters.user-role'),
   PLACEHOLDER_USER_TYPE: t('users.user.filters.user-role'),
+  TEXT_STATUS: t('common.status-name'),
+  PLACEHOLDER_STATUS: t('common.status-name'),
 })
 
 // method
@@ -40,6 +43,8 @@ const handleFormValue = (value: any) => {
 }
 
 // event
+if (window._.isEmpty(statuses.value))
+  fetchStatusUsersCombobox()
 if (window._.isEmpty(userType.value))
   fetchTypeUsersCombobox()
 </script>
@@ -50,7 +55,7 @@ if (window._.isEmpty(userType.value))
     class="user-infor mx-auto no-background"
   >
     <Form>
-      <VRow>
+      <VRow class="mb-5">
         <VCol
           cols="12"
           md="4"
@@ -65,7 +70,7 @@ if (window._.isEmpty(userType.value))
               v-model="data.lastName"
               v-bind="field"
               :errors="errors"
-              :label="`${t('common.surname')}*`"
+              :text="`${t('common.surname')}*`"
               :placeholder="t('users.add-user.enter-surname')"
               @change="handleFormValue"
             />
@@ -85,7 +90,7 @@ if (window._.isEmpty(userType.value))
               v-model="data.firstName"
               v-bind="field"
               :errors="errors"
-              :label="`${t('common.name')}*`"
+              :text="`${t('common.name')}*`"
               :placeholder="t('users.add-user.enter-last-name')"
               @change="handleFormValue"
             />
@@ -105,7 +110,7 @@ if (window._.isEmpty(userType.value))
               v-model="data.email"
               v-bind="field"
               :errors="errors"
-              :label="`${t('common.email')}*`"
+              :text="`${t('common.email')}*`"
               :placeholder="t('users.add-user.enter-email')"
               @change="handleFormValue"
             />
@@ -125,7 +130,7 @@ if (window._.isEmpty(userType.value))
               v-model="data.userName"
               v-bind="field"
               :errors="errors"
-              :label="`${t('common.sign-name')}*`"
+              :text="`${t('common.sign-name')}*`"
               :placeholder="t('users.add-user.enter-sign-name')"
               @change="handleFormValue"
             />
@@ -147,7 +152,7 @@ if (window._.isEmpty(userType.value))
               v-bind="field"
               :errors="errors"
               type="password"
-              :label="`${t('common.password')}*`"
+              :text="`${t('common.password')}*`"
               :placeholder="t('users.add-user.enter-password')"
               @change="handleFormValue"
             />
@@ -167,7 +172,7 @@ if (window._.isEmpty(userType.value))
               v-model="data.userCode"
               v-bind="field"
               :errors="errors"
-              :label="`${t('common.employee-code')}*`"
+              :text="`${t('common.employee-code')}*`"
               :placeholder="$t('users.add-user.enter-employee-code')"
               @change="handleFormValue"
             />
@@ -180,18 +185,39 @@ if (window._.isEmpty(userType.value))
           <Field
             v-slot="{ field, errors }"
             name="userTypeId"
-            type="number"
             :rules="schema.fields.userTypeId"
           >
             <CmSelect
               v-bind="field"
               v-model="data.userTypeId"
-              :label="LABEL.TEXT_USER_TYPE"
+              :text="LABEL.TEXT_USER_TYPE"
               :placeholder="LABEL.PLACEHOLDER_USER_TYPE"
               :items="userType"
               :errors="errors"
               item-value="id"
               custom-key="userTypeName"
+              @update:model-value="handleFormValue"
+            />
+          </Field>
+        </VCol>
+        <VCol
+          cols="12"
+          md="4"
+        >
+          <Field
+            v-slot="{ field, errors }"
+            name="statusId"
+            :rules="schema.fields.statusId"
+          >
+            <CmSelect
+              v-bind="field"
+              v-model="data.statusId"
+              :text="LABEL.TEXT_STATUS"
+              :placeholder="LABEL.PLACEHOLDER_STATUS"
+              :items="statuses"
+              :errors="errors"
+              item-value="key"
+              custom-key="value"
               @update:model-value="handleFormValue"
             />
           </Field>
@@ -210,7 +236,7 @@ if (window._.isEmpty(userType.value))
               v-model="data.phoneNumber"
               v-bind="field"
               :errors="errors"
-              :label="`${t('common.phone-number')}`"
+              :text="`${t('common.phone-number')}`"
               :placeholder="$t('common.phone-number')"
               type="number"
               @change="handleFormValue"
@@ -231,7 +257,7 @@ if (window._.isEmpty(userType.value))
               v-model="data.kpiLearn"
               v-bind="field"
               :errors="errors"
-              :label="`${t('common.kpi-learning')}`"
+              :text="`${t('common.kpi-learning')}`"
               :placeholder="$t('common.kpi-learning')"
               type="number"
               @change="handleFormValue"
@@ -252,7 +278,7 @@ if (window._.isEmpty(userType.value))
               v-model="data.kpiTeach"
               v-bind="field"
               :errors="errors"
-              :label="`${t('common.kpi-teaching')}`"
+              :text="`${t('common.kpi-teaching')}`"
               :placeholder="$t('common.kpi-teaching')"
               type="number"
               @change="handleFormValue"
@@ -261,11 +287,16 @@ if (window._.isEmpty(userType.value))
         </VCol>
       </VRow>
     </Form>
+    <VDivider class="mb-5" />
+  </VSheet>
+  <VSheet
+    width="100%"
+    class="user-infor mx-auto no-background"
+  >
+    <CpTitleTable />
   </VSheet>
 </template>
 
 <style scoped lang="scss">
-  .user-infor.no-background {
-    background-color: transparent;
-  }
+@use "/src/styles/style-global" as *;
 </style>

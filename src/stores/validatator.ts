@@ -7,6 +7,16 @@ export const validatorStore = defineStore('validator', () => {
   const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 
   const CONFIG = Object.freeze({
+    DEFAULT_STRING: {
+      MAX: 255,
+    },
+    DEFAULT_ARIA: {
+      MAX: 2000,
+    },
+    DEFAULT_NUMBER: {
+      MAX_VALUE: 10000,
+      MIN_VALUE: 0,
+    },
     LAST_NAME: {
       FIELD: t('common.surname'),
       MAX: 50,
@@ -36,10 +46,14 @@ export const validatorStore = defineStore('validator', () => {
     },
     PHONE_NUMBER: {
       FIELD: t('common.phone-number'),
-      MAX: 10,
+      MAX: 20,
     },
     USER_TYPE: {
       FIELD: t('users.user.filters.user-role'),
+      MIN: 1,
+    },
+    STATUS: {
+      FIELD: t('common.status-name'),
       MIN: 1,
     },
   })
@@ -51,6 +65,7 @@ export const validatorStore = defineStore('validator', () => {
     password: (field?: any) => `${field || ''} phải chứa ít nhất một chữ cái viết thường, một chữ in hoa, một số và một ký tự đặc biệt`,
     typeNumber: 'Vui lòng nhập một số.',
     typeString: 'Vui lòng nhập chuỗi.',
+    typeArray: 'Vui lựa chọn.',
     positive: 'Vui lòng nhập số dương.',
     requiredOption: (field?: any) => `${field || ''} phải chứa ít nhất một lựa chọn`,
   })
@@ -88,7 +103,8 @@ export const validatorStore = defineStore('validator', () => {
     phoneNumber: yup.string().max(CONFIG.PHONE_NUMBER.MAX, ruleMessage.max(CONFIG.PHONE_NUMBER.MAX, CONFIG.PHONE_NUMBER.FIELD)),
     kpiLearn: yup.number().typeError(ruleMessage.typeNumber).positive(ruleMessage.positive),
     kpiTeach: yup.number().typeError(ruleMessage.typeNumber).positive(ruleMessage.positive),
-    userTypeId: yup.array().typeError(ruleMessage.typeNumber).min(CONFIG.USER_TYPE.MIN, ruleMessage.requiredOption(CONFIG.USER_TYPE.FIELD)),
+    userTypeId: yup.array().typeError(ruleMessage.typeArray).min(CONFIG.USER_TYPE.MIN, ruleMessage.requiredOption(CONFIG.USER_TYPE.FIELD)),
+    statusId: yup.array().typeError(ruleMessage.typeArray).min(CONFIG.STATUS.MIN, ruleMessage.requiredOption(CONFIG.STATUS.FIELD)),
   })
 
   return { schema, ruleMessage, Field, Form, useField }

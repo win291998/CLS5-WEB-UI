@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import Treeselect from 'vue3-treeselect'
 import 'vue3-treeselect/dist/vue3-treeselect.css'
+import { Teleport } from 'vue'
 import { defaultSetting } from '@/constant/data/settingDefault.json'
 import Globals from '@/constant/Globals'
 
@@ -61,7 +62,7 @@ const props = withDefaults(defineProps<Props>(), ({
   rtl: false,
   valueFormat: 'id',
   flat: !!defaultSetting?.[0]?.value,
-  limitText: count => `và ${count} lựa chọn`,
+  limitText: (count: any) => `và ${count} lựa chọn`,
   disableBranchNodes: false,
   sortValueBy: null,
   flattenSearchResults: false,

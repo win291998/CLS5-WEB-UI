@@ -26,6 +26,7 @@ interface Props {/** ** Interface */
   trueValue?: any
   tooltip?: boolean
   tooltipLabel?: string
+  text?: string
 }
 interface Emit {
   (e: 'update:modelValue', value: any): void
@@ -83,6 +84,9 @@ watch(() => propsValue.modelValue, value => {
   >
     <template #activator="{ props }">
       <span v-bind="props">
+        <div class="mb-1">
+          <label class="text-medium-sm color-dark"> {{ text }}</label>
+        </div>
         <VCheckbox
           :id="propsValue.id"
           v-model="checkbox"
@@ -97,7 +101,7 @@ watch(() => propsValue.modelValue, value => {
           :hide-details="propsValue.hideDetails"
           :indeterminate-icon="propsValue.indeterminateIcon"
           :inline="propsValue.inline"
-          :label="propsValue.label"
+          label="propsValue.label"
           :multiple="propsValue.multiple"
           :prepend-icon="propsValue.prependIcon"
           :ripple="propsValue.ripple"
@@ -110,7 +114,7 @@ watch(() => propsValue.modelValue, value => {
           @update:modelValue="onChangeChecked($event)"
         >
           <template #label>
-            <slot name="label" />
+            <slot />
           </template>
         </VCheckbox>
       </span>

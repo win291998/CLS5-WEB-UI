@@ -17,6 +17,7 @@ interface Props {
   modelValue?: any
   prependInnerIcon?: IconValue
   label?: string
+  text?: string
   bgColor?: string
   errors?: any
   field?: any
@@ -48,18 +49,27 @@ const messageError = computed(() => {
 </script>
 
 <template>
-  <VTextField
-    v-model="formModelValue"
-    v-bind="field"
-    :prepend-inner-icon="props.prependInnerIcon"
-    :label="props.label"
-    :bg-color="bgColor"
-    hide-details="auto"
-    :placeholder="placeholder"
-    :error-messages="messageError"
-    :type="type"
-    @change="handleChangeText"
-    @update:modelValue="handleUpdateText"
-  />
+  <div>
+    <div class="mb-1">
+      <label
+        class="text-medium-sm color-dark"
+      >{{ props.text }}</label>
+    </div>
+    <div>
+      <VTextField
+        v-model="formModelValue"
+        v-bind="field"
+        :prepend-inner-icon="props.prependInnerIcon"
+        :label="props.label"
+        :bg-color="bgColor"
+        hide-details="auto"
+        :placeholder="placeholder"
+        :error-messages="messageError"
+        :type="type"
+        @change="handleChangeText"
+        @update:modelValue="handleUpdateText"
+      />
+    </div>
+  </div>
 </template>
 
