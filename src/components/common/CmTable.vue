@@ -1,15 +1,32 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
 import type { ClickRowArgument, Header, Item } from 'vue3-easy-data-table'
-import CpTableSub from '../page/gereral/CpTableSub.vue'
-import CmPagination from './CmPagination.vue'
-import svgChecked from '@/assets/images/svg/checkbox-tick.svg?raw'
-import svgIndeterminate from '@/assets/images/svg/indeterminate.svg?raw'
-import CmDropDown from '@/components/common/CmDropDown.vue'
-import CmSelect from '@/components/common/CmSelect.vue'
 import Globals from '@/constant/Globals'
 import ArrayUtil from '@/utils/ArrayUtil'
 import MethodsUtil from '@/utils/MethodsUtil'
+
+const props = withDefaults(defineProps<Props>(), ({
+  headers: () => ([]),
+  items: () => ([]),
+  groupOptions: () => ({
+    allowEmptySelect: false,
+    collapsable: false,
+    enabled: false,
+  }),
+  isEditing: false,
+  isExpand: false,
+  returnObject: false,
+  isImportFile: false,
+  rowClassName: '',
+  pageSize: Globals.PAGINATION_PAGE_SIZE_DEFAULT,
+  customId: 'id',
+  totalRecord: 0,
+}))
+
+const emit = defineEmits<Emit>()
+const CpTableSub = defineAsyncComponent(() => import('../page/gereral/CpTableSub.vue'))
+const CmPagination = defineAsyncComponent(() => import('./CmPagination.vue'))
+const CmDropDown = defineAsyncComponent(() => import('@/components/common/CmDropDown.vue'))
+const CmSelect = defineAsyncComponent(() => import('@/components/common/CmSelect.vue'))
 
 interface HeaderCustom extends Header {
   type?: string
@@ -44,27 +61,6 @@ interface Emit {
 
 }
 
-const props = withDefaults(defineProps<Props>(), ({
-  headers: () => ([]),
-  items: () => ([]),
-  groupOptions: () => ({
-    allowEmptySelect: false,
-    collapsable: false,
-    enabled: false,
-  }),
-  isEditing: false,
-  isExpand: false,
-  returnObject: false,
-  isImportFile: false,
-  isActionFooter: false,
-  rowClassName: '',
-  pageSize: Globals.PAGINATION_PAGE_SIZE_DEFAULT,
-  customId: 'id',
-  totalRecord: 0,
-}))
-
-const emit = defineEmits<Emit>()
-
 // $ref dataTable
 const dataTable = ref()
 
@@ -93,7 +89,7 @@ const currentPage = ref<number>(Globals.PAGINATION_CURRENT_PAGE) // item hiện 
 // cập nhật selectedRows
 const updateSelectedRows = () => {
   selectedRows.value = []
-  props.items.forEach((item: any) => {
+  props.items?.forEach((item: any) => {
     if (item.isSelected)
       selectedRows.value.push(item[keyid.value])
   })
@@ -102,27 +98,27 @@ const updateSelectedRows = () => {
 // click chọn tất cả hoặc bỏ tất cả
 const checkedAll = (value: any) => {
   selectedRows.value = []
-  if (props.groupOptions.enabled === true) {
+  if (props.groupOptions?.enabled === true) {
     if (!value) {
       props.items?.forEach(element => {
         if (element.children) {
           element.children?.forEach((child: any) => {
             child.isSelected = true
-            selectedRows.value.push(child[keyid.value])
+            selectedRows.value?.push(child[keyid.value])
           })
         }
         else {
           element.isSelected = true
-          selectedRows.value.push(element[keyid.value])
+          selectedRows.value?.push(element[keyid.value])
         }
       })
     }
     else { selectedRows.value = [] }
   }
   else {
-    selectedRows.value = !value ? props.items.map(item => item[keyid.value]) : []
+    selectedRows.value = !value ? props.items?.map(item => item[keyid.value]) : []
     props.items?.forEach(element => {
-      if (!(element.isDisabled && element.isDisabled === true))
+      if (!(element?.isDisabled && element?.isDisabled === true))
         element.isSelected = !value
     })
   }
@@ -139,8 +135,8 @@ const showRow = (item: ClickRowArgument) => {
 // sự kiện click chọn item
 const checkedItem = (rows: any, item: any) => {
   if (props.returnObject) {
-    const selectItemsObject = rows.map((key: any) => {
-      const objectItem = props.items.find(itemProp => itemProp[keyid.value] === key)
+    const selectItemsObject = rows?.map((key: any) => {
+      const objectItem = props.items?.find(itemProp => itemProp[keyid.value] === key)
 
       return objectItem || {}
     })
@@ -163,12 +159,12 @@ const checkedItem = (rows: any, item: any) => {
 
 // Cập nhật table theo pagination
 const updatePage = (paginationNumber: number) => {
-  dataTable.value.updatePage(paginationNumber)
+  dataTable.value?.updatePage(paginationNumber)
 }
 
 // Cập nhật số lượng item trên  table theo pagination
 const updateRowsPerPageSelect = (e: number) => {
-  dataTable.value.updateRowsPerPageActiveOption(e)
+  dataTable.value?.updateRowsPerPageActiveOption(e)
 }
 
 // thay đổi số lượng item trên trang
@@ -226,12 +222,7 @@ watch(() => props.items, value => {
             :indeterminate="indeterminate"
             :label="header.text"
             :class="{ indeterminate }"
-            :true-icon="() => {
-              return h('div', { innerHTML: svgChecked })
-            }"
-            :indeterminate-icon="() => {
-              return h('div', { innerHTML: svgIndeterminate })
-            }"
+
             ripple
             @change="checkedAll(selectedAll)"
           />
@@ -262,7 +253,7 @@ watch(() => props.items, value => {
           :context="context"
         />
         <span
-          v-if="itemsHeader.value === 'select' && context.isSuccess === false"
+          v-if="itemsHeader.value === 'select' && context?.isSuccess === false"
         >
           <VIcon
             icon="tabler:alert-triangle"
@@ -273,7 +264,7 @@ watch(() => props.items, value => {
             activator="parent"
             location="bottom"
           >
-            <div v-html="context.messageErr" />
+            <div v-html="context?.messageErr" />
           </VTooltip>
         </span>
 
@@ -286,9 +277,6 @@ watch(() => props.items, value => {
             v-model="selectedRows"
             multiple
             :value="context[keyid]"
-            :true-icon="() => {
-              return h('div', { innerHTML: svgChecked })
-            }"
             @input="checkedItem(selectedRows, context)"
           />
         </div>
@@ -307,7 +295,7 @@ watch(() => props.items, value => {
                 :icon="actionItem?.icon"
                 :size="actionItem?.size || 18"
                 class="align-middle"
-                :class="[actionItem.color]"
+                :class="`color-${actionItem?.color}`"
                 @click="actionItem?.action ? actionItem?.action(MethodsUtil.checlActionKey(actionItem, context)) : ''"
               />
               <VTooltip
@@ -319,11 +307,11 @@ watch(() => props.items, value => {
             </div>
           </template>
           <div
-            v-if="context?.actions?.length >= Globals.MAX_ITEM_ACTION"
+            v-if="context?.actions?.length > Globals.MAX_ITEM_ACTION"
           >
             <div class="action-more px-2">
               <CmDropDown
-                :list-item="ArrayUtil.sliceArray(context.actions, Globals.MAX_ITEM_ACTION)"
+                :list-item="ArrayUtil.sliceArray(context?.actions, Globals.MAX_ITEM_ACTION)"
                 :data="context"
                 custom-key="name"
                 :type="1"
@@ -340,7 +328,7 @@ watch(() => props.items, value => {
             :item-title="itemsHeader?.combobox?.key"
             :item-value="itemsHeader?.combobox?.value"
             :multiple="itemsHeader?.combobox?.multiple"
-            @update:modelValue="changeCellvalue($event, itemsHeader.value, context.key)"
+            @update:modelValue="changeCellvalue($event, itemsHeader.value, context?.key)"
           />
         </div>
         <VTextField

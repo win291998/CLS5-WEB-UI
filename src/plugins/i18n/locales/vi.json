@@ -4518,5 +4518,7 @@
   "success": "Thành công",
   "USR_GetFailed": "Không lấy được giữ liệu",
   "no-search": "Không tìm thấy kết quả cho { search }",
-  "start-search": "Bắt đầu gõ để tìm kiếm..."
+  "start-search": "Bắt đầu gõ để tìm kiếm...",
+  "list-group-capacity":"Danh sách nhóm năng lực",
+  "group-capacity-name":"Tên nhóm năng lực"
 }
