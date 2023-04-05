@@ -56,6 +56,7 @@ const messageError = computed(() => {
     :bg-color="bgColor"
     hide-details="auto"
     :placeholder="placeholder"
+    :error="errors?.length > 0"
     :error-messages="messageError"
     :type="type"
     @change="handleChangeText"

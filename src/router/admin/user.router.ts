@@ -1,3 +1,5 @@
+import i18n from '@/plugins/i18n'
+
 export default [
   {
     path: 'guilde/tree-select',
@@ -96,6 +98,11 @@ export default [
       {
         path: 'user-groups',
         name: 'admin-organization-user-groups',
+        meta: {
+          requireAuth: {
+            permissionKey: 'UserGroupManaging',
+          },
+        },
         component: () => import('@/pages/admin/organization/user-groups/UserGroups.vue'),
       },
       {
@@ -109,7 +116,7 @@ export default [
         component: () => import('@/pages/admin/organization/position-title/PositionTitle.vue'),
       },
       {
-        path: 'capacity',
+        path: 'capacity/:activeTab',
         name: 'admin-organization-capacity',
         component: () => import('@/pages/admin/organization/capacity/Capacity.vue'),
       },

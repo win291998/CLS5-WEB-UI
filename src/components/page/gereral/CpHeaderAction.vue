@@ -107,15 +107,17 @@ const handleSearch = (value: any) => {
       sm="8"
     >
       <VRow>
-        <VCol class="d-flex justify-end">
+        <VCol class="d-flex justify-end pr-0">
           <CmTextField
             label="Tìm kiếm"
-            class="mr-3 header-action-field"
+            class="header-action-field"
+            placeholder="Tìm kiếm"
             prepend-inner-icon="tabler-search"
             @change="handleSearch"
           />
           <CmButton
             v-if="isFillter"
+            class="ml-3"
             :disabled="disabledFillter"
             variant="outlined"
             bg-color="bg-white"

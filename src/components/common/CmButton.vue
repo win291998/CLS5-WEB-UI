@@ -29,6 +29,7 @@ interface Props {
   className?: string
   positionIcon?: string
   colorIcon?: string
+  sizeIcon?: number
 }
 
 const props = withDefaults(defineProps<Props>(), ({
@@ -41,6 +42,8 @@ const props = withDefaults(defineProps<Props>(), ({
   className: '',
   variant: 'tonal',
   positionIcon: '',
+  size: 'sm',
+  sizeIcon: 14,
 }))
 
 const emit = defineEmits<Emit>()
@@ -58,13 +61,13 @@ onMounted(() => {
   components.value.push(false)
 })
 
+const unLoadButton = () => {
+  unLoadComponent(indexLoad.value)
+}
+
 const handleClick = () => {
   loadComponent(indexLoad.value)
   emit('click', indexLoad.value)
-}
-
-const unLoadButton = () => {
-  unLoadComponent(indexLoad.value)
 }
 
 const isDisabled = computed(() => {
@@ -108,7 +111,7 @@ defineExpose({
           <VueFeather
             v-if="props.icon"
             :type="props.icon"
-            size="14"
+            :size="props.sizeIcon"
             :class="[props.colorIcon]"
           />
           <span>{{ title }}</span>
@@ -128,5 +131,10 @@ defineExpose({
   padding-block: 10px;
   padding-inline: 16px;
   text-transform: inherit;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  border-radius: 8px;
 }
 </style>
