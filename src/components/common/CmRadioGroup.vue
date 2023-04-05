@@ -6,6 +6,7 @@ interface radio {
 interface Props {
   option?: radio[]
   color?: string
+  label?: string
 }
 
 interface Emit {
@@ -28,7 +29,7 @@ const updateValue = (value: any) => {
 <template>
   <VRadioGroup
     v-model="valueCurrent"
-    label="Giới tính"
+    :label="label"
     inline
     @update:model-value="updateValue"
   >

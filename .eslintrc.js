@@ -68,6 +68,7 @@ module.exports = {
     'vue/no-template-shadow': 'off',
     'vue/valid-v-slot': 'off',
     'sonarjs/no-small-switch': 'off',
+    'vue/prefer-true-attribute-shorthand': 'off',
     'padding-line-between-statements': [
       'error',
       { blankLine: 'always', prev: 'expression', next: 'const' },

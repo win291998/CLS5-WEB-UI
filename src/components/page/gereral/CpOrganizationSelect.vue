@@ -4,7 +4,7 @@ import ArrayUtil from '@/utils/ArrayUtil'
 import { comboboxStore } from '@/stores/combobox'
 
 interface Props {/** ** Interface */
-  value?: any
+  modelValue?: any
   orgStructs?: Array<any>
   valueFormat?: string
   excludeId?: number
@@ -13,6 +13,7 @@ interface Props {/** ** Interface */
   multiple?: boolean
   parentId?: number
   appendToBody?: boolean
+  closeOnSelect?: boolean
   bgColor?: string
   text?: string
   placeholder?: string
@@ -24,6 +25,7 @@ interface Emit {
 /** ** Khởi tạo prop emit */
 const props = withDefaults(defineProps<Props>(), ({
   multiple: false,
+  closeOnSelect: false,
   customKey: 'id',
   label: undefined,
   bgColor: 'white',
@@ -37,7 +39,7 @@ const emit = defineEmits<Emit>()
 const store = comboboxStore()
 const { organizations } = storeToRefs(store)
 const { fetchTOrgStructCombobox } = store
-const organizationsValue = ref<Array<any>>([])
+const organizationsValue = ref<any>(props.modelValue)
 
 const options = ref()
 
@@ -81,7 +83,8 @@ onMounted(async () => {
       :options="options"
       :placeholder="props.text"
       value-format="id"
-      multiple
+      :close-on-select="closeOnSelect"
+      :multiple="multiple"
       :normalizer-custom-type="[props.customKey, 'name', 'children']"
       @update:model-value="handleChangeSelect"
     />

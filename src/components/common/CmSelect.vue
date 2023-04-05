@@ -97,10 +97,10 @@ const fetchOptions = (options: any, search: any) => {
 
   const fuse: any = new Fuse(options, optionsFuse)
 
-  fuse.search(searchKey).map((result: any) => result.item)
+  fuse.search(searchKey).map((result: any) => result?.item)
 
-  return searchKey.length
-    ? fuse.search(searchKey).map((result: any) => result.item)
+  return searchKey?.length
+    ? fuse.search(searchKey).map((result: any) => result?.item)
     : fuse.list
 }
 
@@ -112,7 +112,7 @@ watch(() => props.modelValue, newValue => {
 
 <template>
   <div>
-    <div>
+    <div class="mb-1">
       <label
         class="text-medium-sm color-dark"
       >{{ props.text }}</label>
@@ -127,7 +127,7 @@ watch(() => props.modelValue, newValue => {
         :reduce="(value: any) => returnObject ? value : value[itemValue]"
         :filter="fetchOptions"
         class="v-select-limit-width v-select-cls"
-        :class="{ 'is-invalid': !!errors.length }"
+        :class="{ 'is-invalid': !!errors?.length }"
         @open="open"
         @close="close"
         @update:modelValue="handleChangeValue"
@@ -166,6 +166,13 @@ watch(() => props.modelValue, newValue => {
   // Flatpickr
   &.flatpickr-input {
     border-color: red;
+  }
+}
+
+.vs {
+  /* stylelint-disable-next-line no-descending-specificity */
+  &__dropdown-toggle {
+    block-size: 40px;
   }
 }
 </style>
