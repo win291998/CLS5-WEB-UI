@@ -66,6 +66,7 @@ module.exports = {
 
     'vue/multi-word-component-names': 'off',
     'vue/no-template-shadow': 'off',
+    'vue/valid-v-slot': 'off',
     'sonarjs/no-small-switch': 'off',
     'padding-line-between-statements': [
       'error',

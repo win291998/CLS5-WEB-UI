@@ -9,3 +9,8 @@ declare module 'vue3-treeview' {
   const treeview: DefineComponent<{}, {}, any>
   export default treeview
 }
+declare module 'vue-select' {
+  import { DefineComponent } from 'vue'
+  const ISelect: DefineComponent<{}, {}, any>
+  export default ISelect
+}

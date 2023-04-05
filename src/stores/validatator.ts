@@ -30,6 +30,18 @@ export const validatorStore = defineStore('validator', () => {
       MAX: 255,
       MIN: 3,
     },
+    USER_CODE: {
+      FIELD: t('common.employee-code'),
+      MAX: 50,
+    },
+    PHONE_NUMBER: {
+      FIELD: t('common.phone-number'),
+      MAX: 10,
+    },
+    USER_TYPE: {
+      FIELD: t('users.user.filters.user-role'),
+      MIN: 1,
+    },
   })
 
   const ruleMessage = reactive({
@@ -37,6 +49,10 @@ export const validatorStore = defineStore('validator', () => {
     min: (min: any, field?: any) => `${field || ''} phải chứa ít nhất ${min} ký tự`,
     max: (max: any, field?: any) => `${field || ''} chỉ chứa tối đa ${max} ký tự`,
     password: (field?: any) => `${field || ''} phải chứa ít nhất một chữ cái viết thường, một chữ in hoa, một số và một ký tự đặc biệt`,
+    typeNumber: 'Vui lòng nhập một số.',
+    typeString: 'Vui lòng nhập chuỗi.',
+    positive: 'Vui lòng nhập số dương.',
+    requiredOption: (field?: any) => `${field || ''} phải chứa ít nhất một lựa chọn`,
   })
 
   const getRulePassword = () => {
@@ -45,7 +61,7 @@ export const validatorStore = defineStore('validator', () => {
       && ['daotaotlg.cls.vn', 'winedu.com.vn'].includes(window.location.hostname)
     ) {
       return yup.string()
-        .required()
+        .required(ruleMessage.required())
         .min(8, ruleMessage.min(8, CONFIG.PASSWORD.FIELD))
         .matches(
           /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
@@ -53,13 +69,7 @@ export const validatorStore = defineStore('validator', () => {
         )
     }
 
-    return yup.string()
-      .required()
-      .min(8, ruleMessage.min(8, CONFIG.PASSWORD.FIELD))
-      .matches(
-        /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
-        ruleMessage.password(CONFIG.PASSWORD.FIELD),
-      )
+    return yup.string().required(ruleMessage.required()).min(6, ruleMessage.min(6, CONFIG.PASSWORD.FIELD))
   }
 
   const schema = yup.object().shape({
@@ -73,7 +83,12 @@ export const validatorStore = defineStore('validator', () => {
       .max(CONFIG.USERNAME.MAX, ruleMessage.max(CONFIG.USERNAME.MAX, CONFIG.USERNAME.FIELD))
       .min(CONFIG.USERNAME.MIN, ruleMessage.min(CONFIG.USERNAME.MIN, CONFIG.USERNAME.FIELD)),
     password: getRulePassword(),
-
+    userCode: yup.string().required(ruleMessage.required())
+      .max(CONFIG.USER_CODE.MAX, ruleMessage.max(CONFIG.USER_CODE.MAX, CONFIG.USER_CODE.FIELD)),
+    phoneNumber: yup.string().max(CONFIG.PHONE_NUMBER.MAX, ruleMessage.max(CONFIG.PHONE_NUMBER.MAX, CONFIG.PHONE_NUMBER.FIELD)),
+    kpiLearn: yup.number().typeError(ruleMessage.typeNumber).positive(ruleMessage.positive),
+    kpiTeach: yup.number().typeError(ruleMessage.typeNumber).positive(ruleMessage.positive),
+    userTypeId: yup.array().typeError(ruleMessage.typeNumber).min(CONFIG.USER_TYPE.MIN, ruleMessage.requiredOption(CONFIG.USER_TYPE.FIELD)),
   })
 
   return { schema, ruleMessage, Field, Form, useField }
