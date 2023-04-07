@@ -98,12 +98,25 @@ export default [
       {
         path: 'user-groups',
         name: 'admin-organization-user-groups',
+        redirect: { name: 'admin-organization-user-groups-list' },
         meta: {
           requireAuth: {
             permissionKey: 'UserGroupManaging',
           },
         },
-        component: () => import('@/pages/admin/organization/user-groups/UserGroups.vue'),
+        children: [
+          {
+            path: '',
+            name: 'admin-organization-user-groups-list',
+            component: () => import('@/pages/admin/organization/user-groups/UserGroups.vue'),
+          },
+          {
+            path: 'add',
+            name: 'admin-organization-user-groups-add',
+            component: () => import('@/pages/admin/organization/user-groups/Edit/EditUserGroup.vue'),
+          },
+        ],
+        component: () => import('@/pages/admin/organization/user-groups/Index.vue'),
       },
       {
         path: 'org-struct',
@@ -115,11 +128,21 @@ export default [
         name: 'admin-organization-position-title',
         component: () => import('@/pages/admin/organization/position-title/PositionTitle.vue'),
       },
+
       {
-        path: 'capacity/:activeTab',
+        path: 'capacity',
         name: 'admin-organization-capacity',
         component: () => import('@/pages/admin/organization/capacity/Capacity.vue'),
+        redirect: { name: 'admin-organization-capacity-tab', params: { tab: 'group-capacity' } },
+        children: [
+          {
+            path: ':tab',
+            name: 'admin-organization-capacity-tab',
+            component: () => import('@/pages/admin/organization/capacity/Capacity.vue'),
+          },
+        ],
       },
+
     ],
   },
 

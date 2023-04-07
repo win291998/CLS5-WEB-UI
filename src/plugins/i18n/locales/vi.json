@@ -4520,5 +4520,11 @@
   "no-search": "Không tìm thấy kết quả cho { search }",
   "start-search": "Bắt đầu gõ để tìm kiếm...",
   "list-group-capacity":"Danh sách nhóm năng lực",
-  "group-capacity-name":"Tên nhóm năng lực"
+  "group-capacity-name":"Tên nhóm năng lực",
+  "edit-group-capacity": "Chỉnh sửa nhóm năng lực",
+  "delete-group-capacity": "Xóa nhóm năng lực",
+  "error": "Có lỗi xảy ra",
+  "Are-you-sure-you-want-to-delete-the-ability-group?": "Bạn có chắc chắn muốn xóa nhóm năng lực?",
+  "list-group-user": "Danh sách nhóm người dùng",
+  "export-excel": "Xuất Excel"
 }

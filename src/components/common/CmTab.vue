@@ -6,37 +6,38 @@ const props = withDefaults(defineProps<Props>(), ({
   type: 'button',
   isSmall: false,
   label: 'tabActive',
+  routeName: '',
 }))
 
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 
 interface tab {
   key: string
-  title: string
+  title?: string
   icon?: string
   component: any
-  isRendered: boolean
 }
 interface Props {
   listTab: tab[]
   type?: typeof typeTab[any]
-  isSmall?: boolean
-  label?: string
+  isSmall: boolean
+  label: string
+  routeName: string
 }
 const router = useRouter()
 const route = useRoute()
 
-const tabActive = ref({})
+const tabActive = ref<any>({})
 
 const getTabActive = () => {
-  if (route.params.tabActive && !tabActive.value.tabActive)
+  if (route.params[props.label] && !tabActive.value[props.label])
     tabActive.value = props.listTab.find(e => e.key === route.params[props.label]) as object
 }
 
 getTabActive()
 
 const activeTab = (value: any) => {
-  router.push({ params: { [props.label]: value.key } })
+  router.push({ name: props.routeName || undefined, params: { [props.label]: value.key } })
   tabActive.value = value
 }
 </script>
@@ -67,7 +68,6 @@ const activeTab = (value: any) => {
       </VTabs>
     </div>
     <div
-      v-if="tabActive.component"
       class="content-tab"
     >
       <Component

@@ -11,6 +11,12 @@ const props = withDefaults(defineProps<Props>(), ({
 }))
 
 const emit = defineEmits<Emit>()
+
+interface Emit {
+  (e: 'click', type: string): void
+  (e: 'deleteMultiple'): void
+  (e: 'search', type: any): void
+}
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 const CmButton = defineAsyncComponent(() => import('@/components/common/CmButton.vue'))
 const CmTextField = defineAsyncComponent(() => import('@/components/common/CmTextField.vue'))
@@ -30,17 +36,15 @@ interface Props {
   disabledFillter?: boolean
 }
 
-interface Emit {
-  (e: 'click', type: string): void
-  (e: 'search', type: any): void
-}
-
 const isShowFilter = ref(props.isFillter)
 
 const handleClickBtn = (type: string) => {
   switch (type) {
     case 'fillter':
       isShowFilter.value = !isShowFilter.value
+      break
+    case 'delete':
+      emit('deleteMultiple')
       break
 
     default:
