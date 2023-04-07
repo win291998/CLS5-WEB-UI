@@ -36,7 +36,10 @@ const optionSex = ref([
         md="10"
         class="d-flex align-center"
       >
-        <CmRadioGroup :option="optionSex" />
+        <CmRadioGroup
+          :label="t('common.gender')"
+          :option="optionSex"
+        />
       </VCol>
     </VRow>
     <VRow class="my-3">

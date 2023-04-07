@@ -36,7 +36,7 @@ const props = withDefaults(defineProps<Props>(), ({
   isLoad: false,
   block: false,
   disabled: false,
-  color: '',
+  color: 'primary',
   textColor: '',
   bgColor: '',
   className: '',
@@ -75,12 +75,15 @@ const isDisabled = computed(() => {
 })
 
 const prefixColor = computed(() => {
-  if (props.variant === 'outlined')
+  if (props.variant === 'outlined' || props.variant === 'text')
     return 'color'
-
   return 'btn'
 })
-
+const textButton = computed(() => {
+  if (props.variant === 'text')
+    return 'text-button'
+  return ''
+})
 defineExpose({
   unLoadButton,
 })
@@ -95,7 +98,7 @@ defineExpose({
     :size="size"
     :rounded="rounded"
     class="text-style-btn"
-    :class="[`${prefixColor}-${color}`, bgColor, className]"
+    :class="[`${prefixColor}-${color}`, bgColor, className, textButton]"
     @click="handleClick"
   >
     <template #prepend>
@@ -107,15 +110,18 @@ defineExpose({
     >
       <div :class="[textColor]">
         <slot v-if="!title && !icon" />
-        <div v-if="props.title || props.icon">
-          <VueFeather
+        <span v-if="props.title || props.icon">
+          <VIcon
             v-if="props.icon"
-            :type="props.icon"
+            :icon="props.icon"
             :size="props.sizeIcon"
             :class="[props.colorIcon]"
           />
-          <span>{{ title }}</span>
-        </div>
+          <span
+            v-if="props.title"
+            class="ml-1"
+          >{{ title }}</span>
+        </span>
       </div>
     </template>
     <template #append>
@@ -136,5 +142,8 @@ defineExpose({
   font-size: 14px;
   line-height: 20px;
   border-radius: 8px;
+}
+.text-button {
+  box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05);
 }
 </style>

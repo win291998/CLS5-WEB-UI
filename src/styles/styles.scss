@@ -157,6 +157,10 @@
   background-color: $color-white !important;
 }
 
+.no-background {
+  background-color: transparent;
+}
+
 // .outline-dark {
 //   background-color: $color-gray-700;
 // }
@@ -260,3 +264,13 @@
 .font-weight-600 {
   font-weight: $weight-md;
 }
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: $color-gray-600;
+}
+
+

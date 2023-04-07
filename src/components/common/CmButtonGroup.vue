@@ -9,6 +9,7 @@ import type { size } from '@/typescript/enums/enums'
  *  icon:
  *  class:
  *  action: function từ cha truyền xuống, nếu ko thì dùng click item
+ *  key: nếu dùng event clickItem thì dùng key để xử lí từng sự kiện
  * }
  * icon: icon hiển thị của prepend button
  * isBorder: có hiển thị border giữa 2 button
@@ -25,13 +26,14 @@ interface Props {
   isDiabledPrepend?: boolean
   isDiabledAppend?: boolean
   size?: typeof size[any]
-  title: string
+  title?: string
 }
 interface ListItem {
   title: string
   icon?: string
   colorClass?: string
   action?: any
+  key?: any
 }
 
 interface Emit {
@@ -47,6 +49,7 @@ const props = withDefaults(defineProps<Props>(), ({
   isDiabledPrepend: false,
   isDiabledAppend: false,
   size: 'default',
+  title: '',
 }))
 
 const emit = defineEmits<Emit>()
@@ -69,21 +72,19 @@ const clickItem = (item: object) => {
 <template>
   <div>
     <VBtn
-      :class="`button-group-prepend btn-${props.color}`"
+      :class="`button-group button-group-prepend btn-${props.color}`"
       activator="parent"
       :size="props.size"
       :disabled="props.isDiabledPrepend"
+      @click="handlerPrepend"
     >
-      <div
-        @click="handlerPrepend"
-      >
-        <slot />
-      </div>
+      <span v-if="props.title">{{ props.title }}</span>
+      <slot v-if="!props.title" />
     </VBtn>
     <VBtn
       :size="props.size"
       :disabled="props.isDiabledAppend"
-      :class="`button-group-append btn-${props.color} ${isBorder ? `border-left-${props.color}` : ''}`"
+      :class="`button-group button-group-append btn-${props.color} ${isBorder ? `border-left-${props.color}` : ''}`"
     >
       <VMenu
         location="bottom right"
@@ -132,5 +133,9 @@ const clickItem = (item: object) => {
 .button-group-append {
   border-end-start-radius: unset;
   border-start-start-radius: unset;
+}
+
+.button-group {
+  height: -webkit-fill-available;;
 }
 </style>
