@@ -136,6 +136,6 @@ const clickItem = (item: object) => {
 }
 
 .button-group {
-  height: -webkit-fill-available;;
+  height: -webkit-fill-available;
 }
 </style>

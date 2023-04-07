@@ -4,9 +4,9 @@ import { useToast } from 'vue-toastification'
 import login from '../login.vue'
 import Permission from '../admin/organization/permission/Permission.vue'
 import treeSelect from './tree-select.vue'
+import demotab from './demotab.vue'
 import { load } from '@/stores/loadComponent'
 import CmButton from '@/components/common/CmButton.vue'
-
 import CmDateStage from '@/components/common/CmDateStage.vue'
 import CmCheckBox from '@/components/common/CmCheckBox.vue'
 import CmCard from '@/components/common/CmCard.vue'
@@ -54,7 +54,7 @@ const listTab = [
     key: 'infor1',
     title: 'win hello',
     icon: 'mdi-check-circle',
-    component: login,
+    component: demotab,
     isRendered: false,
   },
   {
@@ -133,6 +133,10 @@ const handlerPreButton = () => {
 const toast = useToast()
 
 const button123 = ref(null)
+
+const abcd = (val: any) => {
+  console.log(val)
+}
 </script>
 
 <template>
@@ -256,6 +260,8 @@ const button123 = ref(null)
     <CmTab
       :list-tab="listTab"
       type="underline"
+      abc="abc"
+      @hello="abcd"
     />
   </div>
 </template>
