@@ -1,32 +1,50 @@
 <script setup lang="ts">
 import type { typeTab } from '@/typescript/enums/enums'
 
+/**
+ *khi emit từ component lên thẳng component cha thì khai báo
+ *
+ * interface Props {
+ *    emit?: any
+ * }
+ * const { emitEvent } = props.emit()
+ * emitEvent('name', abc) dùng như emit mặc định của vue
+ *
+ * */
 const props = withDefaults(defineProps<Props>(), ({
   listTab: () => ([]),
   type: 'button',
   isSmall: false,
   label: 'tabActive',
   routeName: '',
+  hide: false,
 }))
 
+const emit = defineEmits<Emit>()
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 
 interface tab {
   key: string
   title?: string
   icon?: string
-  component: any
+  component: any // truyền thẳng component vào nếu dùng composition api, còn không thì truyền string tên component
+  dataTab?: any // Dữ liệu riêng của từng tab
+  isDisabled?: boolean
 }
 interface Props {
+  hide: boolean
   listTab: tab[]
   type?: typeof typeTab[any]
   isSmall: boolean
   label: string
   routeName: string
+  dataGeneral?: any // hạn chế dùng
 }
 const router = useRouter()
 const route = useRoute()
-
+interface Emit {
+  (e: string, data: any): void
+}
 const tabActive = ref<any>({})
 
 const getTabActive = () => {
@@ -40,12 +58,21 @@ const activeTab = (value: any) => {
   router.push({ name: props.routeName || undefined, params: { [props.label]: value.key } })
   tabActive.value = value
 }
+
+const useEmitter = () => {
+  const emitEvent = (event: any, data: any) => {
+    emit(event, data)
+  }
+
+  return { emitEvent }
+}
 </script>
 
 <template>
   <div class="tabs">
     <div class="w-100">
       <VTabs
+        v-if="!hide"
         v-model="tabActive"
         :class="`cm-tabs ${type}-tabs`"
         :hide-slider="type === 'button'"
@@ -54,6 +81,7 @@ const activeTab = (value: any) => {
         <VTab
           v-for="(item, index) in listTab"
           :key="index"
+          :disabled="item.isDisabled"
           :value="item"
           :class="`item-tab ${tabActive.key === item.key ? 'active' : ''} `"
         >
@@ -67,11 +95,15 @@ const activeTab = (value: any) => {
         </VTab>
       </VTabs>
     </div>
+
     <div
       class="content-tab"
     >
       <Component
         :is="tabActive.component"
+        :emit="useEmitter"
+        :data-general="dataGeneral"
+        :data-tab="tabActive.dataTab || undefined"
       />
     </div>
   </div>
