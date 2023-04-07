@@ -284,7 +284,9 @@ watch(() => props.items, value => {
           v-else-if="itemsHeader.value === 'actions'"
           class="player-wrapper d-flex justify-end"
         >
-          <template v-for="(actionItem, idKey) in context?.actions ">
+          <template
+            v-for="(actionItem, idKey) in context?.actions "
+          >
             <div
               v-if="idKey < 2"
               :key="idKey"
@@ -318,6 +320,11 @@ watch(() => props.items, value => {
               />
             </div>
           </div>
+
+          <slot
+            name="actions"
+            :data="context"
+          />
         </div>
         <div v-else-if="itemsHeader?.type === 'menu'" />
         <div v-else-if="itemsHeader?.type === 'custom'" />

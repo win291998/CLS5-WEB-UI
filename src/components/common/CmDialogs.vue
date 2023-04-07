@@ -89,7 +89,7 @@ const onCancel = () => {
 
             <CmButton
               variant="elevated"
-              :color="color "
+              :color="color"
               @click="onConfirmation"
             >
               {{ t(buttonOkName) }}

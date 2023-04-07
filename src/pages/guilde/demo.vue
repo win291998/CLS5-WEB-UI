@@ -109,6 +109,8 @@ const action = [{
 }]
 
 const handleClick = (value: any) => {
+  console.log(1)
+
   // console.log(action)
 }
 
