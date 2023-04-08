@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { reject } from 'lodash'
 import AuthUtil from '@/auth'
 import jwtDefaultConfig from '@/auth/jwtDefaultConfig'
 
@@ -94,6 +95,8 @@ axiosIns.interceptors.response.use(
         })
       })
     }
+
+    return Promise.reject(error)
 
     // if (response && response.status === 401) {
     //   localStorage.clear()

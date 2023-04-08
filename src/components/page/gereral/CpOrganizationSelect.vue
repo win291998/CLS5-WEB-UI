@@ -81,7 +81,7 @@ onMounted(async () => {
     <CmSelectTree
       v-model="organizationsValue"
       :options="options"
-      :placeholder="props.text"
+      :placeholder="props.placeholder"
       value-format="id"
       :close-on-select="closeOnSelect"
       :multiple="multiple"
