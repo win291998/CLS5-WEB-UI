@@ -97,10 +97,11 @@ const useEmitter = () => {
     </div>
 
     <div
+      v-if="tabActive?.component"
       class="content-tab"
     >
       <Component
-        :is="tabActive.component"
+        :is="tabActive?.component"
         :emit="useEmitter"
         :data-general="dataGeneral"
         :data-tab="tabActive.dataTab || undefined"
@@ -111,37 +112,42 @@ const useEmitter = () => {
 
 <style lang="scss" scoped>
 @use "/src/styles/style-global" as *;
+
 .cm-tabs {
-  width: fit-content;
-  text-transform: capitalize !important;
   // background-color: $color-white;
   color: $color-gray-500;
+  inline-size: fit-content;
+  text-transform: capitalize !important;
+
   .v-slide-group__content {
-    border-bottom: 1px red solid;
+    border-block-end: 1px red solid;
   }
+
   .item-tab {
-    text-transform: capitalize !important;
     border-radius: 6px !important;
+    text-transform: capitalize !important;
   }
 }
 
 // kiểu button tab
 .button-tabs {
   .active {
-    color: $color-primary-700 !important;
     background-color: $color-primary-50 !important;
+    color: $color-primary-700 !important;
   }
 }
 
 // kiểu underline tab
 .underline-tabs {
-  border-bottom: 1px solid $color-gray-200;
+  border-block-end: 1px solid $color-gray-200;
+
   .active {
     color: $color-primary-700 !important;
   }
 }
+
 .content-tab {
-  width: 100%;
-  margin-top: 5px;
+  inline-size: 100%;
+  margin-block-start: 5px;
 }
 </style>

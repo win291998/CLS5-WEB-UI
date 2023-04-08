@@ -74,8 +74,28 @@ export default [
             component: () => import('@/pages/admin/organization/users/Users.vue'),
           },
           {
-            path: 'profile',
-            name: 'admin-organization-users-profile',
+            path: 'profile/:tabActive',
+            name: 'admin-organization-users-profile-add',
+            meta: {
+              parent: 'users',
+              pageTitle: 'users.add-user.title',
+              breadcrumb: [
+                {
+                  title: 'users.user.title-table.user-list',
+                  to: { name: 'admin-organization-users' },
+                },
+                {
+                  title: 'common.add',
+
+                  active: true,
+                },
+              ],
+            },
+            component: () => import('@/pages/admin/organization/users/profile/Profile.vue'),
+          },
+          {
+            path: 'profile/:tabActive/:id',
+            name: 'admin-organization-users-profile-edit',
             meta: {
               parent: 'users',
               pageTitle: 'users.add-user.title',

@@ -20,6 +20,7 @@ const props = withDefaults(defineProps<Props>(), ({
   pageSize: Globals.PAGINATION_PAGE_SIZE_DEFAULT,
   customId: 'id',
   totalRecord: 0,
+  minHeight: 100,
 }))
 
 const emit = defineEmits<Emit>()
@@ -49,10 +50,11 @@ interface Props {
   returnObject?: boolean
   isImportFile?: boolean
   totalRecord?: number
+  minHeight?: number
   isActionFooter?: boolean
 }
 interface Emit {
-  (e: 'handleClickRow', dataRow: object): void
+  (e: 'handleClickRow', dataRow: object, index: number): void
   (e: 'selectedRows', dataRow: object): void
   (e: 'itemSelected', dataRow: object): void
   (e: 'checkedAll', checkedAll: boolean, data: object): void
@@ -129,7 +131,9 @@ const checkedAll = (value: any) => {
 /** event */
 // sự kiện click vào hàng
 const showRow = (item: ClickRowArgument) => {
-  emit('handleClickRow', item)
+  const index = props.items.findIndex((row: any) => row.key === item.key)
+
+  emit('handleClickRow', item, index)
 }
 
 // sự kiện click chọn item
@@ -204,7 +208,7 @@ watch(() => props.items, value => {
       :items="items"
       :rows-per-page="pageSize"
       theme-color="#1849a9"
-      :table-min-height="100"
+      :table-min-height="minHeight"
       :item-key="keyid"
       fixed-expand
       hide-footer

@@ -26,7 +26,8 @@ interface Props {
   isDiabledPrepend?: boolean
   isDiabledAppend?: boolean
   size?: typeof size[any]
-  title?: string
+  title: string
+  type?: string
 }
 interface ListItem {
   title: string
@@ -37,7 +38,7 @@ interface ListItem {
 }
 
 interface Emit {
-  (e: 'clickPrepend'): void
+  (e: 'clickPrepend', event: any): void
   (e: 'clickItem', item: object): void
 }
 
@@ -45,7 +46,7 @@ const props = withDefaults(defineProps<Props>(), ({
   listItem: () => ([]),
   icon: 'chevron-down',
   isBorder: true,
-  color: 'error',
+  color: 'primary',
   isDiabledPrepend: false,
   isDiabledAppend: false,
   size: 'default',
@@ -54,7 +55,7 @@ const props = withDefaults(defineProps<Props>(), ({
 
 const emit = defineEmits<Emit>()
 
-const handlerPrepend = () => {
+const handlerPrepend = event => {
   emit('clickPrepend')
 }
 
@@ -70,12 +71,13 @@ const clickItem = (item: object) => {
 </script>
 
 <template>
-  <div>
+  <div class="btn-group-style">
     <VBtn
       :class="`button-group button-group-prepend btn-${props.color}`"
       activator="parent"
       :size="props.size"
       :disabled="props.isDiabledPrepend"
+      class="text-style-btn"
       @click="handlerPrepend"
     >
       <span v-if="props.title">{{ props.title }}</span>
@@ -84,7 +86,7 @@ const clickItem = (item: object) => {
     <VBtn
       :size="props.size"
       :disabled="props.isDiabledAppend"
-      :class="`button-group button-group-append btn-${props.color} ${isBorder ? `border-left-${props.color}` : ''}`"
+      :class="`button-group button-group-append pa-0 btn-${props.color} ${isBorder ? `border-left-${props.color}` : ''}`"
     >
       <VMenu
         location="bottom right"
@@ -124,18 +126,35 @@ const clickItem = (item: object) => {
 
 <style lang="scss" scoped>
 @use "/src/styles/style-global" as *;
-
+.btn-group-style{
+  height: $button-default-height;
+}
 .button-group-prepend {
   border-end-end-radius: unset;
   border-start-end-radius: unset;
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
 }
 
 .button-group-append {
   border-end-start-radius: unset;
   border-start-start-radius: unset;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+  min-width: 40px;
 }
 
 .button-group {
-  height: -webkit-fill-available;
+ height:  -webkit-fill-available;
+}
+
+.text-style-btn {
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px;
+  padding-block: 10px;
+  padding-inline: 16px;
+  text-transform: inherit;
 }
 </style>

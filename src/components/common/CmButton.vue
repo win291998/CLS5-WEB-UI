@@ -134,14 +134,15 @@ defineExpose({
 @use "/src/styles/style-global" as *;
 
 .text-style-btn {
+  border-radius: 8px;
+  block-size: $button-default-height;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px;
   padding-block: 10px;
   padding-inline: 16px;
   text-transform: inherit;
-  font-style: normal;
-  font-weight: 600;
-  font-size: 14px;
-  line-height: 20px;
-  border-radius: 8px;
 }
 .text-button {
   box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05);
