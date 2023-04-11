@@ -77,13 +77,17 @@ const isDisabled = computed(() => {
 const prefixColor = computed(() => {
   if (props.variant === 'outlined' || props.variant === 'text')
     return 'color'
+
   return 'btn'
 })
+
 const textButton = computed(() => {
   if (props.variant === 'text')
     return 'text-button'
+
   return ''
 })
+
 defineExpose({
   unLoadButton,
 })

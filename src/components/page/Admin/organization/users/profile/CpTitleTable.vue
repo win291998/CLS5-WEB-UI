@@ -28,7 +28,7 @@ interface Props {
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 const route = useRoute()
 const storeValidate = validatorStore()
-const { schema, Field, Form } = storeValidate
+const { Field, Form } = storeValidate
 
 const isCourse = ref(false)
 const isTrainingRoute = ref(false)
@@ -40,8 +40,8 @@ if (autoCheckAssignUser && autoCheckAssignUser?.value) {
 
 // table
 const headers = reactive([
-  { text: t('report.name-structure'), value: 'orgStruct', width: '400' },
-  { text: t('common.title-position'), value: 'title', width: '400' },
+  { text: t('report.name-structure'), value: 'orgStruct', width: 400 },
+  { text: t('common.title-position'), value: 'title', width: 400 },
   { text: '', value: 'actions', width: 50 },
 ])
 
@@ -75,7 +75,7 @@ const getTitleByOrg = async (orStructureId: any) => {
   const res = await MethodsUtil.requestApiCustom(ApiUser.GetListTitle, TYPE_REQUEST.POST, params)
     .then(value => {
       if (value?.data?.pageLists?.length > 0) {
-        value.data.pageLists = value.data.pageLists.map(x => ({ value: x.id, text: x.name, orgId: x.organizationalStructureId }))
+        value.data.pageLists = value.data.pageLists.map((x: any) => ({ value: x.id, text: x.name, orgId: x.organizationalStructureId }))
 
         return value.data.pageLists
       }
@@ -116,10 +116,10 @@ const changeOrg = async (index: any, val: any) => {
 }
 
 const updateTitle = async (userId: any) => {
-  const listTitle = items.value.map(item => ({ orgStructId: item.id, titleId: item.titleId }))
-  const errItem = listTitle.find(x => !x.orgStructId)
+  const listTitle = items.value.map((item: any) => ({ orgStructId: item.id, titleId: item.titleId }))
+  const errItem = listTitle.find((x: any) => !x.orgStructId)
   if (errItem) {
-    toast('WARNING', t('Cơ cấu tổ chức không được để trống và không đươc phép trùng'))
+    toast('WARNING', t('org-duplicate'))
 
     return
   }
@@ -228,7 +228,6 @@ defineExpose({
       :items="items"
       :min-height="300"
       is-action-footer
-      @handleClickRow="handleClickRow"
     >
       <template #action-footer>
         <div>
@@ -257,7 +256,7 @@ defineExpose({
         <div v-if="col === 'title'">
           <div v-if="context.id">
             <CmSelect
-              v-model="context.statusId"
+              v-model="context.titleId"
               :placeholder="t('common.title-position')"
               :items="context.listTitle"
               item-value="value"

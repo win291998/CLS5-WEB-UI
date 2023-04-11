@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 interface Prop {
-  value?: any
+  modelValue?: any
   active?: boolean
   appendIcon?: string
   appendInnerIcon?: string
@@ -31,6 +31,7 @@ interface Prop {
   persistentClear?: boolean
   persistentCounter?: boolean
   text?: string
+  field?: any
 }
 
 const props = withDefaults(defineProps<Prop>(), ({}))
@@ -39,6 +40,11 @@ const emit = defineEmits<Emit>()
 
 interface Emit {
   (e: 'update:model-value', data: any): void
+}
+const formModelValue = ref(props.modelValue)
+
+const handleUpdate = (event: any) => {
+  emit('update:model-value', event)
 }
 </script>
 
@@ -51,7 +57,8 @@ interface Emit {
 
   <VTextarea
     :id="id"
-    :value="value"
+    v-model="formModelValue"
+    v-bind="field"
     :active="active"
     :append-icon="appendIcon"
     :append-inner-icon="appendInnerIcon"
@@ -78,7 +85,6 @@ interface Emit {
     :no-resize="noResize"
     :persistent-clear="persistentClear"
     :persistent-counter="persistentCounter"
-    @update:model-value="emit('update:model-value', $event)"
+    @update:model-value="handleUpdate"
   />
 </template>
-

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 interface radio {
   label: string
-  value: string | number
+  value: any
 }
 interface Props {
   option?: radio[]

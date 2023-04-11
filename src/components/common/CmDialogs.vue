@@ -11,10 +11,11 @@ interface Props {
   buttonOkName?: string
   buttonCancleName?: string
   isHideFooter?: boolean
+  persistent?: boolean
 }
 
 interface Emit {
-  (e: 'update:isDialogVisible', value: boolean): void
+  (e: 'update:isDialogVisible', value: boolean, type?: string): void
   (e: 'confirm', value: boolean): void
 }
 
@@ -24,6 +25,7 @@ const props = withDefaults(defineProps<Props>(), ({
   buttonOkName: 'common.ok-title',
   buttonCancleName: 'common.cancel-title',
   isHideFooter: false,
+  persistent: false,
 }))
 
 const emit = defineEmits<Emit>()
@@ -32,18 +34,24 @@ const CmButton = defineAsyncComponent(() => import('@/components/common/CmButton
 
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 
-const updateModelValue = (val: boolean) => {
-  emit('update:isDialogVisible', val)
+const updateModelValue = (val: boolean, type?: string) => {
+  emit('update:isDialogVisible', val, type)
 }
 
 const onConfirmation = () => {
+  console.log(123)
+
   emit('confirm', true)
-  updateModelValue(false)
+  updateModelValue(false, 'confirm')
 }
 
 const onCancel = () => {
   emit('confirm', false)
   emit('update:isDialogVisible', false)
+}
+
+const handleDialogClose = e => {
+  emit('update:isDialogVisible', true)
 }
 </script>
 
@@ -55,7 +63,7 @@ const onCancel = () => {
     <VDialog
       :model-value="props.isDialogVisible"
       width="800"
-      close-on-back
+      :persistent="persistent"
       @update:model-value="updateModelValue"
     >
       <CmCard backgroud="bg-white">

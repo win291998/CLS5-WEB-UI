@@ -4527,5 +4527,6 @@
   "error": "Có lỗi xảy ra",
   "Are-you-sure-you-want-to-delete-the-ability-group?": "Bạn có chắc chắn muốn xóa nhóm năng lực?",
   "list-group-user": "Danh sách nhóm người dùng",
-  "export-excel": "Xuất Excel"
+  "export-excel": "Xuất Excel",
+  "org-duplicate": "Cơ cấu tổ chức không được để trống và không đươc phép trùng"
 }
