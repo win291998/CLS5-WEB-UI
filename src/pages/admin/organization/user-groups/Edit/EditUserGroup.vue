@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import CmtextArea from '@/components/common/CmtextArea.vue'
+import CmTextArea from '@/components/common/CmTextArea.vue'
 import CmTextField from '@/components/common/CmTextField.vue'
 
 const dataInput = ref({
@@ -30,7 +30,7 @@ const dataInput = ref({
     <div
       class="w-50  pl-2 pr-2"
     >
-      <CmtextArea
+      <CmTextArea
         v-model="dataInput.description"
         text="Mô tả"
       />

@@ -62,7 +62,7 @@ const backUser = () => {
  *
  * Lấy dữ liệu compobox
  */
-const optionSex = ref([
+const optionGender = reactive([
   { label: 'nam', value: false },
   { label: 'nữ', value: true },
 ])
@@ -220,6 +220,7 @@ const resetData = () => {
   getAutoCode()
 }
 
+// eslint-disable-next-line sonarjs/cognitive-complexity
 const handlesCreateUser = async (bvModalEvt: any, dataObj: any, type: any) => {
   console.log(titleTable)
 
@@ -266,11 +267,11 @@ const handlesCreateUser = async (bvModalEvt: any, dataObj: any, type: any) => {
  * update users
  *
  */
-const handleUpdateUser = async (bvModalEvt, dataObj, type) => {
+const handleUpdateUser = async (bvModalEvt: any, dataObj: any, type: any) => {
   const form: any = myForm.value
 
   form.validate().then(async (success: any) => {
-    if (success) {
+    if (success.valid) {
       const params = dataObj
 
       await MethodsUtil.requestApiCustom(ApiUser.fetchUpdateUser, TYPE_REQUEST.POST, params)
@@ -306,6 +307,16 @@ const handleUser = (bvModalEvt: any, dataObj: any, type: any) => {
   else
     handleUpdateUser(bvModalEvt, dataObj, type)
 }
+
+const updateListOrg = (val: any) => {
+  const list: number[] = []
+
+  val.forEach((item: any) => {
+    if (item.id)
+      list.push(item.id)
+  })
+  values.listOrganizationalStructureId = list as never
+}
 </script>
 
 <template>
@@ -340,7 +351,7 @@ const handleUser = (bvModalEvt: any, dataObj: any, type: any) => {
           <CmRadioGroup
             v-model="values.gender"
             :label="t('common.gender')"
-            :option="optionSex"
+            :option="optionGender"
           />
         </VCol>
       </VRow>
@@ -590,6 +601,7 @@ const handleUser = (bvModalEvt: any, dataObj: any, type: any) => {
       <CpTitleTable
         ref="titleTable"
         :user-id="route.params.id"
+        @updateListOrg="updateListOrg"
       />
     </VSheet>
     <VSheet

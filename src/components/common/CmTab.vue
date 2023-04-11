@@ -69,7 +69,7 @@ const useEmitter = () => {
 </script>
 
 <template>
-  <div class="tabs">
+  <div class="tabs w-100">
     <div class="w-100">
       <VTabs
         v-if="!hide"

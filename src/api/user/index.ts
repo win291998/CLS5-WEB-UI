@@ -26,6 +26,12 @@ const UserService = {
   fetchUpdateUser: '/user/update', // fetchUpdateUser
   getAutoCode: '/user/get-suggest-user-code', // getAutoCode
   fetchDetailUpdate: '/user/get-detail-update', // fetchDetailUpdate
+  fetchNameSchools: '/school/get-combobox', // get name schools
+  fetchDegrees: '/Degree/get-combobox', // get bằng cấp trình độ '
+  fetchCountry: '/Address/get-countries', // get country
+  fetchProvinces: '/Address/get-provinces', // get provinces
+  fetchDistricts: '/Address/get-districts', // get districts
+  fetchWards: '/Address/get-wards', // get districts
 
 }
 

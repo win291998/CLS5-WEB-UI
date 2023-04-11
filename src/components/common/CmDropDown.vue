@@ -21,6 +21,7 @@ interface Props {
   multiple?: boolean
   customKey: string
   type?: number
+  index?: number
 }
 interface item {
   icon?: string
@@ -49,6 +50,7 @@ const propsValue = withDefaults(defineProps<Props>(), ({
   customKey: 'title',
   type: undefined,
   data: undefined,
+  index: 0,
 }))
 
 const emit = defineEmits<Emit>()
@@ -104,7 +106,7 @@ const handleClickItem = (event: any) => {
             />
           </template>
           <VListItemTitle
-            @click="item?.action ? propsValue.type === 1 ? item?.action(MethodsUtil.checlActionKey(item, data)) : item?.action() : ''"
+            @click="item?.action ? propsValue.type === 1 ? item?.action(MethodsUtil.checlActionKey(item, data), index) : item?.action() : ''"
           >
             <VIcon
               v-if="item?.icon"

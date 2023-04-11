@@ -11,6 +11,7 @@ import { filterInputProps, makeVInputProps } from 'vuetify/lib/components/VInput
 // @ts-expect-error There won't be declaration file for it
 import { filterInputAttrs } from 'vuetify/lib/util/helpers'
 
+import { object } from 'yup'
 import { useThemeConfig } from '@core/composable/useThemeConfig'
 
 const props = defineProps({
@@ -22,6 +23,10 @@ const props = defineProps({
     variant: 'outlined',
     color: 'primary',
   }),
+  placeholder: {
+    type: String,
+  },
+
 })
 
 const emit = defineEmits<Emit>()
@@ -96,7 +101,7 @@ const emitModelValue = (val: string) => {
 <template>
   <!-- v-input -->
   <VInput
-    v-bind="{ ...inputProps, ...rootAttrs }"
+    v-bind="{ ...inputProps, ...rootAttrs, ...field }"
     :model-value="modelValue"
     :hide-details="props.hideDetails"
     class="position-relative"
@@ -122,6 +127,8 @@ const emitModelValue = (val: string) => {
               :model-value="modelValue"
               class="flat-picker-custom-style"
               :disabled="isReadonly.value"
+              :placeholder="placeholder"
+              :options="flatpickrOptions"
               @on-open="isCalendarOpen = true"
               @on-close="isCalendarOpen = false"
               @update:model-value="emitModelValue"
@@ -302,7 +309,7 @@ input[altinputclass="inlinePicker"] {
   }
 
   &.open {
-    z-index: 1051;
+    z-index: 9999;
   }
 
   &.hasTime.open {
@@ -375,7 +382,7 @@ input[altinputclass="inlinePicker"] {
     transition: all 0.15s ease-out;
 
     span {
-      display: none;
+      // display: none;
     }
 
     .flatpickr-monthDropdown-month {

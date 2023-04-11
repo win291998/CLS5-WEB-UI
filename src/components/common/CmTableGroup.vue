@@ -269,7 +269,7 @@ const bodyRowClassName = computed(() => {
               <VIcon
                 v-if="items.key && context?.children?.length "
                 class="cusor-pointer"
-                :icon="!context.isShow ? 'chevron-down' : 'chevron-up'"
+                :icon="!context.isShow ? 'tabler:chevron-down' : 'tabler:chevron-up'"
                 size="18"
                 @click="toggleRowSelection(context)"
               />
@@ -387,7 +387,7 @@ const bodyRowClassName = computed(() => {
 </style>
 
 <style lang="scss">
-.is-hide {
-  display: none;
-}
+// .is-hide {
+//   display: none;
+// }
 </style>

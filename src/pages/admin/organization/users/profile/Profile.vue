@@ -39,9 +39,6 @@ const changeDataFormInfor = (data: any) => {
 </script>
 
 <template>
-  <div>
-    User profile
-  </div>
   <div
     class="d-flex justify-content-center"
     style="margin-top: 20px;"
