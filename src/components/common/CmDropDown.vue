@@ -20,6 +20,7 @@ interface Props {
   data?: any
   multiple?: boolean
   customKey: string
+  dataResend?: any
   type?: number
   index?: number
 }
@@ -48,6 +49,7 @@ const propsValue = withDefaults(defineProps<Props>(), ({
   checkbox: true,
   multiple: false,
   customKey: 'title',
+  dataResend: '',
   type: undefined,
   data: undefined,
   index: 0,
@@ -106,7 +108,7 @@ const handleClickItem = (event: any) => {
             />
           </template>
           <VListItemTitle
-            @click="item?.action ? propsValue.type === 1 ? item?.action(MethodsUtil.checlActionKey(item, data), index) : item?.action() : ''"
+            @click="item?.action ? propsValue.type === 1 ? item?.action(MethodsUtil.checlActionKey(item, data), index, dataResend) : item?.action() : ''"
           >
             <VIcon
               v-if="item?.icon"

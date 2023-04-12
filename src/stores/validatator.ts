@@ -103,7 +103,7 @@ export const validatorStore = defineStore('validator', () => {
     password: getRulePassword(),
     userCode: yup.string().required(ruleMessage.required())
       .max(CONFIG.USER_CODE.MAX, ruleMessage.max(CONFIG.USER_CODE.MAX, CONFIG.USER_CODE.FIELD)),
-    phoneNumber: yup.string().max(CONFIG.PHONE_NUMBER.MAX, ruleMessage.max(CONFIG.PHONE_NUMBER.MAX, CONFIG.PHONE_NUMBER.FIELD)),
+    phoneNumber: yup.string().nullable().max(CONFIG.PHONE_NUMBER.MAX, ruleMessage.max(CONFIG.PHONE_NUMBER.MAX, CONFIG.PHONE_NUMBER.FIELD)),
     kpiLearn: yup.number().typeError(ruleMessage.typeNumber).nullable().positive(ruleMessage.positive),
     kpiTeach: yup.number().typeError(ruleMessage.typeNumber).nullable().positive(ruleMessage.positive),
     userTypeId: yup.array().typeError(ruleMessage.typeOption).min(CONFIG.USER_TYPE.MIN, ruleMessage.requiredOption(CONFIG.USER_TYPE.FIELD)).required(ruleMessage.required()),

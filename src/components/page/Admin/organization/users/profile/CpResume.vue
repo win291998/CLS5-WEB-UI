@@ -10,6 +10,7 @@ import { ActionType } from '@/constant/data/actionType.json'
 interface profile {
   birthDay: string | null
   listEducationUser: Array<any>
+  listExperienceUser: Array<any>
 }
 interface Props {
   profile: profile
@@ -19,13 +20,16 @@ const props = withDefaults(defineProps<Props>(), ({
   profile: () => ({
     birthDay: null,
     listEducationUser: [],
+    listExperienceUser: [],
   }),
 }))
 
 const CmDateTimePicker = defineAsyncComponent(() => import('@/components/common/CmDateTimePicker.vue'))
 const CpModalEducation = defineAsyncComponent(() => import('@/components/page/Admin/organization/users/profile/modal/CpModalEducation.vue'))
+const CpModalExperence = defineAsyncComponent(() => import('@/components/page/Admin/organization/users/profile/modal/CpModalExperence.vue'))
 const CmDropDown = defineAsyncComponent(() => import('@/components/common/CmDropDown.vue'))
 const CmChip = defineAsyncComponent(() => import('@/components/common/CmChip.vue'))
+const CmTextField = defineAsyncComponent(() => import('@/components/common/CmTextField.vue'))
 
 /**
  * lib
@@ -61,22 +65,38 @@ const data = reactive({
   modalExperences: 'modalExperences',
 })
 
-const dataProfile = ref<any>(props.profile)
+const dataProfile = reactive<any>(props.profile)
 
 /**
  *
  * Lấy dữ liệu setup
  */
-const DATA_LABEL = Object.freeze({
 
+const modal = reactive({
+  isShowModalEducation: false,
+  isShowModalExperence: false,
 })
 
 /**
- * modal
+ * action item
  */
-const modal = reactive({
-  isShowModalEducation: false,
+const KEY = Object.freeze({
+  EDUCATION: 'EDUCATION',
+  EXPERENCE: 'EXPERENCE',
 })
+
+// Giáo duc
+// fetch data modal education
+const fetchModalEducation = () => {
+  data.educationData.isEdit = false
+  modal.isShowModalEducation = true
+}
+
+const removeEducation = (index: any) => {
+  console.log(index)
+
+  dataProfile.listEducationUser.splice(index, 1)
+}
 
 // reset education modal
 const resetEducationModal = () => {
@@ -85,47 +105,6 @@ const resetEducationModal = () => {
   data.educationData.graduationYear = null
   data.educationData.schoolId = null
   data.educationData.isEdit = false
-}
-
-// cập nhật trạng thái dialog
-const updateDialogVisible = (event: any) => {
-  modal.isShowModalEducation = event
-  resetEducationModal()
-}
-
-// fetch data modal education
-const fetchModalEducation = () => {
-  data.educationData.isEdit = false
-  modal.isShowModalEducation = true
-}
-
-/**
- *
- * update profile
- */
-const handleUpdataProfile = (education: any, edit: boolean) => {
-  console.log('education', education)
-  console.log('edit', edit)
-  console.log('dataProfile', dataProfile.value.listEducationUser.length)
-  console.log('dataProfile', dataProfile.value.listEducationUser)
-
-  if (edit) { dataProfile.value[education?.index] = education }
-  else {
-    if (!dataProfile.value.listEducationUser || dataProfile.value.listEducationUser === null)
-      dataProfile.value.listEducationUser = []
-    dataProfile.value.listEducationUser[dataProfile.value.listEducationUser.length] = education
-  }
-  updateDialogVisible(false)
-}
-
-/**
- * action item
- */
-// delete experience item
-const removeExperience = (index: any) => {
-  console.log(index)
-
-  dataProfile.value.listEducationUser.splice(index, 1)
 }
 
 const updateEducation = (dataEdit: any, index: any) => {
@@ -138,17 +117,55 @@ const updateEducation = (dataEdit: any, index: any) => {
   data.educationData.index = index
 }
 
-const actionItemEdit = (dataAction: any, index: any) => {
-  console.log('edit', dataAction, index)
-  updateEducation(dataAction[1], index)
-  console.log('educationData', data.educationData)
-  modal.isShowModalEducation = true
+// Kinh nghiệm
+const addExperiences = () => {
+  data.experienceData.isEdit = false
+  modal.isShowModalExperence = true
 }
 
-const actionItemDelete = (dataAction: any, index: any) => {
-  console.log('actionItemDelete', dataAction, index)
+// delete experience item
+const removeExperience = index => {
+  dataProfile.listExperienceUser.splice(index, 1)
+}
 
-  removeExperience(index)
+// reset education modal
+const resetExperenceModal = () => {
+  data.experienceData.dateStart = null
+  data.experienceData.dateFinish = null
+  data.experienceData.description = null
+  data.experienceData.isWork = false
+  data.experienceData.position = null
+  data.experienceData.companyName = null
+}
+
+/**
+ * modal
+ */
+const actionItemEdit = (dataAction: any, index: any, dataResend?: any) => {
+  console.log('edit', dataAction, index, dataResend)
+  switch (dataResend) {
+    case 'EDUCATION':
+      updateEducation(dataAction[1], index)
+      console.log('educationData', data.educationData)
+      modal.isShowModalEducation = true
+      break
+
+    default:
+      break
+  }
+}
+
+const actionItemDelete = (dataAction: any, index: any, dataResend?: any) => {
+  switch (dataResend) {
+    case 'EDUCATION':
+      console.log('actionItemDelete', dataAction, index)
+      removeEducation(index)
+
+      break
+
+    default:
+      break
+  }
 }
 
 const action = [
@@ -163,6 +180,57 @@ const action = [
     action: actionItemDelete,
   },
 ]
+
+// cập nhật trạng thái dialog
+const updateDialogVisible = (event: any, type?: any) => {
+  switch (type) {
+    case 'EDUCATION':
+      modal.isShowModalEducation = event
+      resetEducationModal()
+      break
+    case 'EXPERENCE':
+      modal.isShowModalExperence = event
+      resetExperenceModal()
+      break
+
+    default:
+      break
+  }
+}
+
+/**
+ *
+ * update profile
+ */
+const handleUpdataProfile = (education: any, edit: boolean) => {
+  console.log('education', education)
+  console.log('edit', edit)
+  console.log('dataProfile', dataProfile.listEducationUser.length)
+  console.log('dataProfile', dataProfile.listEducationUser)
+
+  if (edit) { dataProfile.listEducationUser[education?.index] = education }
+  else {
+    if (!dataProfile.listEducationUser || dataProfile.listEducationUser === null)
+      dataProfile.listEducationUser = []
+    dataProfile.listEducationUser[dataProfile.listEducationUser.length] = education
+  }
+  updateDialogVisible(false, 'EDUCATION')
+}
+
+const updateExperences = (experences: any, edit: boolean) => {
+  console.log('education', experences)
+  console.log('edit', edit)
+  console.log('dataProfile', dataProfile.listEducationUser.length)
+  console.log('dataProfile', dataProfile.listEducationUser)
+
+  if (edit) { dataProfile.listEducationUser[experences?.index] = experences }
+  else {
+    if (!dataProfile.listEducationUser || dataProfile.listEducationUser === null)
+      dataProfile.listEducationUser = []
+    dataProfile.listEducationUser[dataProfile.listEducationUser.length] = experences
+  }
+  updateDialogVisible(false, 'EDUCATION')
+}
 
 /** ******************** */
 </script>
@@ -195,19 +263,15 @@ const action = [
         >
           <!-- input birth-day -->
           <Field
-            v-slot="{ field, errors }"
-            v-model="dataProfile.password"
-            name="password"
-            type="password"
-            :rules="dataProfile.password"
+            v-slot="{ field }"
+            v-model="dataProfile.passport"
+            name="passport"
+            type="passport"
           >
             <CmTextField
               :field="field"
-              :errors="errors"
-              type="password"
-              :text="`${t('common.password')}*`"
-              :placeholder="t('users.add-user.enter-password')"
-              @change="handleFormValue"
+              :text="`${t('users.add-user.enter-passport')}`"
+              :placeholder="t('users.add-user.enter-passport')"
             />
           </Field>
         </VCol>
@@ -255,6 +319,7 @@ const action = [
                 >
                   <CmDropDown
                     :list-item="action"
+                    :data-resend="KEY.EDUCATION"
                     :data="item"
                     custom-key="title"
                     :type="1"
@@ -301,10 +366,13 @@ const action = [
                   cols="10"
                 >
                   <div class="text-name-school text-bold-sm mb-2">
-                    {{ item.schoolName }} <span v-if="item?.graduationYear">({{ $t("common.years") }} {{ formatDateYears(item.graduationYear) }})</span>
+                    {{ item.companyName }}
+                    <span>
+                      ({{ $t("common.years") }} {{ formatDateYears(item.dateStart) }} - {{ $t("common.years") }} {{ formatDateYears(item.dateFinish) }})
+                    </span>
                   </div>
                   <CmChip class="mb-2">
-                    <div> {{ item.degreeName }}</div>
+                    <div> {{ item.position }}</div>
                   </CmChip>
                   <div
                     v-if="item?.description"
@@ -319,6 +387,7 @@ const action = [
                 >
                   <CmDropDown
                     :list-item="action"
+                    :data-resend="KEY.EXPERENCE"
                     :data="item"
                     custom-key="title"
                     :type="1"
@@ -331,7 +400,7 @@ const action = [
           </div>
           <BLink
             class="d-flex align-center"
-            @click="fetchModalEducation"
+            @click="addExperiences"
           >
             <VIcon
               icon="tabler:plus"
@@ -350,6 +419,12 @@ const action = [
     :education-data="data.educationData"
     @update:is-dialog-visible="updateDialogVisible"
     @update:profile="handleUpdataProfile"
+  />
+  <CpModalExperence
+    :is-dialog-visible="modal.isShowModalExperence"
+    :experience-data="data.experienceData"
+    @update:is-dialog-visible="updateDialogVisible"
+    @update:profile="updateExperences"
   />
 </template>
 
