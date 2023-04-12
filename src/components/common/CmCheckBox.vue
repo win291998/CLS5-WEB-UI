@@ -27,6 +27,7 @@ interface Props {/** ** Interface */
   tooltip?: boolean
   tooltipLabel?: string
   text?: string
+  field?: any
 }
 interface Emit {
   (e: 'update:modelValue', value: any): void
@@ -66,6 +67,8 @@ const emit = defineEmits<Emit>()
 const checkbox = ref(propsValue.modelValue)
 
 const onChangeChecked = (val: boolean) => {
+  console.log(val)
+
   emit('update:modelValue', val)
 }
 
@@ -88,8 +91,8 @@ watch(() => propsValue.modelValue, value => {
           <label class="text-medium-sm color-dark"> {{ text }}</label>
         </div>
         <VCheckbox
+          v-bind="field"
           :id="propsValue.id"
-          v-model="checkbox"
           :class="`color-${propsValue.color}`"
           :disabled="propsValue.disabled"
           :indeterminate="propsValue.indeterminate"

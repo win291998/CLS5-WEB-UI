@@ -6,7 +6,7 @@ import { TYPE_REQUEST } from '@/typescript/enums/enums'
 
 interface Props {
   isDialogVisible: boolean
-  educationData: any
+  experienceData: any
 }
 interface Emit {
   (e: 'update:isDialogVisible', value: boolean, type: any): void
@@ -14,13 +14,13 @@ interface Emit {
 }
 
 const props = withDefaults(defineProps<Props>(), ({
-  educationData: () => ({
-    schoolId: null,
-    schoolName: null,
-    degreeId: null,
-    degreeName: null,
+  experienceData: () => ({
+    companyName: null,
+    dateFinish: null,
+    dateStart: null,
     description: null,
-    graduationYear: null,
+    isWork: false,
+    position: null,
     isEdit: false,
     index: 0,
   }),
@@ -32,6 +32,8 @@ const CmDialogs = defineAsyncComponent(() => import('@/components/common/CmDialo
 const CmSelect = defineAsyncComponent(() => import('@/components/common/CmSelect.vue'))
 const CmTextArea = defineAsyncComponent(() => import('@/components/common/CmTextArea.vue'))
 const CmDateTimePicker = defineAsyncComponent(() => import('@/components/common/CmDateTimePicker.vue'))
+const CmTextField = defineAsyncComponent(() => import('@/components/common/CmTextField.vue'))
+const CmCheckBox = defineAsyncComponent(() => import('@/components/common/CmCheckBox.vue'))
 
 /**
  * lib
@@ -47,9 +49,10 @@ const data = reactive({
 })
 
 const DATA_LABEL = Object.freeze({
-  TITLE: t('users.add-user.add-education'),
-  LABEL_SCHOOL: t('users.add-user.school-name'),
-  LABEL_DEGREE: t('users.add-user.degree'),
+  TITLE: t('users.add-user.add-experience'),
+  LABEL_COMPANY: `${t('users.add-user.name-company')}(*)`,
+  LABEL_POSITION: `${t('users.add-user.location')}(*)`,
+  IS_WORK: t('users.add-user.working-here'),
 })
 
 // get name schools '
@@ -81,14 +84,15 @@ const storeValidate = validatorStore()
 const { schemaOption, Field, Form, useForm } = storeValidate
 
 const schema = reactive<any>({
-  schoolId: schemaOption.requiredString,
-  degreeId: schemaOption.requiredString,
-  graduationYear: schemaOption.requiredString,
+  companyName: schemaOption.requiredString,
+  position: schemaOption.requiredString,
+  dateStart: schemaOption.requiredString,
+  dateFinish: schemaOption.requiredString,
 })
 
 const { values, setValues, resetForm } = useForm({
   validationSchema: schema,
-  initialValues: ref(props.educationData),
+  initialValues: ref(props.experienceData),
 })
 
 /** event dialog */
@@ -98,25 +102,18 @@ const updateModelValue = (val: boolean, type: string) => {
   if (type === 'confirm')
     return
 
-  emit('update:isDialogVisible', val, 'EDUCATION')
+  emit('update:isDialogVisible', val, 'EXPERENCE')
 }
 
-const myFormEducation = ref(null)
+const myFormExperence = ref(null)
 
 /**
- * add data modal education
+ * add data modal Experience
  */
 
-const addEducation = () => {
-  const school: any = data.nameSchoolsCombobox.find((itemSchoool: any) => itemSchoool.key === values.schoolId)
-  if (school)
-    values.schoolName = school.value
-
-  const degree: any = data.degreesCombobox.find((itemDegrees: any) => itemDegrees.key === values.degreeId)
-  if (degree)
-    values.degreeName = degree.value
-  console.log('education', values)
-  if (props?.educationData?.isEdit === false)
+const addExperience = () => {
+  console.log('experience', values)
+  if (props?.experienceData?.isEdit === false)
     emit('update:profile', window._.clone(values), false)
 
   else
@@ -124,13 +121,13 @@ const addEducation = () => {
 }
 
 const onConfirmation = (event: boolean) => {
-  const form: any = myFormEducation.value
+  const form: any = myFormExperence.value
   if (form && event) {
     form.validate().then((success: any) => {
       console.log(success)
       if (success.valid) {
         console.log(success)
-        addEducation()
+        addExperience()
       }
 
       console.log(values)
@@ -139,9 +136,9 @@ const onConfirmation = (event: boolean) => {
 }
 
 watch(() => props.isDialogVisible, value => {
-  console.log('props:', props.educationData?.isEdit)
+  console.log('props:', props.experienceData?.isEdit)
 
-  if (value && !props.educationData?.isEdit) {
+  if (value && !props.experienceData?.isEdit) {
     console.log('resetForm:', value)
     resetForm()
   }
@@ -157,70 +154,103 @@ watch(() => props.isDialogVisible, value => {
     @confirm="onConfirmation"
   >
     <template #content>
-      <Form ref="myFormEducation">
+      <Form ref="myFormExperence">
         <VRow>
           <VCol
             cols="12"
             md="6"
           >
-            <!-- tên trường -->
-            <div>
-              <Field
-                v-slot="{ field, errors }"
-                v-model="values.schoolId"
-                name="schoolId"
-                :rules="schema.schoolId"
-              >
-                <CmSelect
-                  :field="field"
-                  :model-value="values.schoolId"
-                  :text="DATA_LABEL.LABEL_SCHOOL"
-                  :placeholder="DATA_LABEL.LABEL_SCHOOL"
-                  :items="data.nameSchoolsCombobox"
-                  :errors="errors"
-                  item-value="key"
-                  custom-key="value"
-                />
-              </Field>
-            </div>
-            <!-- bằng cấp -->
+            <!-- tên CÔNG TY -->
             <div class="mt-2">
               <Field
                 v-slot="{ field, errors }"
-                v-model="values.degreeId"
-                name="degreeId"
-                :rules="schema.degreeId"
+                v-model="values.companyName"
+                name="companyName"
+                :rules="schema.companyName"
               >
-                <CmSelect
+                <CmTextField
                   :field="field"
-                  :model-value="values.degreeId"
-                  :text="DATA_LABEL.LABEL_DEGREE"
-                  :placeholder="DATA_LABEL.LABEL_DEGREE"
-                  :items="data.degreesCombobox"
                   :errors="errors"
-                  item-value="key"
-                  custom-key="value"
+                  :text="DATA_LABEL.LABEL_COMPANY"
+                  :placeholder="DATA_LABEL.LABEL_COMPANY"
                 />
               </Field>
             </div>
+            <!-- tên vị trí -->
             <div class="mt-2">
               <Field
                 v-slot="{ field, errors }"
-                v-model="values.graduationYear"
-                name="graduationYear"
-                :rules="schema.graduationYear"
+                v-model="values.position"
+                name="position"
+                :rules="schema.position"
               >
-                <label class="text-label-default">{{ t('common.years') }}</label>
-                <CmDateTimePicker
-                  :key="errors.length"
-                  v-model="values.graduationYear"
-                  :error="errors.length > 0 ? errors : false"
-                  :error-messages="errors ? errors[0] : ''"
+                <CmTextField
                   :field="field"
-                  placeholder="dd-mm-yyyy"
+                  :errors="errors"
+                  :text="DATA_LABEL.LABEL_POSITION"
+                  :placeholder="DATA_LABEL.LABEL_POSITION"
                 />
               </Field>
             </div>
+            <!-- Nơi làm việc -->
+            <div class="mt-2">
+              <Field
+                v-slot="{ field }"
+                v-model="values.isWork"
+                name="isWork"
+              >
+                <CmCheckBox
+                  :field="field"
+                  @update:modelValue="val => values.isWork = val"
+                >
+                  {{ DATA_LABEL.IS_WORK }}
+                </CmCheckBox>
+              </Field>
+            </div>
+            <VRow class="mt-2">
+              <VCol
+                cols="12"
+                md="6"
+              >
+                <Field
+                  v-slot="{ field, errors }"
+                  v-model="values.dateStart"
+                  name="dateStart"
+                  :rules="schema.dateStart"
+                >
+                  <label class="text-label-default">{{ t('common.from-years') }}<code>(*)</code></label>
+                  <CmDateTimePicker
+                    :key="errors.length"
+                    v-model="values.dateStart"
+                    :error="errors.length > 0 ? errors : false"
+                    :error-messages="errors ? errors[0] : ''"
+                    :field="field"
+                    placeholder="dd-mm-yyyy"
+                  />
+                </Field>
+              </VCol>
+              <VCol
+                cols="12"
+                md="6"
+              >
+                <Field
+                  v-slot="{ field, errors }"
+                  v-model="values.dateFinish"
+                  name="dateFinish"
+                  :rules="schema.dateFinish"
+                >
+                  <label class="text-label-default">{{ t('common.to-years') }} <code>(*)</code></label>
+                  <CmDateTimePicker
+                    :key="errors.length"
+                    v-model="values.dateFinish"
+                    :error="errors.length > 0 ? errors : false"
+                    :error-messages="errors ? errors[0] : ''"
+                    :field="field"
+                    placeholder="dd-mm-yyyy"
+                  />
+                </Field>
+              </VCol>
+            </VRow>
           </VCol>
           <VCol
             cols="12"
