@@ -96,13 +96,8 @@ const { values, setValues, resetForm } = useForm({
 })
 
 /** event dialog */
-const updateModelValue = (val: boolean, type: string) => {
-  console.log(type === 'confirm')
-
-  if (type === 'confirm')
-    return
-
-  emit('update:isDialogVisible', val, 'EXPERENCE')
+const onCancel = () => {
+  emit('update:isDialogVisible', false, 'EXPERENCE')
 }
 
 const myFormExperence = ref(null)
@@ -120,9 +115,9 @@ const addExperience = () => {
     emit('update:profile', window._.clone(values), true)
 }
 
-const onConfirmation = (event: boolean) => {
+const onConfirmation = () => {
   const form: any = myFormExperence.value
-  if (form && event) {
+  if (form) {
     form.validate().then((success: any) => {
       console.log(success)
       if (success.valid) {
@@ -150,7 +145,7 @@ watch(() => props.isDialogVisible, value => {
     :is-dialog-visible="isDialogVisible"
     :title="DATA_LABEL.TITLE"
     persistent
-    @update:is-dialog-visible="updateModelValue"
+    @cancel="onCancel"
     @confirm="onConfirmation"
   >
     <template #content>
@@ -195,13 +190,10 @@ watch(() => props.isDialogVisible, value => {
             <!-- Nơi làm việc -->
             <div class="mt-2">
               <Field
-                v-slot="{ field }"
-                v-model="values.isWork"
                 name="isWork"
               >
                 <CmCheckBox
-                  :field="field"
-                  @update:modelValue="val => values.isWork = val"
+                  v-model="values.isWork"
                 >
                   {{ DATA_LABEL.IS_WORK }}
                 </CmCheckBox>
