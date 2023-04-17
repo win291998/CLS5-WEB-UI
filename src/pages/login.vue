@@ -29,8 +29,7 @@ const email = ref('sinhtv')
 const password = ref('123123')
 const rememberMe = ref(false)
 const captcha = ref({})
-let a = 1
-console.log(a++)
+const a = 1
 
 const handleLogin = () => {
   const userData = {
@@ -42,7 +41,6 @@ const handleLogin = () => {
 
   AuthUtil.login(userData)
     .then((res: any) => {
-      console.log(res)
       handleAfterLogin(res)
     })
 
@@ -120,7 +118,7 @@ function handleAfterLogin(response: any) {
         })
     }
     else {
-      router.push({ name: 'user' })
+      router.push({ name: 'admin-organization-users' })
 
       // router.push(urlParams.has('redirect') ? urlParams.get('redirect') : getHomeRouteForLoggedInUser(userData.roles))
         .then(() => {
@@ -185,7 +183,6 @@ function handleAfterLogin(response: any) {
     // })
   }
   else {
-    console.log(response.message)
 
     // this.$bvToast.toast(this.$t(response.message), {
     //   title: this.$t('common.notification'), variant: 'danger', toaster: this.$toastPosition, solid: true,

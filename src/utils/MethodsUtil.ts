@@ -1,5 +1,7 @@
+import { useI18n } from 'vue-i18n'
 import { ActionType } from '@/constant/data/actionType.json'
 import { StatusTypeUser } from '@/constant/data/status.json'
+import axios from '@axios'
 
 type CallbackFunction = (key: string) => any
 
@@ -69,13 +71,13 @@ export default class MethodsUtil {
    * @param {any} payload =>  Dữ liệu đính kèm api
    * @return {object}
    */
-  static requestApiCustom = async (url = '', method = 'GET', payload?: any) => {
+  static requestApiCustom = (url = '', method = 'GET', payload?: any) => {
     if (url === undefined)
       return
     const data = method === 'GET' ? null : payload || null
     const params = method === 'GET' ? payload : null
 
-    return await window.axios({
+    return window.axios({
       url,
       method,
       data,
@@ -83,7 +85,7 @@ export default class MethodsUtil {
     })
   }
 
-  static checlActionKey = (itemRow: any, data: any) => {
+  static checlActionKey = (itemRow: any, data?: any) => {
     const action = ActionType?.find((item: any) => item?.id === itemRow?.id)
 
     return [action || itemRow, data]

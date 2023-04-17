@@ -1,9 +1,4 @@
 @use "./variables/global" as *;
-
-// Màu error
-.color-error {
-  color: $color-error-600 !important;
-}
 .color-purple {
   color: $color-purple-600 !important;
 }
@@ -11,16 +6,49 @@
   color: $color-orange-600 !important;
 }
 
+// default
+.color-error {
+  color: $color-error-600 !important;
+}
+
 .color-warning {
   color: $color-warning-600 !important;
 }
 
-.color-success {
-  color: $color-success-600 !important;
-}
+
 
 .color-dark {
   color: $color-gray-600 !important;
+}
+
+// color button 50
+.color-bd-primary {
+  color: $color-primary-600 !important;
+  background-color: $color-white !important;
+  border-color: $color-primary-300 !important;
+}
+.color-bd-error {
+  color: $color-error-600 !important;
+  background-color: $color-white !important;
+  border-color: $color-error-300 !important;
+}
+
+.color-bd-warning {
+  color: $color-warning-600 !important;
+  background-color: $color-white !important;
+  border-color: $color-warning-300 !important;
+}
+
+.color-bd-success {
+  color: $color-success-600 !important;
+  background-color: $color-white !important;
+  border-color: $color-success-300 !important;
+}
+
+.color-bd-dark {
+  color: $color-gray-600 !important;
+  background-color: $color-white !important;
+  border-color: $color-gray-300 !important;
 }
 
 .color-dark-300 {
@@ -39,12 +67,16 @@
   color: $color-primary-300 !important;
 }
 
+
 .color-warning-300 {
   color: $color-warning-300 !important;
 }
 
+.color-success {
+  color: $color-success-600 !important;
+}
 .color-primary {
-  color: $color-primary-600 !important;
+  color: $color-primary !important;
 }
 
 // full color
@@ -65,8 +97,8 @@
 
 .btn {
   &-primary {
-    border-color: $color-primary-600;
-    background-color: $color-primary-600 !important;
+    border-color: $color-primary;
+    background-color: $color-primary !important;
     color: $color-white !important;
   }
 
@@ -92,6 +124,36 @@
     border-color: $color-gray-700;
     background-color: $color-gray-700 !important;
     color: $color-white !important;
+  }
+  //border color-50
+  &-50-primary {
+    border-color: $color-primary-300;
+    color: $color-primary-600 !important;
+    background-color: $color-white !important;
+  }
+
+  &-50-error {
+    border-color: $color-error-300;
+    color: $color-error-600 !important;
+    background-color: $color-white !important;
+  }
+
+  &-50-warning {
+    border-color: $color-warning-300;
+    color: $color-warning-600 !important;
+    background-color: $color-white !important;
+  }
+
+  &-50-success {
+    border-color: $color-success-300;
+    color: $color-success-600 !important;
+    background-color: $color-white !important;
+  }
+
+  &-50-dark {
+    border-color: $color-gray-300;
+    color: $color-gray-700 !important;
+    background-color: $color-white !important;
   }
 }
 
@@ -273,4 +335,6 @@ h6 {
   color: $color-gray-600;
 }
 
-
+span {
+  font-size: 14px;
+}

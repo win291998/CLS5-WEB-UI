@@ -66,7 +66,9 @@ const unLoadButton = () => {
 }
 
 const handleClick = () => {
-  loadComponent(indexLoad.value)
+  if (props.isLoad)
+    loadComponent(indexLoad.value)
+
   emit('click', indexLoad.value)
 }
 
@@ -76,14 +78,18 @@ const isDisabled = computed(() => {
 
 const prefixColor = computed(() => {
   if (props.variant === 'outlined' || props.variant === 'text')
-    return 'color'
+    return 'color-bd'
+
   return 'btn'
 })
+
 const textButton = computed(() => {
   if (props.variant === 'text')
     return 'text-button'
+
   return ''
 })
+
 defineExpose({
   unLoadButton,
 })
@@ -119,7 +125,7 @@ defineExpose({
           />
           <span
             v-if="props.title"
-            class="ml-1"
+            :class="props.icon ? 'ml-1' : ''"
           >{{ title }}</span>
         </span>
       </div>
@@ -134,16 +140,20 @@ defineExpose({
 @use "/src/styles/style-global" as *;
 
 .text-style-btn {
+  border-radius: 8px;
+  block-size: $button-default-height;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px;
   padding-block: 10px;
   padding-inline: 16px;
   text-transform: inherit;
-  font-style: normal;
-  font-weight: 600;
-  font-size: 14px;
-  line-height: 20px;
-  border-radius: 8px;
 }
 .text-button {
   box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05);
+}
+.v-btn--disabled.v-btn--variant-elevated {
+  opacity: 0.9 !important
 }
 </style>

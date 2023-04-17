@@ -42,7 +42,7 @@ const orgModels = {
 }
 
 const actionItemView = () => {
-  console.log('view')
+  //
 }
 
 const groupModels = {
@@ -109,7 +109,6 @@ const deleteItems = () => {
 
 // hàm trả về các loại action khi click
 const actionItem = (type: any) => {
-  console.log(type)
   switch (type[0]?.name) {
     case 'ActionDelete':
       deleteItem(type[1].id)
@@ -191,7 +190,7 @@ const handleSearch = async (value: any) => {
 
 //  fillter header
 const handleFilterCombobox = (dataFilter: any) => {
-  console.log(dataFilter)
+  //
 }
 
 // hành động của dialog
@@ -229,10 +228,8 @@ const updateDialogVisible = (event: any) => {
 }
 
 const updateDialogVisibleResset = (event: any) => {
-  if (data.showPassword) {
-    console.log(data.showPassword)
+  if (data.showPassword)
     data.isShowDialogPasword = event
-  }
 }
 
 // hàm trả về các loại action từ header filter
@@ -385,7 +382,7 @@ fectchListUsers()
       </div>
     </template>
   </CpConfirmDialog>
-  <CpModalUpdateStatus />
+  <CpModalUpdateStatus :is-dialog-visible="false" />
 </template>
 
 <style lang="scss">

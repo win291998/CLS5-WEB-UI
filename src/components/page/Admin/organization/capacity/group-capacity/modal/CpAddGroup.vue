@@ -13,13 +13,13 @@ const props = withDefaults(defineProps<Props>(), ({
 const emit = defineEmits<Emit>()
 interface Emit {
   (e: 'ok', value: any): void
-  (e: 'edit', value: any): void
+  (e: 'edit', value: any): voidf
   (e: 'update:isShow', value: any): void
 }
 
 // Ẩn modal
 const storeValidate = validatorStore()
-const { schema, Field, Form } = storeValidate
+const { Field, Form } = storeValidate
 const CmDialogs = defineAsyncComponent(() => import('@/components/common/CmDialogs.vue'))
 const CmTextField = defineAsyncComponent(() => import('@/components/common/CmTextField.vue'))
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
@@ -38,17 +38,6 @@ const dataInput = ref({
   description: '',
 })
 
-const confirm = (isShow: boolean) => {
-  if (isShow) {
-    if (dataInput.value.id)
-      emit('edit', dataInput.value)
-    else
-      emit('ok', dataInput.value)
-
-    emit('update:isShow', false)
-  }
-}
-
 /**
  * Chỉnh sửa
  * */
@@ -61,13 +50,21 @@ watch(() => props.dataDetail, val => {
   }
 })
 
-const hideModal = (val: any) => {
+const cancelModal = () => {
   dataInput.value = {
     id: '',
     name: '',
     description: '',
   }
-  emit('update:isShow', val)
+  emit('update:isShow', false)
+}
+
+const confirmModal = () => {
+  if (dataInput.value.id)
+    emit('edit', dataInput.value)
+  else
+    emit('ok', dataInput.value)
+  emit('update:isShow', false)
 }
 </script>
 
@@ -75,45 +72,26 @@ const hideModal = (val: any) => {
   <CmDialogs
     :is-dialog-visible="isShow"
     :title="title"
-    @update:is-dialog-visible="hideModal"
-    @confirm="confirm"
+    :sub-title="title"
+    @cancel="cancelModal"
+    @confirm="confirmModal"
   >
     <template #content>
       <Form>
         <VRow>
           <VCol>
-            <Field
-              v-slot="{ field, errors }"
-              name="name"
-              type="text"
-              :rules="schema.fields.lastName"
-            >
-              <CmTextField
-                v-model="dataInput.name"
-                v-bind="field"
-                :errors="errors"
-                :text="`${t('users.capacity-management.proficiency-group.name')}*`"
-                :placeholder="t('users.capacity-management.proficiency-group.name')"
-              />
-            </Field>
+            <CmTextField
+              :text="`${t('users.capacity-management.proficiency-group.name')}*`"
+              :placeholder="t('users.capacity-management.proficiency-group.name')"
+            />
           </VCol>
         </VRow>
         <VRow>
           <VCol>
-            <Field
-              v-slot="{ field, errors }"
-              name="name"
-              type="text"
-              :rules="schema.fields.lastName"
-            >
-              <CmTextField
-                v-model="dataInput.description"
-                v-bind="field"
-                :errors="errors"
-                :text="t('common.description')"
-                :placeholder="t('users.capacity-management.proficiency-group.name')"
-              />
-            </Field>
+            <CmTextField
+              :text="t('common.description')"
+              :placeholder="t('users.capacity-management.proficiency-group.name')"
+            />
           </VCol>
         </VRow>
       </Form>

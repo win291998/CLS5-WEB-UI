@@ -20,6 +20,18 @@ const UserService = {
   ResetPassword: '/user/set-password', // Cập nhật mật khẩu
   ChangeStatus: '/user/change-status', // Cập nhật trạng thái
   GetListTitle: 'title/get-all-by-search', // GetListTitle
+  GetProfileOrg: 'profile/get-list-organizational-structure', // GetProfileOrg
+  UpdateTitleUser: '/organizationalstructure/update-title-user', // updateTitleUser
+  fetchCreateUser: '/User/create', // fetchCreateUser
+  fetchUpdateUser: '/user/update', // fetchUpdateUser
+  getAutoCode: '/user/get-suggest-user-code', // getAutoCode
+  fetchDetailUpdate: '/user/get-detail-update', // fetchDetailUpdate
+  fetchNameSchools: '/school/get-combobox', // get name schools
+  fetchDegrees: '/Degree/get-combobox', // get bằng cấp trình độ '
+  fetchCountry: '/Address/get-countries', // get country
+  fetchProvinces: '/Address/get-provinces', // get provinces
+  fetchDistricts: '/Address/get-districts', // get districts
+  fetchWards: '/Address/get-wards', // get districts
 
 }
 

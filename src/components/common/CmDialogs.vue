@@ -1,4 +1,11 @@
+<!-- eslint-disable vue/require-default-prop -->
 <script setup lang="ts">
+import type { sizeDialog } from '@/typescript/enums/enums'
+
+/**
+ * @size ['sm', 'lg', 'xl'] tương đương ['300','800','1200']
+ *
+ * */
 interface Props {
   title?: string
   subTitle?: string
@@ -11,11 +18,15 @@ interface Props {
   buttonOkName?: string
   buttonCancleName?: string
   isHideFooter?: boolean
+  persistent?: boolean
+  size?: typeof sizeDialog[] | string
+  disabledOk?: boolean
+  disabledCancel?: boolean
 }
 
 interface Emit {
-  (e: 'update:isDialogVisible', value: boolean): void
-  (e: 'confirm', value: boolean): void
+  (e: 'cancel', type?: string): void
+  (e: 'confirm', type?: string): void
 }
 
 const props = withDefaults(defineProps<Props>(), ({
@@ -24,6 +35,8 @@ const props = withDefaults(defineProps<Props>(), ({
   buttonOkName: 'common.ok-title',
   buttonCancleName: 'common.cancel-title',
   isHideFooter: false,
+  persistent: false,
+  size: 'lg',
 }))
 
 const emit = defineEmits<Emit>()
@@ -32,19 +45,33 @@ const CmButton = defineAsyncComponent(() => import('@/components/common/CmButton
 
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 
-const updateModelValue = (val: boolean) => {
-  emit('update:isDialogVisible', val)
+const onCancel = () => {
+  emit('cancel')
 }
 
 const onConfirmation = () => {
-  emit('confirm', true)
-  updateModelValue(false)
+  emit('confirm')
 }
 
-const onCancel = () => {
-  emit('confirm', false)
-  emit('update:isDialogVisible', false)
+const onDialogShown = (e: any) => {
+  console.log('onDialogShown', e)
 }
+const onDialogHidden = (e: any) => {
+  console.log('onDialogHidden', e)
+}
+
+const sizeModal = computed(() => {
+  switch (props.size) {
+    case 'sm':
+      return '300'
+    case 'lg':
+      return '800'
+    case 'xl':
+      return '1200'
+    default:
+      break
+  }
+})
 </script>
 
 <template>
@@ -54,9 +81,10 @@ const onCancel = () => {
   >
     <VDialog
       :model-value="props.isDialogVisible"
-      width="800"
-      close-on-back
-      @update:model-value="updateModelValue"
+      :width="sizeModal"
+      :persistent="props.persistent"
+      @update:model-value="onCancel"
+      @before-enter="onDialogShown"
     >
       <CmCard backgroud="bg-white">
         <template #title>
@@ -81,6 +109,7 @@ const onCancel = () => {
               variant="outlined"
               bg-color="bg-white"
               color="dark"
+              :disabled="disabledCancel"
               text-color="color-dark"
               @click="onCancel"
             >
@@ -89,6 +118,7 @@ const onCancel = () => {
 
             <CmButton
               variant="elevated"
+              :disabled="disabledOk"
               :color="color"
               @click="onConfirmation"
             >

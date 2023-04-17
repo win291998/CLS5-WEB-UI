@@ -1,5 +1,3 @@
-import i18n from '@/plugins/i18n'
-
 export default [
   {
     path: 'guilde/tree-select',
@@ -62,6 +60,7 @@ export default [
         meta: {
           requireAuth: {
             permissionKey: 'UserManaging',
+            permissionValue: 1,
           },
         },
         name: 'admin-organization-users',
@@ -74,8 +73,28 @@ export default [
             component: () => import('@/pages/admin/organization/users/Users.vue'),
           },
           {
-            path: 'profile',
-            name: 'admin-organization-users-profile',
+            path: 'profile/:tabActive',
+            name: 'admin-organization-users-profile-add',
+            meta: {
+              parent: 'users',
+              pageTitle: 'users.add-user.title',
+              breadcrumb: [
+                {
+                  title: 'users.user.title-table.user-list',
+                  to: { name: 'admin-organization-users' },
+                },
+                {
+                  title: 'common.add',
+
+                  active: true,
+                },
+              ],
+            },
+            component: () => import('@/pages/admin/organization/users/profile/Profile.vue'),
+          },
+          {
+            path: 'profile/:tabActive/:id',
+            name: 'admin-organization-users-profile-edit',
             meta: {
               parent: 'users',
               pageTitle: 'users.add-user.title',
@@ -102,6 +121,7 @@ export default [
         meta: {
           requireAuth: {
             permissionKey: 'UserGroupManaging',
+            permissionValue: 1,
           },
         },
         children: [
@@ -111,8 +131,45 @@ export default [
             component: () => import('@/pages/admin/organization/user-groups/UserGroups.vue'),
           },
           {
-            path: 'add',
+            path: ':tab/add',
+            meta: {
+              requireAuth: {
+                permissionKey: 'UserGroupManaging',
+                permissionValue: 2,
+              },
+              breadcrumb: [
+                {
+                  title: 'list-group-user',
+                  to: { name: 'admin-organization-user-groups' },
+                },
+                {
+                  title: 'common.add',
+                  active: true,
+                },
+              ],
+            },
             name: 'admin-organization-user-groups-add',
+            component: () => import('@/pages/admin/organization/user-groups/Edit/EditUserGroup.vue'),
+          },
+          {
+            path: ':tab/edit/:id',
+            meta: {
+              requireAuth: {
+                permissionKey: 'UserGroupManaging',
+                permissionValue: 4,
+              },
+              breadcrumb: [
+                {
+                  title: 'list-group-user',
+                  to: { name: 'admin-organization-user-groups' },
+                },
+                {
+                  title: 'common.add',
+                  active: true,
+                },
+              ],
+            },
+            name: 'admin-organization-user-groups-edit',
             component: () => import('@/pages/admin/organization/user-groups/Edit/EditUserGroup.vue'),
           },
         ],

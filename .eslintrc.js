@@ -63,19 +63,18 @@ module.exports = {
 
     'array-element-newline': ['error', 'consistent'],
     'array-bracket-newline': ['error', 'consistent'],
-
     'vue/multi-word-component-names': 'off',
     'vue/no-template-shadow': 'off',
     'vue/valid-v-slot': 'off',
     'sonarjs/no-small-switch': 'off',
-    'vue/prefer-true-attribute-shorthand': 'off',
-    'padding-line-between-statements': [
-      'error',
-      { blankLine: 'always', prev: 'expression', next: 'const' },
-      { blankLine: 'always', prev: 'const', next: 'expression' },
-      { blankLine: 'always', prev: 'multiline-const', next: '*' },
-      { blankLine: 'always', prev: '*', next: 'multiline-const' },
-    ],
+
+    // 'padding-line-between-statements': [
+    //   'error',
+    //   { blankLine: 'always', prev: 'expression', next: 'const' },
+    //   { blankLine: 'always', prev: 'const', next: 'expression' },
+    //   { blankLine: 'always', prev: 'multiline-const', next: '*' },
+    //   { blankLine: 'always', prev: '*', next: 'multiline-const' },
+    // ],
 
     // Plugin: eslint-plugin-import
     'import/prefer-default-export': 'off',
@@ -141,7 +140,7 @@ module.exports = {
     'vue/no-useless-v-bind': 'error',
     'vue/padding-line-between-blocks': 'error',
     'vue/prefer-separate-static-class': 'error',
-    'vue/prefer-true-attribute-shorthand': 'error',
+    'vue/prefer-true-attribute-shorthand': 'off',
     'vue/v-on-function-call': 'error',
 
     // -- Extension Rules

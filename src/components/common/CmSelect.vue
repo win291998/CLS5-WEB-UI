@@ -9,6 +9,7 @@ interface Props {/** ** Interface */
   items?: Array<any>
   maxItem?: number
   multiple?: boolean
+  disabled?: boolean
   returnObject?: boolean
   customKey?: string
   itemValue?: string
@@ -17,6 +18,7 @@ interface Props {/** ** Interface */
   text?: string
   placeholder?: string
   errors?: any
+  field?: any
 }
 interface Emit {
   (e: 'update:modelValue', value: any): void
@@ -27,7 +29,7 @@ interface Emit {
 const props = withDefaults(defineProps<Props>(), ({
   items: () => ([]),
   maxItem: Globals.MAX_ITEM_SELECT_MULT,
-  multiple: true,
+  multiple: false,
   returnObject: false,
   customKey: 'key',
   itemValue: 'value',
@@ -40,7 +42,7 @@ const props = withDefaults(defineProps<Props>(), ({
 const emit = defineEmits<Emit>()
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 const stackValue = ref()
-const valueCurrent = ref()
+const valueCurrent = ref(null)
 
 /** method */
 
@@ -52,8 +54,6 @@ const messageError = computed(() => {
 })
 
 const handleChangeValue = (e: any) => {
-  console.log(valueCurrent.value)
-
   emit('update:modelValue', valueCurrent.value)
 }
 
@@ -66,8 +66,6 @@ const open = (e: any) => {
 }
 
 const close = (e: any) => {
-  console.log(!valueCurrent.value && !props.multiple)
-
   if (!valueCurrent.value && !props.multiple)
     valueCurrent.value = stackValue.value
 }
@@ -106,7 +104,6 @@ const fetchOptions = (options: any, search: any) => {
 
 watch(() => props.modelValue, newValue => {
   valueCurrent.value = newValue
-  console.log(newValue)
 }, { immediate: true })
 </script>
 
@@ -120,6 +117,7 @@ watch(() => props.modelValue, newValue => {
     <div>
       <ISelect
         v-model="valueCurrent"
+        v-bind="field"
         :options="optionsModel"
         :label="customKey"
         :multiple="multiple"
@@ -128,6 +126,8 @@ watch(() => props.modelValue, newValue => {
         :filter="fetchOptions"
         class="v-select-limit-width v-select-cls"
         :class="{ 'is-invalid': !!errors?.length }"
+        :disabled="disabled"
+        :input-id="option => option.id"
         @open="open"
         @close="close"
         @update:modelValue="handleChangeValue"
@@ -144,7 +144,7 @@ watch(() => props.modelValue, newValue => {
       </ISelect>
       <div
         v-if="errors?.length"
-        class="color-error"
+        class="color-error error-label"
       >
         {{ messageError }}
       </div>
@@ -174,5 +174,11 @@ watch(() => props.modelValue, newValue => {
   &__dropdown-toggle {
     block-size: 40px;
   }
+}
+
+.error-label {
+  font-size: 12px;
+  padding-block: 6px 0;
+  padding-inline: 16px;
 }
 </style>

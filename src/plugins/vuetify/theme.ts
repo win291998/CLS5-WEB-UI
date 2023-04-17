@@ -40,6 +40,7 @@ const theme: VuetifyOptions['theme'] = {
         'border-color': '#4B465C',
         'medium-emphasis-opacity': 1,
         'color-text-primary': color['color-text-primary'],
+        'color-primary': color['color-primary'],
 
         // Shadows
         'shadow-key-umbra-opacity': 'rgba(var(--v-theme-on-surface), 0.08)',

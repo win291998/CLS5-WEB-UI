@@ -14,7 +14,7 @@ const emit = defineEmits<Emit>()
 
 interface Emit {
   (e: 'update:isDialogVisible', value: boolean): void
-  (e: 'confirm', value: boolean, data: any): void
+  (e: 'confirm', data: any): void
 }
 const store = comboboxStore()
 const { statuses } = storeToRefs(store)
@@ -28,14 +28,14 @@ const LABEL = Object.freeze({
 
 const statusList = ref(null)
 
-const updateModelValue = (val: boolean) => {
-  emit('update:isDialogVisible', val)
+const updateModelValue = () => {
+  emit('update:isDialogVisible', false)
 }
 
-const onConfirmation = (event: boolean) => {
-  console.log(event)
+const onConfirmation = () => {
+  emit('update:isDialogVisible', false)
 
-  emit('confirm', event, statusList.value)
+  emit('confirm', statusList.value)
 }
 
 if (window._.isEmpty(statuses.value))
@@ -47,7 +47,7 @@ if (window._.isEmpty(statuses.value))
     :is-dialog-visible="props.isDialogVisible"
     :title="t('common.action-table.changes-status')"
     close-on-back
-    @update:isDialogVisible="updateModelValue"
+    @cancel="updateModelValue"
     @confirm="onConfirmation"
   >
     <template #content>

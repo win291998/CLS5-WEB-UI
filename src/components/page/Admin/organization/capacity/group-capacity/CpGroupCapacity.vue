@@ -48,14 +48,15 @@ const getDataTable = async () => {
   items.value = res.data.pageLists
   totalRecord.value = res.data.totalRecord
 }
+
 getDataTable()
 
 const handlePageClick = async (page: any) => {
   params.value.pageNumber = page
   await getDataTable()
 }
+
 const changeCellvalue = (val: number) => {
-  console.log(val)
 }
 
 /**
@@ -74,7 +75,6 @@ const selectedRows = (e: any) => {
 
 const selectedAll = (e: any) => {
   deleteIds.value = items.value.map((e: any) => e.id)
-  console.log(deleteIds.value)
 
   disabledDelete.value = e
 }
@@ -84,7 +84,6 @@ const showModalConfirmDelete = () => {
 }
 
 const handleDeleteMultiple = async (val: boolean) => {
-  console.log(deleteIds.value)
   if (val) {
     const res = await MethodsUtil.requestApiCustom(ApiGroupCapacity.DeleteGroup, TYPE_REQUEST.POST, { ids: deleteIds.value })
     if (res && res.code === 200) {
@@ -104,13 +103,17 @@ const MODAL = Object.freeze({
   TITLE_ADD: t('users.capacity-management.proficiency-group.add'),
   TITLE_EDIT: t('users.capacity-management.proficiency-group.edit'),
 })
+
 const isShow = ref(false)
+
 const showModalAdd = () => {
   isShow.value = true
 }
+
 const hideModalAdd = (val: any) => {
   isShow.value = val
 }
+
 const addGroup = async (val: any) => {
   const res = await MethodsUtil.requestApiCustom(ApiGroupCapacity.AddGroup, TYPE_REQUEST.POST, val)
   if (res && res.code === 200)
@@ -124,8 +127,10 @@ const addGroup = async (val: any) => {
  * getDetail
  * */
 const dataDetail = ref({})
+
 const getDetail = async (val: any) => {
   const res = await MethodsUtil.requestApiCustom(ApiGroupCapacity.DetailGroup, TYPE_REQUEST.GET, { id: val.id })
+
   dataDetail.value = { ...res.data }
   if (dataDetail)
     isShow.value = true

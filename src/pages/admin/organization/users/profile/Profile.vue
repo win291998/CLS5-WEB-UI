@@ -1,50 +1,52 @@
 <script setup lang="ts">
 const CmCard = defineAsyncComponent(() => import('@/components/common/CmCard.vue'))
 const CmRadioGroup = defineAsyncComponent(() => import('@/components/common/CmRadioGroup.vue'))
-const CpUserProfileAvatarEdit = defineAsyncComponent(() => import('@/components/page/gereral/CpUserProfileAvatarEdit.vue'))
+const CmTab = defineAsyncComponent(() => import('@/components/common/CmTab.vue'))
 const CpFormModifyUserInfor = defineAsyncComponent(() => import('@/components/page/Admin/organization/users/profile/CpFormModifyUserInfor.vue'))
+const CpResume = defineAsyncComponent(() => import('@/components/page/Admin/organization/users/profile/CpResume.vue'))
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 
 const src = ref('https://sfv4.cloudlms.top/DataFile/2023/4/3/kinhdoanh/6509/Image/fol-sfv4-kssjt7OiJC/origin.png')
 
+/**
+ *
+ * tab
+ */
+const listTab = [
+  {
+    key: 'infor',
+    title: 'users.add-user.account-information',
+    component: CpFormModifyUserInfor,
+    isRendered: false,
+  },
+  {
+    key: 'resumer',
+    title: 'users.add-user.profile',
+    component: CpResume,
+    isRendered: false,
+  },
+]
+
+/**
+ * Xử lý data form
+ *
+ */
 const dataForm: any = ref({})
 
-const optionSex = ref([
-  { label: 'nam', value: 0 },
-  { label: 'nữ', value: 1 },
-])
+const changeDataFormInfor = (data: any) => {
+  //
+}
 </script>
 
 <template>
-  <div>
-    User profile
+  <div
+    class="d-flex justify-content-center"
+    style="margin-top: 20px;"
+  >
+    <CmTab
+      :list-tab="listTab"
+      type="button"
+    />
   </div>
-
-  <VForm v-model="dataForm">
-    <VRow class="my-3">
-      <VCol
-        cols="12"
-        md="2"
-      >
-        <CpUserProfileAvatarEdit
-          v-model:src="src"
-          :tooltip="t('system-management.100x100')"
-        />
-      </VCol>
-      <VCol
-        cols="12"
-        md="10"
-        class="d-flex align-center"
-      >
-        <CmRadioGroup
-          :label="t('common.gender')"
-          :option="optionSex"
-        />
-      </VCol>
-    </VRow>
-    <VRow class="my-3">
-      <CpFormModifyUserInfor />
-    </VRow>
-  </VForm>
 </template>
 

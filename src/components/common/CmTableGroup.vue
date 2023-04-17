@@ -50,8 +50,6 @@ const dataTable = ref()
 // Chuyển đổi mảng items sang định dạng yêu cầu
 const items = ArrayUtil.formatTreeTable(props.items, props.customId)
 
-console.log(items)
-
 const pageSize = ref(props.pageSize) // số lượng item trên 1 page
 const currentPage = ref<number>(Globals.PAGINATION_CURRENT_PAGE) // item hiện tại
 const selectedRows = ref<any>([])// Những row được checked
@@ -130,17 +128,25 @@ const classLevelTreeTable = (item: any) => {
 }
 
 // click mở colap
-const toggleRowSelection = (row: any) => {
+const toggleRowSelection = (row: any, type: boolean | null = null) => {
+  let typeNew: any = null
   const indexParent = props.items.findIndex(item => item[props.customId] === row[props.customId]) // check vị trí item click đóng mở
 
-  items[indexParent].isShow = !items[indexParent]?.isShow // khóa isShow biểu trị đạng thái toogle đóng mở
+  if (type === null) {
+    items[indexParent].isShow = items[indexParent]?.isShow === undefined ? false : !items[indexParent]?.isShow // khóa isShow biểu trị đạng thái toogle đóng mở
+    typeNew = items[indexParent].isShow
+  }
+  else {
+    items[indexParent].isShow = items[indexParent]?.isShow === undefined ? false : type
+    typeNew = type
+  }
 
   row?.children?.forEach((child: any) => {
     const index = props.items.findIndex(item => item[props.customId] === child[props.customId])
 
-    items[index].isHide = !props?.items[index]?.isHide
+    items[index].isHide = !typeNew
     if (items[index]?.children)
-      toggleRowSelection(items[index])
+      toggleRowSelection(items[index], typeNew)
   })
 }
 
@@ -269,7 +275,7 @@ const bodyRowClassName = computed(() => {
               <VIcon
                 v-if="items.key && context?.children?.length "
                 class="cusor-pointer"
-                :icon="!context.isShow ? 'chevron-down' : 'chevron-up'"
+                :icon="context.isShow || context.isShow === undefined ? 'tabler:chevron-down' : 'tabler:chevron-up'"
                 size="18"
                 @click="toggleRowSelection(context)"
               />

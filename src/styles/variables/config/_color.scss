@@ -83,7 +83,7 @@ $color-pink-50: #fdf2fa;
 
 // **main*//
 $color-vertical-layout: $color-gray-50;
-$color-primay: $color-gray-50;
+$color-primary: rgba(var(--v-color-primary));
 
 /** color general */
 $color-default: #1849a9; // càu chủ đạo

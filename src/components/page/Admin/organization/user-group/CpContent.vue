@@ -16,17 +16,21 @@ interface Props {
   headers: any[]
   items: any[]
   totalRecord: number
-  pageNumber: number
+  pageNumber?: number
   listId: any[]
   dataDetail: any
   tootlipEdit: string
   tootlipDelete: string
   tootlipReport: string
+  isShowEdit?: boolean
+  isShowDelete?: boolean
+  isShowReport?: boolean
 }
 
 interface Emit {
   (e: 'update:dataDetail', data: any): void
   (e: 'update:listId', data: any): void
+  (e: 'update:dataDelete', data: any): void
   (e: 'update:pageNumber', data: any): void
 }
 
@@ -35,7 +39,7 @@ const getDetail = (val: any) => {
 }
 
 const deleteItem = (val: any) => {
-  emit('update:dataDetail', val)
+  emit('update:dataDelete', [val.id])
 }
 
 const selectedRows = (e: any) => {
@@ -71,11 +75,15 @@ const handlePageClick = (e: any) => {
         <span>{{ context.name }}</span>
       </span>
     </template>
-    <template #actions="{ data }">
+    <template
+      #actions="{ data }"
+    >
       <div
-        class="px-2 "
+        v-if="props.isShowReport"
+        class="px-2"
       >
         <VIcon
+          disabled="true"
           icon="tabler:chart-pie-2"
           :size="18"
           class="align-middle color-success"
@@ -89,6 +97,7 @@ const handlePageClick = (e: any) => {
         </VTooltip>
       </div>
       <div
+        v-if="props.isShowEdit"
         class="px-2 "
       >
         <VIcon
@@ -105,6 +114,7 @@ const handlePageClick = (e: any) => {
         </VTooltip>
       </div>
       <div
+        v-if="props.isShowDelete"
         class="px-2 "
       >
         <VIcon
@@ -120,6 +130,10 @@ const handlePageClick = (e: any) => {
           {{ props.tootlipDelete }}
         </VTooltip>
       </div>
+      <slot
+        name="actions"
+        :data="data"
+      />
     </template>
   </CmTable>
 </template>
