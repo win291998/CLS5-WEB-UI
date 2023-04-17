@@ -7,13 +7,8 @@ import { formatDateYears } from '@/utils/FilterUtil'
 import ArrayUtil from '@/utils/ArrayUtil'
 import { ActionType } from '@/constant/data/actionType.json'
 
-interface profile {
-  birthDay: string | null
-  listEducationUser: Array<any>
-  listExperienceUser: Array<any>
-}
 interface Props {
-  profile: profile
+  profile: any
 }
 
 const props = withDefaults(defineProps<Props>(), ({
@@ -30,6 +25,7 @@ const CpModalExperence = defineAsyncComponent(() => import('@/components/page/Ad
 const CmDropDown = defineAsyncComponent(() => import('@/components/common/CmDropDown.vue'))
 const CmChip = defineAsyncComponent(() => import('@/components/common/CmChip.vue'))
 const CmTextField = defineAsyncComponent(() => import('@/components/common/CmTextField.vue'))
+const CpAddressEdit = defineAsyncComponent(() => import('@/components/page/gereral/CpAddressEdit.vue'))
 
 /**
  * lib
@@ -137,6 +133,17 @@ const resetExperenceModal = () => {
   data.experienceData.companyName = null
 }
 
+const updateExperences = (dataEdit: any, index: any) => {
+  data.experienceData.companyName = dataEdit.companyName
+  data.experienceData.dateFinish = dataEdit.dateFinish
+  data.experienceData.dateStart = dataEdit.dateStart
+  data.experienceData.description = dataEdit.description
+  data.experienceData.isWork = dataEdit.isWork
+  data.experienceData.position = dataEdit.position
+  data.experienceData.isEdit = true
+  data.experienceData.index = index
+}
+
 /**
  * modal
  */
@@ -147,6 +154,10 @@ const actionItemEdit = (dataAction: any, index: any, dataResend?: any) => {
       updateEducation(dataAction[1], index)
       console.log('educationData', data.educationData)
       modal.isShowModalEducation = true
+      break
+    case 'EXPERENCE':
+      updateExperences(dataAction[1], index)
+      modal.isShowModalExperence = true
       break
 
     default:
@@ -159,6 +170,11 @@ const actionItemDelete = (dataAction: any, index: any, dataResend?: any) => {
     case 'EDUCATION':
       console.log('actionItemDelete', dataAction, index)
       removeEducation(index)
+
+      break
+    case 'EXPERENCE':
+      console.log('actionItemDelete', dataAction, index)
+      removeExperience(index)
 
       break
 
@@ -216,19 +232,19 @@ const handleUpdataProfile = (education: any, edit: boolean) => {
   updateDialogVisible(false, 'EDUCATION')
 }
 
-const updateExperences = (experences: any, edit: boolean) => {
+const handleUpdateExperences = (experences: any, edit: boolean) => {
   console.log('education', experences)
   console.log('edit', edit)
-  console.log('dataProfile', dataProfile.listEducationUser.length)
-  console.log('dataProfile', dataProfile.listEducationUser)
+  console.log('dataProfile', dataProfile)
+  console.log('dataProfile', dataProfile.listExperienceUser?.length)
 
-  if (edit) { dataProfile.listEducationUser[experences?.index] = experences }
+  if (edit) { dataProfile.listExperienceUser[experences?.index] = experences }
   else {
-    if (!dataProfile.listEducationUser || dataProfile.listEducationUser === null)
-      dataProfile.listEducationUser = []
-    dataProfile.listEducationUser[dataProfile.listEducationUser.length] = experences
+    if (!dataProfile.listExperienceUser || dataProfile.listExperienceUser === null)
+      dataProfile.listExperienceUser = []
+    dataProfile.listExperienceUser[dataProfile.listExperienceUser.length] = experences
   }
-  updateDialogVisible(false, 'EDUCATION')
+  updateDialogVisible(false, 'EXPERENCE')
 }
 
 /** ******************** */
@@ -246,168 +262,202 @@ const updateExperences = (experences: any, edit: boolean) => {
           cols="12"
           class="mb-1"
         >
-          <!-- input birth-day -->
-          <Field name="birthDay">
-            <label class="text-label-default">{{ t("common.birth-day") }}</label>
-            <CmDateTimePicker
-              v-model="dataProfile.birthDay"
-              placeholder="dd-mm-yyyy"
-            />
-          </Field>
-        </VCol>
-        <VCol
-          md="4"
-          cols="12"
-          class="mb-1"
-        >
-          <!-- input birth-day -->
-          <Field
-            v-slot="{ field }"
-            v-model="dataProfile.passport"
-            name="passport"
-            type="passport"
-          >
-            <CmTextField
-              :field="field"
-              :text="`${t('users.add-user.enter-passport')}`"
-              :placeholder="t('users.add-user.enter-passport')"
-            />
-          </Field>
-        </VCol>
-      </VRow>
-      <VRow>
-        <VCol
-          md="4"
-          cols="12"
-          class="mb-1"
-        >
-          <!-- giáo dục -->
-          <div>
-            <label class="text-label-default ">{{ $t("users.add-user.education") }}</label>
-          </div>
-          <br>
-          <div
-            v-if="dataProfile.listEducationUser && dataProfile.listEducationUser.length > 0"
-            class="style-education"
-          >
-            <div
-              v-for="(item, index) in dataProfile.listEducationUser"
-              :key="index"
-              class="border-item"
+          <VRow>
+            <VCol
+              cols="12"
+              class="mb-1"
             >
-              <VRow class="mb-3">
-                <VCol
-                  cols="10"
+              <!-- input birth-day -->
+              <Field name="birthDay">
+                <div class="mb-1">
+                  <label class="text-label-default">{{ t("common.birth-day") }}</label>
+                </div>
+                <CmDateTimePicker
+                  v-model="dataProfile.birthDay"
+                  placeholder="dd-mm-yyyy"
+                />
+              </Field>
+            </VCol>
+            <VCol
+              cols="12"
+              class="mb-1"
+            >
+              <!-- giáo dục -->
+              <div>
+                <label class="text-label-default ">{{ $t("users.add-user.education") }}</label>
+              </div>
+              <br>
+              <div
+                v-if="dataProfile.listEducationUser && dataProfile.listEducationUser.length > 0"
+                class="style-education"
+              >
+                <div
+                  v-for="(item, index) in dataProfile.listEducationUser"
+                  :key="index"
+                  class="border-item"
                 >
-                  <div class="text-name-school text-bold-sm mb-2">
-                    {{ item.schoolName }} <span v-if="item?.graduationYear">({{ $t("common.years") }} {{ formatDateYears(item.graduationYear) }})</span>
-                  </div>
-                  <CmChip class="mb-2">
-                    <div> {{ item.degreeName }}</div>
-                  </CmChip>
-                  <div
-                    v-if="item?.description"
-                    class="text-description text-regular-sm b-2"
-                  >
-                    {{ item.description }}
-                  </div>
-                </VCol>
+                  <VRow class="mb-3">
+                    <VCol
+                      cols="10"
+                    >
+                      <div class="text-name-school text-bold-sm mb-2">
+                        {{ item.schoolName }} <span v-if="item?.graduationYear">({{ $t("common.years") }} {{ formatDateYears(item.graduationYear) }})</span>
+                      </div>
+                      <CmChip class="mb-2">
+                        <div> {{ item.degreeName }}</div>
+                      </CmChip>
+                      <div
+                        v-if="item?.description"
+                        class="text-description text-regular-sm b-2"
+                      >
+                        {{ item.description }}
+                      </div>
+                    </VCol>
 
-                <VCol
-                  cols="2"
-                >
-                  <CmDropDown
-                    :list-item="action"
-                    :data-resend="KEY.EDUCATION"
-                    :data="item"
-                    custom-key="title"
-                    :type="1"
-                    :index="index"
-                  />
-                </VCol>
-              </VRow>
-              <VDivider class="mb-4" />
-            </div>
-          </div>
-          <BLink
-            class="d-flex align-center"
-            @click="fetchModalEducation"
-          >
-            <VIcon
-              icon="tabler:plus"
-              size="16"
-              class="color-primary mr-2"
-            />
-            <span class="color-primary  align-center">{{ $t('common.add') }}</span>
-          </BLink>
+                    <VCol
+                      cols="2"
+                    >
+                      <CmDropDown
+                        :list-item="action"
+                        :data-resend="KEY.EDUCATION"
+                        :data="item"
+                        custom-key="title"
+                        :type="1"
+                        :index="index"
+                      />
+                    </VCol>
+                  </VRow>
+                  <VDivider class="mb-4" />
+                </div>
+              </div>
+              <BLink
+                class="d-flex align-center cursor-pointer"
+                @click="fetchModalEducation"
+              >
+                <VIcon
+                  icon="tabler:plus"
+                  size="16"
+                  class="color-primary mr-2"
+                />
+                <span class="color-primary  align-center">{{ $t('common.add') }}</span>
+              </BLink>
+            </VCol>
+          </VRow>
         </VCol>
         <VCol
           md="4"
           cols="12"
           class="mb-1"
         >
-          <!-- Kinh nghiệm -->
-          <div>
-            <label class="text-label-default ">{{ t("users.add-user.experience") }}</label>
-          </div>
-          <br>
-          <div
-            v-if="profile.listExperienceUser && profile.listExperienceUser.length > 0"
-            class="style-experience"
-          >
-            <div
-              v-for="(item, index) in dataProfile.listEducationUser"
-              :key="index"
-              class="border-item"
+          <VRow>
+            <VCol
+              cols="12"
+              class="mb-1"
             >
-              <VRow class="mb-3">
-                <VCol
-                  cols="10"
+              <!-- input passport -->
+              <Field
+                v-slot="{ field }"
+                v-model="dataProfile.passport"
+                name="passport"
+                type="passport"
+              >
+                <CmTextField
+                  :field="field"
+                  :text="`${t('users.add-user.enter-passport')}`"
+                  :placeholder="t('users.add-user.enter-passport')"
+                />
+              </Field>
+            </VCol>
+            <VCol
+              cols="12"
+              class="mb-1"
+            >
+              <!-- Kinh nghiệm -->
+              <div>
+                <label class="text-label-default ">{{ t("users.add-user.experience") }}</label>
+              </div>
+              <br>
+              <div
+                v-if="profile.listExperienceUser && profile.listExperienceUser.length > 0"
+                class="style-experience"
+              >
+                <div
+                  v-for="(item, index) in dataProfile.listExperienceUser"
+                  :key="index"
+                  class="border-item"
                 >
-                  <div class="text-name-school text-bold-sm mb-2">
-                    {{ item.companyName }}
-                    <span>
-                      ({{ $t("common.years") }} {{ formatDateYears(item.dateStart) }} - {{ $t("common.years") }} {{ formatDateYears(item.dateFinish) }})
-                    </span>
-                  </div>
-                  <CmChip class="mb-2">
-                    <div> {{ item.position }}</div>
-                  </CmChip>
-                  <div
-                    v-if="item?.description"
-                    class="text-description text-regular-sm b-2"
-                  >
-                    {{ item.description }}
-                  </div>
-                </VCol>
+                  <VRow class="mb-3">
+                    <VCol
+                      cols="10"
+                    >
+                      <div class="text-name-school text-bold-sm mb-2">
+                        {{ item.companyName }}
+                        <span>
+                          ({{ $t("common.years") }} {{ formatDateYears(item.dateStart) }} - {{ $t("common.years") }} {{ formatDateYears(item.dateFinish) }})
+                        </span>
+                      </div>
+                      <CmChip class="mb-2">
+                        <div> {{ item.position }}</div>
+                      </CmChip>
+                      <div
+                        v-if="item?.description"
+                        class="text-description text-regular-sm b-2"
+                      >
+                        {{ item.description }}
+                      </div>
+                    </VCol>
 
-                <VCol
-                  cols="2"
-                >
-                  <CmDropDown
-                    :list-item="action"
-                    :data-resend="KEY.EXPERENCE"
-                    :data="item"
-                    custom-key="title"
-                    :type="1"
-                    :index="index"
-                  />
-                </VCol>
-              </VRow>
-              <VDivider class="mb-4" />
-            </div>
-          </div>
-          <BLink
-            class="d-flex align-center"
-            @click="addExperiences"
-          >
-            <VIcon
-              icon="tabler:plus"
-              size="16"
-              class="color-primary mr-2"
-            />
-            <span class="color-primary  align-center">{{ $t('common.add') }}</span>
-          </BLink>
+                    <VCol
+                      cols="2"
+                    >
+                      <CmDropDown
+                        :list-item="action"
+                        :data-resend="KEY.EXPERENCE"
+                        :data="item"
+                        custom-key="title"
+                        :type="1"
+                        :index="index"
+                      />
+                    </VCol>
+                  </VRow>
+                  <VDivider class="mb-4" />
+                </div>
+              </div>
+              <BLink
+                class="d-flex align-center cursor-pointer"
+                @click="addExperiences"
+              >
+                <VIcon
+                  icon="tabler:plus"
+                  size="16"
+                  class="color-primary mr-2"
+                />
+                <span class="color-primary  align-center">{{ $t('common.add') }}</span>
+              </BLink>
+            </VCol>
+          </VRow>
+        </VCol>
+        <VCol
+          md="4"
+          cols="12"
+          class="mb-1"
+        >
+          <VRow>
+            <VCol
+              cols="12"
+              class="mb-1"
+            >
+              <!-- address -->
+              <div>
+                <label class="text-label-default ">{{ t("common.address") }}</label>
+              </div>
+              <br>
+              <CpAddressEdit
+                ref="address"
+                :data="profile"
+              />
+            </VCol>
+          </VRow>
         </VCol>
       </VRow>
     </VSheet>
@@ -423,7 +473,7 @@ const updateExperences = (experences: any, edit: boolean) => {
     :is-dialog-visible="modal.isShowModalExperence"
     :experience-data="data.experienceData"
     @update:is-dialog-visible="updateDialogVisible"
-    @update:profile="updateExperences"
+    @update:profile="handleUpdateExperences"
   />
 </template>
 

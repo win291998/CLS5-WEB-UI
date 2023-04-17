@@ -1,38 +1,32 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import MethodsUtil from '@/utils/MethodsUtil'
-import ApiUser from '@/api/user/index'
 import { validatorStore } from '@/stores/validatator'
 import { comboboxStore } from '@/stores/combobox'
-import { userManagerStore } from '@/stores/admin/users/user'
-import { TYPE_REQUEST } from '@/typescript/enums/enums'
 import { load } from '@/stores/loadComponent'
-import toast from '@/plugins/toast'
+import { profileUserManagerStore } from '@/stores/admin/users/profile/profile'
 
 /**
- * emit
+ * interface
  */
-const emit = defineEmits<Emit>()
+
 interface Emit {
   (e: 'tabAction', position: number, status: any): void
 }
+
+const emit = defineEmits<Emit>()
 const CmTextField = defineAsyncComponent(() => import('@/components/common/CmTextField.vue'))
 const CmSelect = defineAsyncComponent(() => import('@/components/common/CmSelect.vue'))
 const CpTitleTable = defineAsyncComponent(() => import('./CpTitleTable.vue'))
-const CpActionFooterEdit = defineAsyncComponent(() => import('@/components/page/gereral/CpActionFooterEdit.vue'))
 const CmRadioGroup = defineAsyncComponent(() => import('@/components/common/CmRadioGroup.vue'))
 const CpUserProfileAvatarEdit = defineAsyncComponent(() => import('@/components/page/gereral/CpUserProfileAvatarEdit.vue'))
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 const storeValidate = validatorStore()
 const storeCombobox = comboboxStore()
-const storeUserManager = userManagerStore()
-const storeButton = load()
-const { unLoadComponent } = storeButton
-const { idUser } = storeToRefs(storeUserManager)
-const { schemaOption, Field, Form, useForm, yup } = storeValidate
+const { Field, Form } = storeValidate
 const { userType, statuses } = storeToRefs(storeCombobox)
 const { fetchTypeUsersCombobox, fetchStatusUsersCombobox } = storeCombobox
-const router = useRouter()
+const storeProfileUserManager = profileUserManagerStore()
+const { idUpdate, myFormUserInfor, titleTable, values, schema } = storeToRefs(storeProfileUserManager)
+const { updateListOrg, submitForm } = storeProfileUserManager
 const route = useRoute()
 
 // interface
@@ -46,16 +40,9 @@ const LABEL = Object.freeze({
   PLACEHOLDER_STATUS: t('common.status-name'),
 })
 
-const titleTable = ref()
-const isShowButton = ref(true)
-
 // method
 const handleFormValue = (value: any) => {
   //
-}
-
-const backUser = () => {
-  router.push({ name: 'admin-organization-users-manager' })
 }
 
 /**
@@ -83,235 +70,13 @@ const isOwner = computed(() => {
   return false
 })
 
-const getErrorsMessage = (errors: Array<any>) => {
-  let str = ''
-  errors.forEach(element => {
-    str += `${t(element.message, element.params)}`
-    str += '. '
-  })
-
-  return str
-}
-
-/**
- * Xử lý data form
- *
- */
-let schema = reactive<any>({
-  lastName: schemaOption.lastName,
-  firstName: schemaOption.firstName,
-  email: schemaOption.email,
-  userName: schemaOption.userName,
-  userCode: schemaOption.userCode,
-  phoneNumber: schemaOption.phoneNumber,
-  kpiLearn: schemaOption.kpiLearn,
-  kpiTeach: schemaOption.kpiTeach,
-  userTypeIdSingle: schemaOption.userTypeIdSingle,
-  statusIdSingle: schemaOption.statusIdSingle,
-})
-
-const schemaPass = reactive <any> ({
-  password: schemaOption?.password,
-})
-
-if (!Number(route.params.id))
-  schema = { ...schema, ...schemaPass }
-
-const { handleSubmit, validate, errors, submitForm, resetForm } = useForm({
-  validationSchema: schema,
-})
-
-const { values, setValues } = useForm({
-  validationSchema: schema,
-  initialValues: reactive({
-    academicDegreeId: null,
-    academicRankId: null,
-    address: '',
-    avatar: '',
-    birthDay: null,
-    email: '',
-    employmentDate: '',
-    firstName: '',
-    gender: true,
-    lastName: '',
-    levelId: null,
-    listEducationUser: null,
-    listExperienceUser: null,
-    listGroupId: null,
-    listOrganizationalStructureId: null,
-    passport: '',
-    password: '',
-    payrollScaleId: null,
-    phoneNumber: '',
-    position: '',
-    statusId: null,
-    story: '',
-    timeZoneId: null,
-    userCode: '',
-    userName: '',
-    userTitleId: null,
-    userTypeId: null,
-    wardId: null,
-    districtId: null,
-    provinceId: null,
-    workplace: '',
-    listBranchId: null,
-    countryId: null,
-    kpiLearn: null,
-    kpiTeach: null,
-    userGroups: [],
-    userBranches: [],
-  }),
-})
-
-/**
- *
- * Lấy dữ liệu edit
- */
-const getAutoCode = async () => {
-  await MethodsUtil.requestApiCustom(ApiUser.getAutoCode, TYPE_REQUEST.GET).then(value => {
-    values.userCode = value?.data?.data
-  })
-}
-
-// lấy mã người dùng tự động
-if (route.name === 'admin-organization-users-profile-add')
-  getAutoCode()
-
-// lấy thông tin học viên
-
-const fectchLecturers = async (id: any) => {
-  const params = { userId: id }
-
-  await MethodsUtil.requestApiCustom(ApiUser.fetchDetailUpdate, TYPE_REQUEST.GET, params).then(value => {
-    setValues(value.data)
-    Promise.resolve().then(() => {
-      titleTable.value?.checkGetListOrgStruct()
-    })
-  })
-}
-
-const idUpdate = ref<null | number>(null)
-
-if (Number(route.params.id) >= 0) {
-  fectchLecturers(route.params.id)
-  idUpdate.value = Number(route.params.id)
-  emit('tabAction', 3, false)
-}
-
-/**
- * create users
- *
- */
-const myForm = ref(null)
-
-const resetData = () => {
-  isShowButton.value = true
-
-  router.push({ name: 'admin-organization-users-profile-edit', params: { tabActive: 'infor', id: route?.params?.id } })
-
-  idUpdate.value = null
-  resetForm()
-  idUser.value = null
-  getAutoCode()
-}
-
-// eslint-disable-next-line sonarjs/cognitive-complexity
-const handlesCreateUser = async (bvModalEvt: any, dataObj: any, type: any) => {
-  const form: any = myForm.value
-  if (form) {
-    form.validate().then(async (success: any) => {
-      if (success.valid) {
-        const params = dataObj
-
-        await MethodsUtil.requestApiCustom(ApiUser.fetchCreateUser, TYPE_REQUEST.POST, params)
-          .then(value => {
-            if (titleTable.value?.isChange)
-              titleTable.value.updateTitle(value.data)
-            toast('SUCCESS', t(value.message))
-
-            if (type === 'save') {
-              router.push({ name: 'admin-organization-users-manager' })
-
-              return
-            }
-            if (type === 'save-add')
-              resetData()
-
-            idUser.value = value.data
-
-            emit('tabAction', 3, false)
-            fectchLecturers(value.data)
-            idUpdate.value = value.data
-
-            router.push({ name: 'admin-organization-users-profile-edit', params: { tabActive: 'infor', id: idUser.value } })
-          })
-          .catch(error => {
-            toast('ERROR', t(getErrorsMessage(error)))
-          })
-      }
-    })
-  }
-}
-
-/**
- * update users
- *
- */
-const handleUpdateUser = async (bvModalEvt: any, dataObj: any, type: any) => {
-  const form: any = myForm.value
-
-  form.validate().then((success: any) => {
-    if (success.valid) {
-      const params = dataObj
-
-      MethodsUtil.requestApiCustom(ApiUser.fetchUpdateUser, TYPE_REQUEST.POST, params)
-        .then(value => {
-          if (titleTable.value?.isChange)
-            titleTable.value.updateTitle()
-
-          toast('SUCCESS', t(value.message))
-          if (type === 'save') {
-            router.push({ name: 'admin-organization-users-manager' })
-
-            return
-          }
-          if (type === 'save-add')
-            resetData()
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    }
-  })
-}
-
-const handleUser = (bvModalEvt: any, dataObj: any, type: any) => {
-  dataObj.firstName = dataObj?.firstName.trim()
-  dataObj.lastName = dataObj?.lastName.trim()
-  dataObj.userName = dataObj?.userName.trim()
-
-  if (idUpdate.value === null)
-    handlesCreateUser(bvModalEvt, dataObj, type)
-
-  else
-    handleUpdateUser(bvModalEvt, dataObj, type)
-}
-
-const updateListOrg = (val: any) => {
-  const list: number[] = []
-
-  val.forEach((item: any) => {
-    if (item.id)
-      list.push(item.id)
-  })
-  values.listOrganizationalStructureId = list as never
-}
+if (Number(route.params.id) >= 0)
+  titleTable.value?.checkGetListOrgStruct()
 </script>
 
 <template>
   <Form
-    ref="myForm"
+    ref="myFormUserInfor"
     :validation-schema="schema"
     @submit.prevent="submitForm"
   >
@@ -592,16 +357,6 @@ const updateListOrg = (val: any) => {
         ref="titleTable"
         :user-id="route.params.id"
         @updateListOrg="updateListOrg"
-      />
-    </VSheet>
-    <VSheet
-      width="100%"
-      class="user-infor mx-auto no-background my-5"
-    >
-      <CpActionFooterEdit
-        :is-save="isShowButton"
-        @onCancel="backUser"
-        @onSave="handleUser($event, values, 'save')"
       />
     </VSheet>
   </Form>

@@ -89,7 +89,7 @@ const handlerPreButton = event => {
         v-if="props.isSave"
         is-load
         :list-item="action"
-        title="hello"
+        :title="t('common.save-and-add')"
         @click-prepend="handlerPreButton($event)"
       >
         {{ t('common.save') }}

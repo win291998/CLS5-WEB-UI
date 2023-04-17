@@ -29,19 +29,19 @@ const prefixColor = computed(() => {
 })
 
 const getAvatarName = (data: any) => {
-  if (data.firstName && data.lastName) {
+  if (data?.firstName && data.lastName) {
     let firstName = 'F'
-    if (data.firstName.length > 0)
+    if (data?.firstName.length > 0)
       firstName = data.firstName[0].toUpperCase()
 
     let lastName = 'L'
-    if (data.lastName.length > 0)
+    if (data?.lastName.length > 0)
       lastName = data.lastName[0].toUpperCase()
 
     return `${firstName}${lastName}`
   }
-  if (data.name != null) {
-    const strs = data.name.split(' ')
+  if (data?.name != null) {
+    const strs = data?.name.split(' ')
     if (strs.length > 1) {
       const firstname = strs[0]
       const lastName = strs[1]
@@ -49,7 +49,7 @@ const getAvatarName = (data: any) => {
       return firstname[0].toUpperCase() + lastName[0].toUpperCase()
     }
   }
-  if (data.userName && data.userName != null) {
+  if (data?.userName && data?.userName != null) {
     const strs = data.userName.split(' ')
     if (strs.length > 1) {
       const firstname = strs[0]

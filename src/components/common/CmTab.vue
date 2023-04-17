@@ -104,7 +104,7 @@ const useEmitter = () => {
         :is="tabActive?.component"
         :emit="useEmitter"
         :data-general="dataGeneral"
-        :data-tab="tabActive.dataTab || undefined"
+        v-bind="tabActive.dataTab"
       />
     </div>
   </div>

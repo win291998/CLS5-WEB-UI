@@ -52,7 +52,7 @@ const messageError = computed(() => {
   <div>
     <div class="mb-1">
       <label
-        class="text-medium-sm color-dark"
+        class="text-label-default"
       >{{ props.text }}</label>
     </div>
     <div>
