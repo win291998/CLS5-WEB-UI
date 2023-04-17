@@ -1,4 +1,11 @@
+<!-- eslint-disable vue/require-default-prop -->
 <script setup lang="ts">
+import type { sizeDialog } from '@/typescript/enums/enums'
+
+/**
+ * @size ['sm', 'lg', 'xl'] tương đương ['300','800','1200']
+ *
+ * */
 interface Props {
   title?: string
   subTitle?: string
@@ -12,11 +19,15 @@ interface Props {
   buttonCancleName?: string
   isHideFooter?: boolean
   persistent?: boolean
+  size?: typeof sizeDialog[] | string
+  disabledOk?: boolean
+  disabledCancel?: boolean
 }
 
 interface Emit {
   (e: 'update:isDialogVisible', value: boolean, type?: string): void
   (e: 'confirm', value: boolean): void
+  (e: 'show', valued: boolean): void
 }
 
 const props = withDefaults(defineProps<Props>(), ({
@@ -26,6 +37,7 @@ const props = withDefaults(defineProps<Props>(), ({
   buttonCancleName: 'common.cancel-title',
   isHideFooter: false,
   persistent: false,
+  size: 'lg',
 }))
 
 const emit = defineEmits<Emit>()
@@ -39,8 +51,6 @@ const updateModelValue = (val: boolean, type?: string) => {
 }
 
 const onConfirmation = () => {
-  console.log(123)
-
   emit('confirm', true)
   updateModelValue(false, 'confirm')
 }
@@ -50,9 +60,27 @@ const onCancel = () => {
   emit('update:isDialogVisible', false)
 }
 
-const handleDialogClose = e => {
+const handleDialogClose = () => {
   emit('update:isDialogVisible', true)
 }
+
+const sizeModal = computed(() => {
+  switch (props.size) {
+    case 'sm':
+      return '300'
+    case 'lg':
+      return '800'
+    case 'xl':
+      return '1200'
+    default:
+      break
+  }
+})
+
+watch(() => props.isDialogVisible, val => {
+  if (val)
+    emit('show', val)
+})
 </script>
 
 <template>
@@ -62,8 +90,9 @@ const handleDialogClose = e => {
   >
     <VDialog
       :model-value="props.isDialogVisible"
-      width="800"
       :persistent="persistent"
+      :width="sizeModal"
+      close-on-back
       @update:model-value="updateModelValue"
     >
       <CmCard backgroud="bg-white">
@@ -89,6 +118,7 @@ const handleDialogClose = e => {
               variant="outlined"
               bg-color="bg-white"
               color="dark"
+              :disabled="disabledCancel"
               text-color="color-dark"
               @click="onCancel"
             >
@@ -97,6 +127,7 @@ const handleDialogClose = e => {
 
             <CmButton
               variant="elevated"
+              :disabled="disabledOk"
               :color="color"
               @click="onConfirmation"
             >

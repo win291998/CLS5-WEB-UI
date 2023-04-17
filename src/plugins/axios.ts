@@ -58,13 +58,11 @@ axiosIns.interceptors.response.use(
 
     // if (response && response.status === 401 && response.error.message === 'TokenLifetimeValidateFailed') {
     if (response && (response.status === 403 || response.status === 401)) {
-      console.log('refreshToken')
       if (!isAlreadyFetchingAccessToken) {
         isAlreadyFetchingAccessToken = true
         isWaitingRefreshToken = true
         // eslint-disable-next-line promise/no-promise-in-callback
         refreshToken().then(r => {
-          console.log('then refreshToken')
           isWaitingRefreshToken = false
           isAlreadyFetchingAccessToken = false
           if (r.data.data.accessToken !== null) {

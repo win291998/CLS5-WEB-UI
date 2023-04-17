@@ -7,6 +7,10 @@ export const validatorStore = defineStore('validator', () => {
   const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 
   const CONFIG = Object.freeze({
+    CODE: {
+      FIELD: t('common.code'),
+      MAX: 50,
+    },
     DEFAULT_STRING: {
       MAX: 255,
     },
@@ -58,11 +62,15 @@ export const validatorStore = defineStore('validator', () => {
     },
   })
 
+  const TEXT = Object.freeze({
+    FIELD: 'Trường này',
+  })
+
   const ruleMessage = reactive({
     required: (field?: any) => `Vui lòng nhập dữ liệu ${field || ''}`,
-    min: (min: any, field?: any) => `${field || ''} phải chứa ít nhất ${min} ký tự`,
-    max: (max: any, field?: any) => `${field || ''} chỉ chứa tối đa ${max} ký tự`,
-    password: (field?: any) => `${field || ''} phải chứa ít nhất một chữ cái viết thường, một chữ in hoa, một số và một ký tự đặc biệt`,
+    min: (min: any, field?: any) => `${field || TEXT.FIELD} phải chứa ít nhất ${min} ký tự`,
+    max: (max: any, field?: any) => `${field || TEXT.FIELD} chỉ chứa tối đa ${max} ký tự`,
+    password: (field?: any) => `${field || TEXT.FIELD} phải chứa ít nhất một chữ cái viết thường, một chữ in hoa, một số và một ký tự đặc biệt`,
     typeNumber: 'Vui lòng nhập một số.',
     typeString: 'Vui lòng nhập chuỗi.',
     typeArray: 'Vui lòng lựa chọn.',
@@ -90,7 +98,11 @@ export const validatorStore = defineStore('validator', () => {
   }
 
   const schemaOption = reactive({
-    requiredString: yup.string().required(ruleMessage.required()),
+    requiredString: yup.string().required(ruleMessage.required()).max(CONFIG.DEFAULT_STRING.MAX, ruleMessage.max(CONFIG.DEFAULT_STRING.MAX)),
+    code: yup.string().max(CONFIG.CODE.MAX, ruleMessage.max(CONFIG.CODE.MAX)).nullable(),
+    require: yup.string().required(ruleMessage.required()),
+    defaultString: yup.string().max(CONFIG.DEFAULT_ARIA.MAX, ruleMessage.max(CONFIG.DEFAULT_ARIA.MAX)),
+
     lastName: yup.string().required(ruleMessage.required())
       .max(CONFIG.LAST_NAME.MAX, ruleMessage.max(CONFIG.LAST_NAME.MAX, CONFIG.LAST_NAME.FIELD)),
     firstName: yup.string().required(ruleMessage.required())

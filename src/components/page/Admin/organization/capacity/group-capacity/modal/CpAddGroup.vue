@@ -13,7 +13,7 @@ const props = withDefaults(defineProps<Props>(), ({
 const emit = defineEmits<Emit>()
 interface Emit {
   (e: 'ok', value: any): void
-  (e: 'edit', value: any): void
+  (e: 'edit', value: any): voidf
   (e: 'update:isShow', value: any): void
 }
 

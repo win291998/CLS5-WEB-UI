@@ -104,11 +104,6 @@ const fetchModalEducation = () => {
  * update profile
  */
 const handleUpdataProfile = (education: any, edit: boolean) => {
-  console.log('education', education)
-  console.log('edit', edit)
-  console.log('dataProfile', dataProfile.value.listEducationUser.length)
-  console.log('dataProfile', dataProfile.value.listEducationUser)
-
   if (edit) { dataProfile.value[education?.index] = education }
   else {
     if (!dataProfile.value.listEducationUser || dataProfile.value.listEducationUser === null)
@@ -123,13 +118,10 @@ const handleUpdataProfile = (education: any, edit: boolean) => {
  */
 // delete experience item
 const removeExperience = (index: any) => {
-  console.log(index)
-
   dataProfile.value.listEducationUser.splice(index, 1)
 }
 
 const updateEducation = (dataEdit: any, index: any) => {
-  console.log(dataEdit)
   data.educationData.degreeId = dataEdit.degreeId
   data.educationData.description = dataEdit.description
   data.educationData.graduationYear = dataEdit.graduationYear
@@ -139,15 +131,11 @@ const updateEducation = (dataEdit: any, index: any) => {
 }
 
 const actionItemEdit = (dataAction: any, index: any) => {
-  console.log('edit', dataAction, index)
   updateEducation(dataAction[1], index)
-  console.log('educationData', data.educationData)
   modal.isShowModalEducation = true
 }
 
 const actionItemDelete = (dataAction: any, index: any) => {
-  console.log('actionItemDelete', dataAction, index)
-
   removeExperience(index)
 }
 

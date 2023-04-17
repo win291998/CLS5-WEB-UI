@@ -50,8 +50,6 @@ const dataTable = ref()
 // Chuyển đổi mảng items sang định dạng yêu cầu
 const items = ArrayUtil.formatTreeTable(props.items, props.customId)
 
-console.log(items)
-
 const pageSize = ref(props.pageSize) // số lượng item trên 1 page
 const currentPage = ref<number>(Globals.PAGINATION_CURRENT_PAGE) // item hiện tại
 const selectedRows = ref<any>([])// Những row được checked
@@ -134,8 +132,6 @@ const toggleRowSelection = (row: any, type: boolean | null = null) => {
   let typeNew: any = null
   const indexParent = props.items.findIndex(item => item[props.customId] === row[props.customId]) // check vị trí item click đóng mở
 
-  console.log(window._.clone(items[indexParent]))
-
   if (type === null) {
     items[indexParent].isShow = items[indexParent]?.isShow === undefined ? false : !items[indexParent]?.isShow // khóa isShow biểu trị đạng thái toogle đóng mở
     typeNew = items[indexParent].isShow
@@ -144,7 +140,6 @@ const toggleRowSelection = (row: any, type: boolean | null = null) => {
     items[indexParent].isShow = items[indexParent]?.isShow === undefined ? false : type
     typeNew = type
   }
-  console.log(typeNew)
 
   row?.children?.forEach((child: any) => {
     const index = props.items.findIndex(item => item[props.customId] === child[props.customId])

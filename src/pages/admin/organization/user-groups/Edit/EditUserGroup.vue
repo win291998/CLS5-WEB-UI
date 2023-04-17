@@ -1,46 +1,53 @@
-<script setup lang="ts">
-import CmTextArea from '@/components/common/CmTextArea.vue'
-import CmTextField from '@/components/common/CmTextField.vue'
+<script lang="ts" setup>
+import CmTab from '@/components/common/CmTab.vue'
 
-const dataInput = ref({
-  code: '',
-  name: '',
-  description: '',
+const CpAdd = defineAsyncComponent(() => import('@/components/page/Admin/organization/user-group/CpAdd.vue'))
+const CpUserTab = defineAsyncComponent(() => import('@/components/page/Admin/organization/user-group/CpUserTab.vue'))
+const CpCourseTab = defineAsyncComponent(() => import('@/components/page/Admin/organization/user-group/CpCourseTab.vue'))
+const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
+
+const route = useRoute()
+
+const isDisabledTab = computed(() => {
+  return !route.params.id
 })
+
+const listtab = ref([
+  {
+    key: 'info',
+    title: 'common.info',
+    component: CpAdd,
+    dataTab: {
+      TITLE: {
+        titlePageAdd: t('add-user-group'),
+        titlePageEdit: t('edit-user-group'),
+        titleButton: t('common.save'),
+        titleCancel: t('common.cancel'),
+        titleButtonAndUpdate: t('common.save-and-update'),
+      },
+    },
+    isDisabled: false,
+  },
+  {
+    key: 'user',
+    title: 'common.tabs.user',
+    isDisabled: isDisabledTab.value,
+    component: CpUserTab,
+  },
+  {
+    key: 'course',
+    title: 'common.tabs.course',
+    isDisabled: isDisabledTab.value,
+    component: CpCourseTab,
+  },
+])
 </script>
 
 <template>
-  <div class="d-flex add-group-user">
-    <div
-      class="w-50 h-auto d-flex flex-wrap pl-2 pr-2"
-    >
-      <div class="w-100">
-        <CmTextField
-          v-model="dataInput.code"
-          text="Mã nhóm người dùng"
-        />
-      </div>
-      <div class="w-100">
-        <CmTextField
-          v-model="dataInput.name"
-          text="Tên nhóm người dùng*"
-        />
-      </div>
-    </div>
-    <div
-      class="w-50  pl-2 pr-2"
-    >
-      <CmTextArea
-        v-model="dataInput.description"
-        text="Mô tả"
-      />
-    </div>
-  </div>
+  <CmTab
+    type="button"
+    :list-tab="listtab"
+    label="tab"
+  />
 </template>
 
-<style lang="scss">
-  .add-group-user {
-    display: inline-block;
-    height: 30vh;
-  }
-</style>

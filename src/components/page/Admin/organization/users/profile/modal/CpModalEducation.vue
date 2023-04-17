@@ -56,8 +56,6 @@ const DATA_LABEL = Object.freeze({
 
 const fetchNameSchools = async () => {
   await MethodsUtil.requestApiCustom(ApiUser.fetchNameSchools, TYPE_REQUEST.GET).then(value => {
-    console.log(value)
-
     data.nameSchoolsCombobox = value.data
   })
 }
@@ -67,7 +65,6 @@ fetchNameSchools()
 // get bằng cấp trình độ '
 const fetchDegrees = async () => {
   await MethodsUtil.requestApiCustom(ApiUser.fetchDegrees, TYPE_REQUEST.GET).then(value => {
-    console.log(value)
     data.degreesCombobox = value.data
   })
 }
@@ -93,8 +90,6 @@ const { values, setValues, resetForm } = useForm({
 
 /** event dialog */
 const updateModelValue = (val: boolean, type: string) => {
-  console.log(type === 'confirm')
-
   if (type === 'confirm')
     return
 
@@ -115,7 +110,6 @@ const addEducation = () => {
   const degree: any = data.degreesCombobox.find((itemDegrees: any) => itemDegrees.key === values.degreeId)
   if (degree)
     values.degreeName = degree.value
-  console.log('education', values)
 
   if (values.isEdit === false)
     emit('update:profile', window._.clone(values), false)
@@ -128,24 +122,15 @@ const onConfirmation = (event: boolean) => {
   const form: any = myFormEducation.value
   if (form && event) {
     form.validate().then((success: any) => {
-      console.log(success)
-      if (success.valid) {
-        console.log(success)
+      if (success.valid)
         addEducation()
-      }
-
-      console.log(values)
     })
   }
 }
 
 watch(() => props.isDialogVisible, value => {
-  console.log('props:', props.educationData?.isEdit)
-
-  if (value && !props.educationData?.isEdit) {
-    console.log('resetForm:', value)
+  if (value && !props.educationData?.isEdit)
     resetForm()
-  }
 })
 </script>
 

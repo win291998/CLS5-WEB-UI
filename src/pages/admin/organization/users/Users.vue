@@ -152,16 +152,12 @@ const confirmDialogResetPass = (event: any) => {
 }
 
 const updateDialogVisibleResset = (event: any) => {
-  if (data.showPassword) {
-    console.log(data.showPassword)
+  if (data.showPassword)
     data.isShowDialogPasword = event
-  }
 }
 
 // reset status
 const handleRefreshStatus = async (status: number) => {
-  console.log(123)
-
   const params = {
     userId: data.selectedItemId,
     statusId: status,
@@ -169,7 +165,6 @@ const handleRefreshStatus = async (status: number) => {
 
   await MethodsUtil.requestApiCustom(ApiUser.ChangeStatus, TYPE_REQUEST.POST, params)
     .then(async (value: any) => {
-      console.log(value)
       toast('SUCCESS', t(value?.message))
       await fectchListUsers()
     })
@@ -179,15 +174,11 @@ const handleRefreshStatus = async (status: number) => {
 }
 
 const confirmDialogStatus = (event: any, status: any) => {
-  console.log(event)
-
   if (event)
     handleRefreshStatus(status)
 }
 
 const updateDialogVisibleStatus = (event: any) => {
-  console.log(event)
-
   data.isShowDialogStatus = event
 }
 
@@ -221,7 +212,6 @@ const handlePageClick = async (page: any) => {
 
 // hàm trả về các loại action khi click
 const actionItem = (type: any) => {
-  console.log(type)
   switch (type[0]?.name) {
     case 'ActionDelete':
       deleteItem(type[1].id)
@@ -236,7 +226,6 @@ const actionItem = (type: any) => {
       data.isShowDialogStatus = true
       break
     case 'ActionEdit':
-      console.log('ActionEdit')
       router.push({ name: 'admin-organization-users-profile-edit', params: { tabActive: 'infor', id: type[1].id } })
       break
 
@@ -288,7 +277,7 @@ const handleSearch = async (value: any) => {
 
 //  fillter header
 const handleFilterCombobox = (dataFilter: any) => {
-  console.log(dataFilter)
+  //
 }
 
 // hàm trả về các loại action từ header filter

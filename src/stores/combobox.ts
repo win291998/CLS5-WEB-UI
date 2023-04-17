@@ -48,10 +48,9 @@ export const comboboxStore = defineStore('combobox', () => {
   }
 
   onMounted(() => {
-    console.log('onMounted')
+    //
   })
   onBeforeUnmount(() => {
-    console.log('onBeforeUnmount')
     organizations.value = []
   })
 

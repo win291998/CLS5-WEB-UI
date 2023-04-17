@@ -51,7 +51,7 @@ const isShowButton = ref(true)
 
 // method
 const handleFormValue = (value: any) => {
-  console.log(value)
+  //
 }
 
 const backUser = () => {
@@ -186,8 +186,6 @@ const fectchLecturers = async (id: any) => {
   await MethodsUtil.requestApiCustom(ApiUser.fetchDetailUpdate, TYPE_REQUEST.GET, params).then(value => {
     setValues(value.data)
     Promise.resolve().then(() => {
-      console.log(titleTable)
-
       titleTable.value?.checkGetListOrgStruct()
     })
   })
@@ -196,8 +194,6 @@ const fectchLecturers = async (id: any) => {
 const idUpdate = ref<null | number>(null)
 
 if (Number(route.params.id) >= 0) {
-  console.log(route.params.id)
-
   fectchLecturers(route.params.id)
   idUpdate.value = Number(route.params.id)
   emit('tabAction', 3, false)
@@ -222,19 +218,14 @@ const resetData = () => {
 
 // eslint-disable-next-line sonarjs/cognitive-complexity
 const handlesCreateUser = async (bvModalEvt: any, dataObj: any, type: any) => {
-  console.log(titleTable)
-
   const form: any = myForm.value
   if (form) {
     form.validate().then(async (success: any) => {
-      console.log(success)
-
       if (success.valid) {
         const params = dataObj
 
         await MethodsUtil.requestApiCustom(ApiUser.fetchCreateUser, TYPE_REQUEST.POST, params)
           .then(value => {
-            console.log(value)
             if (titleTable.value?.isChange)
               titleTable.value.updateTitle(value.data)
             toast('SUCCESS', t(value.message))
@@ -276,12 +267,9 @@ const handleUpdateUser = async (bvModalEvt: any, dataObj: any, type: any) => {
 
       await MethodsUtil.requestApiCustom(ApiUser.fetchUpdateUser, TYPE_REQUEST.POST, params)
         .then(value => {
-          console.log(value)
-
-          if (titleTable.value?.isChange) {
-            console.log(titleTable.value?.isChange)
+          if (titleTable.value?.isChange)
             titleTable.value.updateTitle()
-          }
+
           toast('SUCCESS', t(value.message))
           if (type === 'save') {
             router.push({ name: 'admin-organization-users-manager' })
@@ -299,7 +287,6 @@ const handleUser = (bvModalEvt: any, dataObj: any, type: any) => {
   dataObj.firstName = dataObj?.firstName.trim()
   dataObj.lastName = dataObj?.lastName.trim()
   dataObj.userName = dataObj?.userName.trim()
-  console.log(dataObj)
 
   if (idUpdate.value === null)
     handlesCreateUser(bvModalEvt, dataObj, type)

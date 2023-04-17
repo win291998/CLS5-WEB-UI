@@ -33,8 +33,6 @@ const updateModelValue = (val: boolean) => {
 }
 
 const onConfirmation = (event: boolean) => {
-  console.log(event)
-
   emit('confirm', event, statusList.value)
 }
 
