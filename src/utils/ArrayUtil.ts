@@ -21,22 +21,24 @@ export default class ArraysUtil {
     return data.reduce((object, permiss) => {
       const { permissions, ...rest } = permiss // loại bỏ permissions ra khỏi object
 
-      object[`node-${permiss.orgId ? permiss.orgId : permiss.id}`] = rest
-      object[`node-${permiss.orgId ? permiss.orgId : permiss.id}`].ids = permiss.id
-      object[`node-${permiss.orgId ? permiss.orgId : permiss.id}`].text = object[`node-${permiss.orgId ? permiss.orgId : permiss.id}`].name
+      const perId = permiss.orgId ? permiss.orgId : permiss.id
 
-      object[`node-${permiss.orgId ? permiss.orgId : permiss.id}`].permission = permiss.permissionValue
-      object[`node-${permiss.orgId ? permiss.orgId : permiss.id}`].orgPermission = permiss.orgPermissionValue
-      object[`node-${permiss.orgId ? permiss.orgId : permiss.id}`].permissionValue = 0
-      object[`node-${permiss.orgId ? permiss.orgId : permiss.id}`].orgPermissionValue = 0
-      if (root.includes(`node-${permiss.orgId ? permiss.orgId : permiss.id}`)) {
-        object[`node-${permiss.orgId ? permiss.orgId : permiss.id}`].state = {
+      object[`node-${perId}`] = rest
+      object[`node-${perId}`].ids = permiss.id
+      object[`node-${perId}`].text = object[`node-${perId}`].name
+
+      object[`node-${perId}`].permission = permiss.permissionValue
+      object[`node-${perId}`].orgPermission = permiss.orgPermissionValue
+      object[`node-${perId}`].permissionValue = 0
+      object[`node-${perId}`].orgPermissionValue = 0
+      if (root.includes(`node-${perId}`)) {
+        object[`node-${perId}`].state = {
           opened: true,
         }
       }
 
       if (permiss.permissions?.length)
-        object[`node-${permiss.orgId ? permiss.orgId : permiss.id}`].children = permiss.permissions?.map((item: any) => `node-${item.orgId ? item.orgId : item.id}`)
+        object[`node-${perId}`].children = permiss.permissions?.map((item: any) => `node-${item.orgId ? item.orgId : item.id}`)
 
       return object
     }, {})

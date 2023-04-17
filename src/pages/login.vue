@@ -120,7 +120,7 @@ function handleAfterLogin(response: any) {
         })
     }
     else {
-      router.push({ name: 'user' })
+      router.push({ name: 'admin-organization-users' })
 
       // router.push(urlParams.has('redirect') ? urlParams.get('redirect') : getHomeRouteForLoggedInUser(userData.roles))
         .then(() => {

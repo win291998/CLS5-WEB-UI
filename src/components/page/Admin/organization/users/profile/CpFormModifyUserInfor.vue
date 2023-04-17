@@ -270,11 +270,11 @@ const handlesCreateUser = async (bvModalEvt: any, dataObj: any, type: any) => {
 const handleUpdateUser = async (bvModalEvt: any, dataObj: any, type: any) => {
   const form: any = myForm.value
 
-  form.validate().then(async (success: any) => {
+  form.validate().then((success: any) => {
     if (success.valid) {
       const params = dataObj
 
-      await MethodsUtil.requestApiCustom(ApiUser.fetchUpdateUser, TYPE_REQUEST.POST, params)
+      MethodsUtil.requestApiCustom(ApiUser.fetchUpdateUser, TYPE_REQUEST.POST, params)
         .then(value => {
           console.log(value)
 
@@ -290,6 +290,9 @@ const handleUpdateUser = async (bvModalEvt: any, dataObj: any, type: any) => {
           }
           if (type === 'save-add')
             resetData()
+        })
+        .catch(err => {
+          console.log(err)
         })
     }
   })
