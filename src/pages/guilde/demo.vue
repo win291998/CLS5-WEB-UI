@@ -87,7 +87,10 @@ const action = [{
   action: handleItem2,
   prependItem: {
     value: true,
-    action: () => { console.log(action) },
+    action: () => {
+      //
+
+    },
   },
 },
 {
@@ -96,7 +99,9 @@ const action = [{
   action: handleItem2,
   prependItem: {
     value: true,
-    action: () => { console.log(action) },
+    action: () => {
+      //
+    },
   },
 },
 {
@@ -109,7 +114,6 @@ const action = [{
 }]
 
 const handleClick = (value: any) => {
-  console.log(1)
 
   // console.log(action)
 }
@@ -135,7 +139,7 @@ const toast = useToast()
 const button123 = ref(null)
 
 const abcd = (val: any) => {
-  console.log(val)
+  //
 }
 </script>
 

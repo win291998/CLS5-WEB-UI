@@ -35,7 +35,9 @@ const action = [{
   // action: handleItem2,
   prependItem: {
     value: true,
-    action: () => { console.log(action) },
+    action: () => {
+      //
+    },
   },
 },
 {

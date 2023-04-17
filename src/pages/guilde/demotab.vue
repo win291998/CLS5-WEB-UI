@@ -9,8 +9,6 @@ interface Props {
 }
 const props = withDefaults(defineProps<Props>(), ({}))
 
-console.log(props.emit)
-
 const abc = ref('hello')
 const { emitEvent } = props.emit()
 </script>

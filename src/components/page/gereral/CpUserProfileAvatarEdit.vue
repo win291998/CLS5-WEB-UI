@@ -37,7 +37,6 @@ const serverfile = window.SERVER_FILE || ''
 
 const hanleClickAvatar = () => {
   inputImage.value?.click()
-  console.log(inputImage)
 }
 
 const uploadFile = async (model: any) => {
@@ -45,7 +44,6 @@ const uploadFile = async (model: any) => {
 
   formData.append('IsSecure', model.isSecure)
 
-  console.log(formData)
   formData.append('files', model.files)
   if (model.IsBackground)
     formData.append('IsBackground ', model.IsBackground)
@@ -54,7 +52,6 @@ const uploadFile = async (model: any) => {
   const userData = JSON.parse(`${window.localStorage.getItem('userData')}`)
   if (userData)
     formData.append('UserId', userData.id)
-  console.log(formData.getAll('UserId'))
 
   try {
     const res = await MethodsUtil.requestApiCustom(CommonService.SERVERFILE, TYPE_REQUEST.POST, formData).then(value => value)
@@ -81,8 +78,6 @@ const onFileSelected = async (e: any) => {
     files: file,
     isSecure: false,
   }
-
-  console.log(model)
 
   isLoading.value = true
 

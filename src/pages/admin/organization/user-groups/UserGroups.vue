@@ -4,6 +4,10 @@ import MethodsUtil from '@/utils/MethodsUtil'
 import type { Params } from '@/typescript/interface/params'
 import { TYPE_REQUEST } from '@/typescript/enums/enums'
 import CpContent from '@/components/page/Admin/organization/user-group/CpContent.vue'
+import toast from '@/plugins/toast'
+import router from '@/router'
+
+const CpConfirmDialog = defineAsyncComponent(() => import('@/components/page/gereral/CpConfirmDialog.vue'))
 
 const CpHeaderACtion = defineAsyncComponent(() => import('@/components/page/Admin/organization/user-group/CpHeaderAction.vue'))
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
@@ -29,14 +33,14 @@ const headers = reactive([
 const items = ref([])
 const totalRecord = ref<number>()
 
-const params = ref<Params>({
+const params = reactive<Params>({
   search: '',
   pageNumber: 1,
   pageSize: 10,
 })
 
 const fetchData = async () => {
-  const { data } = await MethodsUtil.requestApiCustom(ApiGroupUser.ListGroup, TYPE_REQUEST.GET, params.value)
+  const { data } = await MethodsUtil.requestApiCustom(ApiGroupUser.ListGroup, TYPE_REQUEST.GET, params)
 
   items.value = data.listData
   totalRecord.value = data.totalRecord
@@ -44,10 +48,42 @@ const fetchData = async () => {
 
 fetchData()
 
-const searchGroupUser = (val: any) => {
-  params.value.search = val
-  params.value.pageNumber = 1
+watch(params, val => {
+  if (val.search) {
+    params.pageNumber = 1
+
+    return
+  }
   fetchData()
+})
+
+const searchGroupUser = (val: any) => {
+  params.search = val
+  params.pageNumber = 1
+  fetchData()
+}
+
+// Chỉnh sửa
+const editGroupUser = (id: number) => {
+  router.push({ name: 'admin-organization-user-groups-edit', params: { id, tab: 'info' } })
+}
+
+// Xóa từng item
+const listId = ref<number[]>([])
+const isShowModalConfirmDelete = ref(false)
+
+const showModalConfirmDelete = (val: number[]) => {
+  listId.value = val
+  isShowModalConfirmDelete.value = true
+}
+
+const handleDeleteUserGroup = () => {
+  MethodsUtil.requestApiCustom(ApiGroupUser.DeleteGroup, TYPE_REQUEST.POST, { listModels: listId.value }).then(res => {
+    toast('SUCCESS', t('calendar.success-delete-group-user'))
+    fetchData()
+  }).catch(() => {
+    toast('ERROR', t('error'))
+  })
 }
 
 /**
@@ -59,29 +95,57 @@ const HEADER = Object.freeze({
   BUTTON_EXCEL: t('export-excel'),
   BUTTON_ADD: t('common.add'),
 })
+
+const listItemButtonGroup = [
+  {
+    title: 'Thêm từ tập tin',
+    icon: 'file-plus',
+    key: 'importFile',
+  },
+  {
+    title: 'Thêm người dùng từ tập tin',
+    icon: 'file-plus',
+    key: 'importFileUser',
+  },
+]
 </script>
 
 <template>
   <div class="w-100">
     <CpHeaderACtion
+      :is-show-add="false"
+      :list-item-button-group="listItemButtonGroup"
       :title-page="HEADER.TITLE_PAGE"
       :button-add="HEADER.BUTTON_ADD"
-      :button-excel="HEADER.BUTTON_EXCEL"
+      :button-prepend="HEADER.BUTTON_EXCEL"
       @update:key-search="searchGroupUser"
+      @click-add="router.push({ name: 'admin-organization-user-groups-add', params: { tab: 'info' } })"
     />
   </div>
   <div class="w-100 mt-3">
     <CpContent
       v-model:pageNumber="params.pageNumber"
+      v-model:list-id="listId"
       :headers="headers"
       :items="items"
       :total-record="totalRecord"
       :tootlip-report="TABLE.TOOLTIP_REPORT"
       :tootlip-delete="TABLE.TOOLTIP_DELETE"
       :tootlip-edit="TABLE.TOOLTIP_EDIT"
+      :is-show-delete="true"
+      :is-show-edit="true"
+      :is-show-report="true"
+      @update:data-delete="showModalConfirmDelete"
+      @update:data-detail="editGroupUser($event.id)"
     />
     <!-- @change:page-number="fetchData" -->
   </div>
+  <CpConfirmDialog
+    v-model:is-dialog-visible="isShowModalConfirmDelete"
+    :type="1"
+    :confirmation-msg="t('users.user-group.warning-delete')"
+    @confirm="handleDeleteUserGroup"
+  />
 </template>
 
 <style lang="scss">

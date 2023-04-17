@@ -14,10 +14,10 @@ export const userManagerStore = defineStore('userManager', () => {
   const idUser = ref()
 
   onMounted(() => {
-    console.log('onMounted')
+    //
   })
   onBeforeUnmount(() => {
-    console.log('onBeforeUnmount')
+    //
   })
 
   return { idUser }

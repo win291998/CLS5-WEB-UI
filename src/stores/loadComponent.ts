@@ -18,7 +18,6 @@ export const load = defineStore('load', () => {
   }
 
   const unLoadComponent = (index: number) => {
-    console.log('index', index)
     components.value[index] = false
   }
 

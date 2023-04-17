@@ -9,7 +9,10 @@ const items = route?.meta?.breadcrumb as any
 </script>
 
 <template>
-  <div v-if="route.meta.breadcrumb && route.meta.breadcrumb.length">
+  <div
+    v-if="route.meta.breadcrumb && route.meta.breadcrumb.length"
+    class="mb-6"
+  >
     <VBreadcrumbs
       :items="items"
       class="breadcrumb"

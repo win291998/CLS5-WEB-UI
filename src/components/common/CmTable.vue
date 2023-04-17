@@ -52,6 +52,7 @@ interface Props {
   totalRecord?: number
   minHeight?: number
   isActionFooter?: boolean
+  pageNumber?: number
 }
 interface Emit {
   (e: 'handleClickRow', dataRow: object, index: number): void
@@ -60,6 +61,7 @@ interface Emit {
   (e: 'checkedAll', checkedAll: boolean, data: object): void
   (e: 'changeCellvalue', value: string, field: string, key: number): void
   (e: 'handlePageClick', page: number): void
+  (e: 'update:pageNumber', page: number): void
 
 }
 
@@ -85,7 +87,6 @@ const keyid = computed(() => {
 })
 
 const pageSize = ref(props.pageSize) // số lượng item trên 1 page
-const currentPage = ref<number>(Globals.PAGINATION_CURRENT_PAGE) // item hiện tại
 
 /** method */
 // cập nhật selectedRows
@@ -173,8 +174,8 @@ const updateRowsPerPageSelect = (e: number) => {
 
 // thay đổi số lượng item trên trang
 const pageSizeChange = (page: number, size: number) => {
-  currentPage.value = page
   pageSize.value = size
+  emit('update:pageNumber', page)
   emit('handlePageClick', page)
   updateRowsPerPageSelect(size)
 
@@ -370,7 +371,7 @@ watch(() => props.items, value => {
     <div class="customize-footer">
       <CmPagination
         :total-items="totalRecord"
-        :current-page="currentPage"
+        :current-page="props.pageNumber"
         @pageClick="pageSizeChange"
       />
     </div>

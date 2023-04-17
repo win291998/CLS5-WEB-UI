@@ -35,9 +35,9 @@ interface Props {
   hide: boolean
   listTab: tab[]
   type?: typeof typeTab[any]
-  isSmall: boolean
-  label: string
-  routeName: string
+  isSmall?: boolean
+  label?: string
+  routeName?: string
   dataGeneral?: any // hạn chế dùng
 }
 const router = useRouter()

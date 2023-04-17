@@ -4528,5 +4528,7 @@
   "Are-you-sure-you-want-to-delete-the-ability-group?": "Bạn có chắc chắn muốn xóa nhóm năng lực?",
   "list-group-user": "Danh sách nhóm người dùng",
   "export-excel": "Xuất Excel",
-  "org-duplicate": "Cơ cấu tổ chức không được để trống và không đươc phép trùng"
+  "org-duplicate": "Cơ cấu tổ chức không được để trống và không đươc phép trùng",
+  "add-user-group": "Thêm nhóm người dùng",
+  "edit-user-group": "Chỉnh sửa nhóm người dùng"
 }
