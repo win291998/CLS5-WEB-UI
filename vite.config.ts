@@ -15,19 +15,18 @@ export default defineConfig(({ mode }) => {
 
   let host
   let httpsOptions
-  if (mode === 'development')
+  if (mode === 'development') {
     host = env.VUE_APP_BASE_HOST
-
-  // httpsOptions = {
-  //   key: fs.readFileSync(`./cert/${host}-key.pem`),
-  //   cert: fs.readFileSync(`./cert/${host}.pem`),
-  // }
+    httpsOptions = {
+      key: fs.readFileSync(`./cert/${host}-key.pem`),
+      cert: fs.readFileSync(`./cert/${host}.pem`),
+    }
+  }
 
   return {
     server: {
       host: mode === 'development' ? host : false,
       https: mode === 'development' ? httpsOptions : false,
-      hmr: false,
     },
     define: {
       'process.env': {

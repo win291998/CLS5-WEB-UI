@@ -92,13 +92,8 @@ const { values, setValues, resetForm } = useForm({
 })
 
 /** event dialog */
-const updateModelValue = (val: boolean, type: string) => {
-  console.log(type === 'confirm')
-
-  if (type === 'confirm')
-    return
-
-  emit('update:isDialogVisible', val, 'EDUCATION')
+const cancelModal = () => {
+  emit('update:isDialogVisible', false, 'EDUCATION')
 }
 
 const myFormEducation = ref(null)
@@ -123,9 +118,9 @@ const addEducation = () => {
     emit('update:profile', window._.clone(values), true)
 }
 
-const onConfirmation = (event: boolean) => {
+const onConfirmation = () => {
   const form: any = myFormEducation.value
-  if (form && event) {
+  if (form) {
     form.validate().then((success: any) => {
       console.log(success)
       if (success.valid) {
@@ -153,7 +148,7 @@ watch(() => props.isDialogVisible, value => {
     :is-dialog-visible="isDialogVisible"
     :title="DATA_LABEL.TITLE"
     persistent
-    @update:is-dialog-visible="updateModelValue"
+    @cancel="cancelModal"
     @confirm="onConfirmation"
   >
     <template #content>

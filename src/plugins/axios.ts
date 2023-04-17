@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { reject } from 'lodash'
 import AuthUtil from '@/auth'
 import jwtDefaultConfig from '@/auth/jwtDefaultConfig'
 
@@ -96,8 +95,6 @@ axiosIns.interceptors.response.use(
       })
     }
 
-    return Promise.reject(error)
-
     // if (response && response.status === 401) {
     //   localStorage.clear()
     //   if (window.location.pathname !== '/login')
@@ -109,6 +106,7 @@ axiosIns.interceptors.response.use(
     // else if (response && response.status === 403) {
     //   // window.location = '/not-authorized'
     // }
+    return Promise.reject(error?.response?.data)
   },
 )
 export default axiosIns

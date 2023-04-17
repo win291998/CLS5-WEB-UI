@@ -385,7 +385,7 @@ fectchListUsers()
       </div>
     </template>
   </CpConfirmDialog>
-  <CpModalUpdateStatus />
+  <CpModalUpdateStatus :is-dialog-visible="false" />
 </template>
 
 <style lang="scss">

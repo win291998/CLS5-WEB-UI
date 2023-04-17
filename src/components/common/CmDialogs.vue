@@ -15,8 +15,8 @@ interface Props {
 }
 
 interface Emit {
-  (e: 'update:isDialogVisible', value: boolean, type?: string): void
-  (e: 'confirm', value: boolean): void
+  (e: 'cancel', type?: string): void
+  (e: 'confirm', type?: string): void
 }
 
 const props = withDefaults(defineProps<Props>(), ({
@@ -34,24 +34,19 @@ const CmButton = defineAsyncComponent(() => import('@/components/common/CmButton
 
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 
-const updateModelValue = (val: boolean, type?: string) => {
-  emit('update:isDialogVisible', val, type)
+const onCancel = () => {
+  emit('cancel')
 }
 
 const onConfirmation = () => {
-  console.log(123)
-
-  emit('confirm', true)
-  updateModelValue(false, 'confirm')
+  emit('confirm')
 }
 
-const onCancel = () => {
-  emit('confirm', false)
-  emit('update:isDialogVisible', false)
+const onDialogShown = (e: any) => {
+  console.log('onDialogShown', e)
 }
-
-const handleDialogClose = e => {
-  emit('update:isDialogVisible', true)
+const onDialogHidden = (e: any) => {
+  console.log('onDialogHidden', e)
 }
 </script>
 
@@ -63,8 +58,9 @@ const handleDialogClose = e => {
     <VDialog
       :model-value="props.isDialogVisible"
       width="800"
-      :persistent="persistent"
-      @update:model-value="updateModelValue"
+      :persistent="props.persistent"
+      @update:model-value="onCancel"
+      @before-enter="onDialogShown"
     >
       <CmCard backgroud="bg-white">
         <template #title>
