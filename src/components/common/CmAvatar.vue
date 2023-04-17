@@ -10,6 +10,7 @@ interface Props {
   size?: number
   className?: string
   isClassicBorder?: boolean
+  data?: string
 }
 
 /** ** Khởi tạo prop emit */
@@ -26,6 +27,40 @@ const prefixColor = computed(() => {
 
   return `btn-${props.color}`
 })
+
+const getAvatarName = (data: any) => {
+  if (data.firstName && data.lastName) {
+    let firstName = 'F'
+    if (data.firstName.length > 0)
+      firstName = data.firstName[0].toUpperCase()
+
+    let lastName = 'L'
+    if (data.lastName.length > 0)
+      lastName = data.lastName[0].toUpperCase()
+
+    return `${firstName}${lastName}`
+  }
+  if (data.name != null) {
+    const strs = data.name.split(' ')
+    if (strs.length > 1) {
+      const firstname = strs[0]
+      const lastName = strs[1]
+
+      return firstname[0].toUpperCase() + lastName[0].toUpperCase()
+    }
+  }
+  if (data.userName && data.userName != null) {
+    const strs = data.userName.split(' ')
+    if (strs.length > 1) {
+      const firstname = strs[0]
+      const lastName = strs[1]
+
+      return firstname[0].toUpperCase() + lastName[0].toUpperCase()
+    }
+  }
+
+  return 'FN'
+}
 </script>
 
 <template>
@@ -44,7 +79,7 @@ const prefixColor = computed(() => {
     <span
       v-else
       :style="{ fontSize: `${size / 2}px` }"
-    ><slot /></span>
+    >{{ getAvatarName(data) }}</span>
   </VAvatar>
 </template>
 

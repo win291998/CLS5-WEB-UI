@@ -63,8 +63,8 @@ const router = createRouter({
   routes: [
     ...setupLayouts(generalRoutes),
   ],
-  scrollBehavior() {
-    return { top: 0 }
+  scrollBehavior(to, from, savePosition) {
+    return { ...savePosition }
   },
 })
 
@@ -93,7 +93,7 @@ router.beforeEach((to: RouteLocationNormalized, from: RouteLocationNormalized, n
       next(getHomeRouteForLoggedInUser(userData ? userData.roles : null))
     }
 
-    if (!(Number(permission[key]) & 1))
+    if (!(Number(permission[key]) & requireAuth.permissionValue))
       return next({ name: 'error-403' })
 
     return next()

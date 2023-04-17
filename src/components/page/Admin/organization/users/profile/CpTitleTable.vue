@@ -72,7 +72,7 @@ const getTitleByOrg = async (orStructureId: any) => {
     orStructureId,
   }
 
-  const res = await MethodsUtil.requestApiCustom(ApiUser.GetListTitle, TYPE_REQUEST.POST, params)
+  return await MethodsUtil.requestApiCustom(ApiUser.GetListTitle, TYPE_REQUEST.POST, params)
     .then(value => {
       if (value?.data?.pageLists?.length > 0) {
         value.data.pageLists = value.data.pageLists.map((x: any) => ({ value: x.id, text: x.name, orgId: x.organizationalStructureId }))
@@ -82,10 +82,6 @@ const getTitleByOrg = async (orStructureId: any) => {
 
       return []
     })
-
-  console.log(res)
-
-  return res
 }
 
 const findIndex = (index: any, data: any) => {
@@ -105,8 +101,6 @@ const changeOrg = async (index: any, val: any) => {
   }
   const changedValue = items.value[indexItem]
   const listTitle = await getTitleByOrg(val)
-
-  console.log(indexItem, val, listTitle)
 
   changedValue.id = val
   changedValue.titleId = null

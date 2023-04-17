@@ -108,7 +108,6 @@ const resetEducationModal = () => {
 }
 
 const updateEducation = (dataEdit: any, index: any) => {
-  console.log(dataEdit)
   data.educationData.degreeId = dataEdit.degreeId
   data.educationData.description = dataEdit.description
   data.educationData.graduationYear = dataEdit.graduationYear

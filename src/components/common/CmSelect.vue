@@ -54,8 +54,6 @@ const messageError = computed(() => {
 })
 
 const handleChangeValue = (e: any) => {
-  console.log(valueCurrent.value)
-
   emit('update:modelValue', valueCurrent.value)
 }
 
@@ -68,8 +66,6 @@ const open = (e: any) => {
 }
 
 const close = (e: any) => {
-  console.log(!valueCurrent.value && !props.multiple)
-
   if (!valueCurrent.value && !props.multiple)
     valueCurrent.value = stackValue.value
 }
@@ -108,7 +104,6 @@ const fetchOptions = (options: any, search: any) => {
 
 watch(() => props.modelValue, newValue => {
   valueCurrent.value = newValue
-  console.log(newValue)
 }, { immediate: true })
 </script>
 

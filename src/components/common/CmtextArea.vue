@@ -79,12 +79,20 @@ const handleUpdate = (event: any) => {
     :label="label"
     :max-errors="maxErrors"
     :max-rows="maxRows"
+    rows="4"
     :messages="messages"
     :model-modifiers="modelModifiers"
     :name="name"
     :no-resize="noResize"
     :persistent-clear="persistentClear"
     :persistent-counter="persistentCounter"
-    @update:model-value="handleUpdate"
+    @update:model-value="emit('update:model-value', formModelValue)"
   />
 </template>
+
+<style lang="scss" scoped>
+.text-area {
+  height: unset;
+}
+</style>
+

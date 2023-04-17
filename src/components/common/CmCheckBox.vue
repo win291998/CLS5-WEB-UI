@@ -79,50 +79,52 @@ watch(() => propsValue.modelValue, value => {
 </script>
 
 <template>
-  <VTooltip
-    :text="propsValue.tooltipLabel"
-    offset="10"
-    location="start"
-    :disabled="!propsValue.tooltip"
-  >
-    <template #activator="{ props }">
-      <span v-bind="props">
-        <div class="mb-1">
-          <label class="text-medium-sm color-dark"> {{ text }}</label>
-        </div>
-        <VCheckbox
-          v-bind="field"
-          :id="propsValue.id"
-          :class="`color-${propsValue.color}`"
-          :disabled="propsValue.disabled"
-          :indeterminate="propsValue.indeterminate"
-          :error="propsValue.error"
-          :error-messages="propsValue.errorMessages"
-          :false-icon="propsValue.falseIcon"
-          :false-value="propsValue.falseValue"
-          :focused="propsValue.focused"
-          :hide-details="propsValue.hideDetails"
-          :indeterminate-icon="propsValue.indeterminateIcon"
-          :inline="propsValue.inline"
-          label="propsValue.label"
-          :multiple="propsValue.multiple"
-          :prepend-icon="propsValue.prependIcon"
-          :ripple="propsValue.ripple"
-          :rules="propsValue.rules"
-          :name="propsValue.name"
-          :readonly="propsValue.readonly"
-          :type="propsValue.type"
-          :true-icon="propsValue.trueIcon"
-          :true-value="propsValue.trueValue"
-          @update:modelValue="onChangeChecked($event)"
-        >
-          <template #label>
-            <slot />
-          </template>
-        </VCheckbox>
-      </span>
-    </template>
-  </VTooltip>
+  <div>
+    <VTooltip
+      :text="propsValue.tooltipLabel"
+      offset="10"
+      location="start"
+      :disabled="!propsValue.tooltip"
+    >
+      <template #activator="{ props }">
+        <span v-bind="props">
+          <div class="mb-1">
+            <label class="text-medium-sm color-dark"> {{ text }}</label>
+          </div>
+          <VCheckbox
+            :id="propsValue.id"
+            v-model="checkbox"
+            :class="`color-${propsValue.color}`"
+            :disabled="propsValue.disabled"
+            :indeterminate="propsValue.indeterminate"
+            :error="propsValue.error"
+            :error-messages="propsValue.errorMessages"
+            :false-icon="propsValue.falseIcon"
+            :false-value="propsValue.falseValue"
+            :focused="propsValue.focused"
+            :hide-details="propsValue.hideDetails"
+            :indeterminate-icon="propsValue.indeterminateIcon"
+            :inline="propsValue.inline"
+            label="propsValue.label"
+            :multiple="propsValue.multiple"
+            :prepend-icon="propsValue.prependIcon"
+            :ripple="propsValue.ripple"
+            :rules="propsValue.rules"
+            :name="propsValue.name"
+            :readonly="propsValue.readonly"
+            :type="propsValue.type"
+            :true-icon="propsValue.trueIcon"
+            :true-value="propsValue.trueValue"
+            @update:modelValue="onChangeChecked($event)"
+          >
+            <template #label>
+              <slot />
+            </template>
+          </VCheckbox>
+        </span>
+      </template>
+    </VTooltip>
+  </div>
 </template>
 
 <style lang="scss">

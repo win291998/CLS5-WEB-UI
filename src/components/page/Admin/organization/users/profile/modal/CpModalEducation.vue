@@ -56,8 +56,6 @@ const DATA_LABEL = Object.freeze({
 
 const fetchNameSchools = async () => {
   await MethodsUtil.requestApiCustom(ApiUser.fetchNameSchools, TYPE_REQUEST.GET).then(value => {
-    console.log(value)
-
     data.nameSchoolsCombobox = value.data
   })
 }
@@ -67,7 +65,6 @@ fetchNameSchools()
 // get bằng cấp trình độ '
 const fetchDegrees = async () => {
   await MethodsUtil.requestApiCustom(ApiUser.fetchDegrees, TYPE_REQUEST.GET).then(value => {
-    console.log(value)
     data.degreesCombobox = value.data
   })
 }
@@ -122,24 +119,15 @@ const onConfirmation = () => {
   const form: any = myFormEducation.value
   if (form) {
     form.validate().then((success: any) => {
-      console.log(success)
-      if (success.valid) {
-        console.log(success)
+      if (success.valid)
         addEducation()
-      }
-
-      console.log(values)
     })
   }
 }
 
 watch(() => props.isDialogVisible, value => {
-  console.log('props:', props.educationData?.isEdit)
-
-  if (value && !props.educationData?.isEdit) {
-    console.log('resetForm:', value)
+  if (value && !props.educationData?.isEdit)
     resetForm()
-  }
 })
 </script>
 

@@ -34,7 +34,7 @@ const listTab = [
 const dataForm: any = ref({})
 
 const changeDataFormInfor = (data: any) => {
-  console.log(data)
+  //
 }
 </script>
 

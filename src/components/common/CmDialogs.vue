@@ -1,4 +1,11 @@
+<!-- eslint-disable vue/require-default-prop -->
 <script setup lang="ts">
+import type { sizeDialog } from '@/typescript/enums/enums'
+
+/**
+ * @size ['sm', 'lg', 'xl'] tương đương ['300','800','1200']
+ *
+ * */
 interface Props {
   title?: string
   subTitle?: string
@@ -12,6 +19,9 @@ interface Props {
   buttonCancleName?: string
   isHideFooter?: boolean
   persistent?: boolean
+  size?: typeof sizeDialog[] | string
+  disabledOk?: boolean
+  disabledCancel?: boolean
 }
 
 interface Emit {
@@ -26,6 +36,7 @@ const props = withDefaults(defineProps<Props>(), ({
   buttonCancleName: 'common.cancel-title',
   isHideFooter: false,
   persistent: false,
+  size: 'lg',
 }))
 
 const emit = defineEmits<Emit>()
@@ -48,6 +59,19 @@ const onDialogShown = (e: any) => {
 const onDialogHidden = (e: any) => {
   console.log('onDialogHidden', e)
 }
+
+const sizeModal = computed(() => {
+  switch (props.size) {
+    case 'sm':
+      return '300'
+    case 'lg':
+      return '800'
+    case 'xl':
+      return '1200'
+    default:
+      break
+  }
+})
 </script>
 
 <template>
@@ -57,7 +81,7 @@ const onDialogHidden = (e: any) => {
   >
     <VDialog
       :model-value="props.isDialogVisible"
-      width="800"
+      :width="sizeModal"
       :persistent="props.persistent"
       @update:model-value="onCancel"
       @before-enter="onDialogShown"
@@ -85,6 +109,7 @@ const onDialogHidden = (e: any) => {
               variant="outlined"
               bg-color="bg-white"
               color="dark"
+              :disabled="disabledCancel"
               text-color="color-dark"
               @click="onCancel"
             >
@@ -93,6 +118,7 @@ const onDialogHidden = (e: any) => {
 
             <CmButton
               variant="elevated"
+              :disabled="disabledOk"
               :color="color"
               @click="onConfirmation"
             >

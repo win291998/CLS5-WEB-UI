@@ -32,7 +32,6 @@ const formFilter = reactive({
 // method
 
 const change = () => {
-  console.log(formFilter)
   emit('update', formFilter)
 }
 

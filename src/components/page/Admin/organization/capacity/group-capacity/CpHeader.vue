@@ -23,9 +23,7 @@ interface Emit {
   (e: 'showAdd'): void
   (e: 'deleteMultiple'): void
 }
-console.log(props.isDisableDelete)
 watch(() => props.isDisableDelete, val => {
-  console.log(props.isDisableDelete)
 })
 </script>
 

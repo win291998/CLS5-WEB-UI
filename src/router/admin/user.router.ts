@@ -1,5 +1,3 @@
-import i18n from '@/plugins/i18n'
-
 export default [
   {
     path: 'guilde/tree-select',
@@ -62,6 +60,7 @@ export default [
         meta: {
           requireAuth: {
             permissionKey: 'UserManaging',
+            permissionValue: 1,
           },
         },
         name: 'admin-organization-users',
@@ -122,6 +121,7 @@ export default [
         meta: {
           requireAuth: {
             permissionKey: 'UserGroupManaging',
+            permissionValue: 1,
           },
         },
         children: [
@@ -131,8 +131,45 @@ export default [
             component: () => import('@/pages/admin/organization/user-groups/UserGroups.vue'),
           },
           {
-            path: 'add',
+            path: ':tab/add',
+            meta: {
+              requireAuth: {
+                permissionKey: 'UserGroupManaging',
+                permissionValue: 2,
+              },
+              breadcrumb: [
+                {
+                  title: 'list-group-user',
+                  to: { name: 'admin-organization-user-groups' },
+                },
+                {
+                  title: 'common.add',
+                  active: true,
+                },
+              ],
+            },
             name: 'admin-organization-user-groups-add',
+            component: () => import('@/pages/admin/organization/user-groups/Edit/EditUserGroup.vue'),
+          },
+          {
+            path: ':tab/edit/:id',
+            meta: {
+              requireAuth: {
+                permissionKey: 'UserGroupManaging',
+                permissionValue: 4,
+              },
+              breadcrumb: [
+                {
+                  title: 'list-group-user',
+                  to: { name: 'admin-organization-user-groups' },
+                },
+                {
+                  title: 'common.add',
+                  active: true,
+                },
+              ],
+            },
+            name: 'admin-organization-user-groups-edit',
             component: () => import('@/pages/admin/organization/user-groups/Edit/EditUserGroup.vue'),
           },
         ],

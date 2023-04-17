@@ -29,7 +29,10 @@ const action = [{
   // action: handleItem2,
   prependItem: {
     value: true,
-    action: () => { console.log(action) },
+    action: () => {
+      //
+
+    },
   },
 },
 {
@@ -39,7 +42,9 @@ const action = [{
   // action: handleItem2,
   prependItem: {
     value: true,
-    action: () => { console.log(action) },
+    action: () => {
+      //
+    },
   },
 },
 {
@@ -58,13 +63,10 @@ interface Emit {
 }
 
 const onCancel = () => {
-  console.log('onCancel')
-
   emit('onCancel')
 }
 
 const handlerPreButton = event => {
-  console.log('onSave')
   emit('onSave', event)
 }
 </script>
