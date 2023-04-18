@@ -39,6 +39,7 @@ const LABEL = Object.freeze({
   TEXT_STATUS: `${t('common.status-name')}*`,
   PLACEHOLDER_STATUS: t('common.status-name'),
 })
+const formUserInfor = ref()
 
 // method
 const handleFormValue = (value: any) => {
@@ -72,11 +73,14 @@ const isOwner = computed(() => {
 
 if (Number(route.params.id) >= 0)
   titleTable.value?.checkGetListOrgStruct()
+onMounted(() => {
+  myFormUserInfor.value = formUserInfor.value
+})
 </script>
 
 <template>
   <Form
-    ref="myFormUserInfor"
+    ref="formUserInfor"
     :validation-schema="schema"
     @submit.prevent="submitForm"
   >

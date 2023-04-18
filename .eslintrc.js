@@ -68,13 +68,13 @@ module.exports = {
     'vue/valid-v-slot': 'off',
     'sonarjs/no-small-switch': 'off',
 
-    'padding-line-between-statements': [
-      'error',
-      { blankLine: 'always', prev: 'expression', next: 'const' },
-      { blankLine: 'always', prev: 'const', next: 'expression' },
-      { blankLine: 'always', prev: 'multiline-const', next: '*' },
-      { blankLine: 'always', prev: '*', next: 'multiline-const' },
-    ],
+    // 'padding-line-between-statements': [
+    //   'error',
+    //   { blankLine: 'always', prev: 'expression', next: 'const' },
+    //   { blankLine: 'always', prev: 'const', next: 'expression' },
+    //   { blankLine: 'always', prev: 'multiline-const', next: '*' },
+    //   { blankLine: 'always', prev: '*', next: 'multiline-const' },
+    // ],
 
     // Plugin: eslint-plugin-import
     'import/prefer-default-export': 'off',

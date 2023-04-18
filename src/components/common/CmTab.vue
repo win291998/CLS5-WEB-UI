@@ -10,7 +10,7 @@ import type { typeTab } from '@/typescript/enums/enums'
  * const { emitEvent } = props.emit()
  * emitEvent('name', abc) dùng như emit mặc định của vue
  *
- * */
+  */
 const props = withDefaults(defineProps<Props>(), ({
   listTab: () => ([]),
   type: 'button',
@@ -27,7 +27,7 @@ interface tab {
   key: string
   title?: string
   icon?: string
-  component: any // truyền thẳng component vào nếu dùng composition api, còn không thì truyền string tên component
+  component?: any // truyền thẳng component vào nếu dùng composition api, còn không thì truyền string tên component
   dataTab?: any // Dữ liệu riêng của từng tab
   isDisabled?: boolean
 }
@@ -97,15 +97,21 @@ const useEmitter = () => {
     </div>
 
     <div
-      v-if="tabActive?.component"
+      v-for="item in listTab"
+      :key="item.key"
       class="content-tab"
     >
-      <Component
-        :is="tabActive?.component"
-        :emit="useEmitter"
-        :data-general="dataGeneral"
-        v-bind="tabActive.dataTab"
-      />
+      {{ item.key === route.params[props.label] }}
+      <div
+        v-show="item.key === route.params[props.label]"
+      >
+        <Component
+          :is="item?.component"
+          :emit="useEmitter"
+          :data-general="dataGeneral"
+          v-bind="tabActive.dataTab"
+        />
+      </div>
     </div>
   </div>
 </template>

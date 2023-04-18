@@ -53,7 +53,6 @@ const backUser = () => {
  */
 if (route.params.id)
   fectchLecturers(route.params.id)
-console.log(accountInformation)
 </script>
 
 <template>
@@ -63,9 +62,11 @@ console.log(accountInformation)
   >
     <CmTab
       :list-tab="listTab"
+      label="tab"
       type="button"
     />
   </div>
+
   <VSheet
     width="100%"
     class="user-infor mx-auto no-background my-5"

@@ -195,6 +195,7 @@ export const profileUserManagerStore = defineStore('profileUserManager', () => {
  */
   const handleUpdateUser = async (bvModalEvt: any, dataObj: any, type: any) => {
     const form: any = myFormUserInfor.value
+    console.log(myFormUserInfor)
 
     form.validate().then(async (success: any) => {
       console.log(success)
