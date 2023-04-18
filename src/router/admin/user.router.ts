@@ -73,7 +73,7 @@ export default [
             component: () => import('@/pages/admin/organization/users/Users.vue'),
           },
           {
-            path: 'profile/:tabActive',
+            path: 'profile/:tab',
             name: 'admin-organization-users-profile-add',
             meta: {
               parent: 'users',
@@ -93,7 +93,7 @@ export default [
             component: () => import('@/pages/admin/organization/users/profile/Profile.vue'),
           },
           {
-            path: 'profile/:tabActive/:id',
+            path: 'profile/:tab/:id',
             name: 'admin-organization-users-profile-edit',
             meta: {
               parent: 'users',

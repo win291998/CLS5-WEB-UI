@@ -251,7 +251,9 @@ const handleUpdateExperences = (experences: any, edit: boolean) => {
 </script>
 
 <template>
-  <Form class="my-5">
+  <Form
+    class="my-5"
+  >
     <VSheet
       width="100%"
       class="user-infor mx-auto no-background"
