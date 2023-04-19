@@ -148,121 +148,119 @@ watch(() => props.isDialogVisible, value => {
     @cancel="onCancel"
     @confirm="onConfirmation"
   >
-    <template #content>
-      <Form ref="myFormExperence">
-        <VRow>
-          <VCol
-            cols="12"
-            md="6"
-          >
-            <!-- tên CÔNG TY -->
-            <div class="mt-2">
-              <Field
-                v-slot="{ field, errors }"
-                v-model="values.companyName"
-                name="companyName"
-                :rules="schema.companyName"
-              >
-                <CmTextField
-                  :field="field"
-                  :errors="errors"
-                  :text="DATA_LABEL.LABEL_COMPANY"
-                  :placeholder="DATA_LABEL.LABEL_COMPANY"
-                />
-              </Field>
-            </div>
-            <!-- tên vị trí -->
-            <div class="mt-2">
-              <Field
-                v-slot="{ field, errors }"
-                v-model="values.position"
-                name="position"
-                :rules="schema.position"
-              >
-                <CmTextField
-                  :field="field"
-                  :errors="errors"
-                  :text="DATA_LABEL.LABEL_POSITION"
-                  :placeholder="DATA_LABEL.LABEL_POSITION"
-                />
-              </Field>
-            </div>
-            <!-- Nơi làm việc -->
-            <div class="mt-2">
-              <Field
-                name="isWork"
-              >
-                <CmCheckBox
-                  v-model="values.isWork"
-                >
-                  {{ DATA_LABEL.IS_WORK }}
-                </CmCheckBox>
-              </Field>
-            </div>
-            <VRow class="mt-2">
-              <VCol
-                cols="12"
-                md="6"
-              >
-                <Field
-                  v-slot="{ field, errors }"
-                  v-model="values.dateStart"
-                  name="dateStart"
-                  :rules="schema.dateStart"
-                >
-                  <label class="text-label-default">{{ t('common.from-years') }}<code>(*)</code></label>
-                  <CmDateTimePicker
-                    :key="errors.length"
-                    v-model="values.dateStart"
-                    :error="errors.length > 0 ? errors : false"
-                    :error-messages="errors ? errors[0] : ''"
-                    :field="field"
-                    placeholder="dd-mm-yyyy"
-                  />
-                </Field>
-              </VCol>
-              <VCol
-                cols="12"
-                md="6"
-              >
-                <Field
-                  v-slot="{ field, errors }"
-                  v-model="values.dateFinish"
-                  name="dateFinish"
-                  :rules="schema.dateFinish"
-                >
-                  <label class="text-label-default">{{ t('common.to-years') }} <code>(*)</code></label>
-                  <CmDateTimePicker
-                    :key="errors.length"
-                    v-model="values.dateFinish"
-                    :error="errors.length > 0 ? errors : false"
-                    :error-messages="errors ? errors[0] : ''"
-                    :field="field"
-                    placeholder="dd-mm-yyyy"
-                  />
-                </Field>
-              </VCol>
-            </VRow>
-          </VCol>
-          <VCol
-            cols="12"
-            md="6"
-          >
-            <!-- Mô tả -->
+    <Form ref="myFormExperence">
+      <VRow>
+        <VCol
+          cols="12"
+          md="6"
+        >
+          <!-- tên CÔNG TY -->
+          <div class="mt-2">
             <Field
-              v-slot="{ field }"
-              v-model="values.description"
-              name="description"
+              v-slot="{ field, errors }"
+              v-model="values.companyName"
+              name="companyName"
+              :rules="schema.companyName"
             >
-              <CmTextArea
+              <CmTextField
                 :field="field"
-                :text="t('common.description')"
+                :errors="errors"
+                :text="DATA_LABEL.LABEL_COMPANY"
+                :placeholder="DATA_LABEL.LABEL_COMPANY"
               />
             </Field>
-          </VCol>
-        </VRow>
-      </Form>
-    </template>
+          </div>
+          <!-- tên vị trí -->
+          <div class="mt-2">
+            <Field
+              v-slot="{ field, errors }"
+              v-model="values.position"
+              name="position"
+              :rules="schema.position"
+            >
+              <CmTextField
+                :field="field"
+                :errors="errors"
+                :text="DATA_LABEL.LABEL_POSITION"
+                :placeholder="DATA_LABEL.LABEL_POSITION"
+              />
+            </Field>
+          </div>
+          <!-- Nơi làm việc -->
+          <div class="mt-2">
+            <Field
+              name="isWork"
+            >
+              <CmCheckBox
+                v-model="values.isWork"
+              >
+                {{ DATA_LABEL.IS_WORK }}
+              </CmCheckBox>
+            </Field>
+          </div>
+          <VRow class="mt-2">
+            <VCol
+              cols="12"
+              md="6"
+            >
+              <Field
+                v-slot="{ field, errors }"
+                v-model="values.dateStart"
+                name="dateStart"
+                :rules="schema.dateStart"
+              >
+                <label class="text-label-default">{{ t('common.from-years') }}<code>(*)</code></label>
+                <CmDateTimePicker
+                  :key="errors.length"
+                  v-model="values.dateStart"
+                  :error="errors.length > 0 ? errors : false"
+                  :error-messages="errors ? errors[0] : ''"
+                  :field="field"
+                  placeholder="dd-mm-yyyy"
+                />
+              </Field>
+            </VCol>
+            <VCol
+              cols="12"
+              md="6"
+            >
+              <Field
+                v-slot="{ field, errors }"
+                v-model="values.dateFinish"
+                name="dateFinish"
+                :rules="schema.dateFinish"
+              >
+                <label class="text-label-default">{{ t('common.to-years') }} <code>(*)</code></label>
+                <CmDateTimePicker
+                  :key="errors.length"
+                  v-model="values.dateFinish"
+                  :error="errors.length > 0 ? errors : false"
+                  :error-messages="errors ? errors[0] : ''"
+                  :field="field"
+                  placeholder="dd-mm-yyyy"
+                />
+              </Field>
+            </VCol>
+          </VRow>
+        </VCol>
+        <VCol
+          cols="12"
+          md="6"
+        >
+          <!-- Mô tả -->
+          <Field
+            v-slot="{ field }"
+            v-model="values.description"
+            name="description"
+          >
+            <CmTextArea
+              :field="field"
+              :text="t('common.description')"
+            />
+          </Field>
+        </VCol>
+      </VRow>
+    </Form>
   </CmDialogs>
 </template>
 

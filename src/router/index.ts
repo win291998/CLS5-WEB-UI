@@ -5,7 +5,6 @@ import { getHomeRouteForLoggedInUser, getUserData, parseJwt } from './utils'
 import error from './errors/error.router'
 import admin from '@/router/admin/admin.router'
 import MethodsUtil from '@/utils/MethodsUtil'
-import { load } from '@/stores/loadComponent'
 import { TYPE_REQUEST } from '@/typescript/enums/enums'
 
 const generalRoutes = [
@@ -69,31 +68,37 @@ const router = createRouter({
 })
 
 // reset loading button
-router.beforeEach((to, from, next) => {
-  const store = load()
+// router.beforeEach((to, from, next) => {
+//   const store = load()
 
-  // eslint-disable-next-line no-unused-expressions
-  store.$reset
+//   if (store.$state.components.length)
+//     store.$dispose()
 
-  return next()
-})
+//   return next()
+// })
 
 router.beforeEach((to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
   if (!isUserLoggedIn())
     return checkPortal(next, to)
+  if (to.meta.redirectIfLoggedIn && isUserLoggedIn()) {
+    const userData = getUserData()
 
+    // getHomeRouteForLoggedInUser(userData ? userData.roles : null)
+    next({ name: 'admin-organization-users-manager' })
+  }
   if (to.meta.requireAuth) {
     const requireAuth: any = to.meta.requireAuth || {}
     const key: string = requireAuth.permissionKey || ''
 
     // Redirect if logged in
-    if (to.meta.redirectIfLoggedIn && isUserLoggedIn()) {
-      const userData = getUserData()
+    console.log(to.meta.redirectIfLoggedIn)
+    console.log(isUserLoggedIn())
 
-      next(getHomeRouteForLoggedInUser(userData ? userData.roles : null))
-    }
+    console.log(Number(permission[key]))
+    console.log(requireAuth.permissionValue)
+    console.log((Number(permission[key]) & requireAuth.permissionValue))
 
-    if (!(Number(permission[key]) & requireAuth.permissionValue))
+    if ((Number(permission[key]) & requireAuth.permissionValue) !== requireAuth.permissionValue)
       return next({ name: 'error-403' })
 
     return next()

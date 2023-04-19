@@ -22,6 +22,7 @@ interface Emit {
   (e: 'update:keySearch', key: string): void
   (e: 'clickAdd'): void
   (e: 'clickDelete'): void
+  (e: 'clickMoveMultiple'): void
 }
 
 const showAdd = () => {
@@ -73,15 +74,25 @@ const handleSearch = (val: string) => {
     </VRow>
 
     <VRow class="mr-1">
-      <VCol>
+      <VCol class="d-flex">
         <CmButton
           v-if="props.isShowDelete"
           icon="tabler:trash"
           color="error"
           size="40"
           :size-icon="18"
-          class="d-flex align-middle justify-center"
+          class="d-flex align-middle justify-center mr-2"
           @click="emit('clickDelete')"
+        />
+
+        <CmButton
+          v-if="props.isShowDelete"
+          icon="simple-line-icons:cursor-move"
+          color="success"
+          size="40"
+          :size-icon="18"
+          class="d-flex align-middle justify-center"
+          @click="emit('clickMoveMultiple')"
         />
 
         <slot name="buttonBottm" />

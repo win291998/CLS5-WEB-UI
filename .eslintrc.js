@@ -46,7 +46,7 @@ module.exports = {
     'arrow-parens': ['error', 'as-needed'],
 
     // add new line above comment
-    'newline-before-return': 'error',
+    // 'newline-before-return': 'error',
 
     // add new line above comment
     'lines-around-comment': [
