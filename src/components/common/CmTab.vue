@@ -18,6 +18,7 @@ const props = withDefaults(defineProps<Props>(), ({
   label: 'tabActive',
   routeName: '',
   hide: false,
+  isRender: false,
 }))
 
 const emit = defineEmits<Emit>()
@@ -42,8 +43,10 @@ interface Props {
 }
 const router = useRouter()
 const route = useRoute()
+
 interface Emit {
   (e: string, data: any): void
+  (e: 'activeTab', data: tab): void
 }
 const tabActive = ref<any>({})
 
@@ -57,6 +60,7 @@ getTabActive()
 const activeTab = (value: any) => {
   router.push({ name: props.routeName || undefined, params: { [props.label]: value.key } })
   tabActive.value = value
+  emit('activeTab', tabActive.value)
 }
 
 const useEmitter = () => {
@@ -95,23 +99,31 @@ const useEmitter = () => {
         </VTab>
       </VTabs>
     </div>
-
-    <div
-      v-for="item in listTab"
-      :key="item.key"
-      class="content-tab"
-    >
-      {{ item.key === route.params[props.label] }}
+    <div v-if="props.isRender">
       <div
-        v-show="item.key === route.params[props.label]"
+        v-for="item in listTab"
+        :key="item.key"
+        class="content-tab"
       >
-        <Component
-          :is="item?.component"
-          :emit="useEmitter"
-          :data-general="dataGeneral"
-          v-bind="tabActive.dataTab"
-        />
+        <div
+          v-show="item.key === route.params[props.label]"
+        >
+          <Component
+            :is="item?.component"
+            :emit="useEmitter"
+            :data-general="dataGeneral"
+            v-bind="tabActive.dataTab"
+          />
+        </div>
       </div>
+    </div>
+    <div v-else>
+      <Component
+        :is="tabActive?.component"
+        :emit="useEmitter"
+        :data-general="dataGeneral"
+        v-bind="tabActive.dataTab"
+      />
     </div>
   </div>
 </template>

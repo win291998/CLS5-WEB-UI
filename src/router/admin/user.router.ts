@@ -89,6 +89,10 @@ export default [
                   active: true,
                 },
               ],
+              requireAuth: {
+                permissionKey: 'UserManaging',
+                permissionValue: 2,
+              },
             },
             component: () => import('@/pages/admin/organization/users/profile/Profile.vue'),
           },
@@ -109,6 +113,10 @@ export default [
                   active: true,
                 },
               ],
+              requireAuth: {
+                permissionKey: 'UserManaging',
+                permissionValue: 4,
+              },
             },
             component: () => import('@/pages/admin/organization/users/profile/Profile.vue'),
           },
