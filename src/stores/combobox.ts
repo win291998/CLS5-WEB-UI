@@ -9,15 +9,19 @@ import { TYPE_REQUEST } from '@/typescript/enums/enums'
 
 export const comboboxStore = defineStore('combobox', () => {
   /** variable */
+  interface combobox {
+    key: number
+    value: string
+  }
   const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 
   const statuses = ref([])
   const organizations = ref([])
   const userType = ref([])
-  const country = ref([])
-  const provinces = ref([])
-  const districts = ref([])
-  const wards = ref([])
+  const country = ref<combobox[]>([])
+  const provinces = ref<combobox[]>([])
+  const districts = ref<combobox[]>([])
+  const wards = ref<combobox[]>([])
 
   /** method */
   // Lấy danh sách trạng thái người dùng

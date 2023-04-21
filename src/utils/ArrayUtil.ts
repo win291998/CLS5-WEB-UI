@@ -134,6 +134,12 @@ export default class ArraysUtil {
     }
   }
 
+  /**
+   * @name: Định dạng cấu trúc cây cho table-tree
+   * @param {Array<any>} items => Mảng phẳng dữ liệu cần định dạng
+   * @param {string} key => key quy định id node cha
+   * @return {object}
+   */
   static formatTreeTable = (items: Array<any>, key: string) => {
     const result: any = []
 
@@ -175,6 +181,11 @@ export default class ArraysUtil {
 
       return dataChildren.length ? { ...parent, children: dataChildren } : { ...parent }
     })
+  }
+
+  // 👉 IsEmptyArray
+  static isEmptyArray = (arr: unknown): boolean => {
+    return Array.isArray(arr) && arr.length === 0
   }
 }
 

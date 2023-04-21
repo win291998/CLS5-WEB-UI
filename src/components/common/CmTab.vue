@@ -101,7 +101,6 @@ const useEmitter = () => {
       :key="item.key"
       class="content-tab"
     >
-      {{ item.key === route.params[props.label] }}
       <div
         v-show="item.key === route.params[props.label]"
       >

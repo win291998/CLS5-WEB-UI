@@ -2,6 +2,7 @@
 import { ActionType } from '@/constant/data/actionType.json'
 import { comboboxStore } from '@/stores/combobox'
 import { profileUserManagerStore } from '@/stores/admin/users/profile/profile'
+import ArrayUtil from '@/utils/ArrayUtil'
 
 // interface
 interface Props {
@@ -16,7 +17,7 @@ const store = comboboxStore()
 const { country, districts, provinces, wards } = storeToRefs(store)
 const { fetchCountry, fetchDistricts, fetchProvinces, fetchWards } = store
 const storeProfileUserManager = profileUserManagerStore()
-const { accountInformation } = storeToRefs(storeProfileUserManager)
+const { values } = storeToRefs(storeProfileUserManager)
 const CpModalAddress = defineAsyncComponent(() => import('../Admin/organization/users/profile/modal/CpModalAddress.vue'))
 const CmDropDown = defineAsyncComponent(() => import('@/components/common/CmDropDown.vue'))
 
@@ -38,6 +39,7 @@ interface Data {
   wards: Array<any>
   address: any
   isShowModalAddress: boolean
+  addressString: string
 }
 
 const data = reactive<Data>({
@@ -45,53 +47,51 @@ const data = reactive<Data>({
   districts: [],
   provinces: [],
   wards: [],
+
   address: reactive({
     countryName: '',
     districtName: '',
     provinceName: '',
-    street: '',
+    address: '',
     wardName: '',
     isShow: false,
   }),
+  addressString: '',
   isShowModalAddress: false,
 })
 
-const actionItemEdit = (dataAction: any, index: any, dataResend?: any) => {
-  console.log('edit', dataAction, index, dataResend)
+const actionItemEdit = (dataAction: any, index: any) => {
+  console.log('edit', dataAction, index)
+  data.isShowModalAddress = true
 }
 
 const actionItemDelete = (dataAction: any, index: any, dataResend?: any) => {
   console.log('actionItemDelete', dataAction, index)
 }
 
-const addressName = (data: any) => {
-  let countryName = null
-  let provinceName = null
-  let districtName = null
-  let wardName = null
-  const countries = dataInit.countries.filter(x => x.key === values.countryId)
-  if (countries.length > 0)
-    countryName = countries[0].value
-  const province = dataInit.provinces.filter(x => x.key === values.provinceId)
-  if (province.length > 0)
-    provinceName = province[0].value
-  const district = dataInit.districts.filter(x => x.key === values.districtId)
-  if (district.length > 0)
-    districtName = district[0].value
-  const ward = dataInit.wards.filter(x => x.key === values.wardId)
-  if (ward.length > 0)
-    wardName = ward[0].value
-  console.log(values)
-
-  dataInit.address = {
-    countryName,
-    provinceName,
-    districtName,
-    wardName,
-    street: values.street,
-    isShow: true,
+const addressName = (address: any) => {
+  const countries = country.value.filter((x: any) => x.key === address.countryId)
+  if (countries.length > 0) {
+    data.address.isShow = true
+    data.address.countryName = countries[0].value
   }
-  console.log(dataInit)
+  const province = districts.value.filter(x => x.key === address.provinceId)
+  if (province.length > 0) {
+    data.address.isShow = true
+    data.address.provinceName = province[0].value
+  }
+  const district = provinces.value.filter(x => x.key === address.districtId)
+  if (district.length > 0) {
+    data.address.isShow = true
+    data.address.districtName = district[0]?.value
+  }
+  const ward = wards.value.filter(x => x.key === address.wardId)
+  if (ward.length > 0) {
+    data.address.isShow = true
+    data.address.wardName = ward[0].value
+  }
+  data.address.address = address.address || ''
+  console.log(data)
 }
 
 const action = [
@@ -107,28 +107,39 @@ const action = [
   },
 ]
 
-if (accountInformation.value.countryId != null) {
-  await fetchCountry()
-  if (accountInformation.value.provinceId != null) {
-    await fetchProvinces(accountInformation.value.countryId)
-    await fetchDistricts(accountInformation.value.provinceId)
-    if (accountInformation.value.districtId) {
-      await fetchDistricts(accountInformation.value.provinceId)
-      await fetchWards(accountInformation.value.districtId)
+const fetchDataAddress = async (dataAddress: any) => {
+  if (dataAddress.countryId && ArrayUtil.isEmptyArray(country)) {
+    await fetchCountry()
+    if (dataAddress.provinceId && ArrayUtil.isEmptyArray(provinces)) {
+      await fetchProvinces(dataAddress.countryId)
+      if (dataAddress.districtId && ArrayUtil.isEmptyArray(districts)) {
+        await fetchDistricts(dataAddress.provinceId)
+        if (dataAddress.wardId && ArrayUtil.isEmptyArray(wards))
+          await fetchWards(dataAddress.districtId)
+      }
     }
   }
+  addressName(dataAddress)
 }
-addressName()
+const handlerAddress = async (address: any) => {
+  await fetchDataAddress(address)
+  await addressName(address)
+  console.log(address)
+}
+fetchDataAddress(values.value)
 </script>
 
 <template>
   <div>
-    <VRow v-if="data.address && data.address?.isShow">
+    <VRow v-if="data.address?.isShow">
       <VCol
         cols="10"
       >
-        <div class="addressStyle">
-          {{ data?.address?.street }}
+        <div class="addressStyle text-bold-sm">
+          {{ data?.address?.address }}
+        </div>
+        <div>
+          <span v-if="data?.address.wardName">{{ data?.address.wardName }}, </span><span v-if="data?.address.districtName">{{ data?.address.districtName }}, </span><span v-if="data?.address.provinceName">{{ data?.address.provinceName }}, </span><span v-if="data?.address.countryName">{{ data?.address.countryName }}</span>
         </div>
       </VCol>
       <VCol
@@ -153,10 +164,11 @@ addressName()
       />
       <span class="color-primary  align-center">{{ $t('common.add') }}</span>
     </BLink>
+
     <CpModalAddress
-      v-model:address="data.address"
       v-model:isDialogVisible="data.isShowModalAddress"
-      :data-edit="data"
+      :data-edit="values"
+      @update:address="handlerAddress"
     />
   </div>
 </template>

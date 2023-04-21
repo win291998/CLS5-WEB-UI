@@ -26,7 +26,7 @@ const { userType, statuses } = storeToRefs(storeCombobox)
 const { fetchTypeUsersCombobox, fetchStatusUsersCombobox } = storeCombobox
 const storeProfileUserManager = profileUserManagerStore()
 const { idUpdate, myFormUserInfor, titleTable, values, schema } = storeToRefs(storeProfileUserManager)
-const { updateListOrg, submitForm } = storeProfileUserManager
+const { updateListOrg, submitForm, updateSchema } = storeProfileUserManager
 const route = useRoute()
 
 // interface
@@ -75,6 +75,7 @@ if (Number(route.params.id) >= 0)
   titleTable.value?.checkGetListOrgStruct()
 onMounted(() => {
   myFormUserInfor.value = formUserInfor.value
+  updateSchema()
 })
 </script>
 

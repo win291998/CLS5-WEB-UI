@@ -12,7 +12,46 @@ export const profileUserManagerStore = defineStore('profileUserManager', () => {
   const router = useRouter()
 
   /** data main */
-  const accountInformation = ref<any>({
+  interface userInfor {
+    academicDegreeId: any
+    academicRankId: any
+    address: any
+    avatar: any
+    birthDay: any
+    email: any
+    employmentDate: any
+    firstName: any
+    gender: boolean
+    lastName: any
+    levelId: any
+    listEducationUser: Array<any>
+    listExperienceUser: Array<any>
+    listGroupId: Array<any>
+    listOrganizationalStructureId: Array<any>
+    passport: any
+    password: any
+    payrollScaleId: any
+    phoneNumber: any
+    position: any
+    statusId: any
+    story: any
+    timeZoneId: any
+    userCode: any
+    userName: any
+    userTitleId: any
+    userTypeId: any
+    wardId: any
+    districtId: any
+    provinceId: any
+    workplace: any
+    listBranchId: any
+    countryId: any
+    userGroups: Array<any>
+    userBranches: Array<any>
+    kpiLearn: any
+    kpiTeach: any
+  }
+  const initForm = ref<any>({
     academicDegreeId: null,
     academicRankId: null,
     address: '',
@@ -52,11 +91,12 @@ export const profileUserManagerStore = defineStore('profileUserManager', () => {
     kpiTeach: null,
   })
 
-  const idUpdate = ref()
+  const idUpdate = ref<any>(null)
   const myFormUserInfor = ref()
   const titleTable = ref()
   const isShowButton = ref(true)
   const idUser = ref()
+  const schema = ref<any>(null)
 
   /**
  * Xử lý data form
@@ -64,7 +104,7 @@ export const profileUserManagerStore = defineStore('profileUserManager', () => {
  */
   const storeValidate = validatorStore()
   const { schemaOption, Field, Form, useForm, yup } = storeValidate
-  let schema = reactive<any>({
+  const schemaInit = reactive<any>({
     lastName: schemaOption.lastName,
     firstName: schemaOption.firstName,
     email: schemaOption.email,
@@ -77,20 +117,21 @@ export const profileUserManagerStore = defineStore('profileUserManager', () => {
     statusIdSingle: schemaOption.statusIdSingle,
   })
 
-  const schemaPass = reactive <any> ({
+  const schemaPass = reactive<any>({
     password: schemaOption?.password,
   })
+  console.log(route.params.id)
+  const updateSchema = () => {
+    if (!Number(route.params.id))
+      schema.value = { ...schemaInit, ...schemaPass }
+    else
+      schema.value = schemaInit
+  }
+  updateSchema()
 
-  if (!Number(route.params.id))
-    schema = { ...schema, ...schemaPass }
-
-  const { handleSubmit, validate, errors, submitForm, resetForm } = useForm({
+  const { values, setValues, resetForm, submitForm } = useForm({
     validationSchema: schema,
-  })
-
-  const { values, setValues } = useForm({
-    validationSchema: schema,
-    initialValues: ref(accountInformation),
+    initialValues: ref<userInfor>(window._.cloneDeep(initForm)),
   })
 
   /**
@@ -127,7 +168,7 @@ export const profileUserManagerStore = defineStore('profileUserManager', () => {
   const resetData = () => {
     isShowButton.value = true
 
-    router.push({ name: 'admin-organization-users-profile-edit', params: { tabActive: 'infor', id: route?.params?.id } })
+    router.push({ name: 'admin-organization-users-profile-edit', params: { tab: 'infor', id: route?.params?.id } })
 
     idUpdate.value = null
     resetForm()
@@ -142,12 +183,13 @@ export const profileUserManagerStore = defineStore('profileUserManager', () => {
 
     idUpdate.value = id
     await MethodsUtil.requestApiCustom(ApiUser.fetchDetailUpdate, TYPE_REQUEST.GET, params).then(value => {
-      accountInformation.value = value.data
       setValues(value.data)
-      console.log(accountInformation)
     })
   }
-
+  const resetFormInfor = () => {
+    setValues(initForm)
+    idUpdate.value = null
+  }
   const handlesCreateUser = async (bvModalEvt: any, dataObj: any, type: any) => {
     const form: any = myFormUserInfor.value
     if (form) {
@@ -180,7 +222,7 @@ export const profileUserManagerStore = defineStore('profileUserManager', () => {
               router.push({ name: 'admin-organization-users-profile-edit', params: { tabActive: 'infor', id: idUser.value } })
             })
 
-            .catch(error => {
+            .catch((error: any) => {
               console.log(error)
               toast('ERROR', t(getErrorsMessage(error)))
             })
@@ -204,14 +246,13 @@ export const profileUserManagerStore = defineStore('profileUserManager', () => {
         const params = dataObj
 
         await MethodsUtil.requestApiCustom(ApiUser.fetchUpdateUser, TYPE_REQUEST.POST, params)
-          .then(value => {
-            console.log(value)
-
+          .then((value: any) => {
             if (titleTable.value?.isChange) {
               console.log(titleTable.value?.isChange)
               titleTable.value.updateTitle()
             }
             toast('SUCCESS', t(value.message))
+            resetFormInfor()
             if (type === 'save') {
               router.push({ name: 'admin-organization-users-manager' })
 
@@ -219,7 +260,11 @@ export const profileUserManagerStore = defineStore('profileUserManager', () => {
             }
             if (type === 'save-add')
               resetData()
+            console.log(value)
           })
+      }
+      else {
+        toast('ERROR', t('invalid-infor'))
       }
     })
   }
@@ -247,16 +292,17 @@ export const profileUserManagerStore = defineStore('profileUserManager', () => {
   return {
     idUpdate,
     isShowButton,
-    accountInformation,
     myFormUserInfor,
     titleTable,
     values,
     schema,
     submitForm,
+    resetFormInfor,
     fectchLecturers,
     handleUser,
     handlesCreateUser,
     handleUpdateUser,
     updateListOrg,
+    updateSchema,
   }
 })
