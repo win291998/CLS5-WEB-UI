@@ -39,7 +39,7 @@ const { handleSubmit, validate, errors, submitForm, resetForm } = useForm({
 })
 
 interface Props {
-  dataTab: any
+  TITLE: any
   dataGeneral: any
 }
 
@@ -59,7 +59,7 @@ const router = useRouter()
 
 // thêm nhóm người dùng
 const handleEdit = (idx: number, isUpdate: boolean) => {
-  MethodsUtil.requestApiCustom(ApiGroupUser.AddGroup, TYPE_REQUEST.POST, dataInput.value).then(res => {
+  MethodsUtil.requestApiCustom(ApiGroupUser.AddGroup, TYPE_REQUEST.POST, dataInput.value).then((res: any) => {
     toast('SUCCESS', t('common.add-success'))
     if (isUpdate)
       router.push({ name: 'admin-organization-user-groups-edit', params: { id: res.data, tab: 'info' } })
@@ -72,7 +72,7 @@ const handleEdit = (idx: number, isUpdate: boolean) => {
 
 // lấy dữ liệu
 const getDataDetail = () => {
-  MethodsUtil.requestApiCustom(ApiGroupUser.DetailGroup, TYPE_REQUEST.GET, { groupId: route.params.id }).then(res => {
+  MethodsUtil.requestApiCustom(ApiGroupUser.DetailGroup, TYPE_REQUEST.GET, { groupId: route.params.id }).then((res: any) => {
     dataInput.value = res.data
   })
 }
@@ -88,7 +88,7 @@ const cancel = () => {
 <template>
   <VRow class="mb-6 mt-6">
     <VCol>
-      <h3>{{ dataTab.TITLE.titlePageAdd }}</h3>
+      <h3>{{ TITLE.titlePageAdd }}</h3>
     </VCol>
   </VRow>
 
@@ -156,12 +156,12 @@ const cancel = () => {
       <CmButton
         variant="outlined"
         color="dark"
-        :title="dataTab.TITLE.titleCancel"
+        :title="TITLE.titleCancel"
         @click="cancel"
       />
 
       <CmButton
-        :title="dataTab.TITLE.titleButton"
+        :title="TITLE.titleButton"
         is-load
         class="ml-2"
         color="50-primary"
@@ -169,7 +169,7 @@ const cancel = () => {
       />
       <CmButton
         v-if="!route.params.id"
-        :title="dataTab.TITLE.titleButtonAndUpdate"
+        :title="TITLE.titleButtonAndUpdate"
         class="ml-2"
         is-load
         @click="handleEdit($event, true)"

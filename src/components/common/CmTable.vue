@@ -53,6 +53,7 @@ interface Props {
   minHeight?: number
   isActionFooter?: boolean
   pageNumber?: number
+  selected?: Item[]
 }
 interface Emit {
   (e: 'handleClickRow', dataRow: object, index: number): void
@@ -62,6 +63,7 @@ interface Emit {
   (e: 'changeCellvalue', value: string, field: string, key: number): void
   (e: 'handlePageClick', page: number): void
   (e: 'update:pageNumber', page: number): void
+  (e: 'update:selected', page: number): void
 
 }
 
@@ -87,6 +89,7 @@ const keyid = computed(() => {
 })
 
 const pageSize = ref(props.pageSize) // số lượng item trên 1 page
+const currentPage = ref<number>(props.pageNumber || Globals.PAGINATION_CURRENT_PAGE) // item hiện tại
 
 /** method */
 // cập nhật selectedRows
@@ -125,7 +128,7 @@ const checkedAll = (value: any) => {
         element.isSelected = !value
     })
   }
-
+  emit('update:selected', selectedRows.value)
   emit('checkedAll', !value, selectedRows)
 }
 
@@ -142,21 +145,18 @@ const checkedItem = (rows: any, item: any) => {
   if (props.returnObject) {
     const selectItemsObject = rows?.map((key: any) => {
       const objectItem = props.items?.find(itemProp => itemProp[keyid.value] === key)
-
       return objectItem || {}
     })
-
     emit('selectedRows', selectItemsObject)
+    emit('update:selected', selectItemsObject)
   }
   else {
+    emit('update:selected', rows)
     emit('selectedRows', rows)
   }
   emit('itemSelected', item)
-
   const value = rows.includes(item[keyid.value])
-
   const action = props.items?.findIndex(element => element[keyid.value] === item[keyid.value])
-
   if (action > -1)
     // eslint-disable-next-line vue/no-mutating-props
     props.items[action].isSelected = value

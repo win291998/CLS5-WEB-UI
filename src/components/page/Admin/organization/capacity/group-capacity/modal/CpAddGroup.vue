@@ -76,25 +76,23 @@ const confirmModal = () => {
     @cancel="cancelModal"
     @confirm="confirmModal"
   >
-    <template #content>
-      <Form>
-        <VRow>
-          <VCol>
-            <CmTextField
-              :text="`${t('users.capacity-management.proficiency-group.name')}*`"
-              :placeholder="t('users.capacity-management.proficiency-group.name')"
-            />
-          </VCol>
-        </VRow>
-        <VRow>
-          <VCol>
-            <CmTextField
-              :text="t('common.description')"
-              :placeholder="t('users.capacity-management.proficiency-group.name')"
-            />
-          </VCol>
-        </VRow>
-      </Form>
-    </template>
+    <Form>
+      <VRow>
+        <VCol>
+          <CmTextField
+            :text="`${t('users.capacity-management.proficiency-group.name')}*`"
+            :placeholder="t('users.capacity-management.proficiency-group.name')"
+          />
+        </VCol>
+      </VRow>
+      <VRow>
+        <VCol>
+          <CmTextField
+            :text="t('common.description')"
+            :placeholder="t('users.capacity-management.proficiency-group.name')"
+          />
+        </VCol>
+      </VRow>
+    </Form>
   </CmDialogs>
 </template>
