@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { Field, Form, useField, useForm } from 'vee-validate'
 import MethodsUtil from '@/utils/MethodsUtil'
 import ApiUser from '@/api/user/index'
 import { TYPE_REQUEST } from '@/typescript/enums/enums'
 import { formatDateYears } from '@/utils/FilterUtil'
 import ArrayUtil from '@/utils/ArrayUtil'
 import { ActionType } from '@/constant/data/actionType.json'
+import { validatorStore } from '@/stores/validatator'
 
 interface Props {
   profile: any
@@ -26,6 +26,8 @@ const CmDropDown = defineAsyncComponent(() => import('@/components/common/CmDrop
 const CmChip = defineAsyncComponent(() => import('@/components/common/CmChip.vue'))
 const CmTextField = defineAsyncComponent(() => import('@/components/common/CmTextField.vue'))
 const CpAddressEdit = defineAsyncComponent(() => import('@/components/page/gereral/CpAddressEdit.vue'))
+const storeValidate = validatorStore()
+const { Field, Form } = storeValidate
 
 /**
  * lib
@@ -89,8 +91,6 @@ const fetchModalEducation = () => {
 }
 
 const removeEducation = (index: any) => {
-  console.log(index)
-
   dataProfile.listEducationUser.splice(index, 1)
 }
 
@@ -148,11 +148,9 @@ const updateExperences = (dataEdit: any, index: any) => {
  * modal
  */
 const actionItemEdit = (dataAction: any, index: any, dataResend?: any) => {
-  console.log('edit', dataAction, index, dataResend)
   switch (dataResend) {
     case 'EDUCATION':
       updateEducation(dataAction[1], index)
-      console.log('educationData', data.educationData)
       modal.isShowModalEducation = true
       break
     case 'EXPERENCE':
@@ -453,10 +451,8 @@ const handleUpdateExperences = (experences: any, edit: boolean) => {
               <div>
                 <label class="text-label-default ">{{ t("common.address") }}</label>
               </div>
-              <br>
               <CpAddressEdit
                 ref="address"
-                :data="profile"
               />
             </VCol>
           </VRow>
@@ -481,9 +477,6 @@ const handleUpdateExperences = (experences: any, edit: boolean) => {
 
 <style scoped lang="scss">
 @use "/src/styles/style-global" as *;
-.text-name-school{
-  color: $color-gray-900
-}
 .text-description{
   color: $color-gray-500
 }

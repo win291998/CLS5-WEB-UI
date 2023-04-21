@@ -18,8 +18,8 @@ const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 const route = useRoute()
 const router = useRouter()
 const storeProfileUserManager = profileUserManagerStore()
-const { accountInformation } = storeToRefs(storeProfileUserManager)
-const { fectchLecturers, handleUser } = storeProfileUserManager
+const { values } = storeToRefs(storeProfileUserManager)
+const { fectchLecturers, handleUser, resetFormInfor } = storeProfileUserManager
 
 /**
  *
@@ -30,13 +30,13 @@ const listTab = [
     key: 'infor',
     title: 'users.add-user.account-information',
     component: CpFormModifyUserInfor,
-    dataTab: { profile: accountInformation },
+    dataTab: { profile: values },
     isRendered: false,
   },
   {
     key: 'resumer',
     title: 'users.add-user.profile',
-    dataTab: { profile: accountInformation },
+    dataTab: { profile: values },
     component: CpResume,
     isRendered: false,
   },
@@ -46,11 +46,13 @@ const isShowButton = ref(true)
 
 const backUser = () => {
   router.push({ name: 'admin-organization-users-manager' })
+  resetFormInfor()
 }
 
 /**
  * Lấy data người dùng
  */
+resetFormInfor()
 if (route.params.id)
   fectchLecturers(route.params.id)
 </script>

@@ -61,7 +61,7 @@ const action = [{
 }]
 
 const handlerPreButton = () => {
-  router.push({ name: 'admin-organization-users-profile-add', params: { tabActive: 'infor' } })
+  router.push({ name: 'admin-organization-users-profile-add', params: { tab: 'infor' } })
 }
 </script>
 
@@ -124,7 +124,7 @@ const handlerPreButton = () => {
         <CmButtonGroup
           is-load
           :list-item="action"
-          title="hello"
+          :title="t('Add')"
           @click-prepend="handlerPreButton($event)"
         >
           {{ t('common.save') }}

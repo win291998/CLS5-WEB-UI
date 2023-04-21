@@ -226,7 +226,7 @@ const actionItem = (type: any) => {
       data.isShowDialogStatus = true
       break
     case 'ActionEdit':
-      router.push({ name: 'admin-organization-users-profile-edit', params: { tabActive: 'infor', id: type[1].id } })
+      router.push({ name: 'admin-organization-users-profile-edit', params: { tab: 'infor', id: type[1].id } })
       break
 
     default:
@@ -236,6 +236,8 @@ const actionItem = (type: any) => {
 
 // Get list Users
 async function fectchListUsers() {
+  window.showAllPageLoading('COMPONENT')
+
   // await fetchData(ApiUser.UsersList, TYPE_REQUEST.POST, queryParam)
   await MethodsUtil.requestApiCustom(ApiUser.UsersList, TYPE_REQUEST.POST, queryParam)
     .then((value: any) => {
@@ -266,6 +268,8 @@ async function fectchListUsers() {
     .catch(() => {
       toast('ERROR', t('USR_GetFailed'))
     })
+
+  window.hideAllPageLoading()
 }
 
 // search ở fillter header

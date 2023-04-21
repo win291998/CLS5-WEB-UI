@@ -4530,5 +4530,6 @@
   "export-excel": "Xuất Excel",
   "org-duplicate": "Cơ cấu tổ chức không được để trống và không đươc phép trùng",
   "add-user-group": "Thêm nhóm người dùng",
-  "edit-user-group": "Chỉnh sửa nhóm người dùng"
+  "edit-user-group": "Chỉnh sửa nhóm người dùng",
+  "invalid-infor": "Kiểm tra thông tin người dùng chưa hợp lệ!"
 }
