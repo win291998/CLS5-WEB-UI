@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 import { useToast } from 'vue-toastification'
+import { Can } from '@casl/vue'
 import login from '../login.vue'
 import Permission from '../admin/organization/permission/Permission.vue'
 import treeSelect from './tree-select.vue'
@@ -144,7 +145,8 @@ const abcd = (val: any) => {
 </script>
 
 <template>
-  <h1>Quản lí người dùng chil</h1>
+  <Can><h1>Quản lí người dùng chil</h1></Can>
+
   <CmSwitch
     :list-item="action"
     color="dark"

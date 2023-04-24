@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { Header, Item } from 'vue3-easy-data-table'
+
 const props = withDefaults(defineProps<Props>(), ({
   headers: _ => [],
   items: _ => [],
@@ -8,17 +10,18 @@ const props = withDefaults(defineProps<Props>(), ({
   tootlipEdit: '',
   tootlipDelete: '',
   tootlipReport: '',
+  pageNumber: 0,
 }))
 
 const emit = defineEmits<Emit>()
 const CmTable = defineAsyncComponent(() => import('@/components/common/CmTable.vue'))
 interface Props {
-  headers: any[]
-  items: any[]
+  headers: Header[]
+  items: Item[]
   totalRecord: number
   pageNumber?: number
   listId: any[]
-  dataDetail: any
+  dataDetail: Item | null
   tootlipEdit: string
   tootlipDelete: string
   tootlipReport: string
@@ -62,17 +65,17 @@ const handlePageClick = (e: any) => {
     :headers="headers"
     :items="items"
     :total-record="totalRecord"
-    @selectedRows="selectedRows"
+    @update:selected="selectedRows"
     @checked-all="selectedAll"
     @handlePageClick="handlePageClick"
   >
     <template #rowItem="{ col, context }">
       <span v-if="col === 'name'">
         <span
-          v-if="context.code"
+          v-if="context?.code"
           class="text-primary mr-1"
-        >{{ context.code }}</span>
-        <span>{{ context.name }}</span>
+        >{{ context?.code }}</span>
+        <span>{{ context?.name }}</span>
       </span>
     </template>
     <template

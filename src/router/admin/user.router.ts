@@ -5,7 +5,7 @@ export default [
     component: () => import('@/pages/guilde/tree-select.vue'),
   },
   {
-    path: 'guilde/import-file',
+    path: '/guilde/import-file',
     name: 'guilde-import-file',
     component: () => import('@/pages/guilde/import-file.vue'),
   },
@@ -28,9 +28,6 @@ export default [
     path: '/guilde/demo',
     meta: {
       layout: 'blank',
-      permission: {
-        key: '123',
-      },
     },
     name: 'guilde-demo',
     component: () => import('@/pages/guilde/demo.vue'),
@@ -157,7 +154,7 @@ export default [
               ],
             },
             name: 'admin-organization-user-groups-add',
-            component: () => import('@/pages/admin/organization/user-groups/Edit/EditUserGroup.vue'),
+            component: () => import('@/pages/admin/organization/user-groups/edit/EditUserGroup.vue'),
           },
           {
             path: ':tab/edit/:id',
@@ -178,7 +175,28 @@ export default [
               ],
             },
             name: 'admin-organization-user-groups-edit',
-            component: () => import('@/pages/admin/organization/user-groups/Edit/EditUserGroup.vue'),
+            component: () => import('@/pages/admin/organization/user-groups/edit/EditUserGroup.vue'),
+          },
+          {
+            path: 'import-file',
+            meta: {
+              requireAuth: {
+                permissionKey: 'UserGroupManaging',
+                permissionValue: 2,
+              },
+              breadcrumb: [
+                {
+                  title: 'list-group-user',
+                  to: { name: 'admin-organization-user-groups' },
+                },
+                {
+                  title: 'common.title-import-file',
+                  active: true,
+                },
+              ],
+            },
+            name: 'admin-organization-user-groups-edit',
+            component: () => import('@/pages/admin/organization/user-groups/import-file/ImportFileAddGroup.vue'),
           },
         ],
         component: () => import('@/pages/admin/organization/user-groups/Index.vue'),

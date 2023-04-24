@@ -145,11 +145,11 @@ const config = reactive<Config>(
       urlFileDefault: ApiUser.GetTemplateExcelUpdateProficiencyUser,
       method: 'POST',
       nameFile: 'Proficiency.xlsm',
-      dataColumnExcel,
     },
     importFile: {
       urlFileDefault: ApiUser.UpdateProficiencyUserExcel,
       method: 'POST',
+      dataColumnExcel,
     },
   },
 )
