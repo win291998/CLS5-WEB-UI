@@ -1,12 +1,16 @@
 import { defineStore } from 'pinia'
 import { useRoute } from 'vue-router'
+import { useStoreAddCourse } from './modalEditGroupUser'
 import MethodsUtil from '@/utils/MethodsUtil'
 import { TYPE_REQUEST } from '@/typescript/enums/enums'
 import ApiGroupUser from '@/api/group-user/index'
 import type { Params } from '@/typescript/interface/params'
+import toast from '@/plugins/toast'
 
 export const useCourseGroupStore = defineStore('useCourseGroupStore', () => {
   const route = useRoute()
+  const { t } = window.i18n()
+  const addStoreCourse = useStoreAddCourse()
   interface QueryParams extends Params {
     id: number
   }
@@ -19,24 +23,34 @@ export const useCourseGroupStore = defineStore('useCourseGroupStore', () => {
 
   const listUserInGroup = ref([])
   const totalRecord = ref(0)
-  const getListUser = async () => {
+  const getListCourse = async () => {
     const { data } = await MethodsUtil.requestApiCustom(ApiGroupUser.ListCourse, TYPE_REQUEST.GET, queryParams)
     listUserInGroup.value = data.pageLists
     totalRecord.value = data.totalRecord
   }
   if (!listUserInGroup.value.length)
-    getListUser()
+    getListCourse()
 
-  const excludeIds = computed(() => {
-    return listUserInGroup.value.map((e: any) => e.userId)
+  interface DataCourse {
+    groupId: number
+    courseModel: any[]
+  }
+  const dataCourse = reactive<DataCourse>({
+    groupId: Number(route.params.id),
+    courseModel: [],
   })
-  const moveUser = (val: any) => {
-    //
+  const deleteItem = () => {
+    let status = false
+    MethodsUtil.requestApiCustom(ApiGroupUser.DeleteCourse, TYPE_REQUEST.POST, dataCourse).then((res: any) => {
+      toast('SUCCESS', t('calendar.delete-user-success'))
+      addStoreCourse.getUsersByStruce()
+      getListCourse()
+    }).catch(() => {
+      status = true
+      toast('ERROR', t('calendar.add-user-failed'))
+    })
+    return status
   }
 
-  const deleteItem = (val: any) => {
-    //
-  }
-
-  return { queryParams, listUserInGroup, totalRecord, getListUser, moveUser, deleteItem, excludeIds }
+  return { queryParams, listUserInGroup, totalRecord, getListCourse, deleteItem, dataCourse }
 })

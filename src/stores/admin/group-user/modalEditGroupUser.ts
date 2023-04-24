@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { useRoute } from 'vue-router'
 import { useUserGroupStore } from './cpUser'
+import { useCourseGroupStore } from './cpCourse'
 import MethodsUtil from '@/utils/MethodsUtil'
 import { TYPE_REQUEST } from '@/typescript/enums/enums'
 import ApiGroupUser from '@/api/group-user/index'
@@ -70,14 +71,16 @@ export const useStoreAddUser = defineStore('useStoreAddUser', () => {
     const { data } = await MethodsUtil.requestApiCustom(ApiGroupUser.GroupUserCombobox, TYPE_REQUEST.GET, payload)
     dataHeader.listGroupUser = data
   }
-  getGroupUser()
+  if (!dataHeader.listGroupUser.length)
+    getGroupUser()
 
   const getCategoryTitle = async () => {
     const { data } = await MethodsUtil.requestApiCustom(ApiGroupUser.CategoryTitleCombobox, TYPE_REQUEST.GET)
     dataHeader.listCategoryTitle = data
   }
+  if (!dataHeader.listCategoryTitle.length)
+    getCategoryTitle()
 
-  getCategoryTitle()
   const getTitle = async () => {
     const { data } = await MethodsUtil.requestApiCustom(ApiGroupUser.TitleCombobox, TYPE_REQUEST.GET)
     const list: any[] = []
@@ -89,7 +92,8 @@ export const useStoreAddUser = defineStore('useStoreAddUser', () => {
     })
     dataHeader.listTitle = list
   }
-  getTitle()
+  if (!dataHeader.listTitle.length)
+    getTitle()
 
   // Xử lý thêm người dùng vào nhóm người dùng
   interface DataUser {
@@ -128,32 +132,32 @@ export const useStoreAddUser = defineStore('useStoreAddUser', () => {
 export const useStoreAddCourse = defineStore('useStoreAddCourse', () => {
   const route = useRoute()
   const { t } = window.i18n()
+  const useCourseStore = useCourseGroupStore()
   interface QueryParamsModal extends Params {
     keyword: string
     excludeListId: number[] | null
+    topicCourseId?: number | null
   }
-  const listId = ref<number[]>([])
+  const queryParams = reactive<QueryParamsModal>({
+    keyword: '',
+    excludeListId: [],
+    pageNumber: 1,
+    pageSize: 10,
+    topicCourseId: null,
+  })
   const getUsersByStruce = async () => {
     const payload = {
       id: route.params.id,
       typeId: 2,
     }
     const { data } = await MethodsUtil.requestApiCustom(ApiGroupUser.CourseExclude, TYPE_REQUEST.GET, payload)
-    listId.value = data
-    console.log(data)
+    queryParams.excludeListId = data
   }
   getUsersByStruce()
-  const queryParams = reactive<QueryParamsModal>({
-    keyword: '',
-    excludeListId: [],
-    pageNumber: 1,
-    pageSize: 10,
-  })
 
   const listCourse = ref([])
   const totalRecord = ref(0)
   const fetchData = async () => {
-    queryParams.excludeListId = listId.value
     const { data } = await MethodsUtil.requestApiCustom(ApiGroupUser.ListCourseAdd, TYPE_REQUEST.GET, queryParams)
     listCourse.value = data.pageLists
     totalRecord.value = data.totalRecord
@@ -161,26 +165,18 @@ export const useStoreAddCourse = defineStore('useStoreAddCourse', () => {
 
   // Xử lý thêm người dùng vào nhóm người dùng
   interface DataCourse {
-    isCourse: boolean
-    isTraining: boolean
     groupId: number
-    listCourse: any[]
+    courseModel: any[]
   }
   const dataCourse = reactive<DataCourse>({
-    isCourse: false,
-    isTraining: false,
     groupId: Number(route.params.id),
-    listCourse: [],
+    courseModel: [],
   })
 
-  const handleAddCourse = (list: number[]) => {
-    list.forEach((element: number) => {
-      dataCourse.listCourse.push({ userId: element })
-    })
+  const handleAddCourse = () => {
     let status = false
     MethodsUtil.requestApiCustom(ApiGroupUser.AddCourse, TYPE_REQUEST.POST, dataCourse).then((res: any) => {
       toast('SUCCESS', t('calendar.add-course-success'))
-      status = false
     }).catch((e: any) => {
       toast('ERROR', t('calendar.add-course-failed'))
       status = true
@@ -188,5 +184,5 @@ export const useStoreAddCourse = defineStore('useStoreAddCourse', () => {
     return status
   }
 
-  return { fetchData, queryParams, listCourse, totalRecord, dataCourse, handleAddCourse }
+  return { fetchData, queryParams, listCourse, totalRecord, dataCourse, handleAddCourse, getUsersByStruce }
 })

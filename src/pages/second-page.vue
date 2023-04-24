@@ -75,7 +75,7 @@ const splitRow = () => {
       :headers="headers"
       :items="items"
       @handleClickRow="handleClickRow"
-      @selectedRows="selectedRows"
+      @update:selected="selectedRows"
     />
   </div>
 </template>

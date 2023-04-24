@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import CpHeaderAction from './CpHeaderAction.vue'
 import CpMdAddUser from './Modal/CpMdAddUser.vue'
+import CpMdMoveGroup from './Modal/CpMdMoveGroup.vue'
 import DateUtil from '@/utils/DateUtil'
 import CpCustomInfo from '@/components/page/gereral/CpCustomInfo.vue'
 import { useUserGroupStore } from '@/stores/admin/group-user/cpUser'
@@ -26,7 +27,6 @@ const headers = [
   { text: '', value: 'actions', width: 150 },
 ]
 
-const isShow = ref(false)
 const store = useUserGroupStore()
 const { listUserInGroup, totalRecord, queryParams } = storeToRefs(store)
 const { moveUser, deleteItem, getListUser } = store
@@ -40,8 +40,9 @@ watch(queryParams.value, val => {
   getListUser()
 })
 
+const isShowAddUser = ref(false)
 const showModalAdd = () => {
-  isShow.value = true
+  isShowAddUser.value = true
 }
 
 onBeforeUnmount(() => {
@@ -51,6 +52,14 @@ onBeforeUnmount(() => {
 onDeactivated(() => {
   store.$dispose()
 })
+
+// Chuyển nhóm người dùng
+const isShowModalMove = ref<boolean>(false)
+const showModalShowMove = (data: any) => {
+  console.log(123)
+
+  isShowModalMove.value = true
+}
 </script>
 
 <template>
@@ -82,7 +91,7 @@ onDeactivated(() => {
           icon="simple-line-icons:cursor-move"
           :size="18"
           class="align-middle color-success"
-          @click="moveUser(data)"
+          @click="showModalShowMove(data)"
         />
         <VTooltip
           activator="parent"
@@ -109,9 +118,12 @@ onDeactivated(() => {
   </CmTable>
 
   <CpMdAddUser
-    v-model:is-show="isShow"
+    v-model:is-show="isShowAddUser"
     title="Thêm mới nhóm người dùng"
-    @update:data-user=""
+  />
+  <CpMdMoveGroup
+    v-model:is-show="isShowModalMove"
+    title="Chuyển nhóm người dùng"
   />
 </template>
 

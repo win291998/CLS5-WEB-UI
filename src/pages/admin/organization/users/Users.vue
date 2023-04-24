@@ -334,7 +334,7 @@ fectchListUsers()
       :items="items"
       :total-record="totalRecord"
       @handlePageClick="handlePageClick"
-      @selectedRows="selectedRows"
+      @update:selected="selectedRows"
     >
       <template #rowItem="{ col, context }">
         <div v-if="col === 'fullName'">
