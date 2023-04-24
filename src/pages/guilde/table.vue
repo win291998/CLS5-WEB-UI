@@ -112,7 +112,7 @@ const splitRow = () => {
       custom-id="customId"
       is-expand
       @handleClickRow="handleClickRow"
-      @selectedRows="selectedRows"
+      @update:selected="selectedRows"
     />
   </div>
 </template>

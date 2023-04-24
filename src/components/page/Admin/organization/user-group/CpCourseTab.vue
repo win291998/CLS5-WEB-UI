@@ -5,6 +5,7 @@ import CpCustomInfo from '@/components/page/gereral/CpCustomInfo.vue'
 
 import { useCourseGroupStore } from '@/stores/admin/group-user/cpCourse'
 
+const CpConfirmDialog = defineAsyncComponent(() => import('@/components/page/gereral/CpConfirmDialog.vue'))
 const CpMdAddCourse = defineAsyncComponent(() => import('./Modal/CpMdAddCourse.vue'))
 const CmTable = defineAsyncComponent(() => import('@/components/common/CmTable.vue'))
 
@@ -15,7 +16,8 @@ const TITLE = Object.freeze({
   TITLE_PAGE: t('Danh sách khóa học'),
   BUTTON_ADD: t('common.add'),
   BUTTON_MOVE: t('Chuyển nhóm'),
-  BUTTON_DELETE: t('Xóa người dùng'),
+  BUTTON_DELETE: t('Xóa khóa học'),
+  MESSAGE_DELETE: t('courses.course.confirm-delete'),
 })
 
 // Danh sách người dùng
@@ -34,10 +36,9 @@ const isShowInfo = {
   labelCode: 'code',
 }
 
-const isShow = ref(false)
 const store = useCourseGroupStore()
-const { listUserInGroup, totalRecord, queryParams } = storeToRefs(store)
-const { moveUser, deleteItem, getListUser } = store
+const { listUserInGroup, totalRecord, queryParams, dataCourse } = storeToRefs<any>(store)
+const { deleteItem, getListCourse } = store
 
 // Tìm kiếm người dùng
 const handleSearch = (val: string) => {
@@ -45,11 +46,25 @@ const handleSearch = (val: string) => {
   store.queryParams.pageNumber = 1
 }
 watch(queryParams.value, val => {
-  getListUser()
+  getListCourse()
 })
 
+const isShow = ref(false)
 const showModalAdd = () => {
   isShow.value = true
+}
+
+// Xử lý xóa khóa học
+const isShowModalDelete = ref<boolean>(false)
+const showModalConfirmDelete = (val: any) => {
+  isShowModalDelete.value = true
+  if (val)
+    dataCourse.value.courseModel = [val.id]
+}
+
+const deleteCourse = (val: boolean) => {
+  if (val)
+    deleteItem()
 }
 </script>
 
@@ -59,11 +74,15 @@ const showModalAdd = () => {
     :title-page="TITLE.TITLE_PAGE"
     :button-add="TITLE.BUTTON_ADD"
     :is-show-add-group="false"
+    :is-show-move="false"
     @update:key-search="handleSearch"
     @click-add="showModalAdd"
+    @click-delete="showModalConfirmDelete(null)"
   />
   <CmTable
+
     v-model:page-number="store.queryParams.pageNumber"
+    v-model:selected="store.dataCourse.courseModel"
     :headers="headers"
     :items="listUserInGroup"
     :total-record="totalRecord"
@@ -80,28 +99,12 @@ const showModalAdd = () => {
       </span>
     </template>
     <template #actions="{ data }">
-      <!--
-        <div>
-        <VIcon
-        icon="simple-line-icons:cursor-move"
-        :size="18"
-        class="align-middle color-success"
-        @click="moveUser(data)"
-        />
-        <VTooltip
-        activator="parent"
-        location="top"
-        >
-        {{ TITLE.BUTTON_MOVE }}
-        </VTooltip>
-        </div>
-      -->
       <div>
         <VIcon
           icon="fe:trash"
           :size="18"
           class="align-middle color-error ml-2"
-          @click="deleteItem(data)"
+          @click="showModalConfirmDelete(data)"
         />
         <VTooltip
           activator="parent"
@@ -116,6 +119,12 @@ const showModalAdd = () => {
   <CpMdAddCourse
     v-model:is-show="isShow"
     title="Danh sách khóa học"
+  />
+  <CpConfirmDialog
+    v-model:is-dialog-visible="isShowModalDelete"
+    :confirmation-msg="TITLE.MESSAGE_DELETE"
+    :type="2"
+    @confirm="deleteCourse"
   />
 </template>
 

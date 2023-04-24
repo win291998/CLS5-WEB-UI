@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { ClickRowArgument, Header, Item } from 'vue3-easy-data-table'
+
 import Globals from '@/constant/Globals'
 import ArrayUtil from '@/utils/ArrayUtil'
 import MethodsUtil from '@/utils/MethodsUtil'
@@ -21,6 +22,7 @@ const props = withDefaults(defineProps<Props>(), ({
   customId: 'id',
   totalRecord: 0,
   minHeight: 100,
+  customKeyError: 'errors',
 }))
 
 const emit = defineEmits<Emit>()
@@ -54,6 +56,7 @@ interface Props {
   isActionFooter?: boolean
   pageNumber?: number
   selected?: Item[]
+  customKeyError?: string
 }
 interface Emit {
   (e: 'handleClickRow', dataRow: object, index: number): void
@@ -63,19 +66,18 @@ interface Emit {
   (e: 'changeCellvalue', value: string, field: string, key: number): void
   (e: 'handlePageClick', page: number): void
   (e: 'update:pageNumber', page: number): void
-  (e: 'update:selected', page: number): void
+  (e: 'update:selected', data: Item): void
 
 }
 
 // $ref dataTable
 const dataTable = ref()
 
-const selectedRows = ref<any>([])
-
+// Checkbox table
+const selectedRows = ref<Item[]>([])
 const selectedAll = computed(() => {
-  return (selectedRows.value && selectedRows.value.length > 0 && selectedRows.value.length === props.items.length)
+  return (selectedRows.value.length && selectedRows.value.length === props.items.length)
 })
-
 const indeterminate = computed(() => {
   return (
     selectedRows.value
@@ -83,52 +85,44 @@ const indeterminate = computed(() => {
         && selectedRows.value.length < props.items.length
   )
 })
-
 const keyid = computed(() => {
   return props?.isImportFile ? 'key' : props.customId
 })
 
+watch(() => props.items, (val: Item[]) => {
+  const itemSelected = props.items.filter((x: Item) => x.isSelected === true)
+  selectedRows.value = itemSelected.map((item: Item) => item[keyid.value])
+}, { immediate: true })
 const pageSize = ref(props.pageSize) // số lượng item trên 1 page
 const currentPage = ref<number>(props.pageNumber || Globals.PAGINATION_CURRENT_PAGE) // item hiện tại
+props.items.forEach((element, index) => {
+  element.originIndex = index
+})
 
 /** method */
 // cập nhật selectedRows
-const updateSelectedRows = () => {
-  selectedRows.value = []
-  props.items?.forEach((item: any) => {
-    if (item.isSelected)
-      selectedRows.value.push(item[keyid.value])
-  })
-}
+// const updateSelectedRows = () => {
+//   console.log(123)
+
+//   selectedRows.value = []
+//   props.items?.forEach((item: any) => {
+//     if (item.isSelected)
+//       selectedRows.value.push(item[keyid.value])
+//   })
+// }
 
 // click chọn tất cả hoặc bỏ tất cả
 const checkedAll = (value: any) => {
-  selectedRows.value = []
-  if (props.groupOptions?.enabled === true) {
-    if (!value) {
-      props.items?.forEach(element => {
-        if (element.children) {
-          element.children?.forEach((child: any) => {
-            child.isSelected = true
-            selectedRows.value?.push(child[keyid.value])
-          })
-        }
-        else {
-          element.isSelected = true
-          selectedRows.value?.push(element[keyid.value])
-        }
-      })
-    }
-    else { selectedRows.value = [] }
-  }
-  else {
-    selectedRows.value = !value ? props.items?.map(item => item[keyid.value]) : []
+  if (!value) {
     props.items?.forEach(element => {
       if (!(element?.isDisabled && element?.isDisabled === true))
         element.isSelected = !value
     })
+    selectedRows.value = props.items?.map((item: Item) => item[keyid.value])
   }
-  emit('update:selected', selectedRows.value)
+  else {
+    selectedRows.value = []
+  }
   emit('checkedAll', !value, selectedRows)
 }
 
@@ -136,30 +130,21 @@ const checkedAll = (value: any) => {
 // sự kiện click vào hàng
 const showRow = (item: ClickRowArgument) => {
   const index = props.items.findIndex((row: any) => row.key === item.key)
-
   emit('handleClickRow', item, index)
 }
 
 // sự kiện click chọn item
-const checkedItem = (rows: any, item: any) => {
-  if (props.returnObject) {
-    const selectItemsObject = rows?.map((key: any) => {
-      const objectItem = props.items?.find(itemProp => itemProp[keyid.value] === key)
-      return objectItem || {}
-    })
-    emit('selectedRows', selectItemsObject)
-    emit('update:selected', selectItemsObject)
-  }
-  else {
-    emit('update:selected', rows)
-    emit('selectedRows', rows)
-  }
-  emit('itemSelected', item)
-  const value = rows.includes(item[keyid.value])
-  const action = props.items?.findIndex(element => element[keyid.value] === item[keyid.value])
-  if (action > -1)
-    // eslint-disable-next-line vue/no-mutating-props
-    props.items[action].isSelected = value
+const checkedItem = (index: number, value: any) => {
+  // eslint-disable-next-line vue/no-mutating-props
+  props.items[index].isSelected = !value
+  const itemSelected = props.items.filter((x: Item) => x.isSelected === true)
+  selectedRows.value = itemSelected.map((item: Item) => item[keyid.value])
+  if (props.returnObject)
+    emit('update:selected', itemSelected)
+  else
+    emit('update:selected', selectedRows.value)
+  console.log('selectedRows.value', selectedRows.value)
+  console.log('itemSelected', itemSelected)
 }
 
 // Cập nhật table theo pagination
@@ -185,7 +170,7 @@ const pageSizeChange = (page: number, size: number) => {
 
 // kiểm tra cột lỗi
 const isErrorcell = (field: string, data: any) => {
-  return data.errors?.filter(x => x.location.toLowerCase() === field.toLowerCase()).length > 0
+  return data.errors?.filter((x: any) => x.location.toLowerCase() === field.toLowerCase()).length > 0
 }
 
 // thay đổi dữ liệu trên bảng
@@ -194,9 +179,9 @@ const changeCellvalue = (event: any, field: string, key: number) => {
 }
 
 // watch
-watch(() => props.items, value => {
-  updateSelectedRows()
-}, { deep: true })
+// watch(() => props.items, value => {
+//   updateSelectedRows()
+// }, { deep: true, immediate: true })
 </script>
 
 <template>
@@ -226,9 +211,8 @@ watch(() => props.items, value => {
             v-model="selectedAll"
             :indeterminate="indeterminate"
             :label="header.text"
-            :class="{ indeterminate }"
-
             ripple
+            :class="{ indeterminate }"
             @change="checkedAll(selectedAll)"
           />
         </div>
@@ -282,7 +266,7 @@ watch(() => props.items, value => {
             v-model="selectedRows"
             multiple
             :value="context[keyid]"
-            @input="checkedItem(selectedRows, context)"
+            @input="checkedItem(context.originIndex, context.isSelected)"
           />
         </div>
         <div

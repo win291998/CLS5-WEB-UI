@@ -13,6 +13,7 @@ interface Props {
   listItemButtonGroup?: any[]
   isShowAddGroup?: boolean
   isShowDelete?: boolean
+  isShowMove?: boolean
   isShowAdd?: boolean
   titlePage: string
   buttonAdd: string
@@ -86,7 +87,7 @@ const handleSearch = (val: string) => {
         />
 
         <CmButton
-          v-if="props.isShowDelete"
+          v-if="props.isShowMove"
           icon="simple-line-icons:cursor-move"
           color="success"
           size="40"

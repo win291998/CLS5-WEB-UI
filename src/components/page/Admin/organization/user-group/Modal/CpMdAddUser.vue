@@ -2,7 +2,7 @@
 import CpHeaderMdGroupUser from './CpHeaderMdGroupUser.vue'
 import CmDialogs from '@/components/common/CmDialogs.vue'
 import CpCustomInfo from '@/components/page/gereral/CpCustomInfo.vue'
-import { useStoreAddUser } from '@/stores/admin/group-user/modal'
+import { useStoreAddUser } from '@/stores/admin/group-user/modalEditGroupUser'
 
 const props = withDefaults(defineProps<Props>(), ({}))
 
@@ -48,11 +48,11 @@ const confirm = async () => {
     :is-dialog-visible="props.isShow"
     :title="title"
     size="xl"
+    :disabled-ok="!listItem.length"
     @cancel="hidden"
     @confirm="confirm"
     @show="fetchDataModal"
   >
-    <!-- :disabled-ok="!dataUser.listUser.length" -->
     <CpHeaderMdGroupUser
       v-model:is-course="store.dataUser.isCourse"
       v-model:is-training="store.dataUser.isTraining"
@@ -62,8 +62,8 @@ const confirm = async () => {
       v-model:group-id="store.queryParams.groupId"
       v-model:organizational-structure-id="store.queryParams.organizationalStructureId"
       v-model:titles="store.queryParams.titles"
-      v-model:page-number="store.queryParams.pageNumber"
       v-bind="dataHeader"
+      v-model:page-number="store.queryParams.pageNumber"
     />
 
     <CmTable

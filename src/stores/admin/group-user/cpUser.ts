@@ -50,7 +50,7 @@ export const useUserGroupStore = defineStore('useUserGroupStore', () => {
     MethodsUtil.requestApiCustom(ApiGroupUser.MoveUser, TYPE_REQUEST.PUT).then((res: any) => {
       toast('SUCCESS', t('calendar.add-user-success'))
     }).catch((e: any) => {
-      toast('SUCCESS', t('calendar.add-user-failed'))
+      toast('ERROR', t('calendar.add-user-failed'))
       status = true
     })
     return status

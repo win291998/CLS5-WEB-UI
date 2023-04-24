@@ -89,6 +89,7 @@ const sizeModal = computed(() => {
       content-class="cm-dialogs"
       :model-value="props.isDialogVisible"
       :width="sizeModal"
+      scrollable
       :persistent="props.persistent"
       @update:model-value="onCancel"
       @before-enter="onDialogShown"
@@ -152,8 +153,8 @@ const sizeModal = computed(() => {
 }
 .cm-dialogs {
   .v-card-text {
-    overflow: auto;
-    max-height: 90vh;
+    // overflow: auto;
+    // max-height: 90vh;
   }
 }
 </style>

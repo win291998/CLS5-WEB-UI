@@ -165,7 +165,7 @@ const deleteItem = async (val: any) => {
       :headers="headers"
       :items="items"
       :total-record="totalRecord"
-      @selectedRows="selectedRows"
+      @update:selected="selectedRows"
       @checked-all="selectedAll"
       @handlePageClick="handlePageClick"
       @changeCellvalue="changeCellvalue"

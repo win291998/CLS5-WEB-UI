@@ -109,6 +109,11 @@ export const comboboxStore = defineStore('combobox', () => {
     organizations.value = []
   })
 
+  const listTopicCourse = ref([])
+  const getListTopicCourse = async () => {
+    const { data } = await MethodsUtil.requestApiCustom(ComboboxService.topicCourse, TYPE_REQUEST.GET)
+    listTopicCourse.value = data
+  }
   return {
     organizations,
     statuses,
@@ -124,5 +129,7 @@ export const comboboxStore = defineStore('combobox', () => {
     fetchDistricts,
     fetchProvinces,
     fetchWards,
+    listTopicCourse,
+    getListTopicCourse,
   }
 })

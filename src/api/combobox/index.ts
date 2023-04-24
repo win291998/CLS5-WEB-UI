@@ -9,6 +9,7 @@ const ComboboxService = {
   Provinces: '/Address/get-provinces', // Tỉnh thành phố
   Districts: '/Address/get-districts', // Quận huyện
   Wards: '/Address/get-wards', // Quận huyện
+  topicCourse: '/topic/get-combobox-topic-course',
 }
 
 export default ComboboxService

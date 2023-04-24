@@ -1,9 +1,6 @@
 <script lang="ts" setup>
 import CpOrganizationSelect from '@/components/page/gereral/CpOrganizationSelect.vue'
 import CmSelect from '@/components/common/CmSelect.vue'
-import ApiGroupUser from '@/api/group-user/index'
-import MethodsUtil from '@/utils/MethodsUtil'
-import { TYPE_REQUEST } from '@/typescript/enums/enums'
 import CpSearch from '@/components/page/gereral/CpSearch.vue'
 import CmCheckBox from '@/components/common/CmCheckBox.vue'
 
@@ -16,7 +13,6 @@ interface Props {
   organizationalStructureId: number[] | null
   isCourse: boolean
   isTraining: boolean
-  pageNumber: number
   listGroupUser?: any[]
   listCategoryTitle?: any[]
   listTitle?: any[]
