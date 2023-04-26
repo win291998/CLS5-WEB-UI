@@ -90,20 +90,18 @@ const keyid = computed(() => {
 })
 
 watch(() => props.items, (val: Item[]) => {
-  const itemSelected = props.items.filter((x: Item) => x.isSelected === true)
-  selectedRows.value = itemSelected.map((item: Item) => item[keyid.value])
+  props.items.forEach((element, index) => {
+    element.originIndex = index
+    element.isSelected = !!element.isSelected
+    if (element.isSelected)
+      selectedRows.value.push([keyid.value])
+  })
 }, { immediate: true })
 const pageSize = ref(props.pageSize) // số lượng item trên 1 page
-const currentPage = ref<number>(props.pageNumber || Globals.PAGINATION_CURRENT_PAGE) // item hiện tại
-props.items.forEach((element, index) => {
-  element.originIndex = index
-})
 
 /** method */
 // cập nhật selectedRows
 // const updateSelectedRows = () => {
-//   console.log(123)
-
 //   selectedRows.value = []
 //   props.items?.forEach((item: any) => {
 //     if (item.isSelected)
@@ -116,13 +114,20 @@ const checkedAll = (value: any) => {
   if (!value) {
     props.items?.forEach(element => {
       if (!(element?.isDisabled && element?.isDisabled === true))
+        // eslint-disable-next-line sonarjs/no-gratuitous-expressions
         element.isSelected = !value
     })
     selectedRows.value = props.items?.map((item: Item) => item[keyid.value])
   }
   else {
     selectedRows.value = []
+    props.items?.forEach(element => {
+      if (!(element?.isDisabled && element?.isDisabled === true))
+        element.isSelected = !value
+    })
   }
+  const data = props.returnObject ? props.items : selectedRows.value
+  emit('update:selected', data)
   emit('checkedAll', !value, selectedRows)
 }
 
@@ -134,7 +139,7 @@ const showRow = (item: ClickRowArgument) => {
 }
 
 // sự kiện click chọn item
-const checkedItem = (index: number, value: any) => {
+const checkedItem = (index: number, value: boolean | undefined) => {
   // eslint-disable-next-line vue/no-mutating-props
   props.items[index].isSelected = !value
   const itemSelected = props.items.filter((x: Item) => x.isSelected === true)
@@ -143,8 +148,6 @@ const checkedItem = (index: number, value: any) => {
     emit('update:selected', itemSelected)
   else
     emit('update:selected', selectedRows.value)
-  console.log('selectedRows.value', selectedRows.value)
-  console.log('itemSelected', itemSelected)
 }
 
 // Cập nhật table theo pagination

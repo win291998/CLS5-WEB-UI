@@ -7,14 +7,9 @@ import ApiGroupUser from '@/api/group-user/index'
 // Cập nhật năng lực
 const dataColumnExcel = (rowData: Array<any>) => {
   // eslint-disable-next-line prefer-const
-  let [code, name, description] = rowData
-  return { name, code, description }
+  let [infor, groupName] = rowData
+  return { infor, groupName }
 }
-
-const combobox = reactive({
-  comboboxLevel: [],
-  comboboxGroupProficiency: [],
-})
 
 // config
 const config = reactive<Config>(
@@ -23,18 +18,17 @@ const config = reactive<Config>(
     routerBack: 'admin-organization-user-groups-list',
     table: ({
       header: [
-        { text: 'Mã', value: 'code' },
-        { text: 'Tên Nhóm', value: 'name' },
-        { text: 'Mô Tả', value: 'description' },
+        { text: 'Mã', value: 'infor' },
+        { text: 'Tên Nhóm', value: 'groupName' },
       ],
     }),
     dowloadSample: {
-      urlFileDefault: ApiGroupUser.DownloadFileSampleGroup,
+      urlFileDefault: ApiGroupUser.DownloadFileSampleAddUser,
       method: TYPE_REQUEST.POST,
-      nameFile: 'UserGroup.xlsx',
+      nameFile: 'AddUserToGroup.xlsx',
     },
     importFile: {
-      urlFileDefault: ApiGroupUser.ImportFileGroup,
+      urlFileDefault: ApiGroupUser.ImportAddUserToGroup,
       method: TYPE_REQUEST.POST,
       dataColumnExcel,
       paramsImport: {
@@ -45,14 +39,23 @@ const config = reactive<Config>(
 )
 const actions = ref<Action[]>([
   {
-    title: 'Thêm từ tệp tin',
+    title: 'Cập nhật từ mail',
+    key: 1,
+  },
+  {
+    title: 'Cập nhật từ mã',
+    key: 2,
+  },
+  {
+    title: 'Cập nhật từ tài khoản',
+    key: 3,
   },
 ])
 const titleImport = {
-  titleList: 'Danh sách nhóm người dùng',
-  titlePage: 'Thêm nhóm người dùng từ tập tin',
-  titleButtonAdd: 'Thêm nhóm người dùng',
-  titlePageUpload: 'Thêm nhóm người dùng từ tập tin',
+  titleList: 'Danh sách người dùng',
+  titlePage: 'Thêm người dùng từ tập tin',
+  titleButtonAdd: 'Thêm người dùng',
+  titlePageUpload: 'Thêm người dùng từ tập tin',
 }
 </script>
 
@@ -60,7 +63,6 @@ const titleImport = {
   <div>
     <CpImportFile
       :config="config"
-      custom-key-error="messErr"
       :actions="actions"
       v-bind="titleImport"
     />

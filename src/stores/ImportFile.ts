@@ -15,6 +15,11 @@ export const useImportFileStore = defineStore('importFile', () => {
     validData: [],
     invalidData: [],
   })
+  const $reset = () => {
+    paramsImport.validData = []
+    paramsImport.invalidData = []
+    type.value = undefined
+  }
   const customKeyError = ref<string>('errors')
 
   /** method */
@@ -42,14 +47,11 @@ export const useImportFileStore = defineStore('importFile', () => {
       listExcel: listData,
       isSave: false,
       isValidate: true,
-      type: 2,
+      type: type.value,
       ...paramExtend,
     }
-
     const res = await MethodsUtil.requestApiCustom(config.importFile?.urlFileDefault, config.importFile?.method, model).then((value: any) => value)
-
     checkDataError(res.data)
-
     const validData = res.data.filter((item: any) => item.isSuccess === true)
     if (validData) {
       validData.forEach((element: never, id: number) => {
@@ -64,6 +66,7 @@ export const useImportFileStore = defineStore('importFile', () => {
       })
       paramsImport.invalidData = inValidData
     }
+    console.log(paramsImport)
 
     // showaddComponent = validData.length > 0
   }
@@ -74,14 +77,11 @@ export const useImportFileStore = defineStore('importFile', () => {
       listExcel: paramsImport.invalidData,
       isSave: false,
       isValidate: true,
-      type: 2,
+      type: type.value,
       ...config?.importFile?.paramsImport,
     }
-
     const res = await MethodsUtil.requestApiCustom(config.importFile?.urlFileDefault, config.importFile?.method, model).then((value: any) => value)
-
     checkDataError(res.data)
-
     const validData = res.data.filter((item: any) => item.isSuccess === true)
     if (validData.length) {
       validData.forEach((element: never, id: number) => {
@@ -98,8 +98,6 @@ export const useImportFileStore = defineStore('importFile', () => {
       })
       paramsImport.invalidData = inValidData
     }
-
-    // this.showaddComponent = this.validData.length > 0
   }
 
   const fileChange = (event: any) => {
@@ -134,14 +132,13 @@ export const useImportFileStore = defineStore('importFile', () => {
         list.listData.push(item)
       }
     })
-
     let model = {
       listExcel: list.listData,
       isSave: true,
       isValidate: false,
       typeUpdate: 2,
+      type: type.value,
     }
-
     if (!ObjectUtil.isEmpty(type.value)) {
       model = {
         ...model,
@@ -167,5 +164,5 @@ export const useImportFileStore = defineStore('importFile', () => {
     }
   }
 
-  return { getValidData, checkInvalidData, checkDataError, paramsImport, fileChange, config, type, updateFromFile, customKeyError }
+  return { getValidData, checkInvalidData, checkDataError, paramsImport, fileChange, config, type, updateFromFile, customKeyError, $reset }
 })
