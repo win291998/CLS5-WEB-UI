@@ -28,7 +28,6 @@ interface propertyGlobal {
 
 
 const showAllPageLoading = (type:  typeof typeLoading[number] =null)=> {
-  console.log(document.getElementById('loading-bg'))
   const htmlLoading =  document.getElementById('loading-bg')
   if(htmlLoading){
     switch (type) {
@@ -54,7 +53,6 @@ const showAllPageLoading = (type:  typeof typeLoading[number] =null)=> {
   }
 }
 const hideAllPageLoading = ()=> {
-  console.log(document.getElementById('loading-bg'))
   const htmlLoading =  document.getElementById('loading-bg')
   
   if(htmlLoading){

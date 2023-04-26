@@ -30,8 +30,8 @@ const emit = defineEmits<Emit>()
 
 const CmDialogs = defineAsyncComponent(() => import('@/components/common/CmDialogs.vue'))
 const CmSelect = defineAsyncComponent(() => import('@/components/common/CmSelect.vue'))
-const CmTextArea = defineAsyncComponent(() => import('@/components/common/CmTextArea.vue'))
 const CmDateTimePicker = defineAsyncComponent(() => import('@/components/common/CmDateTimePicker.vue'))
+const CmTextArea = defineAsyncComponent(() => import('@/components/common/CmtextArea.vue'))
 
 /**
  * lib
@@ -129,6 +129,9 @@ watch(() => props.isDialogVisible, value => {
   if (value && !props.educationData?.isEdit)
     resetForm()
 })
+watch(() => props.educationData, value => {
+  setValues(value)
+}, { deep: true })
 </script>
 
 <template>
@@ -226,6 +229,6 @@ watch(() => props.isDialogVisible, value => {
 </template>
 
 <style scoped lang="scss">
-@use "/src/styles/style-global" as *;
+@use "@/styles/style-global.scss" as *;
 </style>
 

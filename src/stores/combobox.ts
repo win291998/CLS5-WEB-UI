@@ -22,6 +22,7 @@ export const comboboxStore = defineStore('combobox', () => {
   const provinces = ref<combobox[]>([])
   const districts = ref<combobox[]>([])
   const wards = ref<combobox[]>([])
+  const userLevels = ref<combobox[]>([])
 
   /** method */
   // Lấy danh sách trạng thái người dùng
@@ -106,6 +107,19 @@ export const comboboxStore = defineStore('combobox', () => {
     }
   }
 
+  // get trình độ
+  const fetchUserLevels = async () => {
+    await MethodsUtil.requestApiCustom(ComboboxService.levels, TYPE_REQUEST.GET).then((value: any) => {
+      userLevels.value = value.data || []
+      console.log(value)
+      userLevels.value = value?.data?.map((item: any) => {
+        return {
+          ...item,
+          value: t(item.value),
+        }
+      })
+    })
+  }
   onMounted(() => {
     //
   })
@@ -126,6 +140,8 @@ export const comboboxStore = defineStore('combobox', () => {
     provinces,
     districts,
     wards,
+    userLevels,
+    listTopicCourse,
     fetchStatusUsersCombobox,
     fetchTypeUsersCombobox,
     fetchTOrgStructCombobox,
@@ -133,7 +149,7 @@ export const comboboxStore = defineStore('combobox', () => {
     fetchDistricts,
     fetchProvinces,
     fetchWards,
-    listTopicCourse,
     getListTopicCourse,
+    fetchUserLevels,
   }
 })

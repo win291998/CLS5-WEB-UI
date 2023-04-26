@@ -115,12 +115,12 @@ export const profileUserManagerStore = defineStore('profileUserManager', () => {
     kpiTeach: schemaOption.kpiTeach,
     userTypeIdSingle: schemaOption.userTypeIdSingle,
     statusIdSingle: schemaOption.statusIdSingle,
+    defaultField: schemaOption.defaultField,
   })
 
   const schemaPass = reactive<any>({
     password: schemaOption?.password,
   })
-  console.log(route.params.id)
   const updateSchema = () => {
     if (!Number(route.params.id))
       schema.value = { ...schemaInit, ...schemaPass }
@@ -194,14 +194,11 @@ export const profileUserManagerStore = defineStore('profileUserManager', () => {
     const form: any = myFormUserInfor.value
     if (form) {
       form.validate().then(async (success: any) => {
-        console.log(success)
-
         if (success.valid) {
           const params = dataObj
 
           await MethodsUtil.requestApiCustom(ApiUser.fetchCreateUser, TYPE_REQUEST.POST, params)
             .then(value => {
-              console.log(value)
               if (titleTable.value?.isChange)
                 titleTable.value.updateTitle(value.data)
               toast('SUCCESS', t(value.message))
@@ -223,7 +220,6 @@ export const profileUserManagerStore = defineStore('profileUserManager', () => {
             })
 
             .catch((error: any) => {
-              console.log(error)
               toast('ERROR', t(getErrorsMessage(error)))
             })
         }
@@ -237,22 +233,18 @@ export const profileUserManagerStore = defineStore('profileUserManager', () => {
  */
   const handleUpdateUser = async (bvModalEvt: any, dataObj: any, type: any) => {
     const form: any = myFormUserInfor.value
-    console.log(myFormUserInfor)
 
     form.validate().then(async (success: any) => {
-      console.log(success)
-
       if (success.valid) {
         const params = dataObj
 
         await MethodsUtil.requestApiCustom(ApiUser.fetchUpdateUser, TYPE_REQUEST.POST, params)
           .then((value: any) => {
-            if (titleTable.value?.isChange) {
-              console.log(titleTable.value?.isChange)
+            if (titleTable.value?.isChange)
               titleTable.value.updateTitle()
-            }
+
             toast('SUCCESS', t(value.message))
-            resetFormInfor()
+
             if (type === 'save') {
               router.push({ name: 'admin-organization-users-manager' })
 
@@ -260,7 +252,8 @@ export const profileUserManagerStore = defineStore('profileUserManager', () => {
             }
             if (type === 'save-add')
               resetData()
-            console.log(value)
+
+            resetFormInfor()
           })
       }
       else {
@@ -273,7 +266,6 @@ export const profileUserManagerStore = defineStore('profileUserManager', () => {
     values.firstName = values?.firstName.trim()
     values.lastName = values?.lastName.trim()
     values.userName = values?.userName.trim()
-    console.log(values)
 
     if (idUpdate.value === null)
       handlesCreateUser(bvModalEvt, values, type)

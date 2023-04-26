@@ -10,6 +10,7 @@ const ComboboxService = {
   Districts: '/Address/get-districts', // Quận huyện
   Wards: '/Address/get-wards', // Quận huyện
   topicCourse: '/topic/get-combobox-topic-course',
+  levels: '/Level/get-combobox',
 }
 
 export default ComboboxService

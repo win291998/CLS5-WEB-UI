@@ -114,7 +114,7 @@ watch(() => props.modelValue, newValue => {
         class="text-medium-sm color-dark"
       >{{ props.text }}</label>
     </div>
-    <div>
+    <div class="cm-select">
       <ISelect
         v-model="valueCurrent"
         v-bind="field"
@@ -153,8 +153,8 @@ watch(() => props.modelValue, newValue => {
 </template>
 
 <style lang="scss">
+@use "@/styles/style-global.scss" as *;
 @import "vue-select/dist/vue-select.css";
-
 .v-select-cls.is-invalid {
   // Vue Select
   &.v-select {
@@ -174,11 +174,18 @@ watch(() => props.modelValue, newValue => {
   &__dropdown-toggle {
     block-size: 40px;
   }
+  &__search {
+    color:  $color-gray-500;
+  }
 }
 
 .error-label {
   font-size: 12px;
   padding-block: 6px 0;
   padding-inline: 16px;
+}
+.cm-select .vs__dropdown-toggle{
+  border-radius: $border-radius-xs;
+  background: $color-input-default;
 }
 </style>

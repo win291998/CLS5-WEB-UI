@@ -30,7 +30,7 @@ const emit = defineEmits<Emit>()
 
 const CmDialogs = defineAsyncComponent(() => import('@/components/common/CmDialogs.vue'))
 const CmSelect = defineAsyncComponent(() => import('@/components/common/CmSelect.vue'))
-const CmTextArea = defineAsyncComponent(() => import('@/components/common/CmTextArea.vue'))
+const CmTextArea = defineAsyncComponent(() => import('@/components/common/CmtextArea.vue'))
 const CmDateTimePicker = defineAsyncComponent(() => import('@/components/common/CmDateTimePicker.vue'))
 const CmTextField = defineAsyncComponent(() => import('@/components/common/CmTextField.vue'))
 const CmCheckBox = defineAsyncComponent(() => import('@/components/common/CmCheckBox.vue'))
@@ -58,7 +58,7 @@ const DATA_LABEL = Object.freeze({
 // get name schools '
 
 const fetchNameSchools = async () => {
-  await MethodsUtil.requestApiCustom(ApiUser.fetchNameSchools, TYPE_REQUEST.GET).then(value => {
+  await MethodsUtil.requestApiCustom(ApiUser.fetchNameSchools, TYPE_REQUEST.GET).then((value: any) => {
     console.log(value)
 
     data.nameSchoolsCombobox = value.data
@@ -69,7 +69,7 @@ fetchNameSchools()
 
 // get bằng cấp trình độ '
 const fetchDegrees = async () => {
-  await MethodsUtil.requestApiCustom(ApiUser.fetchDegrees, TYPE_REQUEST.GET).then(value => {
+  await MethodsUtil.requestApiCustom(ApiUser.fetchDegrees, TYPE_REQUEST.GET).then((value: any) => {
     console.log(value)
     data.degreesCombobox = value.data
   })
@@ -96,10 +96,10 @@ const { values, setValues, resetForm } = useForm({
 })
 
 /** event dialog */
-const onCancel = () => {
+
+const onCancel = async () => {
   emit('update:isDialogVisible', false, 'EXPERENCE')
 }
-
 const myFormExperence = ref(null)
 
 /**
@@ -131,13 +131,13 @@ const onConfirmation = () => {
 }
 
 watch(() => props.isDialogVisible, value => {
-  console.log('props:', props.experienceData?.isEdit)
-
-  if (value && !props.experienceData?.isEdit) {
-    console.log('resetForm:', value)
+  if (value && !props.experienceData?.isEdit)
     resetForm()
-  }
 })
+watch(() => props.experienceData, value => {
+  console.log('props:', value)
+  setValues(value)
+}, { deep: true })
 </script>
 
 <template>

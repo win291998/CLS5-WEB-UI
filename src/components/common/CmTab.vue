@@ -40,6 +40,7 @@ interface Props {
   label?: string
   routeName?: string
   dataGeneral?: any // hạn chế dùng
+  isRender: boolean
 }
 const router = useRouter()
 const route = useRoute()

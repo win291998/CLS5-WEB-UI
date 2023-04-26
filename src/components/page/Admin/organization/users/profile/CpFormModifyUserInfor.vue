@@ -4,6 +4,9 @@ import { comboboxStore } from '@/stores/combobox'
 import { load } from '@/stores/loadComponent'
 import { profileUserManagerStore } from '@/stores/admin/users/profile/profile'
 
+const emit = defineEmits<Emit>()
+window.showAllPageLoading('COMPONENT')
+
 /**
  * interface
  */
@@ -12,7 +15,6 @@ interface Emit {
   (e: 'tabAction', position: number, status: any): void
 }
 
-const emit = defineEmits<Emit>()
 const CmTextField = defineAsyncComponent(() => import('@/components/common/CmTextField.vue'))
 const CmSelect = defineAsyncComponent(() => import('@/components/common/CmSelect.vue'))
 const CpTitleTable = defineAsyncComponent(() => import('./CpTitleTable.vue'))
@@ -77,294 +79,298 @@ onMounted(() => {
   myFormUserInfor.value = formUserInfor.value
   updateSchema()
 })
+window.hideAllPageLoading()
 </script>
 
 <template>
-  <Form
-    ref="formUserInfor"
-    :validation-schema="schema"
-    @submit.prevent="submitForm"
-  >
-    <VSheet
-      width="100%"
-      class="user-infor mx-auto no-background"
+  <div>
+    <Form
+      ref="formUserInfor"
+      :validation-schema="schema"
+      @submit.prevent="submitForm"
     >
-      <div>
-        User profile
-      </div>
+      <VSheet
+        width="100%"
+        class="user-infor mx-auto no-background"
+      >
+        <div>
+          User profile
+        </div>
 
-      <VRow class="my-3">
-        <VCol
-          cols="12"
-          md="2"
-        >
-          <CpUserProfileAvatarEdit
-            v-model:src="values.avatar"
-            :tooltip="t('system-management.100x100')"
-          />
-        </VCol>
-        <VCol
-          cols="12"
-          md="10"
-          class="d-flex align-center"
-        >
-          <CmRadioGroup
-            v-model="values.gender"
-            :label="t('common.gender')"
-            :option="optionGender"
-          />
-        </VCol>
-      </VRow>
-      <VRow class="mb-5">
-        <VCol
-          cols="12"
-          md="4"
-        >
-          <Field
-            v-slot="{ field, errors }"
-            v-model="values.lastName"
-            name="lastName"
-            type="text"
-            :rules="schema.lastName"
+        <VRow class="my-3">
+          <VCol
+            cols="12"
+            md="2"
           >
-            <CmTextField
-              :field="field"
-              :errors="errors"
-              :text="`${t('common.surname')}*`"
-              :placeholder="t('users.add-user.enter-surname')"
-              @change="handleFormValue"
+            <CpUserProfileAvatarEdit
+              v-if="values"
+              v-model:src="values.avatar"
+              :tooltip="t('system-management.100x100')"
             />
-          </Field>
-        </VCol>
-        <VCol
-          cols="12"
-          md="4"
-        >
-          <Field
-            v-slot="{ field, errors }"
-            v-model="values.firstName"
-            name="firstName"
-            type="text"
-            :rules="schema.firstName"
+          </VCol>
+          <VCol
+            cols="12"
+            md="10"
+            class="d-flex align-center"
           >
-            <CmTextField
-              :field="field"
-              :errors="errors"
-              :text="`${t('common.name')}*`"
-              :placeholder="t('users.add-user.enter-last-name')"
-              @change="handleFormValue"
+            <CmRadioGroup
+              v-model="values.gender"
+              :label="t('common.gender')"
+              :option="optionGender"
             />
-          </Field>
-        </VCol>
-        <VCol
-          cols="12"
-          md="4"
-        >
-          <Field
-            v-slot="{ field, errors }"
-            v-model="values.email"
-            name="email"
-            type="text"
-            :rules="schema.email"
+          </VCol>
+        </VRow>
+        <VRow class="mb-5">
+          <VCol
+            cols="12"
+            md="4"
           >
-            <CmTextField
-              :field="field"
-              :errors="errors"
-              :text="`${t('common.email')}*`"
-              :placeholder="t('users.add-user.enter-email')"
-              @change="handleFormValue"
-            />
-          </Field>
-        </VCol>
-        <VCol
-          cols="12"
-          md="4"
-        >
-          <Field
-            v-slot="{ field, errors }"
-            v-model="values.userName"
-            name="userName"
-            type="text"
-            :rules="schema.userName"
+            <Field
+              v-slot="{ field, errors }"
+              v-model="values.lastName"
+              name="lastName"
+              type="text"
+              :rules="schema.lastName"
+            >
+              <CmTextField
+                :field="field"
+                :errors="errors"
+                :text="`${t('common.surname')}*`"
+                :placeholder="t('users.add-user.enter-surname')"
+                @change="handleFormValue"
+              />
+            </Field>
+          </VCol>
+          <VCol
+            cols="12"
+            md="4"
           >
-            <CmTextField
-              :field="field"
-              :errors="errors"
-              :text="`${t('common.sign-name')}*`"
-              :placeholder="t('users.add-user.enter-sign-name')"
-              @change="handleFormValue"
-            />
-          </Field>
-        </VCol>
+            <Field
+              v-slot="{ field, errors }"
+              v-model="values.firstName"
+              name="firstName"
+              type="text"
+              :rules="schema.firstName"
+            >
+              <CmTextField
+                :field="field"
+                :errors="errors"
+                :text="`${t('common.name')}*`"
+                :placeholder="t('users.add-user.enter-last-name')"
+                @change="handleFormValue"
+              />
+            </Field>
+          </VCol>
+          <VCol
+            cols="12"
+            md="4"
+          >
+            <Field
+              v-slot="{ field, errors }"
+              v-model="values.email"
+              name="email"
+              type="text"
+              :rules="schema.email"
+            >
+              <CmTextField
+                :field="field"
+                :errors="errors"
+                :text="`${t('common.email')}*`"
+                :placeholder="t('users.add-user.enter-email')"
+                @change="handleFormValue"
+              />
+            </Field>
+          </VCol>
+          <VCol
+            cols="12"
+            md="4"
+          >
+            <Field
+              v-slot="{ field, errors }"
+              v-model="values.userName"
+              name="userName"
+              type="text"
+              :rules="schema.userName"
+            >
+              <CmTextField
+                :field="field"
+                :errors="errors"
+                :text="`${t('common.sign-name')}*`"
+                :placeholder="t('users.add-user.enter-sign-name')"
+                @change="handleFormValue"
+              />
+            </Field>
+          </VCol>
 
-        <VCol
-          v-if="!idUpdate"
-          cols="12"
-          md="4"
-        >
-          <Field
-            v-slot="{ field, errors }"
-            v-model="values.password"
-            name="password"
-            type="password"
-            :rules="schema.password"
+          <VCol
+            v-if="!idUpdate"
+            cols="12"
+            md="4"
           >
-            <CmTextField
-              :field="field"
-              :errors="errors"
+            <Field
+              v-slot="{ field, errors }"
+              v-model="values.password"
+              name="password"
               type="password"
-              :text="`${t('common.password')}*`"
-              :placeholder="t('users.add-user.enter-password')"
-              @change="handleFormValue"
-            />
-          </Field>
-        </VCol>
-        <VCol
-          cols="12"
-          md="4"
-        >
-          <Field
-            v-slot="{ field, errors }"
-            v-model="values.userCode"
-            name="userCode"
-            type="text"
-            :rules="schema.userCode"
+              :rules="schema.password"
+            >
+              <CmTextField
+                :field="field"
+                :errors="errors"
+                type="password"
+                :text="`${t('common.password')}*`"
+                :placeholder="t('users.add-user.enter-password')"
+                @change="handleFormValue"
+              />
+            </Field>
+          </VCol>
+          <VCol
+            cols="12"
+            md="4"
           >
-            <CmTextField
-              :field="field"
-              :errors="errors"
-              :text="`${t('common.employee-code')}*`"
-              :placeholder="$t('users.add-user.enter-employee-code')"
-              @change="handleFormValue"
-            />
-          </Field>
-        </VCol>
-        <VCol
-          cols="12"
-          md="4"
-        >
-          <Field
-            v-slot="{ field, errors }"
-            v-model="values.phoneNumber"
-            name="phoneNumber"
-            type="number"
-            :rules="schema.phoneNumber"
+            <Field
+              v-slot="{ field, errors }"
+              v-model="values.userCode"
+              name="userCode"
+              type="text"
+              :rules="schema.userCode"
+            >
+              <CmTextField
+                :field="field"
+                :errors="errors"
+                :text="`${t('common.employee-code')}*`"
+                :placeholder="$t('users.add-user.enter-employee-code')"
+                @change="handleFormValue"
+              />
+            </Field>
+          </VCol>
+          <VCol
+            cols="12"
+            md="4"
           >
-            <CmTextField
-              :field="field"
-              :errors="errors"
-              :text="`${t('common.phone-number')}`"
-              :placeholder="$t('common.phone-number')"
+            <Field
+              v-slot="{ field, errors }"
+              v-model="values.phoneNumber"
+              name="phoneNumber"
               type="number"
-              @change="handleFormValue"
-            />
-          </Field>
-        </VCol>
-        <VCol
-          cols="12"
-          md="4"
-        >
-          <Field
-            v-slot="{ field, errors }"
-            v-model="values.userTypeId"
-            name="userTypeIdSingle"
-            :rules="schema.userTypeIdSingle"
+              :rules="schema.phoneNumber"
+            >
+              <CmTextField
+                :field="field"
+                :errors="errors"
+                :text="`${t('common.phone-number')}`"
+                :placeholder="$t('common.phone-number')"
+                type="number"
+                @change="handleFormValue"
+              />
+            </Field>
+          </VCol>
+          <VCol
+            cols="12"
+            md="4"
           >
-            <CmSelect
-              :field="field"
-              :model-value="values.userTypeId"
-              :text="LABEL.TEXT_USER_TYPE"
-              :placeholder="LABEL.PLACEHOLDER_USER_TYPE"
-              :items="userType"
-              :errors="errors"
-              :disabled="isOwner"
-              item-value="id"
-              custom-key="userTypeName"
-              @update:model-value="handleFormValue"
-            />
-          </Field>
-        </VCol>
-        <VCol
-          cols="12"
-          md="4"
-        >
-          <Field
-            v-slot="{ field, errors }"
-            v-model="values.statusId"
-            name="statusIdSingle"
-            :rules="schema.statusIdSingle"
+            <Field
+              v-slot="{ field, errors }"
+              v-model="values.userTypeId"
+              name="userTypeIdSingle"
+              :rules="schema.userTypeIdSingle"
+            >
+              <CmSelect
+                :field="field"
+                :model-value="values.userTypeId"
+                :text="LABEL.TEXT_USER_TYPE"
+                :placeholder="LABEL.PLACEHOLDER_USER_TYPE"
+                :items="userType"
+                :errors="errors"
+                :disabled="isOwner"
+                item-value="id"
+                custom-key="userTypeName"
+                @update:model-value="handleFormValue"
+              />
+            </Field>
+          </VCol>
+          <VCol
+            cols="12"
+            md="4"
           >
-            <CmSelect
-              :field="field"
-              :model-value="values.statusId"
-              :text="LABEL.TEXT_STATUS"
-              :placeholder="LABEL.PLACEHOLDER_STATUS"
-              :items="statuses"
-              :errors="errors"
-              item-value="key"
-              custom-key="value"
-              @update:model-value="handleFormValue"
-            />
-          </Field>
-        </VCol>
+            <Field
+              v-slot="{ field, errors }"
+              v-model="values.statusId"
+              name="statusIdSingle"
+              :rules="schema.statusIdSingle"
+            >
+              <CmSelect
+                :field="field"
+                :model-value="values.statusId"
+                :text="LABEL.TEXT_STATUS"
+                :placeholder="LABEL.PLACEHOLDER_STATUS"
+                :items="statuses"
+                :errors="errors"
+                item-value="key"
+                custom-key="value"
+                @update:model-value="handleFormValue"
+              />
+            </Field>
+          </VCol>
 
-        <VCol
-          cols="12"
-          md="4"
-        >
-          <Field
-            v-slot="{ field, errors }"
-            v-model="values.kpiLearn"
-            name="kpiLearn"
-            type="number"
-            :rules="schema.kpiLearn"
+          <VCol
+            cols="12"
+            md="4"
           >
-            <CmTextField
-              :field="field"
-              :errors="errors"
-              :text="`${t('common.kpi-learning')}`"
-              :placeholder="$t('common.kpi-learning')"
+            <Field
+              v-slot="{ field, errors }"
+              v-model="values.kpiLearn"
+              name="kpiLearn"
               type="number"
-              @change="handleFormValue"
-            />
-          </Field>
-        </VCol>
-        <VCol
-          cols="12"
-          md="4"
-        >
-          <Field
-            v-slot="{ field, errors }"
-            v-model="values.kpiTeach"
-            name="kpiTeach"
-            type="number"
-            :rules="schema.kpiTeach"
+              :rules="schema.kpiLearn"
+            >
+              <CmTextField
+                :field="field"
+                :errors="errors"
+                :text="`${t('common.kpi-learning')}`"
+                :placeholder="$t('common.kpi-learning')"
+                type="number"
+                @change="handleFormValue"
+              />
+            </Field>
+          </VCol>
+          <VCol
+            cols="12"
+            md="4"
           >
-            <CmTextField
-              :field="field"
-              :errors="errors"
-              :text="`${t('common.kpi-teaching')}`"
-              :placeholder="$t('common.kpi-teaching')"
+            <Field
+              v-slot="{ field, errors }"
+              v-model="values.kpiTeach"
+              name="kpiTeach"
               type="number"
-              @change="handleFormValue"
-            />
-          </Field>
-        </VCol>
-      </VRow>
+              :rules="schema.kpiTeach"
+            >
+              <CmTextField
+                :field="field"
+                :errors="errors"
+                :text="`${t('common.kpi-teaching')}`"
+                :placeholder="$t('common.kpi-teaching')"
+                type="number"
+                @change="handleFormValue"
+              />
+            </Field>
+          </VCol>
+        </VRow>
 
-      <VDivider class="mb-5" />
-    </VSheet>
-    <VSheet
-      width="100%"
-      class="user-infor mx-auto no-background"
-    >
-      <CpTitleTable
-        ref="titleTable"
-        :user-id="route.params.id"
-        @updateListOrg="updateListOrg"
-      />
-    </VSheet>
-  </Form>
+        <VDivider class="mb-5" />
+      </VSheet>
+      <VSheet
+        width="100%"
+        class="user-infor mx-auto no-background"
+      >
+        <CpTitleTable
+          ref="titleTable"
+          :user-id="route.params.id"
+          @updateListOrg="updateListOrg"
+        />
+      </VSheet>
+    </Form>
+  </div>
 </template>
 
 <style scoped lang="scss">

@@ -87,7 +87,28 @@ const router = createRouter({
 })
 
 router.beforeEach((to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
-  return checkPortal(next, to)
+  // return checkPortal(next, to)
+  if (!isUserLoggedIn())
+    return checkPortal(next, to)
+  if (to.meta.redirectIfLoggedIn && isUserLoggedIn()) {
+    const userData = getUserData()
+
+    // getHomeRouteForLoggedInUser(userData ? userData.roles : null)
+    next({ name: 'admin-organization-users-manager' })
+  }
+  if (to.meta.requireAuth) {
+    const requireAuth: any = to.meta.requireAuth || {}
+    const key: string = requireAuth.permissionKey || ''
+
+    // Redirect if logged in
+
+    if ((Number(permission[key]) & requireAuth.permissionValue) !== requireAuth.permissionValue)
+      return next({ name: 'error-403' })
+
+    return next()
+  }
+
+  return next()
 })
 
 export default router

@@ -98,7 +98,6 @@ interface DataEdit {
 }
 
 const handleChangeCountry = async (countryId: any) => {
-  console.log(countryId)
   await fetchProvinces(countryId)
   dataInit.provinces = provinces.value
   dataInit.districts = []
@@ -110,7 +109,6 @@ const handleChangeCountry = async (countryId: any) => {
 }
 
 const handleChangeProvinces = async (provinceId: any) => {
-  console.log(provinceId)
   await fetchDistricts(values.value.provinceId)
 
   dataInit.districts = districts.value
@@ -121,19 +119,28 @@ const handleChangeProvinces = async (provinceId: any) => {
 }
 
 const handleChangeDistrict = async (districtId: any) => {
-  console.log(districtId)
   await fetchWards(districtId)
-
   dataInit.wards = wards.value
   values.value.wardId = null
   values.value.address = null
 }
 
 onMounted(async () => {
+  console.log(country.value)
+
   if (window._.isEmpty(country.value))
     await fetchCountry()
+  if (window._.isEmpty(provinces.value))
+    await fetchProvinces(values.value.countryId)
+  if (window._.isEmpty(districts.value))
+    await fetchDistricts(values.value.provinceId)
+  if (window._.isEmpty(wards.value))
+    await fetchWards(values.value.districtId)
 
   dataInit.countries = country.value
+  dataInit.provinces = provinces.value
+  dataInit.districts = districts.value
+  dataInit.wards = wards.value
 })
 </script>
 
@@ -145,125 +152,125 @@ onMounted(async () => {
     @cancel="onCancel"
     @confirm="onConfirmation"
   >
-    <template #content>
-      <Form ref="myFormAddress">
-        <VRow>
-          <VCol
-            cols="12"
-            md="6"
-          >
-            <!-- Quốc gia -->
-            <div>
-              <Field
-                v-slot="{ field }"
-                v-model="values.countryId"
-                name="countryId"
-              >
-                <CmSelect
-                  :field="field"
-                  :model-value="values.countryId"
-                  :text="DATA_LABEL.COUNTRY"
-                  :placeholder="DATA_LABEL.COUNTRY"
-                  :items="dataInit.countries"
-                  item-value="key"
-                  custom-key="value"
-                  @update:modelValue="handleChangeCountry"
-                />
-              </Field>
-            </div>
-          </VCol>
-          <VCol
-            cols="12"
-            md="6"
-          >
-            <!-- Tỉnh thành phố -->
-            <div>
-              <Field
-                v-slot="{ field }"
-                v-model="values.provinceId"
-                name="provinceId"
-              >
-                <CmSelect
-                  :field="field"
-                  :model-value="values.provinceId"
-                  :text="DATA_LABEL.PROVINCEID"
-                  :placeholder="DATA_LABEL.PROVINCEID"
-                  :items="dataInit.provinces"
-                  item-value="key"
-                  custom-key="value"
-                  @update:modelValue="handleChangeProvinces"
-                />
-              </Field>
-            </div>
-          </VCol>
-          <VCol
-            cols="12"
-            md="6"
-          >
-            <!-- Quận huyện -->
-            <div>
-              <Field
-                v-slot="{ field }"
-                v-model="values.districtId"
-                name="districtId"
-              >
-                <CmSelect
-                  :field="field"
-                  :model-value="values.districtId"
-                  :text="DATA_LABEL.DISTRICT"
-                  :placeholder="DATA_LABEL.DISTRICT"
-                  :items="dataInit.districts"
-                  item-value="key"
-                  custom-key="value"
-                  @update:modelValue="handleChangeDistrict"
-                />
-              </Field>
-            </div>
-          </VCol>
-          <VCol
-            cols="12"
-            md="6"
-          >
-            <!-- Phường/xã -->
-            <div>
-              <Field
-                v-slot="{ field }"
-                v-model="values.wardId"
-                name="wardId"
-              >
-                <CmSelect
-                  :field="field"
-                  :model-value="values.wardId"
-                  :text="DATA_LABEL.WARDS"
-                  :placeholder="DATA_LABEL.WARDS"
-                  :items="dataInit.wards"
-                  item-value="key"
-                  custom-key="value"
-                />
-              </Field>
-            </div>
-          </VCol>
-          <VCol
-            cols="12"
-            md="6"
-          >
-            <!-- tên đường -->
-            <div>
-              <Field
-                v-slot="{ field }"
-                v-model="values.address"
-                name="address"
-              >
-                <CmTextField
-                  :field="field"
-                  :text="DATA_LABEL.ADDRESS"
-                  :placeholder="DATA_LABEL.ADDRESS"
-                />
-              </Field>
-            </div>
-          </VCol>
-        </VRow>
-      </Form>
-    </template>
+    <!-- <template #text> -->
+    <Form ref="myFormAddress">
+      <VRow>
+        <VCol
+          cols="12"
+          md="6"
+        >
+          <!-- Quốc gia -->
+          <div>
+            <Field
+              v-slot="{ field }"
+              v-model="values.countryId"
+              name="countryId"
+            >
+              <CmSelect
+                :field="field"
+                :model-value="values.countryId"
+                :text="DATA_LABEL.COUNTRY"
+                :placeholder="DATA_LABEL.COUNTRY"
+                :items="dataInit.countries"
+                item-value="key"
+                custom-key="value"
+                @update:modelValue="handleChangeCountry"
+              />
+            </Field>
+          </div>
+        </VCol>
+        <VCol
+          cols="12"
+          md="6"
+        >
+          <!-- Tỉnh thành phố -->
+          <div>
+            <Field
+              v-slot="{ field }"
+              v-model="values.provinceId"
+              name="provinceId"
+            >
+              <CmSelect
+                :field="field"
+                :model-value="values.provinceId"
+                :text="DATA_LABEL.PROVINCEID"
+                :placeholder="DATA_LABEL.PROVINCEID"
+                :items="dataInit.provinces"
+                item-value="key"
+                custom-key="value"
+                @update:modelValue="handleChangeProvinces"
+              />
+            </Field>
+          </div>
+        </VCol>
+        <VCol
+          cols="12"
+          md="6"
+        >
+          <!-- Quận huyện -->
+          <div>
+            <Field
+              v-slot="{ field }"
+              v-model="values.districtId"
+              name="districtId"
+            >
+              <CmSelect
+                :field="field"
+                :model-value="values.districtId"
+                :text="DATA_LABEL.DISTRICT"
+                :placeholder="DATA_LABEL.DISTRICT"
+                :items="dataInit.districts"
+                item-value="key"
+                custom-key="value"
+                @update:modelValue="handleChangeDistrict"
+              />
+            </Field>
+          </div>
+        </VCol>
+        <VCol
+          cols="12"
+          md="6"
+        >
+          <!-- Phường/xã -->
+          <div>
+            <Field
+              v-slot="{ field }"
+              v-model="values.wardId"
+              name="wardId"
+            >
+              <CmSelect
+                :field="field"
+                :model-value="values.wardId"
+                :text="DATA_LABEL.WARDS"
+                :placeholder="DATA_LABEL.WARDS"
+                :items="dataInit.wards"
+                item-value="key"
+                custom-key="value"
+              />
+            </Field>
+          </div>
+        </VCol>
+        <VCol
+          cols="12"
+          md="6"
+        >
+          <!-- tên đường -->
+          <div>
+            <Field
+              v-slot="{ field }"
+              v-model="values.address"
+              name="address"
+            >
+              <CmTextField
+                :field="field"
+                :text="DATA_LABEL.ADDRESS"
+                :placeholder="DATA_LABEL.ADDRESS"
+              />
+            </Field>
+          </div>
+        </VCol>
+      </VRow>
+    </Form>
+    <!-- </template> -->
   </CmDialogs>
 </template>
