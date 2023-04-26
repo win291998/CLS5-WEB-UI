@@ -91,7 +91,6 @@ const addressName = (address: any) => {
     data.address.wardName = ward[0].value
   }
   data.address.address = address.address || ''
-  console.log(data)
 }
 
 const action = [
@@ -108,13 +107,15 @@ const action = [
 ]
 
 const fetchDataAddress = async (dataAddress: any) => {
-  if (dataAddress.countryId && ArrayUtil.isEmptyArray(country)) {
+  console.log(ArrayUtil.isEmptyArray(country.value))
+
+  if (dataAddress.countryId && ArrayUtil.isEmptyArray(country.value)) {
     await fetchCountry()
-    if (dataAddress.provinceId && ArrayUtil.isEmptyArray(provinces)) {
+    if (dataAddress.provinceId && ArrayUtil.isEmptyArray(provinces.value)) {
       await fetchProvinces(dataAddress.countryId)
-      if (dataAddress.districtId && ArrayUtil.isEmptyArray(districts)) {
+      if (dataAddress.districtId && ArrayUtil.isEmptyArray(districts.value)) {
         await fetchDistricts(dataAddress.provinceId)
-        if (dataAddress.wardId && ArrayUtil.isEmptyArray(wards))
+        if (dataAddress.wardId && ArrayUtil.isEmptyArray(wards.value))
           await fetchWards(dataAddress.districtId)
       }
     }
@@ -124,7 +125,6 @@ const fetchDataAddress = async (dataAddress: any) => {
 const handlerAddress = async (address: any) => {
   await fetchDataAddress(address)
   await addressName(address)
-  console.log(address)
 }
 fetchDataAddress(values.value)
 </script>

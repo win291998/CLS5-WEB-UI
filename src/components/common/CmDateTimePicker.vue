@@ -104,7 +104,7 @@ const emitModelValue = (val: string) => {
     v-bind="{ ...inputProps, ...rootAttrs, ...field }"
     :model-value="modelValue"
     :hide-details="props.hideDetails"
-    class="position-relative"
+    class="position-relative cm-datetime"
   >
     <template #default="{ isDirty, isValid, isReadonly }">
       <!-- v-field -->
@@ -125,7 +125,7 @@ const emitModelValue = (val: string) => {
               v-bind="compAttrs"
               ref="refFlatPicker"
               :model-value="modelValue"
-              class="flat-picker-custom-style"
+              class="flat-picker-custom-style text-regular-md"
               :disabled="isReadonly.value"
               :placeholder="placeholder"
               :options="flatpickrOptions"
@@ -138,7 +138,7 @@ const emitModelValue = (val: string) => {
             <input
               v-if="isInlinePicker"
               :value="modelValue"
-              class="flat-picker-custom-style"
+              class="flat-picker-custom-style text-regular-md"
               type="text"
             >
           </div>
@@ -162,6 +162,7 @@ const emitModelValue = (val: string) => {
 <style lang="scss">
 /* stylelint-disable no-descending-specificity */
 @use "flatpickr/dist/flatpickr.css";
+@use "@/styles/style-global.scss" as *;
 
 .flat-picker-custom-style {
   position: absolute;
@@ -441,5 +442,25 @@ input[altinputclass="inlinePicker"] {
       text-align: start;
     }
   }
+}
+
+.cm-datetime .v-field__input{
+  color: $color-gray-900 !important;
+  /* Text md/Regular */
+  font-family: Inter, sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  border: $border-input;
+  border-radius: $border-radius-input;
+}
+.cm-datetime .v-field__outline__end,
+.cm-datetime .v-field__outline__start{
+  border: none !important;
+}
+.cm-datetime .v-field__field{
+  background: $color-input-default;
+  border-radius: $border-radius-xs;
 }
 </style>

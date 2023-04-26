@@ -1,24 +1,11 @@
 <script setup lang="ts">
-import MethodsUtil from '@/utils/MethodsUtil'
-import ApiUser from '@/api/user/index'
-import { TYPE_REQUEST } from '@/typescript/enums/enums'
 import { formatDateYears } from '@/utils/FilterUtil'
-import ArrayUtil from '@/utils/ArrayUtil'
 import { ActionType } from '@/constant/data/actionType.json'
 import { validatorStore } from '@/stores/validatator'
+import { profileUserManagerStore } from '@/stores/admin/users/profile/profile'
+import CmtextArea from '@/components/common/CmtextArea.vue'
 
-interface Props {
-  profile: any
-}
-
-const props = withDefaults(defineProps<Props>(), ({
-  profile: () => ({
-    birthDay: null,
-    listEducationUser: [],
-    listExperienceUser: [],
-  }),
-}))
-
+window.showAllPageLoading('COMPONENT')
 const CmDateTimePicker = defineAsyncComponent(() => import('@/components/common/CmDateTimePicker.vue'))
 const CpModalEducation = defineAsyncComponent(() => import('@/components/page/Admin/organization/users/profile/modal/CpModalEducation.vue'))
 const CpModalExperence = defineAsyncComponent(() => import('@/components/page/Admin/organization/users/profile/modal/CpModalExperence.vue'))
@@ -26,8 +13,13 @@ const CmDropDown = defineAsyncComponent(() => import('@/components/common/CmDrop
 const CmChip = defineAsyncComponent(() => import('@/components/common/CmChip.vue'))
 const CmTextField = defineAsyncComponent(() => import('@/components/common/CmTextField.vue'))
 const CpAddressEdit = defineAsyncComponent(() => import('@/components/page/gereral/CpAddressEdit.vue'))
+const CpJobInformation = defineAsyncComponent(() => import('@/components/page/Admin/organization/users/profile/CpJobInformation.vue'))
+
+// store
 const storeValidate = validatorStore()
 const { Field, Form } = storeValidate
+const storeProfileUserManager = profileUserManagerStore()
+const { values } = storeToRefs(storeProfileUserManager)
 
 /**
  * lib
@@ -63,8 +55,6 @@ const data = reactive({
   modalExperences: 'modalExperences',
 })
 
-const dataProfile = reactive<any>(props.profile)
-
 /**
  *
  * Lấy dữ liệu setup
@@ -91,7 +81,7 @@ const fetchModalEducation = () => {
 }
 
 const removeEducation = (index: any) => {
-  dataProfile.listEducationUser.splice(index, 1)
+  values.value.listEducationUser.splice(index, 1)
 }
 
 // reset education modal
@@ -120,7 +110,7 @@ const addExperiences = () => {
 
 // delete experience item
 const removeExperience = index => {
-  dataProfile.listExperienceUser.splice(index, 1)
+  values.value.listExperienceUser.splice(index, 1)
 }
 
 // reset education modal
@@ -218,14 +208,14 @@ const updateDialogVisible = (event: any, type?: any) => {
 const handleUpdataProfile = (education: any, edit: boolean) => {
   console.log('education', education)
   console.log('edit', edit)
-  console.log('dataProfile', dataProfile.listEducationUser.length)
-  console.log('dataProfile', dataProfile.listEducationUser)
+  console.log('dataProfile', values.value.listEducationUser.length)
+  console.log('dataProfile', values.value.listEducationUser)
 
-  if (edit) { dataProfile.listEducationUser[education?.index] = education }
+  if (edit) { values.value.listEducationUser[education?.index] = education }
   else {
-    if (!dataProfile.listEducationUser || dataProfile.listEducationUser === null)
-      dataProfile.listEducationUser = []
-    dataProfile.listEducationUser[dataProfile.listEducationUser.length] = education
+    if (!values.value.listEducationUser || values.value.listEducationUser === null)
+      values.value.listEducationUser = []
+    values.value.listEducationUser[values.value.listEducationUser.length] = education
   }
   updateDialogVisible(false, 'EDUCATION')
 }
@@ -233,30 +223,32 @@ const handleUpdataProfile = (education: any, edit: boolean) => {
 const handleUpdateExperences = (experences: any, edit: boolean) => {
   console.log('education', experences)
   console.log('edit', edit)
-  console.log('dataProfile', dataProfile)
-  console.log('dataProfile', dataProfile.listExperienceUser?.length)
+  console.log('dataProfile', values.value)
+  console.log('dataProfile', values.value.listExperienceUser?.length)
 
-  if (edit) { dataProfile.listExperienceUser[experences?.index] = experences }
+  if (edit) { values.value.listExperienceUser[experences?.index] = experences }
   else {
-    if (!dataProfile.listExperienceUser || dataProfile.listExperienceUser === null)
-      dataProfile.listExperienceUser = []
-    dataProfile.listExperienceUser[dataProfile.listExperienceUser.length] = experences
+    if (!values.value.listExperienceUser || values.value.listExperienceUser === null)
+      values.value.listExperienceUser = []
+    values.value.listExperienceUser[values.value.listExperienceUser.length] = experences
   }
   updateDialogVisible(false, 'EXPERENCE')
 }
 
 /** ******************** */
+window.hideAllPageLoading()
 </script>
 
 <template>
   <Form
+    ref="formUserInfor"
     class="my-5"
   >
     <VSheet
       width="100%"
       class="user-infor mx-auto no-background"
     >
-      <VRow>
+      <VRow class="mb-2">
         <VCol
           md="4"
           cols="12"
@@ -273,7 +265,7 @@ const handleUpdateExperences = (experences: any, edit: boolean) => {
                   <label class="text-label-default">{{ t("common.birth-day") }}</label>
                 </div>
                 <CmDateTimePicker
-                  v-model="dataProfile.birthDay"
+                  v-model="values.birthDay"
                   placeholder="dd-mm-yyyy"
                 />
               </Field>
@@ -283,16 +275,15 @@ const handleUpdateExperences = (experences: any, edit: boolean) => {
               class="mb-1"
             >
               <!-- giáo dục -->
-              <div>
+              <div class="mb-3">
                 <label class="text-label-default ">{{ $t("users.add-user.education") }}</label>
               </div>
-              <br>
               <div
-                v-if="dataProfile.listEducationUser && dataProfile.listEducationUser.length > 0"
+                v-if="values.listEducationUser && values.listEducationUser.length > 0"
                 class="style-education"
               >
                 <div
-                  v-for="(item, index) in dataProfile.listEducationUser"
+                  v-for="(item, index) in values.listEducationUser"
                   :key="index"
                   class="border-item"
                 >
@@ -357,7 +348,7 @@ const handleUpdateExperences = (experences: any, edit: boolean) => {
               <!-- input passport -->
               <Field
                 v-slot="{ field }"
-                v-model="dataProfile.passport"
+                v-model="values.passport"
                 name="passport"
                 type="passport"
               >
@@ -373,16 +364,15 @@ const handleUpdateExperences = (experences: any, edit: boolean) => {
               class="mb-1"
             >
               <!-- Kinh nghiệm -->
-              <div>
+              <div class="mb-3">
                 <label class="text-label-default ">{{ t("users.add-user.experience") }}</label>
               </div>
-              <br>
               <div
-                v-if="profile.listExperienceUser && profile.listExperienceUser.length > 0"
+                v-if="values.listExperienceUser && values.listExperienceUser.length > 0"
                 class="style-experience"
               >
                 <div
-                  v-for="(item, index) in dataProfile.listExperienceUser"
+                  v-for="(item, index) in values.listExperienceUser"
                   :key="index"
                   class="border-item"
                 >
@@ -448,7 +438,7 @@ const handleUpdateExperences = (experences: any, edit: boolean) => {
               class="mb-1"
             >
               <!-- address -->
-              <div>
+              <div class="mb-3">
                 <label class="text-label-default ">{{ t("common.address") }}</label>
               </div>
               <CpAddressEdit
@@ -458,6 +448,7 @@ const handleUpdateExperences = (experences: any, edit: boolean) => {
           </VRow>
         </VCol>
       </VRow>
+      <CpJobInformation />
     </VSheet>
   </Form>
   <CpModalEducation

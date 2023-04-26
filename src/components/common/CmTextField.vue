@@ -8,6 +8,7 @@ const props = withDefaults(defineProps<Props>(), ({
   label: '',
   bgColor: 'white',
   type: 'text',
+  maxlength: 50,
 }))
 
 const emit = defineEmits<Emit>(); const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
@@ -23,6 +24,7 @@ interface Props {
   field?: any
   placeholder?: any
   type?: string
+  maxlength?: number
 }
 interface Emit {
   (e: 'update:modelValue', value: any): void
@@ -50,22 +52,27 @@ const messageError = computed(() => {
 
 <template>
   <div>
-    <div class="mb-1">
+    <div
+      v-if="props.text"
+      class="mb-1"
+    >
       <label
         class="text-label-default"
       >{{ props.text }}</label>
     </div>
-    <div>
+    <div class="vTextField">
       <VTextField
         v-model="formModelValue"
         v-bind="field"
         :prepend-inner-icon="props.prependInnerIcon"
         :label="props.label"
         :bg-color="bgColor"
-        hide-details="auto"
         :placeholder="placeholder"
         :error-messages="messageError"
         :type="type"
+        :maxlength="maxlength"
+        hide-details="auto"
+        class="text-regular-md"
         @change="handleChangeText"
         @update:modelValue="handleUpdateText"
       />
@@ -73,3 +80,32 @@ const messageError = computed(() => {
   </div>
 </template>
 
+<style lang="scss">
+@use "@/styles/style-global.scss" as *;
+
+.vTextField .v-field__input{
+  color: $color-gray-900 !important;
+  /* Text md/Regular */
+  font-family: Inter, sans-serif;
+  font-size: 16px;
+  height: 40px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  border: $border-input;
+  border-radius: $border-radius-input !important;
+}
+.vTextField .v-field__outline__end,
+.vTextField .v-field__outline__start{
+  border: none !important;
+}
+.v-field--prepended{
+  border: $border-input !important;
+  border-radius: $border-radius-input !important;
+  .v-field__outline__notch::before,
+  .v-field__outline__notch::after
+  {
+    border: none !important;
+  }
+}
+</style>

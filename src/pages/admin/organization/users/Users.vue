@@ -10,6 +10,7 @@ import toast from '@/plugins/toast'
 
 import { fetchData } from '@/mock/users/index'
 
+window.showAllPageLoading('COMPONENT')
 const CpHeaderPageAction = defineAsyncComponent(() => import('@/components/page/Admin/organization/users/CpHeaderPageUserAction.vue'))
 const CpHeaderAction = defineAsyncComponent(() => import('@/components/page/gereral/CpHeaderAction.vue'))
 const CpUserFilter = defineAsyncComponent(() => import('@/components/page/Admin/organization/users/CpUserFilter.vue'))
@@ -236,8 +237,6 @@ const actionItem = (type: any) => {
 
 // Get list Users
 async function fectchListUsers() {
-  window.showAllPageLoading('COMPONENT')
-
   // await fetchData(ApiUser.UsersList, TYPE_REQUEST.POST, queryParam)
   await MethodsUtil.requestApiCustom(ApiUser.UsersList, TYPE_REQUEST.POST, queryParam)
     .then((value: any) => {
@@ -268,8 +267,6 @@ async function fectchListUsers() {
     .catch(() => {
       toast('ERROR', t('USR_GetFailed'))
     })
-
-  window.hideAllPageLoading()
 }
 
 // search ở fillter header
@@ -307,6 +304,7 @@ watch(() => route.path, value => {
 
 // created
 fectchListUsers()
+window.hideAllPageLoading()
 </script>
 
 <template>

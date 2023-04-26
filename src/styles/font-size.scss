@@ -78,6 +78,7 @@
 }
 
 .text-regular-md {
+  color: $color-gray-900;
   /* Text md/Regular */
   font-family: Inter, sans-serif;
   font-size: 16px;
@@ -87,6 +88,7 @@
 }
 
 .text-regular-sm {
+  color: $color-gray-900;
   /* Text sm/Regular */
   font-family: Inter, sans-serif;
   font-size: 14px;
@@ -297,6 +299,7 @@
 }
 
 .text-semibold-sm {
+  color: $color-gray-900;
   /* Text sm/semibold */
   font-family: Inter, sans-serif;
   font-size: 14px;

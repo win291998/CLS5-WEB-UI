@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { profileUserManagerStore } from '@/stores/admin/users/profile/profile'
 
+window.showAllPageLoading('COMPONENT')
+
 /**
  * component
  */
@@ -55,29 +57,33 @@ const backUser = () => {
 resetFormInfor()
 if (route.params.id)
   fectchLecturers(route.params.id)
+window.hideAllPageLoading()
 </script>
 
 <template>
-  <div
-    class="d-flex justify-content-center"
-    style="margin-top: 20px;"
-  >
-    <CmTab
-      :list-tab="listTab"
-      label="tab"
-      type="button"
-    />
-  </div>
+  <div>
+    <div
+      class="d-flex justify-content-center"
+      style="margin-top: 20px;"
+    >
+      <CmTab
+        :is-render="true"
+        :list-tab="listTab"
+        label="tab"
+        type="button"
+      />
+    </div>
 
-  <VSheet
-    width="100%"
-    class="user-infor mx-auto no-background my-5"
-  >
-    <CpActionFooterEdit
-      :is-save="isShowButton"
-      @onCancel="backUser"
-      @onSave="handleUser($event, 'save')"
-    />
-  </VSheet>
+    <VSheet
+      width="100%"
+      class="user-infor mx-auto no-background my-5"
+    >
+      <CpActionFooterEdit
+        :is-save="isShowButton"
+        @onCancel="backUser"
+        @onSave="handleUser($event, 'save')"
+      />
+    </VSheet>
+  </div>
 </template>
 
