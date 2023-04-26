@@ -3,14 +3,14 @@ import StringUtil from '@/utils/StringUtil'
 import CmAvatar from '@/components/common/CmAvatar.vue'
 
 interface Props {
-  context: any
+  context?: any
   isShowEmail?: boolean
   isShowCode?: boolean
   isShowAvatar?: boolean
-  labelFirst: string
-  labelLast: string
-  isFullName: boolean
-  labelCode: string
+  labelFirst?: string
+  labelLast?: string
+  isFullName?: boolean
+  labelCode?: string
 }
 
 const props = withDefaults(defineProps<Props>(), ({

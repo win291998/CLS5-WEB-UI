@@ -20,16 +20,21 @@ const props = withDefaults(defineProps<Props>(), ({
   actions: () => ([{
     title: 'Thêm từ dữ liệu từ tập tin',
   }]),
+  titleButtonAdd: 'Thêm',
+  titleButtonCancel: 'Quay lại',
+  titlePageUpload: ' Trang bắt đầu',
 }))
 const { t } = window.i18n()
 
 // interface
-
 interface Props {
   titleList: string
   config: Config
   customKeyError: string
   actions: Action[]
+  titleButtonAdd?: string
+  titleButtonCancel?: string
+  titlePageUpload?: string
 }
 
 /** ** Khởi tạo store */
@@ -54,17 +59,13 @@ const headersInvalid = computed(() => {
     thClass: 'custom-th-class',
     sortable: false,
   }
-
   const columns = window._.cloneDeep(headers)
-
   columns.shift()
   columns.unshift(select)
-
   return columns
 })
 
 const inputFile = ref()
-
 watch(() => props.config, value => {
   store.$patch({
     config: {
@@ -94,28 +95,28 @@ const handleEditTable = () => {
 
 const updateFromFileHandle = async () => {
   const back = await updateFromFile()
-  if (back === 'back' && props?.config?.routerBack)
+  if (back === 'back' && props?.config?.routerBack) {
+    store.$dispose()
     router.push({ name: props.config.routerBack })
+  }
 }
-
-const handleSelectedRows = (listSelected: any) => {
-  console.log(listSelected)
-}
-onBeforeUnmount(() => {
-  store.$dispose()
-})
 const isDisabledSubmit = computed(() => {
   const listSelected = paramsImport.validData.filter((item: any) => item.isSelected === true)
   return !listSelected.length
 })
 const isShowTemplateImport = computed(() => {
-  return paramsImport.validData.length && paramsImport.invalidData.length
+  return paramsImport.validData.length || paramsImport.invalidData.length
 })
 
 const uploadFile = (val: string | number | undefined) => {
   type.value = val
   inputFile.value.click()
 }
+
+onBeforeUnmount(() => {
+  store.$dispose()
+  store.$reset()
+})
 </script>
 
 <template>
@@ -124,7 +125,7 @@ const uploadFile = (val: string | number | undefined) => {
     class="template-no-data page-container"
   >
     <div class="d-flex justify-space-between align-center">
-      <h3>Thêm nhóm người dùng từ tập tin</h3>
+      <h3>{{ titlePageUpload }}</h3>
       <CmButton
         title="Tải tập tin mẫu"
         icon="solar:download-minimalistic-bold"
@@ -133,17 +134,22 @@ const uploadFile = (val: string | number | undefined) => {
     </div>
 
     <div
-      v-for="item in actions"
-      :key="item.key"
       class="d-flex w-100 button-group"
-      @click="uploadFile(item?.key || undefined)"
     >
-      <div class="button-import-file cursor-pointer">
+      <div
+        v-for="item in actions"
+        :key="item.key"
+        class="button-import-file cursor-pointer"
+        @click="uploadFile(item?.key || undefined)"
+      >
         <VIcon :icon="item.icon ? item.icon : 'bi:upload'" />
         <span
           class="mt-3"
         >{{ item.title }}</span>
       </div>
+    </div>
+    <div class="d-flex w-100">
+      <slot name="actions" />
     </div>
   </div>
   <div v-else>
@@ -156,12 +162,12 @@ const uploadFile = (val: string | number | undefined) => {
           <div class="cp-import-file-action">
             <div class="cp-import-file-btn mr-3">
               <CmButton @click="dowloadSampleFile">
-                Tải tập tin mẫu {{ t('common.action-header.download-file') }}
+                {{ t('common.action-header.download-file') }}
               </CmButton>
             </div>
             <div class="cp-import-file-btn">
               <CmButton @click="inputFile.click()">
-                Lựa chọn tập tin
+                {{ t('common.select-file') }}
               </CmButton>
             </div>
           </div>
@@ -172,7 +178,6 @@ const uploadFile = (val: string | number | undefined) => {
             :items="paramsImport.validData"
             return-object
             is-import-file
-            @update:selected="handleSelectedRows"
           />
         </div>
       </div>
@@ -187,7 +192,7 @@ const uploadFile = (val: string | number | undefined) => {
           <div class="cp-import-file-action">
             <div class="cp-import-file-btn mr-3">
               <CmButton @click="checkInvalidData">
-                Kiểm tra
+                {{ t('common.import-file.check') }}
               </CmButton>
             </div>
             <div class="cp-import-file-btn">
@@ -218,8 +223,8 @@ const uploadFile = (val: string | number | undefined) => {
   >
   <div class="cp-import-file-action-footer mt-3">
     <div class="cp-import-file-btn-footer ">
-      <CmButton @click="dowloadSampleFile">
-        Quay lại
+      <CmButton @click="() => { router.push({ name: props.config.routerBack }) }">
+        {{ titleButtonCancel }}
       </CmButton>
     </div>
     <div
@@ -230,7 +235,7 @@ const uploadFile = (val: string | number | undefined) => {
         :disabled="isDisabledSubmit"
         @click="updateFromFileHandle"
       >
-        Thêm người dùng
+        {{ titleButtonAdd }}
       </CmButton>
     </div>
   </div>

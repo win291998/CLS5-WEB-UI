@@ -195,8 +195,29 @@ export default [
                 },
               ],
             },
-            name: 'admin-organization-user-groups-edit',
+            name: 'admin-organization-user-groups-import',
             component: () => import('@/pages/admin/organization/user-groups/import-file/ImportFileAddGroup.vue'),
+          },
+          {
+            path: 'add-user/import-file',
+            meta: {
+              requireAuth: {
+                permissionKey: 'UserGroupManaging',
+                permissionValue: 4,
+              },
+              breadcrumb: [
+                {
+                  title: 'list-group-user',
+                  to: { name: 'admin-organization-user-groups' },
+                },
+                {
+                  title: 'common.title-import-file',
+                  active: true,
+                },
+              ],
+            },
+            name: 'admin-organization-user-groups-import-user',
+            component: () => import('@/pages/admin/organization/user-groups/import-file/ImportFileAddUserToGroup.vue'),
           },
         ],
         component: () => import('@/pages/admin/organization/user-groups/Index.vue'),

@@ -5,6 +5,7 @@ import { getHomeRouteForLoggedInUser, getUserData, parseJwt } from './utils'
 import error from './errors/error.router'
 import admin from '@/router/admin/admin.router'
 import MethodsUtil from '@/utils/MethodsUtil'
+import { load } from '@/stores/loadComponent.js'
 import { TYPE_REQUEST } from '@/typescript/enums/enums'
 import { canNavigate } from '@/@layouts/plugins/casl'
 
@@ -34,6 +35,9 @@ const isUserLoggedIn = () => {
 }
 
 const checkPortal: any = async (next: any, to: any) => {
+  const store = load()
+  store.components = []
+  store.$dispose()
   const isLoggedIn = isUserLoggedIn()
   if (to.meta.requireAuth) {
     const requireAuth: any = to.meta.requireAuth || {}
@@ -73,6 +77,7 @@ const checkPortal: any = async (next: any, to: any) => {
     // getHomeRouteForLoggedInUser(userData ? userData.roles : null)
     next({ name: 'admin-organization-users-manager' })
   }
+
   return next()
 }
 

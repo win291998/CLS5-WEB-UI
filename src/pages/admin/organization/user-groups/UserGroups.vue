@@ -23,10 +23,10 @@ const TABLE = Object.freeze({
 
 const headers = reactive([
   { text: '', value: 'checkbox' },
-  { text: t('common.name'), value: 'name', type: 'custom' },
-  { text: t('report.number-user-in-group'), value: 'numberUser' },
-  { text: t('common.number-course-group'), value: 'numberCourse' },
-  { text: t('common.description'), value: 'description' },
+  { text: t('name'), value: 'name', type: 'custom' },
+  { text: t('number-user-in-group'), value: 'numberUser' },
+  { text: t('number-course-group'), value: 'numberCourse' },
+  { text: t('description'), value: 'description' },
   { text: '', value: 'actions', width: 150 },
 ])
 
@@ -101,11 +101,17 @@ const listItemButtonGroup = [
     title: 'Thêm từ tập tin',
     icon: 'file-plus',
     key: 'importFile',
+    action: () => {
+      router.push({ name: 'admin-organization-user-groups-import' })
+    },
   },
   {
     title: 'Thêm người dùng từ tập tin',
     icon: 'file-plus',
     key: 'importFileUser',
+    action: () => {
+      router.push({ name: 'admin-organization-user-groups-import-user' })
+    },
   },
 ]
 </script>
