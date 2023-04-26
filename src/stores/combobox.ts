@@ -9,11 +9,20 @@ import { TYPE_REQUEST } from '@/typescript/enums/enums'
 
 export const comboboxStore = defineStore('combobox', () => {
   /** variable */
+  interface combobox {
+    key: number
+    value: string
+  }
   const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 
   const statuses = ref([])
   const organizations = ref([])
   const userType = ref([])
+  const country = ref<combobox[]>([])
+  const provinces = ref<combobox[]>([])
+  const districts = ref<combobox[]>([])
+  const wards = ref<combobox[]>([])
+  const userLevels = ref<combobox[]>([])
 
   /** method */
   // Lấy danh sách trạng thái người dùng
@@ -47,6 +56,70 @@ export const comboboxStore = defineStore('combobox', () => {
       organizations.value = res?.data || []
   }
 
+  // get country'
+  const fetchCountry = async () => {
+    await MethodsUtil.requestApiCustom(ComboboxService.Country, TYPE_REQUEST.GET).then((value: any) => {
+      country.value = value.data
+    })
+  }
+
+  // get provinces'
+  const fetchProvinces = async (countryId: any) => {
+    if (countryId === null) {
+      provinces.value = []
+    }
+    else {
+      const params = {
+        countryId,
+      }
+
+      await MethodsUtil.requestApiCustom(ComboboxService.Provinces, TYPE_REQUEST.GET, params).then((value: any) => {
+        provinces.value = value.data
+      })
+    }
+  }
+
+  // get districts'
+  const fetchDistricts = async (provinceId: any) => {
+    const params = {
+      provinceId,
+    }
+
+    if (provinceId === null) { districts.value = [] }
+    else {
+      await MethodsUtil.requestApiCustom(ComboboxService.Districts, TYPE_REQUEST.GET, params).then((value: any) => {
+        districts.value = value.data
+      })
+    }
+  }
+
+  // get wards'
+  const fetchWards = async (districtId: any) => {
+    const params = {
+      districtId,
+    }
+
+    if (districtId === null) { wards.value = [] }
+    else {
+      await MethodsUtil.requestApiCustom(ComboboxService.Wards, TYPE_REQUEST.GET, params).then((value: any) => {
+        wards.value = value.data
+      })
+    }
+  }
+
+  // get trình độ
+  const fetchUserLevels = async () => {
+    await MethodsUtil.requestApiCustom(ComboboxService.levels, TYPE_REQUEST.GET).then((value: any) => {
+      userLevels.value = value.data || []
+      console.log(value)
+      userLevels.value = value?.data?.map((item: any) => {
+        return {
+          ...item,
+          value: t(item.value),
+        }
+      })
+    })
+  }
   onMounted(() => {
     //
   })
@@ -54,5 +127,29 @@ export const comboboxStore = defineStore('combobox', () => {
     organizations.value = []
   })
 
-  return { organizations, statuses, userType, fetchStatusUsersCombobox, fetchTypeUsersCombobox, fetchTOrgStructCombobox }
+  const listTopicCourse = ref([])
+  const getListTopicCourse = async () => {
+    const { data } = await MethodsUtil.requestApiCustom(ComboboxService.topicCourse, TYPE_REQUEST.GET)
+    listTopicCourse.value = data
+  }
+  return {
+    organizations,
+    statuses,
+    userType,
+    country,
+    provinces,
+    districts,
+    wards,
+    userLevels,
+    listTopicCourse,
+    fetchStatusUsersCombobox,
+    fetchTypeUsersCombobox,
+    fetchTOrgStructCombobox,
+    fetchCountry,
+    fetchDistricts,
+    fetchProvinces,
+    fetchWards,
+    getListTopicCourse,
+    fetchUserLevels,
+  }
 })

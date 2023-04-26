@@ -10,7 +10,7 @@ import type { typeTab } from '@/typescript/enums/enums'
  * const { emitEvent } = props.emit()
  * emitEvent('name', abc) dùng như emit mặc định của vue
  *
- * */
+  */
 const props = withDefaults(defineProps<Props>(), ({
   listTab: () => ([]),
   type: 'button',
@@ -18,6 +18,7 @@ const props = withDefaults(defineProps<Props>(), ({
   label: 'tabActive',
   routeName: '',
   hide: false,
+  isRender: false,
 }))
 
 const emit = defineEmits<Emit>()
@@ -27,7 +28,7 @@ interface tab {
   key: string
   title?: string
   icon?: string
-  component: any // truyền thẳng component vào nếu dùng composition api, còn không thì truyền string tên component
+  component?: any // truyền thẳng component vào nếu dùng composition api, còn không thì truyền string tên component
   dataTab?: any // Dữ liệu riêng của từng tab
   isDisabled?: boolean
 }
@@ -39,11 +40,14 @@ interface Props {
   label?: string
   routeName?: string
   dataGeneral?: any // hạn chế dùng
+  isRender: boolean
 }
 const router = useRouter()
 const route = useRoute()
+
 interface Emit {
   (e: string, data: any): void
+  (e: 'activeTab', data: tab): void
 }
 const tabActive = ref<any>({})
 
@@ -57,6 +61,7 @@ getTabActive()
 const activeTab = (value: any) => {
   router.push({ name: props.routeName || undefined, params: { [props.label]: value.key } })
   tabActive.value = value
+  emit('activeTab', tabActive.value)
 }
 
 const useEmitter = () => {
@@ -95,16 +100,30 @@ const useEmitter = () => {
         </VTab>
       </VTabs>
     </div>
-
-    <div
-      v-if="tabActive?.component"
-      class="content-tab"
-    >
+    <div v-if="props.isRender">
+      <div
+        v-for="item in listTab"
+        :key="item.key"
+        class="content-tab"
+      >
+        <div
+          v-show="item.key === route.params[props.label]"
+        >
+          <Component
+            :is="item?.component"
+            :emit="useEmitter"
+            :data-general="dataGeneral"
+            v-bind="tabActive.dataTab"
+          />
+        </div>
+      </div>
+    </div>
+    <div v-else>
       <Component
         :is="tabActive?.component"
         :emit="useEmitter"
         :data-general="dataGeneral"
-        :data-tab="tabActive.dataTab || undefined"
+        v-bind="tabActive.dataTab"
       />
     </div>
   </div>

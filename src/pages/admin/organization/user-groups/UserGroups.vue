@@ -78,7 +78,7 @@ const showModalConfirmDelete = (val: number[]) => {
 }
 
 const handleDeleteUserGroup = () => {
-  MethodsUtil.requestApiCustom(ApiGroupUser.DeleteGroup, TYPE_REQUEST.POST, { listModels: listId.value }).then(res => {
+  MethodsUtil.requestApiCustom(ApiGroupUser.DeleteGroup, TYPE_REQUEST.POST, { listModels: listId.value }).then((res: any) => {
     toast('SUCCESS', t('calendar.success-delete-group-user'))
     fetchData()
   }).catch(() => {

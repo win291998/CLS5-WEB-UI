@@ -67,8 +67,6 @@ const emit = defineEmits<Emit>()
 const checkbox = ref(propsValue.modelValue)
 
 const onChangeChecked = (val: boolean) => {
-  console.log(val)
-
   emit('update:modelValue', val)
 }
 

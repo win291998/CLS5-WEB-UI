@@ -183,92 +183,94 @@ defineExpose({
 </script>
 
 <template>
-  <VSheet
-    width="100%"
-    class="user-infor mx-auto no-background"
-  >
-    <Form>
-      <label class="mb-1">{{ $t('common.auto-assign-content') }}</label>
-      <VRow class="mb-5">
-        <VCol
-          cols="12"
-          md="4"
-        >
-          <CmCheckBox
-            v-model="isCourse"
-          >
-            {{ t('common.course') }}
-          </CmCheckBox>
-        </VCol>
-        <VCol
-          cols="12"
-          md="4"
-        >
-          <CmCheckBox
-            v-model:model-value="isTrainingRoute"
-          >
-            {{ t('calendar.training-path') }}
-          </CmCheckBox>
-        </VCol>
-      </VRow>
-    </Form>
-  </VSheet>
-  <VSheet
-    width="100%"
-    class="user-infor mx-auto no-background"
-  >
-    <CmTable
-      :headers="headers"
-      :items="items"
-      :min-height="300"
-      is-action-footer
+  <div>
+    <VSheet
+      width="100%"
+      class="user-infor mx-auto no-background"
     >
-      <template #action-footer>
-        <div>
-          <CmButton
-            variant="text"
-            @click="addOrg"
+      <Form>
+        <label class="mb-1">{{ $t('common.auto-assign-content') }}</label>
+        <VRow class="mb-5">
+          <VCol
+            cols="12"
+            md="4"
           >
-            <VIcon icon="tabler:plus" />
-            {{ t('common.add') }}
-          </CmButton>
-        </div>
-      </template>
-      <template #rowItem="{ col, context }">
-        <div v-if="col === 'orgStruct'">
-          <Form>
-            <Field name="orgStruct">
-              <CpOrganizationSelect
-                v-model="context.id"
-                :placeholder="t('report.name-structure')"
-                :close-on-select="true"
-                @update:modelValue="changeOrg(context.key, $event)"
+            <CmCheckBox
+              v-model="isCourse"
+            >
+              {{ t('common.course') }}
+            </CmCheckBox>
+          </VCol>
+          <VCol
+            cols="12"
+            md="4"
+          >
+            <CmCheckBox
+              v-model:model-value="isTrainingRoute"
+            >
+              {{ t('calendar.training-path') }}
+            </CmCheckBox>
+          </VCol>
+        </VRow>
+      </Form>
+    </VSheet>
+    <VSheet
+      width="100%"
+      class="user-infor mx-auto no-background"
+    >
+      <CmTable
+        :headers="headers"
+        :items="items"
+        :min-height="300"
+        is-action-footer
+      >
+        <template #action-footer>
+          <div>
+            <CmButton
+              variant="text"
+              @click="addOrg"
+            >
+              <VIcon icon="tabler:plus" />
+              {{ t('common.add') }}
+            </CmButton>
+          </div>
+        </template>
+        <template #rowItem="{ col, context }">
+          <div v-if="col === 'orgStruct'">
+            <Form>
+              <Field name="orgStruct">
+                <CpOrganizationSelect
+                  v-model="context.id"
+                  :placeholder="t('report.name-structure')"
+                  :close-on-select="true"
+                  @update:modelValue="changeOrg(context.key, $event)"
+                />
+              </Field>
+            </Form>
+          </div>
+          <div v-if="col === 'title'">
+            <div v-if="context.id">
+              <CmSelect
+                v-model="context.titleId"
+                :placeholder="t('common.title-position')"
+                :items="context.listTitle"
+                item-value="value"
+                custom-key="text"
+                @update:model-value="changeTitle(context.key, $event)"
               />
-            </Field>
-          </Form>
-        </div>
-        <div v-if="col === 'title'">
-          <div v-if="context.id">
-            <CmSelect
-              v-model="context.titleId"
-              :placeholder="t('common.title-position')"
-              :items="context.listTitle"
-              item-value="value"
-              custom-key="text"
-              @update:model-value="changeTitle(context.key, $event)"
+            </div>
+          </div>
+          <div v-if="col === 'actions'">
+            <VIcon
+              class="cursor-pointer"
+              icon="fe:trash"
+              @click="deleteItem(context.key)"
             />
           </div>
-        </div>
-        <div v-if="col === 'actions'">
-          <VIcon
-            class="cursor-pointer"
-            icon="fe:trash"
-            @click="deleteItem(context.key)"
-          />
-        </div>
-      </template>
-    </CmTable>
-  </VSheet>
+        </template>
+      </CmTable>
+    </VSheet>
+  </div>
 </template>
 
 <style lang="scss" scoped>

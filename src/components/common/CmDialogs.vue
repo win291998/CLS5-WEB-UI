@@ -27,6 +27,7 @@ interface Props {
 interface Emit {
   (e: 'cancel', type?: string): void
   (e: 'confirm', type?: string): void
+  (e: 'show'): void
 }
 
 const props = withDefaults(defineProps<Props>(), ({
@@ -60,6 +61,10 @@ const onDialogHidden = (e: any) => {
   console.log('onDialogHidden', e)
 }
 
+watch(() => props.isDialogVisible, val => {
+  if (val)
+    emit('show')
+})
 const sizeModal = computed(() => {
   switch (props.size) {
     case 'sm':
@@ -80,8 +85,11 @@ const sizeModal = computed(() => {
     class="dialog-common"
   >
     <VDialog
+      class="abc"
+      content-class="cm-dialogs"
       :model-value="props.isDialogVisible"
       :width="sizeModal"
+      scrollable
       :persistent="props.persistent"
       @update:model-value="onCancel"
       @before-enter="onDialogShown"
@@ -98,9 +106,10 @@ const sizeModal = computed(() => {
             <slot name="sub-title" />
           </VCardSubtitle>
         </template>
-
-        <template #text>
-          <slot name="content" />
+        <template
+          #text
+        >
+          <slot />
         </template>
         <VDivider class="mb-1" />
         <template #actions>
@@ -141,5 +150,11 @@ const sizeModal = computed(() => {
 
 .v-card-item {
   border-block-end: 1px solid $color-line-default;
+}
+.cm-dialogs {
+  .v-card-text {
+    // overflow: auto;
+    // max-height: 90vh;
+  }
 }
 </style>

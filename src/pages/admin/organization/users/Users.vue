@@ -10,6 +10,7 @@ import toast from '@/plugins/toast'
 
 import { fetchData } from '@/mock/users/index'
 
+window.showAllPageLoading('COMPONENT')
 const CpHeaderPageAction = defineAsyncComponent(() => import('@/components/page/Admin/organization/users/CpHeaderPageUserAction.vue'))
 const CpHeaderAction = defineAsyncComponent(() => import('@/components/page/gereral/CpHeaderAction.vue'))
 const CpUserFilter = defineAsyncComponent(() => import('@/components/page/Admin/organization/users/CpUserFilter.vue'))
@@ -226,7 +227,7 @@ const actionItem = (type: any) => {
       data.isShowDialogStatus = true
       break
     case 'ActionEdit':
-      router.push({ name: 'admin-organization-users-profile-edit', params: { tabActive: 'infor', id: type[1].id } })
+      router.push({ name: 'admin-organization-users-profile-edit', params: { tab: 'infor', id: type[1].id } })
       break
 
     default:
@@ -303,6 +304,7 @@ watch(() => route.path, value => {
 
 // created
 fectchListUsers()
+window.hideAllPageLoading()
 </script>
 
 <template>
@@ -330,7 +332,7 @@ fectchListUsers()
       :items="items"
       :total-record="totalRecord"
       @handlePageClick="handlePageClick"
-      @selectedRows="selectedRows"
+      @update:selected="selectedRows"
     >
       <template #rowItem="{ col, context }">
         <div v-if="col === 'fullName'">

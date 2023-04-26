@@ -50,18 +50,16 @@ if (window._.isEmpty(statuses.value))
     @cancel="updateModelValue"
     @confirm="onConfirmation"
   >
-    <template #content>
-      <div>
-        <CmSelect
-          v-model="statusList"
-          item-value="key"
-          custom-key="value"
-          :text="LABEL.TEXT"
-          :placeholder="LABEL.PLACEHOLDER"
-          :items="statuses"
-        />
-      </div>
-    </template>
+    <div>
+      <CmSelect
+        v-model="statusList"
+        item-value="key"
+        custom-key="value"
+        :text="LABEL.TEXT"
+        :placeholder="LABEL.PLACEHOLDER"
+        :items="statuses"
+      />
+    </div>
   </CmDialogs>
 </template>
 

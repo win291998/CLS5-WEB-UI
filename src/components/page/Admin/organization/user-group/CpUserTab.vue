@@ -1,9 +1,10 @@
 <script lang="ts" setup>
 import CpHeaderAction from './CpHeaderAction.vue'
-import CpMdGroupUser from './Modal/CpMdGroupUser.vue'
+import CpMdAddUser from './Modal/CpMdAddUser.vue'
+import CpMdMoveGroup from './Modal/CpMdMoveGroup.vue'
 import DateUtil from '@/utils/DateUtil'
 import CpCustomInfo from '@/components/page/gereral/CpCustomInfo.vue'
-import { useUserGroupStore } from '@/stores/admin/group-user/userTab'
+import { useUserGroupStore } from '@/stores/admin/group-user/cpUser'
 
 const CmTable = defineAsyncComponent(() => import('@/components/common/CmTable.vue'))
 const { t } = window.i18n()
@@ -26,22 +27,38 @@ const headers = [
   { text: '', value: 'actions', width: 150 },
 ]
 
-const isShow = ref(false)
 const store = useUserGroupStore()
 const { listUserInGroup, totalRecord, queryParams } = storeToRefs(store)
 const { moveUser, deleteItem, getListUser } = store
 
-watch(queryParams.value, val => {
-  getListUser()
-})
-
+// Tìm kiếm người dùng
 const handleSearch = (val: string) => {
   store.queryParams.search = val
   store.queryParams.pageNumber = 1
 }
+watch(queryParams.value, val => {
+  getListUser()
+})
 
+const isShowAddUser = ref(false)
 const showModalAdd = () => {
-  isShow.value = true
+  isShowAddUser.value = true
+}
+
+onBeforeUnmount(() => {
+  store.$dispose()
+})
+
+onDeactivated(() => {
+  store.$dispose()
+})
+
+// Chuyển nhóm người dùng
+const isShowModalMove = ref<boolean>(false)
+const showModalShowMove = (data: any) => {
+  console.log(123)
+
+  isShowModalMove.value = true
 }
 </script>
 
@@ -74,7 +91,7 @@ const showModalAdd = () => {
           icon="simple-line-icons:cursor-move"
           :size="18"
           class="align-middle color-success"
-          @click="moveUser(data)"
+          @click="showModalShowMove(data)"
         />
         <VTooltip
           activator="parent"
@@ -100,13 +117,13 @@ const showModalAdd = () => {
     </template>
   </CmTable>
 
-  <CpMdGroupUser
-    v-model:is-show="isShow"
+  <CpMdAddUser
+    v-model:is-show="isShowAddUser"
     title="Thêm mới nhóm người dùng"
   />
-
-  <!-- :user-in-group="userInGroup" -->
-  <!-- :data-header="dataHeader" -->
-  <!-- @fetch-data="fetchDataModal" -->
+  <CpMdMoveGroup
+    v-model:is-show="isShowModalMove"
+    title="Chuyển nhóm người dùng"
+  />
 </template>
 

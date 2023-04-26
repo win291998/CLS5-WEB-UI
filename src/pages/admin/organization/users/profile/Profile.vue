@@ -1,12 +1,27 @@
 <script setup lang="ts">
+import { profileUserManagerStore } from '@/stores/admin/users/profile/profile'
+
+window.showAllPageLoading('COMPONENT')
+
+/**
+ * component
+ */
 const CmCard = defineAsyncComponent(() => import('@/components/common/CmCard.vue'))
 const CmRadioGroup = defineAsyncComponent(() => import('@/components/common/CmRadioGroup.vue'))
 const CmTab = defineAsyncComponent(() => import('@/components/common/CmTab.vue'))
 const CpFormModifyUserInfor = defineAsyncComponent(() => import('@/components/page/Admin/organization/users/profile/CpFormModifyUserInfor.vue'))
 const CpResume = defineAsyncComponent(() => import('@/components/page/Admin/organization/users/profile/CpResume.vue'))
-const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
+const CpActionFooterEdit = defineAsyncComponent(() => import('@/components/page/gereral/CpActionFooterEdit.vue'))
 
-const src = ref('https://sfv4.cloudlms.top/DataFile/2023/4/3/kinhdoanh/6509/Image/fol-sfv4-kssjt7OiJC/origin.png')
+/**
+ * lib
+ */
+const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
+const route = useRoute()
+const router = useRouter()
+const storeProfileUserManager = profileUserManagerStore()
+const { values } = storeToRefs(storeProfileUserManager)
+const { fectchLecturers, handleUser, resetFormInfor } = storeProfileUserManager
 
 /**
  *
@@ -17,36 +32,58 @@ const listTab = [
     key: 'infor',
     title: 'users.add-user.account-information',
     component: CpFormModifyUserInfor,
+    dataTab: { profile: values },
     isRendered: false,
   },
   {
     key: 'resumer',
     title: 'users.add-user.profile',
+    dataTab: { profile: values },
     component: CpResume,
     isRendered: false,
   },
 ]
 
-/**
- * Xử lý data form
- *
- */
-const dataForm: any = ref({})
+const isShowButton = ref(true)
 
-const changeDataFormInfor = (data: any) => {
-  //
+const backUser = () => {
+  router.push({ name: 'admin-organization-users-manager' })
+  resetFormInfor()
 }
+
+/**
+ * Lấy data người dùng
+ */
+resetFormInfor()
+if (route.params.id)
+  fectchLecturers(route.params.id)
+window.hideAllPageLoading()
 </script>
 
 <template>
-  <div
-    class="d-flex justify-content-center"
-    style="margin-top: 20px;"
-  >
-    <CmTab
-      :list-tab="listTab"
-      type="button"
-    />
+  <div>
+    <div
+      class="d-flex justify-content-center"
+      style="margin-top: 20px;"
+    >
+      <CmTab
+        :is-render="true"
+        :list-tab="listTab"
+        label="tab"
+        type="button"
+      />
+    </div>
+
+    <VSheet
+      width="100%"
+      class="user-infor mx-auto no-background my-5"
+    >
+      <CpActionFooterEdit
+        :is-save="isShowButton"
+        @onCancel="backUser"
+        @onSave="handleUser($event, 'save')"
+      />
+    </VSheet>
   </div>
 </template>
 

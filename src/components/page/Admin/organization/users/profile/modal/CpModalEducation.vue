@@ -30,8 +30,8 @@ const emit = defineEmits<Emit>()
 
 const CmDialogs = defineAsyncComponent(() => import('@/components/common/CmDialogs.vue'))
 const CmSelect = defineAsyncComponent(() => import('@/components/common/CmSelect.vue'))
-const CmTextArea = defineAsyncComponent(() => import('@/components/common/CmTextArea.vue'))
 const CmDateTimePicker = defineAsyncComponent(() => import('@/components/common/CmDateTimePicker.vue'))
+const CmTextArea = defineAsyncComponent(() => import('@/components/common/CmtextArea.vue'))
 
 /**
  * lib
@@ -129,6 +129,9 @@ watch(() => props.isDialogVisible, value => {
   if (value && !props.educationData?.isEdit)
     resetForm()
 })
+watch(() => props.educationData, value => {
+  setValues(value)
+}, { deep: true })
 </script>
 
 <template>
@@ -139,95 +142,93 @@ watch(() => props.isDialogVisible, value => {
     @cancel="cancelModal"
     @confirm="onConfirmation"
   >
-    <template #content>
-      <Form ref="myFormEducation">
-        <VRow>
-          <VCol
-            cols="12"
-            md="6"
-          >
-            <!-- tên trường -->
-            <div>
-              <Field
-                v-slot="{ field, errors }"
-                v-model="values.schoolId"
-                name="schoolId"
-                :rules="schema.schoolId"
-              >
-                <CmSelect
-                  :field="field"
-                  :model-value="values.schoolId"
-                  :text="DATA_LABEL.LABEL_SCHOOL"
-                  :placeholder="DATA_LABEL.LABEL_SCHOOL"
-                  :items="data.nameSchoolsCombobox"
-                  :errors="errors"
-                  item-value="key"
-                  custom-key="value"
-                />
-              </Field>
-            </div>
-            <!-- bằng cấp -->
-            <div class="mt-2">
-              <Field
-                v-slot="{ field, errors }"
-                v-model="values.degreeId"
-                name="degreeId"
-                :rules="schema.degreeId"
-              >
-                <CmSelect
-                  :field="field"
-                  :model-value="values.degreeId"
-                  :text="DATA_LABEL.LABEL_DEGREE"
-                  :placeholder="DATA_LABEL.LABEL_DEGREE"
-                  :items="data.degreesCombobox"
-                  :errors="errors"
-                  item-value="key"
-                  custom-key="value"
-                />
-              </Field>
-            </div>
-            <div class="mt-2">
-              <Field
-                v-slot="{ field, errors }"
-                v-model="values.graduationYear"
-                name="graduationYear"
-                :rules="schema.graduationYear"
-              >
-                <label class="text-label-default">{{ t('common.years') }}</label>
-                <CmDateTimePicker
-                  :key="errors.length"
-                  v-model="values.graduationYear"
-                  :error="errors.length > 0 ? errors : false"
-                  :error-messages="errors ? errors[0] : ''"
-                  :field="field"
-                  placeholder="dd-mm-yyyy"
-                />
-              </Field>
-            </div>
-          </VCol>
-          <VCol
-            cols="12"
-            md="6"
-          >
-            <!-- Mô tả -->
+    <Form ref="myFormEducation">
+      <VRow>
+        <VCol
+          cols="12"
+          md="6"
+        >
+          <!-- tên trường -->
+          <div>
             <Field
-              v-slot="{ field }"
-              v-model="values.description"
-              name="description"
+              v-slot="{ field, errors }"
+              v-model="values.schoolId"
+              name="schoolId"
+              :rules="schema.schoolId"
             >
-              <CmTextArea
+              <CmSelect
                 :field="field"
-                :text="t('common.description')"
+                :model-value="values.schoolId"
+                :text="DATA_LABEL.LABEL_SCHOOL"
+                :placeholder="DATA_LABEL.LABEL_SCHOOL"
+                :items="data.nameSchoolsCombobox"
+                :errors="errors"
+                item-value="key"
+                custom-key="value"
               />
             </Field>
-          </VCol>
-        </VRow>
-      </Form>
-    </template>
+          </div>
+          <!-- bằng cấp -->
+          <div class="mt-2">
+            <Field
+              v-slot="{ field, errors }"
+              v-model="values.degreeId"
+              name="degreeId"
+              :rules="schema.degreeId"
+            >
+              <CmSelect
+                :field="field"
+                :model-value="values.degreeId"
+                :text="DATA_LABEL.LABEL_DEGREE"
+                :placeholder="DATA_LABEL.LABEL_DEGREE"
+                :items="data.degreesCombobox"
+                :errors="errors"
+                item-value="key"
+                custom-key="value"
+              />
+            </Field>
+          </div>
+          <div class="mt-2">
+            <Field
+              v-slot="{ field, errors }"
+              v-model="values.graduationYear"
+              name="graduationYear"
+              :rules="schema.graduationYear"
+            >
+              <label class="text-label-default">{{ t('common.years') }}</label>
+              <CmDateTimePicker
+                :key="errors.length"
+                v-model="values.graduationYear"
+                :error="errors.length > 0 ? errors : false"
+                :error-messages="errors ? errors[0] : ''"
+                :field="field"
+                placeholder="dd-mm-yyyy"
+              />
+            </Field>
+          </div>
+        </VCol>
+        <VCol
+          cols="12"
+          md="6"
+        >
+          <!-- Mô tả -->
+          <Field
+            v-slot="{ field }"
+            v-model="values.description"
+            name="description"
+          >
+            <CmTextArea
+              :field="field"
+              :text="t('common.description')"
+            />
+          </Field>
+        </VCol>
+      </VRow>
+    </Form>
   </CmDialogs>
 </template>
 
 <style scoped lang="scss">
-@use "/src/styles/style-global" as *;
+@use "@/styles/style-global.scss" as *;
 </style>
 

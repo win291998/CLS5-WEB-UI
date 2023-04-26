@@ -213,6 +213,7 @@
   },
   "CertificationManaging": "Quản lý chứng nhận",
   "common": {
+    "title-import-file": "Thêm từ file",
     "zoom-in": "Phóng to",
     "zoom-out": "Thu nhỏ",
     "position": "STT",
@@ -4530,5 +4531,8 @@
   "export-excel": "Xuất Excel",
   "org-duplicate": "Cơ cấu tổ chức không được để trống và không đươc phép trùng",
   "add-user-group": "Thêm nhóm người dùng",
-  "edit-user-group": "Chỉnh sửa nhóm người dùng"
+  "edit-user-group": "Chỉnh sửa nhóm người dùng",
+  "invalid-infor": "Kiểm tra thông tin người dùng chưa hợp lệ!",
+  "invalid":  "không hợp lệ",
+  "valid":  "hợp lệ"
 }

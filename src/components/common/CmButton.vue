@@ -61,6 +61,11 @@ onMounted(() => {
   components.value.push(false)
 })
 
+onBeforeUnmount(() => {
+  if (components.value.length)
+    store.$dispose()
+})
+
 const unLoadButton = () => {
   unLoadComponent(indexLoad.value)
 }

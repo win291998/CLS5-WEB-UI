@@ -3,6 +3,7 @@ import axios from '@axios';
 import _ from 'lodash';
 import { Ref } from "vue";
 import { useI18n } from 'vue-i18n';
+import type { typeLoading } from '@/typescript/enums/enums'
 //Cài đặt cố định
 declare global {
   interface Window extends propertyGlobal {
@@ -20,9 +21,46 @@ interface propertyGlobal {
   _?: _.LoDashStatic,
   i18n?: any,
   axios?: any,
+  showAllPageLoading?: any,
+  hideAllPageLoading?: any,
   SERVER_FILE?: string,
 }
 
+
+const showAllPageLoading = (type:  typeof typeLoading[number] =null)=> {
+  const htmlLoading =  document.getElementById('loading-bg')
+  if(htmlLoading){
+    switch (type) {
+      case 'FULL':
+        htmlLoading?.style.setProperty("z-index", "9999", "important");
+        htmlLoading?.style.setProperty("opacity", "1", "important");
+        break;
+      case 'FULL-OPACITY':
+        htmlLoading?.style.setProperty("z-index", "9999", "important");
+        htmlLoading?.style.setProperty("opacity", "0.8", "important");
+        break;
+      case 'COMPONENT':
+        htmlLoading?.style.setProperty("z-index", "999", "important");
+        htmlLoading?.style.setProperty("opacity", "1", "important");
+        break;
+    
+      default:
+        htmlLoading?.style.setProperty("z-index", "999", "important");
+        htmlLoading?.style.setProperty("opacity", "0.8", "important");
+        break;
+      }
+    htmlLoading.style.setProperty("display", "block", "important");
+  }
+}
+const hideAllPageLoading = ()=> {
+  const htmlLoading =  document.getElementById('loading-bg')
+  
+  if(htmlLoading){
+   setTimeout(() => {
+    htmlLoading.style.setProperty("display", "none", "important");
+   }, 1000);
+  }
+}
 //Định nghĩa biến toàn cục (reactvie) có thể thay đổi dữ liệu
 const windowDefineReactiveProperty = (app: any)=> {
   const global: propertyGlobal = {
@@ -38,6 +76,8 @@ const windowDefineConstProperty = ()=> {
     _: _,
     i18n: useI18n,
     axios: axios,
+    showAllPageLoading,
+    hideAllPageLoading,
     SERVER_FILE: process.env.VUE_APP_BASE_SERVER_FILE,
   }
   defineProperty(global, 'const')

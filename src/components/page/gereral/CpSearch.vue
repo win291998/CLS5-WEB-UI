@@ -7,7 +7,7 @@ interface Emit {
 }
 
 interface Props {
-  keySearch: string
+  keySearch?: string
 }
 const timer = ref<any>(null)
 

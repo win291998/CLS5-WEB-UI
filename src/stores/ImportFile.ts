@@ -8,28 +8,29 @@ import ObjectUtil from '@/utils/ObjectUtil'
 export const useImportFileStore = defineStore('importFile', () => {
   /** variable */
   const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
-  const type = ref(2)
+  const type = ref<number | string | undefined>(2)
   const config = reactive<Config>({ table: { header: [] } })
 
   const paramsImport = reactive({
     validData: [],
     invalidData: [],
   })
+  const customKeyError = ref<string>('errors')
 
   /** method */
   const checkDataError = (data: any) => {
     if (data && data.length > 0) {
       data.forEach((item: any) => {
         if (item.isSuccess === false) {
-          if (item.errors) {
+          if (item[customKeyError.value]) {
             item.messageErr = ''
-            item.errors.forEach((err: any) => {
+            item[customKeyError.value].forEach((err: any) => {
               item.messageErr += `${t(`${err.message}`)} <br> `
             })
           }
         }
         else {
-          // item.isSelected = true
+          item.isSelected = true
         }
       })
     }
@@ -40,6 +41,7 @@ export const useImportFileStore = defineStore('importFile', () => {
       listLocal: [],
       listExcel: listData,
       isSave: false,
+      isValidate: true,
       type: 2,
       ...paramExtend,
     }
@@ -71,6 +73,7 @@ export const useImportFileStore = defineStore('importFile', () => {
       listLocal: paramsImport.validData,
       listExcel: paramsImport.invalidData,
       isSave: false,
+      isValidate: true,
       type: 2,
       ...config?.importFile?.paramsImport,
     }
@@ -102,7 +105,6 @@ export const useImportFileStore = defineStore('importFile', () => {
   const fileChange = (event: any) => {
     const input = event.target.files[0]
     const listData: any = []
-
     readXlsxFile(input).then(rows => {
       if (rows.length <= 2) {
         // console.log('error')
@@ -111,12 +113,10 @@ export const useImportFileStore = defineStore('importFile', () => {
         for (let i = 2; i < rows.length; i += 1) {
           const rowData = rows[i]
           let data = null
-          data = config?.dowloadSample?.dataColumnExcel(rowData)
+          data = config?.importFile?.dataColumnExcel(rowData)
           listData.push(data)
         }
-
         event.target.value = null
-
         getValidData(listData, config?.importFile?.paramsImport)
       }
     })
@@ -138,6 +138,7 @@ export const useImportFileStore = defineStore('importFile', () => {
     let model = {
       listExcel: list.listData,
       isSave: true,
+      isValidate: false,
       typeUpdate: 2,
     }
 
@@ -166,5 +167,5 @@ export const useImportFileStore = defineStore('importFile', () => {
     }
   }
 
-  return { getValidData, checkInvalidData, checkDataError, paramsImport, fileChange, config, type, updateFromFile }
+  return { getValidData, checkInvalidData, checkDataError, paramsImport, fileChange, config, type, updateFromFile, customKeyError }
 })

@@ -7,8 +7,7 @@ export const validatorStore = defineStore('validator', () => {
   const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 
   const CONFIG = Object.freeze({
-    CODE: {
-      FIELD: t('common.code'),
+    DEFAULT_FIELD: {
       MAX: 50,
     },
     DEFAULT_STRING: {
@@ -20,6 +19,10 @@ export const validatorStore = defineStore('validator', () => {
     DEFAULT_NUMBER: {
       MAX_VALUE: 10000,
       MIN_VALUE: 0,
+    },
+    CODE: {
+      FIELD: t('common.code'),
+      MAX: 50,
     },
     LAST_NAME: {
       FIELD: t('common.surname'),
@@ -98,10 +101,12 @@ export const validatorStore = defineStore('validator', () => {
   }
 
   const schemaOption = reactive({
+    defaultField: yup.string().max(CONFIG.DEFAULT_FIELD.MAX, ruleMessage.max(CONFIG.DEFAULT_FIELD.MAX)),
+    defaultString: yup.string().max(CONFIG.DEFAULT_STRING.MAX, ruleMessage.max(CONFIG.DEFAULT_STRING.MAX)),
+
     requiredString: yup.string().required(ruleMessage.required()).max(CONFIG.DEFAULT_STRING.MAX, ruleMessage.max(CONFIG.DEFAULT_STRING.MAX)),
     code: yup.string().max(CONFIG.CODE.MAX, ruleMessage.max(CONFIG.CODE.MAX)).nullable(),
     require: yup.string().required(ruleMessage.required()),
-    defaultString: yup.string().max(CONFIG.DEFAULT_ARIA.MAX, ruleMessage.max(CONFIG.DEFAULT_ARIA.MAX)),
 
     lastName: yup.string().required(ruleMessage.required())
       .max(CONFIG.LAST_NAME.MAX, ruleMessage.max(CONFIG.LAST_NAME.MAX, CONFIG.LAST_NAME.FIELD)),
