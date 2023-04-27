@@ -81,7 +81,7 @@ const handlerPreButton = event => {
         text-color="color-dark"
         @click="onCancel"
       >
-        {{ t('common.cancel-title') }}
+        {{ t('cancel-title') }}
       </CmButton>
     </div>
     <div>
@@ -89,10 +89,10 @@ const handlerPreButton = event => {
         v-if="props.isSave"
         is-load
         :list-item="action"
-        :title="t('common.save-and-add')"
+        :title="t('save-and-add')"
         @click-prepend="handlerPreButton($event)"
       >
-        {{ t('common.save') }}
+        {{ t('save') }}
       </CmButtonGroup>
     </div>
   </div>

@@ -4,16 +4,6 @@ import { profileUserManagerStore } from '@/stores/admin/users/profile/profile'
 window.showAllPageLoading('COMPONENT')
 
 /**
- * component
- */
-const CmCard = defineAsyncComponent(() => import('@/components/common/CmCard.vue'))
-const CmRadioGroup = defineAsyncComponent(() => import('@/components/common/CmRadioGroup.vue'))
-const CmTab = defineAsyncComponent(() => import('@/components/common/CmTab.vue'))
-const CpFormModifyUserInfor = defineAsyncComponent(() => import('@/components/page/Admin/organization/users/profile/CpFormModifyUserInfor.vue'))
-const CpResume = defineAsyncComponent(() => import('@/components/page/Admin/organization/users/profile/CpResume.vue'))
-const CpActionFooterEdit = defineAsyncComponent(() => import('@/components/page/gereral/CpActionFooterEdit.vue'))
-
-/**
  * lib
  */
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
@@ -24,22 +14,38 @@ const { values } = storeToRefs(storeProfileUserManager)
 const { fectchLecturers, handleUser, resetFormInfor } = storeProfileUserManager
 
 /**
+ * component
+ */
+const CmTab = defineAsyncComponent(() => import('@/components/common/CmTab.vue'))
+const CpFormModifyUserInfor = defineAsyncComponent(() => import('@/components/page/Admin/organization/users/profile/CpFormModifyUserInfor.vue'))
+const CpResume = defineAsyncComponent(() => import('@/components/page/Admin/organization/users/profile/CpResume.vue'))
+const CpOrganization = defineAsyncComponent(() => import('@/components/page/Admin/organization/users/profile/CpOrganization.vue'))
+const CpActionFooterEdit = defineAsyncComponent(() => import('@/components/page/gereral/CpActionFooterEdit.vue'))
+
+/**
  *
  * tab
  */
 const listTab = [
   {
     key: 'infor',
-    title: 'users.add-user.account-information',
+    title: 'account-information',
     component: CpFormModifyUserInfor,
     dataTab: { profile: values },
     isRendered: false,
   },
   {
     key: 'resumer',
-    title: 'users.add-user.profile',
+    title: 'profile',
     dataTab: { profile: values },
     component: CpResume,
+    isRendered: false,
+  },
+  {
+    key: 'organization',
+    title: 'organization',
+    dataTab: { profile: values },
+    component: CpOrganization,
     isRendered: false,
   },
 ]
@@ -63,7 +69,7 @@ window.hideAllPageLoading()
 <template>
   <div>
     <div
-      class="d-flex justify-content-center"
+      class="d-flex justify-content-center mb-5"
       style="margin-top: 20px;"
     >
       <CmTab
@@ -74,16 +80,16 @@ window.hideAllPageLoading()
       />
     </div>
 
-    <VSheet
+    <div
       width="100%"
-      class="user-infor mx-auto no-background my-5"
+      class="user-infor no-background py-5"
     >
       <CpActionFooterEdit
         :is-save="isShowButton"
         @onCancel="backUser"
         @onSave="handleUser($event, 'save')"
       />
-    </VSheet>
+    </div>
   </div>
 </template>
 

@@ -40,8 +40,8 @@ if (autoCheckAssignUser && autoCheckAssignUser?.value) {
 
 // table
 const headers = reactive([
-  { text: t('report.name-structure'), value: 'orgStruct', width: 400 },
-  { text: t('common.title-position'), value: 'title', width: 400 },
+  { text: t('name-structure'), value: 'orgStruct', width: 400 },
+  { text: t('title-position'), value: 'title', width: 400 },
   { text: '', value: 'actions', width: 50 },
 ])
 
@@ -189,7 +189,7 @@ defineExpose({
       class="user-infor mx-auto no-background"
     >
       <Form>
-        <label class="mb-1">{{ $t('common.auto-assign-content') }}</label>
+        <label class="mb-1">{{ $t('auto-assign-content') }}</label>
         <VRow class="mb-5">
           <VCol
             cols="12"
@@ -198,7 +198,7 @@ defineExpose({
             <CmCheckBox
               v-model="isCourse"
             >
-              {{ t('common.course') }}
+              {{ t('course') }}
             </CmCheckBox>
           </VCol>
           <VCol
@@ -208,7 +208,7 @@ defineExpose({
             <CmCheckBox
               v-model:model-value="isTrainingRoute"
             >
-              {{ t('calendar.training-path') }}
+              {{ t('training-path') }}
             </CmCheckBox>
           </VCol>
         </VRow>
@@ -231,7 +231,7 @@ defineExpose({
               @click="addOrg"
             >
               <VIcon icon="tabler:plus" />
-              {{ t('common.add') }}
+              {{ t('add') }}
             </CmButton>
           </div>
         </template>
@@ -241,7 +241,7 @@ defineExpose({
               <Field name="orgStruct">
                 <CpOrganizationSelect
                   v-model="context.id"
-                  :placeholder="t('report.name-structure')"
+                  :placeholder="t('name-structure')"
                   :close-on-select="true"
                   @update:modelValue="changeOrg(context.key, $event)"
                 />
@@ -252,7 +252,7 @@ defineExpose({
             <div v-if="context.id">
               <CmSelect
                 v-model="context.titleId"
-                :placeholder="t('common.title-position')"
+                :placeholder="t('title-position')"
                 :items="context.listTitle"
                 item-value="value"
                 custom-key="text"

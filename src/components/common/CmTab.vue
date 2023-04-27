@@ -113,7 +113,7 @@ const useEmitter = () => {
             :is="item?.component"
             :emit="useEmitter"
             :data-general="dataGeneral"
-            v-bind="tabActive.dataTab"
+            v-bind="tabActive?.dataTab"
           />
         </div>
       </div>
@@ -123,7 +123,7 @@ const useEmitter = () => {
         :is="tabActive?.component"
         :emit="useEmitter"
         :data-general="dataGeneral"
-        v-bind="tabActive.dataTab"
+        v-bind="tabActive?.dataTab"
       />
     </div>
   </div>

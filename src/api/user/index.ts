@@ -1,5 +1,5 @@
 const UserService = {
-  /** Get */
+
   // dowload file sample
   GenerateExcelTemplateCreateUsers: 'user/generate-excel-template-create-users',
   GetTemplateExcelUpdateEmailUser: '/User/get-template-excel-update-email-user',
@@ -14,7 +14,9 @@ const UserService = {
   /// user type
   RoleFeaturePermission: '/usertype/get-feature-permission-by-portal',
 
-  /// get danh sách:
+  /** GET */
+  GetListIdStructureUser: '/user/get-list-id-from-structure-by-user',
+
   UsersList: '/User/get-all-users-paging', // danh sách người dùng
   UsersDelete: '/user/delete', // Xóa người dùng
   ResetPassword: '/user/set-password', // Cập nhật mật khẩu
@@ -32,7 +34,11 @@ const UserService = {
   fetchProvinces: '/Address/get-provinces', // get provinces
   fetchDistricts: '/Address/get-districts', // get districts
   fetchWards: '/Address/get-wards', // get districts
-
+  GetPagingByUser: '/usergroup/get-paging-by-user', // GetPagingByUser
+  DeleteGroupWithUser: '/usergroup/delete-group-with-user', // GetPagingByUser
+  GetPagingUserGroup: '/usergroup/get-paging-user-group-by-list', // GetPagingUserGroup
+  /** POST */
+  PostAddGroupUser: 'usergroup/add-group-with-user',
 }
 
 export default UserService

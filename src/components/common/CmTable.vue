@@ -64,8 +64,9 @@ interface Emit {
   (e: 'itemSelected', dataRow: object): void
   (e: 'checkedAll', checkedAll: boolean, data: object): void
   (e: 'changeCellvalue', value: string, field: string, key: number): void
-  (e: 'handlePageClick', page: number): void
+  (e: 'handlePageClick', page: number, size: number): void
   (e: 'update:pageNumber', page: number): void
+  (e: 'update:size', size: number): void
   (e: 'update:selected', data: Item): void
 
 }
@@ -93,6 +94,7 @@ watch(() => props.items, (val: Item[]) => {
   props.items.forEach((element, index) => {
     element.originIndex = index
     element.isSelected = !!element.isSelected
+    selectedRows.value = []
     if (element.isSelected)
       selectedRows.value.push([keyid.value])
   })
@@ -129,6 +131,7 @@ const checkedAll = (value: any) => {
   const data = props.returnObject ? props.items : selectedRows.value
   emit('update:selected', data)
   emit('checkedAll', !value, selectedRows)
+  emit('update:selected', selectedRows.value)
 }
 
 /** event */
@@ -164,7 +167,9 @@ const updateRowsPerPageSelect = (e: number) => {
 const pageSizeChange = (page: number, size: number) => {
   pageSize.value = size
   emit('update:pageNumber', page)
-  emit('handlePageClick', page)
+  emit('update:size', size)
+  emit('handlePageClick', page, size)
+
   updateRowsPerPageSelect(size)
 
   // phân trang local

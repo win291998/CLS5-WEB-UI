@@ -29,7 +29,6 @@ const handleSearch = (val: string) => {
 
 <template>
   <CmTextField
-    label="Tìm kiếm"
     class="header-action-field"
     placeholder="Tìm kiếm"
     prepend-inner-icon="tabler-search"
