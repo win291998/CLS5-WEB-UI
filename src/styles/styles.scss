@@ -360,5 +360,15 @@ span {
 
 // INPUT//
 .border-input-default{
-  border: $border-input
+  border: $border-input;
+}
+
+.page-containter{
+  padding: $xl-5;
+}
+.page-containter-box{
+  margin: $xl-4 0;
+  border: 1px solid #EAECF0;
+  box-shadow: $box-shadow-md;
+  padding: $xl-5;
 }

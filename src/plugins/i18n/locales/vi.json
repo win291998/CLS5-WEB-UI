@@ -3280,5 +3280,20 @@
   "invalid-infor": "Kiểm tra thông tin người dùng chưa hợp lệ!",
   "invalid": "không hợp lệ",
   "valid": "hợp lệ",
-  "": ""
+  "": "",
+  "ActionDelete": "Xóa",
+  "ActionEdit": "Chỉnh sửa",
+  "ActionSendAgree": "Gửi duyệt",
+  "ActionViewDetail": "Xem chi tiết",
+  "ActionViewFeedBack": "Xem phản hồi",
+  "ActionRecallRequest": "Yêu cầu thu hồi",
+  "ActionAcceptRecallRequest": "Cho phép thu hồi",
+  "ActionViewReport": "Xem báo cáo",
+  "ActionAgree": "Duyệt",
+  "ActionCreatingTestCode": "Tạo đề",
+  "ActionRollCallOffline": "Điểm danh",
+  "ActionUpdatePointOffline": "Cập nhật điểm",
+  "issuePasswords": "Cấp mật khẩu",
+  "changeStatus": "Thay đổi trạng thái",
+  "RestoreCourse": "Khôi phục"
 }

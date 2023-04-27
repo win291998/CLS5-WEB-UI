@@ -22,6 +22,7 @@ import { createApp } from 'vue'
 import VueFeather from 'vue-feather'
 import Vue3EasyDataTable from 'vue3-easy-data-table'
 import 'vue3-easy-data-table/dist/style.css'
+import { configStore } from '@/stores/index'
 
 const pinia = createPinia()
 
@@ -72,6 +73,10 @@ app.use(layoutsPlugin)
 app.component('EasyDataTable', Vue3EasyDataTable)
 
 app.use(router)
+const configControl = configStore()
+const { getDefaultSetting } = configControl
+
+getDefaultSetting()
 
 // Mount vue app
 app.mount('#app')

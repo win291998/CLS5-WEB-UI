@@ -36,12 +36,13 @@ const route = useRoute()
 
 // data
 const LABEL = Object.freeze({
-  TEXT_USER_TYPE: `${t('users.user.filters.user-role')}*`,
-  PLACEHOLDER_USER_TYPE: t('users.user.filters.user-role'),
-  TEXT_STATUS: `${t('common.status-name')}*`,
-  PLACEHOLDER_STATUS: t('common.status-name'),
+  TEXT_USER_TYPE: `${t('filters.user-role')}*`,
+  PLACEHOLDER_USER_TYPE: t('filters.user-role'),
+  TEXT_STATUS: `${t('status-name')}*`,
+  PLACEHOLDER_STATUS: t('status-name'),
 })
 const formUserInfor = ref()
+const valuesComponent = ref(values)
 
 // method
 const handleFormValue = (value: any) => {
@@ -72,7 +73,6 @@ const isOwner = computed(() => {
 
   return false
 })
-
 if (Number(route.params.id) >= 0)
   titleTable.value?.checkGetListOrgStruct()
 onMounted(() => {
@@ -103,8 +103,8 @@ window.hideAllPageLoading()
             md="2"
           >
             <CpUserProfileAvatarEdit
-              v-if="values"
-              v-model:src="values.avatar"
+              v-if="valuesComponent"
+              v-model:src="valuesComponent.avatar"
               :tooltip="t('system-management.100x100')"
             />
           </VCol>
@@ -114,8 +114,9 @@ window.hideAllPageLoading()
             class="d-flex align-center"
           >
             <CmRadioGroup
-              v-model="values.gender"
-              :label="t('common.gender')"
+              v-if="valuesComponent"
+              v-model="valuesComponent.gender"
+              :label="t('gender')"
               :option="optionGender"
             />
           </VCol>
@@ -127,7 +128,7 @@ window.hideAllPageLoading()
           >
             <Field
               v-slot="{ field, errors }"
-              v-model="values.lastName"
+              v-model="valuesComponent.lastName"
               name="lastName"
               type="text"
               :rules="schema.lastName"
@@ -135,8 +136,8 @@ window.hideAllPageLoading()
               <CmTextField
                 :field="field"
                 :errors="errors"
-                :text="`${t('common.surname')}*`"
-                :placeholder="t('users.add-user.enter-surname')"
+                :text="`${t('surname')}*`"
+                :placeholder="t('enter-surname')"
                 @change="handleFormValue"
               />
             </Field>
@@ -147,7 +148,7 @@ window.hideAllPageLoading()
           >
             <Field
               v-slot="{ field, errors }"
-              v-model="values.firstName"
+              v-model="valuesComponent.firstName"
               name="firstName"
               type="text"
               :rules="schema.firstName"
@@ -155,8 +156,8 @@ window.hideAllPageLoading()
               <CmTextField
                 :field="field"
                 :errors="errors"
-                :text="`${t('common.name')}*`"
-                :placeholder="t('users.add-user.enter-last-name')"
+                :text="`${t('name')}*`"
+                :placeholder="t('enter-last-name')"
                 @change="handleFormValue"
               />
             </Field>
@@ -167,7 +168,7 @@ window.hideAllPageLoading()
           >
             <Field
               v-slot="{ field, errors }"
-              v-model="values.email"
+              v-model="valuesComponent.email"
               name="email"
               type="text"
               :rules="schema.email"
@@ -175,8 +176,8 @@ window.hideAllPageLoading()
               <CmTextField
                 :field="field"
                 :errors="errors"
-                :text="`${t('common.email')}*`"
-                :placeholder="t('users.add-user.enter-email')"
+                :text="`${t('email')}*`"
+                :placeholder="t('enter-email')"
                 @change="handleFormValue"
               />
             </Field>
@@ -187,7 +188,7 @@ window.hideAllPageLoading()
           >
             <Field
               v-slot="{ field, errors }"
-              v-model="values.userName"
+              v-model="valuesComponent.userName"
               name="userName"
               type="text"
               :rules="schema.userName"
@@ -195,8 +196,8 @@ window.hideAllPageLoading()
               <CmTextField
                 :field="field"
                 :errors="errors"
-                :text="`${t('common.sign-name')}*`"
-                :placeholder="t('users.add-user.enter-sign-name')"
+                :text="`${t('sign-name')}*`"
+                :placeholder="t('enter-sign-name')"
                 @change="handleFormValue"
               />
             </Field>
@@ -209,7 +210,7 @@ window.hideAllPageLoading()
           >
             <Field
               v-slot="{ field, errors }"
-              v-model="values.password"
+              v-model="valuesComponent.password"
               name="password"
               type="password"
               :rules="schema.password"
@@ -218,8 +219,8 @@ window.hideAllPageLoading()
                 :field="field"
                 :errors="errors"
                 type="password"
-                :text="`${t('common.password')}*`"
-                :placeholder="t('users.add-user.enter-password')"
+                :text="`${t('password')}*`"
+                :placeholder="t('enter-password')"
                 @change="handleFormValue"
               />
             </Field>
@@ -230,7 +231,7 @@ window.hideAllPageLoading()
           >
             <Field
               v-slot="{ field, errors }"
-              v-model="values.userCode"
+              v-model="valuesComponent.userCode"
               name="userCode"
               type="text"
               :rules="schema.userCode"
@@ -238,8 +239,8 @@ window.hideAllPageLoading()
               <CmTextField
                 :field="field"
                 :errors="errors"
-                :text="`${t('common.employee-code')}*`"
-                :placeholder="$t('users.add-user.enter-employee-code')"
+                :text="`${t('employee-code')}*`"
+                :placeholder="$t('enter-employee-code')"
                 @change="handleFormValue"
               />
             </Field>
@@ -250,7 +251,7 @@ window.hideAllPageLoading()
           >
             <Field
               v-slot="{ field, errors }"
-              v-model="values.phoneNumber"
+              v-model="valuesComponent.phoneNumber"
               name="phoneNumber"
               type="number"
               :rules="schema.phoneNumber"
@@ -258,8 +259,8 @@ window.hideAllPageLoading()
               <CmTextField
                 :field="field"
                 :errors="errors"
-                :text="`${t('common.phone-number')}`"
-                :placeholder="$t('common.phone-number')"
+                :text="`${t('phone-number')}`"
+                :placeholder="$t('phone-number')"
                 type="number"
                 @change="handleFormValue"
               />
@@ -271,13 +272,13 @@ window.hideAllPageLoading()
           >
             <Field
               v-slot="{ field, errors }"
-              v-model="values.userTypeId"
+              v-model="valuesComponent.userTypeId"
               name="userTypeIdSingle"
               :rules="schema.userTypeIdSingle"
             >
               <CmSelect
                 :field="field"
-                :model-value="values.userTypeId"
+                :model-value="valuesComponent.userTypeId"
                 :text="LABEL.TEXT_USER_TYPE"
                 :placeholder="LABEL.PLACEHOLDER_USER_TYPE"
                 :items="userType"
@@ -295,13 +296,13 @@ window.hideAllPageLoading()
           >
             <Field
               v-slot="{ field, errors }"
-              v-model="values.statusId"
+              v-model="valuesComponent.statusId"
               name="statusIdSingle"
               :rules="schema.statusIdSingle"
             >
               <CmSelect
                 :field="field"
-                :model-value="values.statusId"
+                :model-value="valuesComponent.statusId"
                 :text="LABEL.TEXT_STATUS"
                 :placeholder="LABEL.PLACEHOLDER_STATUS"
                 :items="statuses"
@@ -319,7 +320,7 @@ window.hideAllPageLoading()
           >
             <Field
               v-slot="{ field, errors }"
-              v-model="values.kpiLearn"
+              v-model="valuesComponent.kpiLearn"
               name="kpiLearn"
               type="number"
               :rules="schema.kpiLearn"
@@ -327,8 +328,8 @@ window.hideAllPageLoading()
               <CmTextField
                 :field="field"
                 :errors="errors"
-                :text="`${t('common.kpi-learning')}`"
-                :placeholder="$t('common.kpi-learning')"
+                :text="`${t('kpi-learning')}`"
+                :placeholder="$t('kpi-learning')"
                 type="number"
                 @change="handleFormValue"
               />
@@ -340,7 +341,7 @@ window.hideAllPageLoading()
           >
             <Field
               v-slot="{ field, errors }"
-              v-model="values.kpiTeach"
+              v-model="valuesComponent.kpiTeach"
               name="kpiTeach"
               type="number"
               :rules="schema.kpiTeach"
@@ -348,8 +349,8 @@ window.hideAllPageLoading()
               <CmTextField
                 :field="field"
                 :errors="errors"
-                :text="`${t('common.kpi-teaching')}`"
-                :placeholder="$t('common.kpi-teaching')"
+                :text="`${t('kpi-teaching')}`"
+                :placeholder="$t('kpi-teaching')"
                 type="number"
                 @change="handleFormValue"
               />

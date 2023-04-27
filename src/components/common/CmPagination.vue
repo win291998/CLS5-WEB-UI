@@ -46,6 +46,8 @@ const totalItemsLength = computed(() => {
 
 // Xử lý chuyển trang
 const handlePageClick = (page: number) => {
+  console.log(123)
+
   emit('handlePageClick', page)
   emit('pageClick', page, pageSizeCurrent.value)
 }
@@ -69,10 +71,10 @@ watch([() => props.currentPage], ([newValue]) => {
     <div class="d-flex pagination-flex flex-wrap ">
       <div
         v-if="showPageSelect === true"
-        class="d-flex align-center mb-0 mt-1 pagination-select"
+        class="d-flex align-center mb-2 mt-1 pagination-select"
       >
         <span class="text-nowrap text-regular-sm ">
-          {{ t('Hiển thị') }}
+          {{ t('show') }}
         </span>
         <VSelect
           v-model="pageSizeCurrent"
@@ -86,9 +88,9 @@ watch([() => props.currentPage], ([newValue]) => {
           single-line
           @update:modelValue="handlePageSizeChange"
         />
-        <span class="text-nowrap text-regular-sm ">{{ `${t('of')} ${totalItems} ${t('common.pagination.item')}` }}</span>
+        <span class="text-nowrap text-regular-sm ">{{ `${t('of')} ${totalItems} ${t('item')}` }}</span>
       </div>
-      <div class="page-number">
+      <div class="page-number  mb-2">
         <VPagination
           v-model="selectedPage"
           :length="totalItemsLength"

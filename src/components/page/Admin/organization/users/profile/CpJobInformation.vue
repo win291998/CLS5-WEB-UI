@@ -22,8 +22,8 @@ const { fetchUserLevels } = storeCombobox
 
 // data
 const LABEL = Object.freeze({
-  TEXT_LEVEL: t('common.level'),
-  PLACEHOLDER_LEVEL: t('common.level'),
+  TEXT_LEVEL: t('level'),
+  PLACEHOLDER_LEVEL: t('level'),
 })
 
 // method
@@ -51,8 +51,8 @@ console.log(userLevels)
           :field="field"
           :model-value="values.workplace"
           :errors="errors"
-          :text="t('users.add-user.enter-workplace')"
-          :placeholder="t('users.add-user.enter-workplace')"
+          :text="t('enter-workplace')"
+          :placeholder="t('enter-workplace')"
         />
       </Field>
     </VCol>
@@ -91,7 +91,7 @@ console.log(userLevels)
         name="employmentDate"
       >
         <div class="mb-1">
-          <label class="text-label-default ">{{ t('common.years') }}</label>
+          <label class="text-label-default ">{{ t('years') }}</label>
         </div>
         <CmDateTimePicker
           v-model="values.employmentDate"
@@ -104,7 +104,7 @@ console.log(userLevels)
   <div>
     <CmtextArea
       v-model:model-value="values.story"
-      :text="t('users.add-user.enter-story')"
+      :text="t('enter-story')"
     />
   </div>
 </template>
