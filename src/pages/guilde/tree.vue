@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import CmTreeView from '@/components/common/CmTreeView.vue'
+import _ from 'lodash'
 import ArraysUtil from '@/utils/ArrayUtil'
+
+const CmTreeView = defineAsyncComponent(() => import('@/components/common/CmTreeView.vue'))
 
 const modeBool = ref(true)
 const { t } = window.i18n()
@@ -25,11 +27,12 @@ const changeMode = () => {
 }
 
 const getRoleFeature = async () => {
-  const res = await window.axios.get('/usertype/get-feature-permission-by-portal')
-    .then((value: any) => value)
+  await window.axios.get('/usertype/get-feature-permission-by-portal')
+    .then((value: any) => {
+      const result = ArraysUtil.formatTreeData(ArraysUtil.flatMapTree([value.data[0]], 'permissions'), config.roots, t)
+      nodes.value = reactive(result)
+    })
     .catch((error: any) => error)
-  const result = ArraysUtil.formatTreeData(ArraysUtil.flatMapTree([res.data[0]], 'permissions'), config.roots, t)
-  nodes.value = reactive(result)
 }
 
 getRoleFeature()
