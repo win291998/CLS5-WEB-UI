@@ -63,7 +63,6 @@ const backUser = () => {
 resetFormInfor()
 if (route.params.id)
   fectchLecturers(route.params.id)
-window.hideAllPageLoading()
 </script>
 
 <template>

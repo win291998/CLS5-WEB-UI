@@ -5,7 +5,6 @@ import { load } from '@/stores/loadComponent'
 import { profileUserManagerStore } from '@/stores/admin/users/profile/profile'
 
 const emit = defineEmits<Emit>()
-window.showAllPageLoading('COMPONENT')
 
 /**
  * interface
@@ -77,9 +76,8 @@ if (Number(route.params.id) >= 0)
   titleTable.value?.checkGetListOrgStruct()
 onMounted(() => {
   myFormUserInfor.value = formUserInfor.value
-  updateSchema()
+  window.hideAllPageLoading()
 })
-window.hideAllPageLoading()
 </script>
 
 <template>

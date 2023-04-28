@@ -15,14 +15,8 @@ const config = reactive({
   editable: false,
   disabled: false,
   padding: 25,
-  checkMode: 0,
 })
-const modeBool = ref(true)
 const nodes = ref({})
-const changeMode = () => {
-  modeBool.value = !modeBool.value
-  config.checkMode = modeBool.value ? 0 : 1
-}
 
 const getRoleFeature = async () => {
   const res = await window.axios.get('/usertype/get-feature-permission-by-portal')
@@ -59,7 +53,9 @@ getRoleFeature()
     <CmTreeView
       :nodes="nodes"
       :config="config"
+      custom-id="ids"
       :is-org="false"
+      :type-flat-child="true"
     />
   </div>
 </template>
