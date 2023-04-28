@@ -111,7 +111,6 @@ export const comboboxStore = defineStore('combobox', () => {
   const fetchUserLevels = async () => {
     await MethodsUtil.requestApiCustom(ComboboxService.levels, TYPE_REQUEST.GET).then((value: any) => {
       userLevels.value = value.data || []
-      console.log(value)
       userLevels.value = value?.data?.map((item: any) => {
         return {
           ...item,

@@ -16,6 +16,7 @@ const UserService = {
 
   /** GET */
   GetListIdStructureUser: '/user/get-list-id-from-structure-by-user',
+  GetOrganizationalStructure: '/organizationalstructure/get-all',
 
   UsersList: '/User/get-all-users-paging', // danh sách người dùng
   UsersDelete: '/user/delete', // Xóa người dùng

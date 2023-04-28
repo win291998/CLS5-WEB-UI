@@ -29,7 +29,6 @@ const LABEL = Object.freeze({
 // method
 if (window._.isEmpty(userLevels.value))
   fetchUserLevels()
-console.log(userLevels)
 </script>
 
 <template>
