@@ -2,11 +2,14 @@
 import Treeview from 'vue3-treeview'
 import CmCheckBox from '@/components/common/CmCheckBox.vue'
 import 'vue3-treeview/dist/style.css'
+import { configStore } from '@/stores/index'
 
 interface Props {
   config?: Config
   nodes?: NodeTree
   isOrg: boolean
+  typeFlatChild?: boolean
+  customId?: string
 }
 interface Emit {
   (e: 'nodeOpened', value: any): void
@@ -23,6 +26,7 @@ interface Emit {
   (e: 'nodeDragend', value: any): void
   (e: 'nodeOver', value: any): void
   (e: 'nodeDrop', value: any): void
+  (e: 'update:modelValue', value: any): void
 }
 
 interface Config {
@@ -32,11 +36,11 @@ interface Config {
   checkboxes: boolean
   editable: boolean
   disabled: boolean
-  leaves: boolean
+  leaves?: boolean
   padding: number
   closedIcon?: any
   openedIcon?: any
-  checkMode: number
+  checkMode?: number
 }
 interface NodeTree {
   [NodeTree: string]: Node
@@ -62,14 +66,20 @@ const props = withDefaults(defineProps<Props>(), ({
   }),
   nodes: () => (reactive({})),
   isOrg: true,
-
+  typeFlatChild: false, // chọn con không ảnh hưởng cha
+  customId: 'id',
 }))
 
 const emit = defineEmits<Emit>()
-const valueChecked = ref()
+const configControl = configStore()
+const { isTreeBinding } = configControl
+const valueChecked = ref<any>([])
+const nodesTree = ref<any>(props.nodes)
+
 const configTree = computed(() => {
   return {
     ...props.config,
+    checkMode: props.typeFlatChild ? 1 : (isTreeBinding() ? 0 : 1),
     openedIcon: {
       style: 'font-size: 18px; height: 18px; width: 18px;',
       type: 'shape',
@@ -92,6 +102,14 @@ const configTree = computed(() => {
     },
   }
 })
+const updateValueChecked = async () => {
+  await nextTick()
+
+  valueChecked.value = window._.filter(nodesTree.value, prop => {
+    return window._.get(prop, 'state.checked') === true
+  })
+  emit('update:modelValue', valueChecked.value)
+}
 const handleNodeOpened = (event: any) => {
   emit('nodeOpened', event)
 }
@@ -116,15 +134,31 @@ const handleNodeEdit = (event: any) => {
   emit('nodeEdit', event)
 }
 
-const handleNodeChecked = (event: any) => {
+const checkedNodeChild = (node: any, status: boolean) => {
+  if (props.typeFlatChild && isTreeBinding() && node?.children && node?.children.length) {
+    node.children.forEach((nodeChild: any) => {
+      nodesTree.value[nodeChild] = {
+        ...nodesTree.value[nodeChild],
+        state: {
+          checked: status,
+        },
+      }
+      if (nodesTree.value[nodeChild]?.children?.length)
+        checkedNodeChild(nodesTree.value[nodeChild], status)
+    })
+  }
+}
+const handleNodeChecked = async (event: any) => {
   emit('nodeChecked', event)
-  console.log(event)
-  console.log('valueChecked', valueChecked)
+
+  checkedNodeChild(event, true)
+  updateValueChecked()
 }
 
 const handleNodeUnchecked = (event: any) => {
   emit('nodeUnchecked', event)
-  console.log(event)
+  checkedNodeChild(event, false)
+  updateValueChecked()
 }
 
 const handleNodeDragstart = (event: any) => {
@@ -152,16 +186,13 @@ const handleNodeDrop = (event: any) => {
 }
 
 const onChangeOrgChecked = (val: any, node: any) => {
-  console.log(node)
   node.orgPermissionValue = val ? node.orgPermission : 0
   if (node.ids === 0) {
-    // eslint-disable-next-line vue/no-mutating-props
-    props.nodes[node.parent].orgPermissionValue += (val ? node.orgPermission : -node.orgPermission)
+    nodesTree[node.parent].orgPermissionValue += (val ? node.orgPermission : -node.orgPermission)
     return
   }
   node.children.forEach((childeNode: any) => {
-    // eslint-disable-next-line vue/no-mutating-props
-    props.nodes[childeNode].orgPermissionValue = val ? props.nodes[childeNode].orgPermission : 0
+    nodesTree[childeNode].orgPermissionValue = val ? nodesTree[childeNode].orgPermission : 0
   })
 }
 </script>
@@ -170,9 +201,8 @@ const onChangeOrgChecked = (val: any, node: any) => {
   <div class="tree-view-select">
     <Treeview
       :config="configTree"
-      :nodes="props.nodes"
+      :nodes="nodesTree"
       class="tree-view"
-      @onUpdate:modelValue="valueChecked"
       @node-opened="handleNodeOpened"
       @node-closed="handleNodeClosed"
       @node-focus="handleNodeFocus"
@@ -240,7 +270,7 @@ const onChangeOrgChecked = (val: any, node: any) => {
     inset-inline-end: 0;
   }
   .checkbox-wrapper {
-    left: 11px;
+    left: 24px;
     opacity: 0;
     position: absolute;
     width: 36px;

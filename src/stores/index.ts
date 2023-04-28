@@ -13,6 +13,10 @@ export const configStore = defineStore('appConfig', () => {
   const connectionControl = connectionStore()
   const { isLoginOneDevice } = storeToRefs(connectionControl)
   const settingDefaults = ref(defaultSetting)
+  const isTreeBinding = () => {
+    const treeBindItem = settingDefaults.value?.find((item: any) => item.typeId === 1)
+    return treeBindItem && treeBindItem.value === 1
+  }
   const getDefaultSetting = async () => {
     await MethodsUtil.requestApiCustom(SystemService.SettingDefaultSystem, TYPE_REQUEST.GET).then((value: any) => {
       if (value?.data?.length > 0)
@@ -27,5 +31,5 @@ export const configStore = defineStore('appConfig', () => {
       return value.data
     })
   }
-  return { config, getDefaultSetting, settingDefaults }
+  return { config, settingDefaults, isTreeBinding, getDefaultSetting }
 })

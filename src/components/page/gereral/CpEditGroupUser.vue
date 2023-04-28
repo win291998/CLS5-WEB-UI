@@ -10,8 +10,6 @@ const props = withDefaults(defineProps<Props>(), ({
   idUser: null,
 }))
 
-window.showAllPageLoading('COMPONENT')
-
 /**
  * component
  */
@@ -26,7 +24,6 @@ interface Props {
 /**
  * data main
  */
-window.showAllPageLoading('COMPONENT')
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 const route = useRoute()
 
@@ -67,15 +64,12 @@ const queryBodyAdd = reactive({
  */
 // danh sách nhóm người dùng
 const getPagingByUser = async (queryParam: any) => {
-  window.showAllPageLoading('COMPONENT')
   if (props.idUser != null || Number(route.params.id) != null) {
     await MethodsUtil.requestApiCustom(ApiUser.GetPagingByUser, TYPE_REQUEST.GET, queryParam).then((value: any) => {
       dataTableGroup.value = value?.data?.pageLists
       dataComponent.totalRecord = value?.data?.totalRecord
     })
   }
-
-  window.hideAllPageLoading()
 }
 
 // lấy danh sách id
@@ -186,7 +180,6 @@ const updateDialogVisibleAddStatus = (event: any) => {
 }
 
 getPagingByUser(queryParams)
-window.hideAllPageLoading()
 </script>
 
 <template>

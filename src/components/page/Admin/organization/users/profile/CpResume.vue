@@ -5,7 +5,6 @@ import { validatorStore } from '@/stores/validatator'
 import { profileUserManagerStore } from '@/stores/admin/users/profile/profile'
 import CmtextArea from '@/components/common/CmtextArea.vue'
 
-window.showAllPageLoading('COMPONENT')
 const CmDateTimePicker = defineAsyncComponent(() => import('@/components/common/CmDateTimePicker.vue'))
 const CpModalEducation = defineAsyncComponent(() => import('@/components/page/Admin/organization/users/profile/modal/CpModalEducation.vue'))
 const CpModalExperence = defineAsyncComponent(() => import('@/components/page/Admin/organization/users/profile/modal/CpModalExperence.vue'))
@@ -237,7 +236,6 @@ const handleUpdateExperences = (experences: any, edit: boolean) => {
 }
 
 /** ******************** */
-window.hideAllPageLoading()
 </script>
 
 <template>

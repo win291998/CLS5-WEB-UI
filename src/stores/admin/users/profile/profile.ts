@@ -184,6 +184,7 @@ export const profileUserManagerStore = defineStore('profileUserManager', () => {
     idUpdate.value = id
     await MethodsUtil.requestApiCustom(ApiUser.fetchDetailUpdate, TYPE_REQUEST.GET, params).then(value => {
       setValues(value.data)
+      console.log(1232313)
     })
   }
   const resetFormInfor = () => {
