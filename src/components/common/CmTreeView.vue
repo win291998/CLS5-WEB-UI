@@ -2,6 +2,8 @@
 import Treeview from 'vue3-treeview'
 import CmCheckBox from '@/components/common/CmCheckBox.vue'
 import 'vue3-treeview/dist/style.css'
+import IconClose from '@/assets/images/svg/IconClose.svg'
+import IconOpen from '@/assets/images/svg/IconOpen.svg'
 
 interface Props {
   config?: Config
@@ -32,7 +34,10 @@ interface Config {
   checkboxes: boolean
   editable: boolean
   disabled: boolean
+  leaves: boolean
   padding: number
+  closedIcon?: any
+  openedIcon?: any
   checkMode: number
 }
 interface NodeTree {
@@ -50,9 +55,10 @@ const props = withDefaults(defineProps<Props>(), ({
     roots: [],
     keyboardNavigation: false,
     dragAndDrop: false,
-    checkboxes: true,
     editable: false,
     disabled: false,
+    checkboxes: false,
+    leaves: false,
     padding: 0,
     checkMode: 0,
   }),
@@ -120,11 +126,11 @@ const handleNodeDrop = (event: any) => {
 }
 
 const onChangeOrgChecked = (val: any, node: any) => {
+  console.log(node)
   node.orgPermissionValue = val ? node.orgPermission : 0
   if (node.ids === 0) {
     // eslint-disable-next-line vue/no-mutating-props
     props.nodes[node.parent].orgPermissionValue += (val ? node.orgPermission : -node.orgPermission)
-
     return
   }
   node.children.forEach((childeNode: any) => {
@@ -135,66 +141,113 @@ const onChangeOrgChecked = (val: any, node: any) => {
 </script>
 
 <template>
-  <Treeview
-    :config="props.config"
-    :nodes="props.nodes"
-    class="tree-view"
-    @node-opened="handleNodeOpened"
-    @node-closed="handleNodeClosed"
-    @node-focus="handleNodeFocus"
-    @node-toggle="handleNodeToggle"
-    @node-blur="handleNodeBlur"
-    @node-edit="handleNodeEdit"
-    @node-checked="handleNodeChecked"
-    @node-unchecked="handleNodeUnchecked"
-    @node-dragstart="handleNodeDragstart"
-    @node-dragenter="handleNodeDragenter"
-    @node-dragleave="handleNodeDragleave"
-    @node-dragend="handleNodeDragend"
-    @node-over="handleNodeOver"
-    @node-drop="handleNodeDrop"
-  >
-    <template
-      v-if="isOrg"
-      #after-input="{ node }"
+  <div class="tree-view-select">
+    <Treeview
+      :config="props.config"
+      :nodes="props.nodes"
+      class="tree-view"
+      @node-opened="handleNodeOpened"
+      @node-closed="handleNodeClosed"
+      @node-focus="handleNodeFocus"
+      @node-toggle="handleNodeToggle"
+      @node-blur="handleNodeBlur"
+      @node-edit="handleNodeEdit"
+      @node-checked="handleNodeChecked"
+      @node-unchecked="handleNodeUnchecked"
+      @node-dragstart="handleNodeDragstart"
+      @node-dragenter="handleNodeDragenter"
+      @node-dragleave="handleNodeDragleave"
+      @node-dragend="handleNodeDragend"
+      @node-over="handleNodeOver"
+      @node-drop="handleNodeDrop"
     >
-      <div
-        v-if="node.orgPermission > 0"
-        class="content-after"
-      >
-        <CmCheckBox
-          tooltip-label="Phân quyền theo cơ cấu tổ chức"
-          :model-value="node.orgPermissionValue
-            && (node.orgPermissionValue & node.orgPermission) === node.orgPermission"
-          :disabled="!(node.state?.checked || node.state?.indeterminate)"
-          :indeterminate="!!(node.orgId
-            && node.orgPermissionValue
-            && node.orgPermissionValue < node.orgPermission)"
-          @update:model-value="onChangeOrgChecked($event, node)"
+      <template #before-input="{ node }">
+        <div
+          v-if="!node.children.length"
+          class="dot-tree"
         />
-      </div>
-    </template>
-    <template #loading-slot>
-      <div class="progress">
-        <div class="indeterminate" />
-      </div>
-    </template>
-  </Treeview>
+        <CmCheckBox
+          v-model:model-value="node.state.checked"
+          tooltip-label="Phân quyền theo cơ cấu tổ chức"
+          :false-value="false"
+          class="checkbox-tree-view"
+          :true-value="true"
+          :indeterminate="node.state.indeterminate"
+        />
+      </template>
+      <template
+        v-if="isOrg"
+        #after-input="{ node }"
+      >
+        <div
+          v-if="node.orgPermission > 0"
+          class="content-after"
+        >
+          <CmCheckBox
+            tooltip-label="Phân quyền theo cơ cấu tổ chức"
+            :model-value="node.orgPermissionValue
+              && (node.orgPermissionValue & node.orgPermission) === node.orgPermission"
+            :disabled="!(node.state?.checked || node.state?.indeterminate)"
+            :indeterminate="!!(node.orgId
+              && node.orgPermissionValue
+              && node.orgPermissionValue < node.orgPermission)"
+            @update:model-value="onChangeOrgChecked($event, node)"
+          />
+        </div>
+      </template>
+      <template #loading-slot>
+        <div class="progress">
+          <div class="indeterminate" />
+        </div>
+      </template>
+    </Treeview>
+  </div>
 </template>
 
 <style lang="scss">
-.content-after {
-  position: absolute;
-  z-index: 99;
-  inset-block: 0;
-  inset-inline-end: 0;
-}
+.tree-view-select {
+  .content-after {
+    position: absolute;
+    z-index: 99;
+    inset-block: 0;
+    inset-inline-end: 0;
+  }
+  .checkbox-wrapper {
+    left: 11px;
+    opacity: 0;
+    position: absolute;
+    width: 36px;
+    height: 36px;
+    top: 4px;
+    z-index: 1000;
+  }
 
-.tree-view {
-  .tree-node {
-    .node-wrapper {
-      position: relative;
+  .input-wrapper {
+    margin: 0;
+  }
+  .checkbox-tree-view {
+    display: flex;
+    align-items: center;
+  }
+  .tree-view {
+    .tree-node {
+      .node-wrapper {
+        position: relative;
+        align-items: center;
+      }
     }
+  }
+  // .dot-tree {
+  //   width: 6px;
+  //   height: 6px;
+  //   border-radius: 50%;
+  //   //gray 300
+  //   background-color: #D0D5DD;
+  //   margin-left: -14px;
+  //   margin-right: 8px;
+  // }
+  .dot-tree::before {
+    content: url('https://webcoban.vn/image/banana.png')
   }
 }
 </style>

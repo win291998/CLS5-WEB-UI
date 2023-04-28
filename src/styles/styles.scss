@@ -1,4 +1,7 @@
 @use "./variables/global" as *;
+.text-primary {
+  color: $color-primary-600 !important
+}
 .color-purple {
   color: $color-purple-600 !important;
 }
@@ -371,4 +374,8 @@ span {
   border: 1px solid #EAECF0;
   box-shadow: $box-shadow-md;
   padding: $xl-5;
+}
+
+.text-error {
+  color: $color-error-600 !important
 }
