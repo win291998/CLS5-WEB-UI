@@ -17,7 +17,7 @@ export default class ArraysUtil {
    * @param data
    * @returns
    */
-  static formatTreeData = (data: Array<any>, root: any) => {
+  static formatTreeData = (data: Array<any>, root: any, t: any) => {
     return data.reduce((object, permiss) => {
       const { permissions, ...rest } = permiss // loại bỏ permissions ra khỏi object
 
@@ -25,7 +25,7 @@ export default class ArraysUtil {
 
       object[`node-${perId}`] = rest
       object[`node-${perId}`].ids = permiss.id
-      object[`node-${perId}`].text = object[`node-${perId}`].name
+      object[`node-${perId}`].text = t(object[`node-${perId}`].name)
 
       object[`node-${perId}`].permission = permiss.permissionValue
       object[`node-${perId}`].orgPermission = permiss.orgPermissionValue

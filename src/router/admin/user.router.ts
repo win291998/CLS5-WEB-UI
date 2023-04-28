@@ -42,15 +42,47 @@ export default [
   {
     path: '/organization',
     name: 'admin-organization',
-    redirect: { name: 'admin-organization-permistion' },
+    redirect: { name: 'admin-organization-permission' },
     children: [
       {
         path: 'permistion',
-        name: 'admin-organization-permistion',
+        name: 'admin-organization-permission',
         requireAuth: {
-          permissionKey: 'UserManaging',
+          permissionKey: 'UserTypeManaging',
+          permissionValue: 1,
         },
         component: () => import('@/pages/admin/organization/permission/Permission.vue'),
+        children: [
+          {
+            path: 'add',
+            name: 'admin-organization-permission-add',
+            requireAuth: {
+              permissionKey: 'UserTypeManaging',
+              permissionValue: 2,
+            },
+            breadcrumb: [
+              {
+                title: 'usertype-management',
+                to: { name: 'admin-organization-permission' },
+              },
+              {
+                title: 'add',
+
+                active: true,
+              },
+            ],
+            component: () => import('@/pages/admin/organization/permission/Edit/EditPermission.vue'),
+          },
+          {
+            path: 'edit/:id',
+            name: 'admin-organization-permission-edit',
+            requireAuth: {
+              permissionKey: 'UserTypeManaging',
+              permissionValue: 4,
+            },
+            component: () => import('@/pages/admin/organization/permission/Edit/EditPermission.vue'),
+          },
+        ],
       },
       {
         path: 'users',

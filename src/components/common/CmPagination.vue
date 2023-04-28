@@ -46,8 +46,6 @@ const totalItemsLength = computed(() => {
 
 // Xử lý chuyển trang
 const handlePageClick = (page: number) => {
-  console.log(123)
-
   emit('handlePageClick', page)
   emit('pageClick', page, pageSizeCurrent.value)
 }

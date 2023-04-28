@@ -39,6 +39,8 @@ const checkPortal: any = async (next: any, to: any) => {
   store.components = []
   store.$dispose()
   const isLoggedIn = isUserLoggedIn()
+  console.log(to)
+
   if (to.meta.requireAuth) {
     const requireAuth: any = to.meta.requireAuth || {}
     const key: string = requireAuth.permissionKey || ''
@@ -93,27 +95,28 @@ const router = createRouter({
 
 router.beforeEach((to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
   // return checkPortal(next, to)
-  if (!isUserLoggedIn())
-    return checkPortal(next, to)
-  if (to.meta.redirectIfLoggedIn && isUserLoggedIn()) {
-    const userData = getUserData()
+  // if (!isUserLoggedIn())
+  return checkPortal(next, to)
 
-    // getHomeRouteForLoggedInUser(userData ? userData.roles : null)
-    next({ name: 'admin-organization-users-manager' })
-  }
-  if (to.meta.requireAuth) {
-    const requireAuth: any = to.meta.requireAuth || {}
-    const key: string = requireAuth.permissionKey || ''
+  // if (to.meta.redirectIfLoggedIn && isUserLoggedIn()) {
+  //   const userData = getUserData()
 
-    // Redirect if logged in
+  //   // getHomeRouteForLoggedInUser(userData ? userData.roles : null)
+  //   next({ name: 'admin-organization-users-manager' })
+  // }
+  // if (to.meta.requireAuth) {
+  //   const requireAuth: any = to.meta.requireAuth || {}
+  //   const key: string = requireAuth.permissionKey || ''
 
-    if ((Number(permission[key]) & requireAuth.permissionValue) !== requireAuth.permissionValue)
-      return next({ name: 'error-403' })
+  //   // Redirect if logged in
 
-    return next()
-  }
+  //   if ((Number(permission[key]) & requireAuth.permissionValue) !== requireAuth.permissionValue)
+  //     return next({ name: 'error-403' })
 
-  return next()
+  //   return next()
+  // }
+
+  // return next()
 })
 
 export default router

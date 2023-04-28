@@ -8,7 +8,6 @@ import toast from '@/plugins/toast'
 import router from '@/router'
 
 const CpConfirmDialog = defineAsyncComponent(() => import('@/components/page/gereral/CpConfirmDialog.vue'))
-
 const CpHeaderACtion = defineAsyncComponent(() => import('@/components/page/Admin/organization/user-group/CpHeaderAction.vue'))
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 
@@ -32,22 +31,17 @@ const headers = reactive([
 
 const items = ref([])
 const totalRecord = ref<number>()
-
 const params = reactive<Params>({
   search: '',
   pageNumber: 1,
   pageSize: 10,
 })
-
 const fetchData = async () => {
   const { data } = await MethodsUtil.requestApiCustom(ApiGroupUser.ListGroup, TYPE_REQUEST.GET, params)
-
   items.value = data.listData
   totalRecord.value = data.totalRecord
 }
-
 fetchData()
-
 watch(params, val => {
   if (val.search) {
     params.pageNumber = 1
@@ -71,7 +65,6 @@ const editGroupUser = (id: number) => {
 // Xóa từng item
 const listId = ref<number[]>([])
 const isShowModalConfirmDelete = ref(false)
-
 const showModalConfirmDelete = (val: number[]) => {
   listId.value = val
   isShowModalConfirmDelete.value = true

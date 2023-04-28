@@ -55,10 +55,10 @@ const onConfirmation = () => {
 }
 
 const onDialogShown = (e: any) => {
-  console.log('onDialogShown', e)
+  // console.log('onDialogShown', e)
 }
 const onDialogHidden = (e: any) => {
-  console.log('onDialogHidden', e)
+  // console.log('onDialogHidden', e)
 }
 
 watch(() => props.isDialogVisible, val => {

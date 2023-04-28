@@ -89,8 +89,6 @@ const moveMultipleUser = () => {
 // Xóa người dùng khỏi nhóm
 const isShowModalConfirmDelete = ref<boolean>(false)
 const showModalDeleteUser = (val: any | null) => {
-  console.log(val)
-
   if (val)
     listSelected.value = [val.userId]
   isShowModalConfirmDelete.value = true
