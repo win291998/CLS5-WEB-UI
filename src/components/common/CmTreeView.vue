@@ -1,12 +1,34 @@
 <script setup lang="ts">
-import Treeview from 'vue3-treeview'
 import CmCheckBox from '@/components/common/CmCheckBox.vue'
 import 'vue3-treeview/dist/style.css'
 import { configStore } from '@/stores/index'
 
+/** ** Khởi tạo prop emit */
+const props = withDefaults(defineProps<Props>(), ({
+  config: () => ({
+    roots: [],
+    keyboardNavigation: false,
+    dragAndDrop: false,
+    editable: false,
+    disabled: false,
+    checkboxes: false,
+    leaves: false,
+    padding: 0,
+    checkMode: 0,
+  }),
+  nodes: () => (reactive({})),
+  isOrg: true,
+  typeFlatChild: false, // chọn con không ảnh hưởng cha
+  customId: 'id',
+}))
+
+const emit = defineEmits<Emit>()
+
+const Treeview = defineAsyncComponent(() => import('vue3-treeview'))
+
 interface Props {
   config?: Config
-  nodes?: NodeTree
+  nodes: NodeTree
   isOrg: boolean
   typeFlatChild?: boolean
   customId?: string
@@ -51,26 +73,6 @@ interface Node {
   children?: Array<string>
 }
 
-/** ** Khởi tạo prop emit */
-const props = withDefaults(defineProps<Props>(), ({
-  config: () => ({
-    roots: [],
-    keyboardNavigation: false,
-    dragAndDrop: false,
-    editable: false,
-    disabled: false,
-    checkboxes: false,
-    leaves: false,
-    padding: 0,
-    checkMode: 0,
-  }),
-  nodes: () => (reactive({})),
-  isOrg: true,
-  typeFlatChild: false, // chọn con không ảnh hưởng cha
-  customId: 'id',
-}))
-
-const emit = defineEmits<Emit>()
 const configControl = configStore()
 const { isTreeBinding } = configControl
 const valueChecked = ref<any>([])
