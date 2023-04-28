@@ -2,8 +2,6 @@
 import Treeview from 'vue3-treeview'
 import CmCheckBox from '@/components/common/CmCheckBox.vue'
 import 'vue3-treeview/dist/style.css'
-import IconClose from '@/assets/images/svg/IconClose.svg'
-import IconOpen from '@/assets/images/svg/IconOpen.svg'
 
 interface Props {
   config?: Config
@@ -68,7 +66,32 @@ const props = withDefaults(defineProps<Props>(), ({
 }))
 
 const emit = defineEmits<Emit>()
-
+const valueChecked = ref()
+const configTree = computed(() => {
+  return {
+    ...props.config,
+    openedIcon: {
+      style: 'font-size: 18px; height: 18px; width: 18px;',
+      type: 'shape',
+      width: '32',
+      fill: 'currentColor',
+      height: '32',
+      stroke: 'black',
+      viewBox: '0 0 24 24',
+      draw: 'M12 14.975q-.2 0-.388-.075t-.312-.2l-4.6-4.6q-.275-.275-.275-.7t.275-.7q.275-.275.7-.275t.7.275l3.9 3.9l3.9-3.9q.275-.275.7-.275t.7.275q.275.275.275.7t-.275.7l-4.6 4.6q-.15.15-.325.213t-.375.062Z',
+    },
+    closedIcon: {
+      style: 'font-size: 18px; height: 18px; width: 18px;',
+      type: 'shape',
+      stroke: 'black',
+      fill: 'currentColor',
+      width: '32',
+      height: '32',
+      viewBox: '0 0 24 24',
+      draw: 'M8.7 17.3q-.275-.275-.275-.7t.275-.7l3.9-3.9l-3.9-3.9q-.275-.275-.275-.7t.275-.7q.275-.275.7-.275t.7.275l4.6 4.6q.15.15.213.325t.062.375q0 .2-.063.375t-.212.325l-4.6 4.6q-.275.275-.7.275t-.7-.275Z',
+    },
+  }
+})
 const handleNodeOpened = (event: any) => {
   emit('nodeOpened', event)
 }
@@ -95,10 +118,13 @@ const handleNodeEdit = (event: any) => {
 
 const handleNodeChecked = (event: any) => {
   emit('nodeChecked', event)
+  console.log(event)
+  console.log('valueChecked', valueChecked)
 }
 
 const handleNodeUnchecked = (event: any) => {
   emit('nodeUnchecked', event)
+  console.log(event)
 }
 
 const handleNodeDragstart = (event: any) => {
@@ -143,9 +169,10 @@ const onChangeOrgChecked = (val: any, node: any) => {
 <template>
   <div class="tree-view-select">
     <Treeview
-      :config="props.config"
+      :config="configTree"
       :nodes="props.nodes"
       class="tree-view"
+      @onUpdate:modelValue="valueChecked"
       @node-opened="handleNodeOpened"
       @node-closed="handleNodeClosed"
       @node-focus="handleNodeFocus"
@@ -237,18 +264,18 @@ const onChangeOrgChecked = (val: any, node: any) => {
       }
     }
   }
-  // .dot-tree {
-  //   width: 6px;
-  //   height: 6px;
-  //   border-radius: 50%;
-  //   //gray 300
-  //   background-color: #D0D5DD;
-  //   margin-left: -14px;
-  //   margin-right: 8px;
-  // }
-  .dot-tree::before {
-    content: url('https://webcoban.vn/image/banana.png')
+  .dot-tree {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    //gray 300
+    background-color: #D0D5DD;
+    margin-left: -14px;
+    margin-right: 8px;
   }
+  // .dot-tree::before {
+  //   content: url('https://webcoban.vn/image/banana.png')
+  // }
 }
 </style>
 

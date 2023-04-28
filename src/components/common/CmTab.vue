@@ -75,11 +75,11 @@ const useEmitter = () => {
 
 <template>
   <div class="tabs w-100">
-    <div class="w-100">
+    <div :class="`w-100 ${type}-tabs`">
       <VTabs
         v-if="!hide"
         v-model="tabActive"
-        :class="`cm-tabs ${type}-tabs`"
+        class="cm-tabs"
         :hide-slider="type === 'button'"
         @update:modelValue="activeTab"
       >
