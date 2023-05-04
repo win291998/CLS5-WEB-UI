@@ -45,14 +45,20 @@ export default [
     redirect: { name: 'admin-organization-permission' },
     children: [
       {
-        path: 'permistion',
+        path: 'permission',
         name: 'admin-organization-permission',
         requireAuth: {
           permissionKey: 'UserTypeManaging',
           permissionValue: 1,
         },
-        component: () => import('@/pages/admin/organization/permission/Permission.vue'),
+        component: () => import('@/pages/admin/organization/permission/Index.vue'),
+        redirect: { name: 'admin-organization-permission-list' },
         children: [
+          {
+            path: '',
+            name: 'admin-organization-permission-list',
+            component: () => import('@/pages/admin/organization/permission/Permission.vue'),
+          },
           {
             path: 'add',
             name: 'admin-organization-permission-add',

@@ -4,8 +4,10 @@ import { validatorStore } from '@/stores/validatator'
 
 const emit = defineEmits<Emit>()
 const storeValidate = validatorStore()
+const { t } = window.i18n()
 interface Emit {
-  (e: 'update:modelValue', value: any): void
+  (e: 'update:userTypeName', value: any): void
+  (e: 'update:defaultRoleId', value: any): void
   (e: 'change', value: any): void
 }
 const { schemaOption, Field, Form, useForm, yup } = storeValidate
@@ -29,10 +31,10 @@ const dataInput = reactive<DataInput>({
 
 <template>
   <Form>
-    <VRrow
-      cols="4"
-    >
-      <VCol>
+    <VRow>
+      <VCol
+        cols="4"
+      >
         <Field
           v-slot="{ field, errors }"
           v-model="dataInput.userTypeName"
@@ -43,10 +45,10 @@ const dataInput = reactive<DataInput>({
           <CmTextField
             :field="field"
             :errors="errors"
-            text="Tên nhóm người dùng*"
-            placeholder="Mã nhóm người dùng"
+            :text="`${t('userTypeName')}*`"
+            :placeholder="t('userTypeName')"
+            @update:model-value="emit('update:userTypeName', $event)"
           />
-          <!-- @update:model-value="emit('update:name', $event)" -->
         </Field>
       </VCol>
       <VCol
@@ -62,13 +64,13 @@ const dataInput = reactive<DataInput>({
           <CmTextField
             :field="field"
             :errors="errors"
-            text="Tên nhóm người dùng*"
-            placeholder="Mã nhóm người dùng"
+            :text="`${t('default-role')}*`"
+            :placeholder="t('default-role')"
+            @update:model-value="emit('update:defaultRoleId', $event)"
           />
-          <!-- @update:model-value="emit('update:name', $event)" -->
         </Field>
       </VCol>
-    </VRrow>
+    </VRow>
   </Form>
 </template>
 
