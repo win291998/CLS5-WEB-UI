@@ -31,6 +31,7 @@ interface tab {
   component?: any // truyền thẳng component vào nếu dùng composition api, còn không thì truyền string tên component
   dataTab?: any // Dữ liệu riêng của từng tab
   isDisabled?: boolean
+  isRendered?: boolean
 }
 interface Props {
   hide: boolean
@@ -59,6 +60,7 @@ const getTabActive = () => {
 getTabActive()
 
 const activeTab = (value: any) => {
+  value.isRendered = true
   router.push({ name: props.routeName || undefined, params: { [props.label]: value.key } })
   tabActive.value = value
   emit('activeTab', tabActive.value)
@@ -106,15 +108,17 @@ const useEmitter = () => {
         :key="item.key"
         class="content-tab"
       >
-        <div
-          v-show="item.key === route.params[props.label]"
-        >
-          <Component
-            :is="item?.component"
-            :emit="useEmitter"
-            :data-general="dataGeneral"
-            v-bind="tabActive?.dataTab"
-          />
+        <div v-if="item.isRendered">
+          <div
+            v-show="item.key === route.params[props.label]"
+          >
+            <Component
+              :is="item?.component"
+              :emit="useEmitter"
+              :data-general="dataGeneral"
+              v-bind="tabActive?.dataTab"
+            />
+          </div>
         </div>
       </div>
     </div>

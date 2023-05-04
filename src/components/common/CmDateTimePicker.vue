@@ -36,11 +36,6 @@ interface Emit {
   (e: 'click:clear', el: MouseEvent): void
 }
 
-// inherit Attribute make false
-defineOptions({
-  inheritAttrs: false,
-})
-
 const attrs = useAttrs()
 
 const [rootAttrs, compAttrs] = filterInputAttrs(attrs)

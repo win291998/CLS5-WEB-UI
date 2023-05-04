@@ -44,9 +44,9 @@ const listTab = [
   {
     key: 'organization',
     title: 'organization',
-    dataTab: { profile: values },
     component: CpOrganization,
     isRendered: false,
+    isDisabled: true,
   },
 ]
 
@@ -61,8 +61,13 @@ const backUser = () => {
  * Lấy data người dùng
  */
 resetFormInfor()
-if (route.params.id)
+if (route.params.id) {
+  listTab[2].isDisabled = false
   fectchLecturers(route.params.id)
+}
+if (route.params.tab)
+  console.log(listTab.findIndex(item => item.key === route.params.tab))
+listTab[listTab.findIndex(item => item.key === route.params.tab)].isRendered = true
 </script>
 
 <template>

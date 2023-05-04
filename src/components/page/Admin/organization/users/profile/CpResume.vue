@@ -19,7 +19,7 @@ const storeValidate = validatorStore()
 const { Field, Form } = storeValidate
 const storeProfileUserManager = profileUserManagerStore()
 const { values } = storeToRefs(storeProfileUserManager)
-const valuesComponent = ref(values)
+const valuesComponent = ref(computed(() => values.value))
 
 /**
  * lib
@@ -81,7 +81,7 @@ const fetchModalEducation = () => {
 }
 
 const removeEducation = (index: any) => {
-  valuesComponent.value.listEducationUser.splice(index, 1)
+  valuesComponent.value?.listEducationUser.splice(index, 1)
 }
 
 // reset education modal
@@ -208,12 +208,12 @@ const updateDialogVisible = (event: any, type?: any) => {
 const handleUpdataProfile = (education: any, edit: boolean) => {
   console.log('education', education)
   console.log('edit', edit)
-  console.log('dataProfile', valuesComponent.value.listEducationUser.length)
-  console.log('dataProfile', valuesComponent.value.listEducationUser)
+  console.log('dataProfile', valuesComponent.value?.listEducationUser.length)
+  console.log('dataProfile', valuesComponent.value?.listEducationUser)
 
   if (edit) { valuesComponent.value.listEducationUser[education?.index] = education }
   else {
-    if (!valuesComponent.value.listEducationUser || valuesComponent.value.listEducationUser === null)
+    if (!valuesComponent.value?.listEducationUser || valuesComponent.value?.listEducationUser === null)
       valuesComponent.value.listEducationUser = []
     valuesComponent.value.listEducationUser[valuesComponent.value.listEducationUser.length] = education
   }
@@ -279,11 +279,11 @@ const handleUpdateExperences = (experences: any, edit: boolean) => {
                 <label class="text-label-default ">{{ $t("education") }}</label>
               </div>
               <div
-                v-if="valuesComponent.listEducationUser && valuesComponent.listEducationUser.length > 0"
+                v-if="valuesComponent?.listEducationUser && valuesComponent?.listEducationUser.length > 0"
                 class="style-education"
               >
                 <div
-                  v-for="(item, index) in valuesComponent.listEducationUser"
+                  v-for="(item, index) in valuesComponent?.listEducationUser"
                   :key="index"
                   class="border-item"
                 >

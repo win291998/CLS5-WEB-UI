@@ -19,6 +19,7 @@ const CpConfirmDialog = defineAsyncComponent(() => import('@/components/page/ger
 const CpModalAddUserGroup = defineAsyncComponent(() => import('@/components/page/gereral/modal/CpModalAddUserGroup.vue'))
 interface Props {
   idUser?: any
+  emit: any
 }
 
 /**
@@ -26,6 +27,7 @@ interface Props {
  */
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 const route = useRoute()
+const { emitEvent } = props.emit()
 
 /**
  * data variable
@@ -155,7 +157,6 @@ const confirmDialog = (event: any) => {
 
 const confirmDialogAddGroup = async (listGroup: any) => {
   console.log('confirmDialogAddGroup', listGroup)
-
   if (listGroup.length > 0) {
     queryBodyAdd.listId = listGroup
     await MethodsUtil.requestApiCustom(ApiUser.PostAddGroupUser, TYPE_REQUEST.POST, queryBodyAdd)
@@ -165,7 +166,6 @@ const confirmDialogAddGroup = async (listGroup: any) => {
       })
       .catch((error: any) => {
         console.log(error)
-
         toast('ERROR', t(error.message))
       })
   }

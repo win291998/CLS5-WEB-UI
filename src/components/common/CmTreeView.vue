@@ -20,6 +20,7 @@ const props = withDefaults(defineProps<Props>(), ({
   isOrg: true,
   typeFlatChild: false, // chọn con không ảnh hưởng cha
   customId: 'id',
+  returnObject: true,
 }))
 
 const emit = defineEmits<Emit>()
@@ -31,6 +32,7 @@ interface Props {
   nodes: NodeTree
   isOrg: boolean
   typeFlatChild?: boolean
+  returnObject?: boolean
   customId?: string
 }
 interface Emit {
@@ -110,7 +112,8 @@ const updateValueChecked = async () => {
   valueChecked.value = window._.filter(nodesTree.value, prop => {
     return window._.get(prop, 'state.checked') === true
   })
-  emit('update:modelValue', valueChecked.value)
+  console.log(valueChecked.value)
+  emit('update:modelValue', props.returnObject ? valueChecked.value : valueChecked.value.map((item: any) => item[props.customId]))
 }
 const handleNodeOpened = (event: any) => {
   emit('nodeOpened', event)
@@ -190,11 +193,11 @@ const handleNodeDrop = (event: any) => {
 const onChangeOrgChecked = (val: any, node: any) => {
   node.orgPermissionValue = val ? node.orgPermission : 0
   if (node.ids === 0) {
-    nodesTree[node.parent].orgPermissionValue += (val ? node.orgPermission : -node.orgPermission)
+    nodesTree.value[node.parent].orgPermissionValue += (val ? node.orgPermission : -node.orgPermission)
     return
   }
   node.children.forEach((childeNode: any) => {
-    nodesTree[childeNode].orgPermissionValue = val ? nodesTree[childeNode].orgPermission : 0
+    nodesTree.value[childeNode].orgPermissionValue = val ? nodesTree.value[childeNode].orgPermission : 0
   })
 }
 </script>

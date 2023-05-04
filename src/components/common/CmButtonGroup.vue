@@ -38,7 +38,7 @@ interface ListItem {
 }
 
 interface Emit {
-  (e: 'clickPrepend', event: any): void
+  (e: 'clickPrepend', event?: any): void
   (e: 'clickItem', item: object): void
 }
 
@@ -55,7 +55,7 @@ const props = withDefaults(defineProps<Props>(), ({
 
 const emit = defineEmits<Emit>()
 
-const handlerPrepend = event => {
+const handlerPrepend = (event: any) => {
   emit('clickPrepend')
 }
 
