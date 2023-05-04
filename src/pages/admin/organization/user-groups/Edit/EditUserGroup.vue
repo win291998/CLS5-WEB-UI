@@ -48,6 +48,7 @@ const listtab = ref([
     type="button"
     :list-tab="listtab"
     label="tab"
+    :is-use-component="true"
   />
 </template>
 

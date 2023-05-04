@@ -112,7 +112,6 @@ const updateValueChecked = async () => {
   valueChecked.value = window._.filter(nodesTree.value, prop => {
     return window._.get(prop, 'state.checked') === true
   })
-  console.log(valueChecked.value)
   emit('update:modelValue', props.returnObject ? valueChecked.value : valueChecked.value.map((item: any) => item[props.customId]))
 }
 const handleNodeOpened = (event: any) => {
@@ -199,6 +198,7 @@ const onChangeOrgChecked = (val: any, node: any) => {
   node.children.forEach((childeNode: any) => {
     nodesTree.value[childeNode].orgPermissionValue = val ? nodesTree.value[childeNode].orgPermission : 0
   })
+  console.log(node)
 }
 </script>
 

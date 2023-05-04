@@ -90,15 +90,15 @@ const keyid = computed(() => {
   return props?.isImportFile ? 'key' : props.customId
 })
 
-watch(() => props.items, (val: Item[]) => {
-  props.items.forEach((element, index) => {
-    element.originIndex = index
-    element.isSelected = !!element.isSelected
-    selectedRows.value = []
-    if (element.isSelected)
-      selectedRows.value.push([keyid.value])
-  })
-}, { immediate: true })
+// watch(() => props.items, (val: Item[]) => {
+//   props.items.forEach((element, index) => {
+//     element.originIndex = index
+//     element.isSelected = !!element.isSelected
+//     selectedRows.value = []
+//     if (element.isSelected)
+//       selectedRows.value.push([keyid.value])
+//   })
+// }, { immediate: true })
 const pageSize = ref(props.pageSize) // số lượng item trên 1 page
 
 /** method */
