@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const CmTab = defineAsyncComponent(() => import('@/components/common/CmTab.vue'))
-const CpEditGroupUser = defineAsyncComponent(() => import('@/components/page/gereral/CpEditGroupUser.vue'))
-const CpEditOrganization = defineAsyncComponent(() => import('@/components/page/gereral/CpEditOrganization.vue'))
+const CpEditGroupUser = defineAsyncComponent(() => import('@/components/page/Admin/organization/users/profile/CpEditGroupUser.vue'))
+const CpEditOrganization = defineAsyncComponent(() => import('@/components/page/Admin/organization/users/profile/CpEditOrganization.vue'))
 
 /**
  *

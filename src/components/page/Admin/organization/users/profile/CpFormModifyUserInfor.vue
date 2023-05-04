@@ -41,7 +41,7 @@ const LABEL = Object.freeze({
   PLACEHOLDER_STATUS: t('status-name'),
 })
 const formUserInfor = ref()
-const valuesComponent = ref(values)
+const valuesComponent = ref(computed(() => values.value))
 
 // method
 const handleFormValue = (value: any) => {
@@ -125,6 +125,7 @@ onMounted(() => {
             md="4"
           >
             <Field
+              v-if="valuesComponent"
               v-slot="{ field, errors }"
               v-model="valuesComponent.lastName"
               name="lastName"
@@ -145,6 +146,7 @@ onMounted(() => {
             md="4"
           >
             <Field
+              v-if="valuesComponent"
               v-slot="{ field, errors }"
               v-model="valuesComponent.firstName"
               name="firstName"
@@ -165,6 +167,7 @@ onMounted(() => {
             md="4"
           >
             <Field
+              v-if="valuesComponent"
               v-slot="{ field, errors }"
               v-model="valuesComponent.email"
               name="email"
@@ -185,6 +188,7 @@ onMounted(() => {
             md="4"
           >
             <Field
+              v-if="valuesComponent"
               v-slot="{ field, errors }"
               v-model="valuesComponent.userName"
               name="userName"
@@ -207,6 +211,7 @@ onMounted(() => {
             md="4"
           >
             <Field
+              v-if="valuesComponent"
               v-slot="{ field, errors }"
               v-model="valuesComponent.password"
               name="password"
@@ -228,6 +233,7 @@ onMounted(() => {
             md="4"
           >
             <Field
+              v-if="valuesComponent"
               v-slot="{ field, errors }"
               v-model="valuesComponent.userCode"
               name="userCode"
@@ -248,6 +254,7 @@ onMounted(() => {
             md="4"
           >
             <Field
+              v-if="valuesComponent"
               v-slot="{ field, errors }"
               v-model="valuesComponent.phoneNumber"
               name="phoneNumber"
@@ -269,6 +276,7 @@ onMounted(() => {
             md="4"
           >
             <Field
+              v-if="valuesComponent"
               v-slot="{ field, errors }"
               v-model="valuesComponent.userTypeId"
               name="userTypeIdSingle"
@@ -293,6 +301,7 @@ onMounted(() => {
             md="4"
           >
             <Field
+              v-if="valuesComponent"
               v-slot="{ field, errors }"
               v-model="valuesComponent.statusId"
               name="statusIdSingle"
@@ -317,6 +326,7 @@ onMounted(() => {
             md="4"
           >
             <Field
+              v-if="valuesComponent"
               v-slot="{ field, errors }"
               v-model="valuesComponent.kpiLearn"
               name="kpiLearn"
@@ -338,6 +348,7 @@ onMounted(() => {
             md="4"
           >
             <Field
+              v-if="valuesComponent"
               v-slot="{ field, errors }"
               v-model="valuesComponent.kpiTeach"
               name="kpiTeach"

@@ -188,7 +188,7 @@ export const profileUserManagerStore = defineStore('profileUserManager', () => {
     })
   }
   const resetFormInfor = () => {
-    setValues(initForm)
+    setValues(initForm.value)
     idUpdate.value = null
   }
   const handlesCreateUser = async (bvModalEvt: any, dataObj: any, type: any) => {

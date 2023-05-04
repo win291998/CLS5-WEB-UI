@@ -125,7 +125,7 @@ const handlerPreButton = () => {
           is-load
           :list-item="action"
           :title="t('Add')"
-          @click-prepend="handlerPreButton($event)"
+          @click-prepend="handlerPreButton"
         >
           {{ t('common.save') }}
         </CmButtonGroup>
