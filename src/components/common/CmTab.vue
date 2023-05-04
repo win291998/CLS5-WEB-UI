@@ -108,17 +108,16 @@ const useEmitter = () => {
         :key="item.key"
         class="content-tab"
       >
-        <div v-if="item.isRendered">
-          <div
-            v-show="item.key === route.params[props.label]"
-          >
-            <Component
-              :is="item?.component"
-              :emit="useEmitter"
-              :data-general="dataGeneral"
-              v-bind="tabActive?.dataTab"
-            />
-          </div>
+        <div
+          v-if="item.isRendered"
+          v-show="item.key === route.params[props.label]"
+        >
+          <Component
+            :is="item?.component"
+            :emit="useEmitter"
+            :data-general="dataGeneral"
+            v-bind="tabActive?.dataTab"
+          />
         </div>
       </div>
     </div>
