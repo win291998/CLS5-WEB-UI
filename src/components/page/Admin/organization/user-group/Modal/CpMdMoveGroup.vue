@@ -20,8 +20,6 @@ const hidden = (val: any) => {
 const store = useStoreAddUser()
 const groupId = ref(null)
 const confirm = (val: any) => {
-  console.log(groupId.value)
-
   emit('ok', groupId.value)
 }
 </script>

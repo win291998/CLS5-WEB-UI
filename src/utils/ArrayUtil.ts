@@ -182,7 +182,6 @@ export default class ArraysUtil {
   static formatSelectTree = (items: Array<any>, keyParent = 'parentId', customId = 'id') => {
     const orderedNodes = window._.orderBy(items, ['left'], ['desc'])
     const groupedNodes = window._.groupBy(orderedNodes, keyParent)
-    console.log(groupedNodes)
 
     return window._.map(groupedNodes['0'], parent => {
       const children = groupedNodes[parent[customId]] || []

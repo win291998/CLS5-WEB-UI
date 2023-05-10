@@ -245,7 +245,7 @@ watch(() => props.experienceData, value => {
           >
             <CmTextArea
               :field="field"
-              :text="t('common.description')"
+              :text="t('description')"
             />
           </Field>
         </VCol>

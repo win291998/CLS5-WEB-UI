@@ -115,7 +115,7 @@ export default [
               pageTitle: 'users.add-user.title',
               breadcrumb: [
                 {
-                  title: 'users.user.title-table.user-list',
+                  title: 'user-list',
                   to: { name: 'admin-organization-users' },
                 },
                 {
@@ -139,11 +139,11 @@ export default [
               pageTitle: 'users.add-user.title',
               breadcrumb: [
                 {
-                  title: 'users.user.title-table.user-list',
+                  title: 'user-list',
                   to: { name: 'admin-organization-users' },
                 },
                 {
-                  title: 'common.add',
+                  title: 'add',
 
                   active: true,
                 },
@@ -154,6 +154,48 @@ export default [
               },
             },
             component: () => import('@/pages/admin/organization/users/profile/Profile.vue'),
+          },
+          {
+            path: 'import-file',
+            meta: {
+              requireAuth: {
+                permissionKey: 'UserManaging',
+                permissionValue: 1,
+              },
+              breadcrumb: [
+                {
+                  title: 'user-list',
+                  to: { name: 'admin-organization-users-manager' },
+                },
+                {
+                  title: 'title-import-file',
+                  active: true,
+                },
+              ],
+            },
+            name: 'admin-organization-user-import-file-update-user-infor',
+            component: () => import('@/pages/admin/organization/users/import-file/UpdateUserInfor.vue'),
+          },
+          {
+            path: 'import-file-title',
+            meta: {
+              requireAuth: {
+                permissionKey: 'UserManaging',
+                permissionValue: 1,
+              },
+              breadcrumb: [
+                {
+                  title: 'user-list',
+                  to: { name: 'admin-organization-users-manager' },
+                },
+                {
+                  title: 'title-import-file',
+                  active: true,
+                },
+              ],
+            },
+            name: 'admin-organization-user-import-file-update-user-title',
+            component: () => import('@/pages/admin/organization/users/import-file/UpdateUserTitle.vue'),
           },
         ],
       },
@@ -228,7 +270,7 @@ export default [
                   to: { name: 'admin-organization-user-groups' },
                 },
                 {
-                  title: 'common.title-import-file',
+                  title: 'title-import-file',
                   active: true,
                 },
               ],
@@ -249,7 +291,7 @@ export default [
                   to: { name: 'admin-organization-user-groups' },
                 },
                 {
-                  title: 'common.title-import-file',
+                  title: 'title-import-file',
                   active: true,
                 },
               ],

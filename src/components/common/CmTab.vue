@@ -18,7 +18,7 @@ const props = withDefaults(defineProps<Props>(), ({
   label: 'tabActive',
   routeName: '',
   hide: false,
-  isUseComponent: false,
+  isRender: false,
 }))
 
 const emit = defineEmits<Emit>()
@@ -41,7 +41,7 @@ interface Props {
   label?: string
   routeName?: string
   dataGeneral?: any // hạn chế dùng
-  isUseComponent: boolean
+  isRender: boolean
 }
 const router = useRouter()
 const route = useRoute()
@@ -53,16 +53,16 @@ interface Emit {
 const tabActive = ref<any>({})
 
 const getTabActive = () => {
-  if (props.isUseComponent && route.params[props.label] && !tabActive.value[props.label])
+  if (route.params[props.label] && !tabActive.value[props.label])
     tabActive.value = props.listTab.find(e => e.key === route.params[props.label]) as object
 }
+
 getTabActive()
 
 const activeTab = (value: any) => {
-  if (props.isUseComponent) {
-    router.push({ name: props.routeName || undefined, params: { [props.label]: value.key } })
-    tabActive.value = value
-  }
+  value.isRendered = true
+  router.push({ name: props.routeName || undefined, params: { [props.label]: value.key } })
+  tabActive.value = value
   emit('activeTab', tabActive.value)
 }
 
@@ -70,8 +70,12 @@ const useEmitter = () => {
   const emitEvent = (event: any, data: any) => {
     emit(event, data)
   }
+
   return { emitEvent }
 }
+watch(() => route.params[props.label], val => {
+  getTabActive()
+})
 </script>
 
 <template>
@@ -101,8 +105,26 @@ const useEmitter = () => {
         </VTab>
       </VTabs>
     </div>
-
-    <div v-if="props.isUseComponent">
+    <div v-if="props.isRender">
+      <div
+        v-for="item in listTab"
+        :key="item.key"
+        class="content-tab"
+      >
+        <div
+          v-if="item.isRendered"
+          v-show="item.key === route.params[props.label]"
+        >
+          <Component
+            :is="item?.component"
+            :emit="useEmitter"
+            :data-general="dataGeneral"
+            v-bind="tabActive?.dataTab"
+          />
+        </div>
+      </div>
+    </div>
+    <div v-else>
       <Component
         :is="tabActive?.component"
         :emit="useEmitter"

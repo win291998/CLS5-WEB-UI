@@ -32,14 +32,14 @@ const listTab = [
     title: 'account-information',
     component: CpFormModifyUserInfor,
     dataTab: { profile: values },
-    isRendered: false,
+    isRendered: true,
   },
   {
     key: 'resumer',
     title: 'profile',
     dataTab: { profile: values },
     component: CpResume,
-    isRendered: false,
+    isRendered: true,
   },
   {
     key: 'organization',
@@ -60,14 +60,16 @@ const backUser = () => {
 /**
  * Lấy data người dùng
  */
+
+if (route.params.tab)
+  listTab[listTab.findIndex(item => item.key === route.params.tab)].isRendered = true
+
 resetFormInfor()
 if (route.params.id) {
   listTab[2].isDisabled = false
   fectchLecturers(route.params.id)
 }
-if (route.params.tab)
-  console.log(listTab.findIndex(item => item.key === route.params.tab))
-listTab[listTab.findIndex(item => item.key === route.params.tab)].isRendered = true
+window.hideAllPageLoading()
 </script>
 
 <template>
@@ -91,7 +93,7 @@ listTab[listTab.findIndex(item => item.key === route.params.tab)].isRendered = t
       <CpActionFooterEdit
         :is-save="isShowButton"
         @onCancel="backUser"
-        @onSave="handleUser($event, 'save')"
+        @onSave="handleUser"
       />
     </div>
   </div>

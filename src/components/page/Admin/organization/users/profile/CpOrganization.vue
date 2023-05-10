@@ -12,7 +12,7 @@ const listTab = [
     key: 'user-group',
     title: 'user-group',
     component: CpEditGroupUser,
-    isRendered: false,
+    isRendered: true,
   },
   {
     key: 'organizational',

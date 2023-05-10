@@ -8,7 +8,7 @@ const modeBool = ref(true)
 const { t } = window.i18n()
 
 const config = reactive({
-  roots: ['node-1'],
+  roots: ['node-p1'],
   keyboardNavigation: false,
   dragAndDrop: false,
   checkboxes: true,
@@ -31,6 +31,7 @@ const getRoleFeature = async () => {
     .then((value: any) => {
       const result = ArraysUtil.formatTreeData(ArraysUtil.flatMapTree([value.data[0]], 'permissions'), config.roots, t)
       nodes.value = reactive(result)
+      console.log(result)
     })
     .catch((error: any) => error)
 }

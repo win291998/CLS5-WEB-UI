@@ -72,7 +72,6 @@ const disableSave = ref(false)
 const getListGroupModal = async (queryGetList: any) => {
   queryGetList.listId = props.listId
   window.showAllPageLoading('FULL')
-  console.log(queryGetList)
   if (queryGetList === null)
     return []
   let strParam = ''
@@ -100,7 +99,6 @@ const addGroupUser = () => {
   if (disableSave.value)
     return
   disableSave.value = true
-  console.log(dataComponent.listId)
 
   if (dataComponent.listId.length === 0) {
     const message = t('please-choose-at-least') + t('user').toLowerCase()
@@ -126,7 +124,6 @@ const filterData = () => {
   getListGroupModal(queryGetLists)
 }
 const selectedRows = (e: any) => {
-  console.log(e)
   dataComponent.listId = e
 }
 

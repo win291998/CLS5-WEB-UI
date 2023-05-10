@@ -4,6 +4,7 @@ import type { ClickRowArgument, Header, Item } from 'vue3-easy-data-table'
 import Globals from '@/constant/Globals'
 import ArrayUtil from '@/utils/ArrayUtil'
 import MethodsUtil from '@/utils/MethodsUtil'
+import StringUtil from '@/utils/StringUtil'
 
 const props = withDefaults(defineProps<Props>(), ({
   headers: () => ([]),
@@ -30,9 +31,10 @@ const CpTableSub = defineAsyncComponent(() => import('../page/gereral/CpTableSub
 const CmPagination = defineAsyncComponent(() => import('./CmPagination.vue'))
 const CmDropDown = defineAsyncComponent(() => import('@/components/common/CmDropDown.vue'))
 const CmSelect = defineAsyncComponent(() => import('@/components/common/CmSelect.vue'))
-
+const CpOrganizationSelect = defineAsyncComponent(() => import('@/components/page/gereral/CpOrganizationSelect.vue'))
 interface HeaderCustom extends Header {
   type?: string
+  typeOrg?: number
   combobox?: any
 }
 interface groupOptions {
@@ -73,7 +75,7 @@ interface Emit {
 
 // $ref dataTable
 const dataTable = ref()
-
+const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 // Checkbox table
 const selectedRows = ref<Item[]>([])
 const selectedAll = computed(() => {
@@ -90,15 +92,15 @@ const keyid = computed(() => {
   return props?.isImportFile ? 'key' : props.customId
 })
 
-// watch(() => props.items, (val: Item[]) => {
-//   props.items.forEach((element, index) => {
-//     element.originIndex = index
-//     element.isSelected = !!element.isSelected
-//     selectedRows.value = []
-//     if (element.isSelected)
-//       selectedRows.value.push([keyid.value])
-//   })
-// }, { immediate: true })
+watch(() => props.items, (val: Item[]) => {
+  props.items.forEach((element, index) => {
+    element.originIndex = index
+    element.isSelected = !!element.isSelected
+    selectedRows.value = []
+    if (element.isSelected)
+      selectedRows.value.push([keyid.value])
+  })
+}, { immediate: true })
 const pageSize = ref(props.pageSize) // số lượng item trên 1 page
 
 /** method */
@@ -143,6 +145,8 @@ const showRow = (item: ClickRowArgument) => {
 
 // sự kiện click chọn item
 const checkedItem = (index: number, value: boolean | undefined) => {
+  console.log(index)
+
   // eslint-disable-next-line vue/no-mutating-props
   props.items[index].isSelected = !value
   const itemSelected = props.items.filter((x: Item) => x.isSelected === true)
@@ -185,6 +189,11 @@ const isErrorcell = (field: string, data: any) => {
 const changeCellvalue = (event: any, field: string, key: number) => {
   emit('changeCellvalue', event, field, key)
 }
+defineExpose({
+  checkedAll,
+  selectedRows: selectedRows.value,
+  items: props.items,
+})
 
 // watch
 // watch(() => props.items, value => {
@@ -301,7 +310,7 @@ const changeCellvalue = (event: any, field: string, key: number) => {
                 activator="parent"
                 location="top"
               >
-                {{ actionItem?.name }}
+                {{ t(actionItem?.name) }}
               </VTooltip>
             </div>
           </template>
@@ -327,12 +336,25 @@ const changeCellvalue = (event: any, field: string, key: number) => {
         <div v-else-if="itemsHeader?.type === 'custom'" />
         <div v-else-if="isErrorcell(itemsHeader.value, context) && isEditing && itemsHeader?.type === 'combobox'">
           <CmSelect
+            v-model="context.title"
             :max-item="Globals.MAX_ITEM_SELECT_MULT"
-            :items="itemsHeader?.combobox?.data"
-            :item-title="itemsHeader?.combobox?.key"
+            :items="itemsHeader?.combobox.type === 'function'
+              ? itemsHeader?.combobox?.data(context[itemsHeader?.combobox.params])
+              : itemsHeader?.combobox?.data"
+            :custom-key="itemsHeader?.combobox?.key"
             :item-value="itemsHeader?.combobox?.value"
             :multiple="itemsHeader?.combobox?.multiple"
             @update:modelValue="changeCellvalue($event, itemsHeader.value, context?.key)"
+          />
+        </div>
+        <div v-else-if="isErrorcell(itemsHeader.value, context) && isEditing && itemsHeader?.type === 'organization'">
+          <CpOrganizationSelect
+            v-model="context.organizationalStructureId"
+            :max-height="100"
+            :placeholder="t('organizational')"
+            close-on-select
+            :type-org="itemsHeader?.typeOrg || 0"
+            @update:modelValue="changeCellvalue($event, 'organizational', context?.key)"
           />
         </div>
         <VTextField
@@ -340,7 +362,6 @@ const changeCellvalue = (event: any, field: string, key: number) => {
           v-model="context[itemsHeader.value]"
           class="input-edit-cell"
           type="text"
-          :error="context.errors?.length"
           @update:modelValue="changeCellvalue($event, itemsHeader.value, context.key)"
         />
 
@@ -362,7 +383,7 @@ const changeCellvalue = (event: any, field: string, key: number) => {
     </div>
     <div class="customize-footer">
       <CmPagination
-        :total-items="totalRecord"
+        :total-items="totalRecord || items.length"
         :current-page="props.pageNumber"
         @pageClick="pageSizeChange"
       />

@@ -5,11 +5,18 @@ const UserService = {
   GetTemplateExcelUpdateEmailUser: '/User/get-template-excel-update-email-user',
   GetTemplateExcelUpdateKpiUser: '/User/get-template-excel-update-kpi',
   GetTemplateExcelUpdateProficiencyUser: '/Proficiency/generate-excel-template-proficiency',
+  DownloadFileSampleUser: 'user/excel-template-change-info',
+  downloadSampleFileUpdateTitle: '/User/excel-template-change-title',
 
   // import file
   UpdateInforUserExcel: '/User/update-email-excel',
   UpdateKpiUserExcel: '/User/update-kpi-excel',
   UpdateProficiencyUserExcel: '/Title/import-excel-create-proficiency',
+  UpdateFileUserInfor: '/user/import-excel-change-info',
+  updateTitleFromFile: '/User/import-excel-change-title',
+
+  // export file
+  exportUserToExcel: 'user/export-excel-users',
 
   /// user type
   RoleFeaturePermission: '/usertype/get-feature-permission-by-portal',

@@ -6,6 +6,7 @@ import Globals from '@/constant/Globals'
 import { useImportFileStore } from '@/stores/ImportFile'
 import MethodsUtil from '@/utils/MethodsUtil'
 import type { Action, Config } from '@/typescript/interface/import'
+import { comboboxStore } from '@/stores/combobox'
 
 /** ** Khởi tạo prop emit */
 const props = withDefaults(defineProps<Props>(), ({
@@ -23,25 +24,49 @@ const props = withDefaults(defineProps<Props>(), ({
   titleButtonAdd: 'Thêm',
   titleButtonCancel: 'Quay lại',
   titlePageUpload: ' Trang bắt đầu',
+  isFilter: false,
+  filterConfig: () => ({
+    list: [],
+    customKey: 'value',
+    itemValue: 'key',
+  }),
 }))
+
+const emit = defineEmits<Emit>()
+
+const CmSelect = defineAsyncComponent(() => import('@/components/common/CmSelect.vue'))
+
 const { t } = window.i18n()
+interface Emit {
+  (e: 'filter', data: any): void
+}
 
 // interface
+interface filter {
+  list: Array<any>
+  customKey?: string
+  itemValue?: string
+  modelValue?: any
+}
 interface Props {
-  titleList: string
   config: Config
-  customKeyError: string
-  actions: Action[]
+  titleList?: string
+  customKeyError?: string
+  actions?: Action[]
   titleButtonAdd?: string
   titleButtonCancel?: string
   titlePageUpload?: string
+  isFilter?: boolean
+  filterConfig?: filter
 }
 
 /** ** Khởi tạo store */
 const store = useImportFileStore()
+const storeCombobox = comboboxStore()
 const router = useRouter()
 const { paramsImport } = store
-const { type } = storeToRefs(store)
+const { organizations } = storeToRefs(storeCombobox)
+const { type, refTableValid } = storeToRefs(store)
 const { checkInvalidData, fileChange, updateFromFile } = store
 // eslint-disable-next-line vue/no-setup-props-destructure
 store.customKeyError = props.customKeyError
@@ -64,7 +89,7 @@ const headersInvalid = computed(() => {
   columns.unshift(select)
   return columns
 })
-
+const typeFillter = ref(props.filterConfig?.modelValue)
 const inputFile = ref()
 watch(() => props.config, value => {
   store.$patch({
@@ -86,7 +111,13 @@ const dowloadSampleFile = async () => {
 
 // thay đổi dữ liệu trên bảng
 const changeCellvalue = (event: any, field: string, key: number) => {
-  paramsImport.invalidData[key][field] = event as never
+  if (field === 'organizational') {
+    paramsImport.invalidData[key].organizationalStructureId = event
+    const org: any = organizations.value.find((item: any) => item.id === event)
+    paramsImport.invalidData[key].organizationalStructure = org?.name
+  }
+
+  else { paramsImport.invalidData[key][field] = event as never }
 }
 
 const handleEditTable = () => {
@@ -109,8 +140,14 @@ const isShowTemplateImport = computed(() => {
 })
 
 const uploadFile = (val: string | number | undefined) => {
+  console.log(val)
+
   type.value = val
   inputFile.value.click()
+}
+const filterUpdate = (event: any) => {
+  console.log(event)
+  emit('filter', event)
 }
 
 onBeforeUnmount(() => {
@@ -132,7 +169,19 @@ onBeforeUnmount(() => {
         @click="dowloadSampleFile"
       />
     </div>
-
+    <div
+      v-if="isFilter"
+      class="d-flex justify-center my-4"
+    >
+      <CmSelect
+        v-model:model-value="typeFillter"
+        style="width: 400px;"
+        :items="filterConfig?.list"
+        :custom-key="filterConfig?.customKey"
+        :item-value="filterConfig?.itemValue"
+        @update:model-value="filterUpdate"
+      />
+    </div>
     <div
       class="d-flex w-100 button-group"
     >
@@ -162,18 +211,19 @@ onBeforeUnmount(() => {
           <div class="cp-import-file-action">
             <div class="cp-import-file-btn mr-3">
               <CmButton @click="dowloadSampleFile">
-                {{ t('common.action-header.download-file') }}
+                {{ t('download-file') }}
               </CmButton>
             </div>
             <div class="cp-import-file-btn">
               <CmButton @click="inputFile.click()">
-                {{ t('common.select-file') }}
+                {{ t('select-file') }}
               </CmButton>
             </div>
           </div>
         </div>
         <div class="cp-import-file-table">
           <CmTable
+            ref="refTableValid"
             :headers="headers"
             :items="paramsImport.validData"
             return-object
@@ -192,7 +242,7 @@ onBeforeUnmount(() => {
           <div class="cp-import-file-action">
             <div class="cp-import-file-btn mr-3">
               <CmButton @click="checkInvalidData">
-                {{ t('common.import-file.check') }}
+                {{ t('check') }}
               </CmButton>
             </div>
             <div class="cp-import-file-btn">
@@ -207,6 +257,7 @@ onBeforeUnmount(() => {
             :headers="headersInvalid"
             :items="paramsImport.invalidData"
             :is-editing="isEditing"
+            :min-height="300"
             is-import-file
             @changeCellvalue="changeCellvalue"
           />

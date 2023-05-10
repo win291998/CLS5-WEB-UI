@@ -27,7 +27,7 @@ const { userType, statuses } = storeToRefs(storeCombobox)
 const { fetchTypeUsersCombobox, fetchStatusUsersCombobox } = storeCombobox
 const storeProfileUserManager = profileUserManagerStore()
 const { idUpdate, myFormUserInfor, titleTable, values, schema } = storeToRefs(storeProfileUserManager)
-const { updateListOrg, submitForm, updateSchema } = storeProfileUserManager
+const { updateListOrg, submitForm, updateSchema, resetFormInfor } = storeProfileUserManager
 const route = useRoute()
 
 // interface
@@ -35,8 +35,8 @@ const route = useRoute()
 
 // data
 const LABEL = Object.freeze({
-  TEXT_USER_TYPE: `${t('filters.user-role')}*`,
-  PLACEHOLDER_USER_TYPE: t('filters.user-role'),
+  TEXT_USER_TYPE: `${t('user-role')}*`,
+  PLACEHOLDER_USER_TYPE: t('user-role'),
   TEXT_STATUS: `${t('status-name')}*`,
   PLACEHOLDER_STATUS: t('status-name'),
 })
@@ -76,8 +76,9 @@ if (Number(route.params.id) >= 0)
   titleTable.value?.checkGetListOrgStruct()
 onMounted(() => {
   myFormUserInfor.value = formUserInfor.value
-  window.hideAllPageLoading()
 })
+
+window.hideAllPageLoading()
 </script>
 
 <template>
@@ -91,10 +92,6 @@ onMounted(() => {
         width="100%"
         class="user-infor mx-auto no-background"
       >
-        <div>
-          User profile
-        </div>
-
         <VRow class="my-3">
           <VCol
             cols="12"
