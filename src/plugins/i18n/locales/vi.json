@@ -14,7 +14,7 @@
   "Add": "Thêm",
   "Administrator": "Quản trị viên",
   "Agree": "Duyệt",
-  "Add-new":"Thêm mới",
+  "Add-new": "Thêm mới",
   "OrganizationManaging": "Quản lý tổ chức",
   "TrainingManaging": "Quản lý đào tạo",
   "LearningManaging": "Tổ chức đào tạo",
@@ -3296,5 +3296,13 @@
   "ActionUpdatePointOffline": "Cập nhật điểm",
   "issuePasswords": "Cấp mật khẩu",
   "changeStatus": "Thay đổi trạng thái",
-  "RestoreCourse": "Khôi phục"
+  "RestoreCourse": "Khôi phục",
+  "QUE_TestCodeInShiftNotDelete": "Có đề thi trong ca thi chưa được xóa",
+  "AddFromFiles": "Thêm từ tệp tin",
+  "update-from-account": "Cập nhật từ tài khoản",
+  "download-file": "Tải tập tin mẫu",
+  "UserInformation": "Thông tin cũ",
+  "InfoUpdate": "Thông tin mới",
+  "edit-user-from-file": "Cập nhật người dùng",
+  "code-log": "Mã"
 }

@@ -75,7 +75,7 @@ const getTitleByOrg = async (orStructureId: any) => {
   return await MethodsUtil.requestApiCustom(ApiUser.GetListTitle, TYPE_REQUEST.POST, params)
     .then(value => {
       if (value?.data?.pageLists?.length > 0) {
-        value.data.pageLists = value.data.pageLists.map((x: any) => ({ value: x.id, text: x.name, orgId: x.organizationalStructureId }))
+        value.data.pageLists = value.data.pageLists.map((x: any, idItem: any) => ({ value: x.id, text: x.name, orgId: x.organizationalStructureId }))
 
         return value.data.pageLists
       }
@@ -129,14 +129,18 @@ const updateTitle = async (userId: any) => {
 }
 
 const changeTitle = (index: any, val: any) => {
+  console.log(index, val)
+
   const indexItem = findIndex(index, items.value)
+  console.log(indexItem)
 
   // dataOrg.isChange = true
   isChangeRef.value = true
-
   const changedValue = items.value[indexItem]
 
   changedValue.titleId = val
+  console.log(changedValue)
+
   items.value.splice(indexItem, 1, changedValue)
 }
 
@@ -157,9 +161,10 @@ const getListOrgStructTitleUser = async () => {
   await MethodsUtil.requestApiCustom(ApiUser.GetProfileOrg, TYPE_REQUEST.GET, params).then(async (value: any) => {
     const listTitle = await getTitleByOrg(0)
     if (value.data) {
-      value.data.forEach((item: any) => {
+      value.data.forEach((item: any, index: number) => {
         item.titleId = item.titleId || null
         item.listTitle = listTitle.filter((x: any) => !x.orgId || x.orgId === item.id)
+        item.key = index
       })
       items.value = value.data
     }
@@ -167,14 +172,21 @@ const getListOrgStructTitleUser = async () => {
 }
 
 const checkGetListOrgStruct = async () => {
-  if (route.name === 'admin-organization-users-profile-add')
+  if (route.name === 'admin-organization-users-profile-add') {
+    items.value = []
+    console.log(123)
+
     return
+  }
 
   await getListOrgStructTitleUser()
 }
 
 checkGetListOrgStruct()
 
+watch(() => route.name, val => {
+  checkGetListOrgStruct()
+})
 defineExpose({
   updateTitle,
   checkGetListOrgStruct,

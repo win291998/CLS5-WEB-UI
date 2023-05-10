@@ -12,62 +12,44 @@ const CmButton = defineAsyncComponent(() => import('@/components/common/CmButton
 const CmButtonGroup = defineAsyncComponent(() => import('@/components/common/CmButtonGroup.vue'))
 
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
+const handleSaveUpdate = (event: any) => {
+  emit('onSave', event, 'save-update')
+}
+const handleSaveAdd = (event: any) => {
+  emit('onSave', event, 'save-add')
+}
+const action = [
+  {
+    title: t('save-and-update'),
+    icon: 'save',
 
-const action = [{
-  title: 'Xem chi tiết',
-  icon: 'eye',
-
-  // action: handleItem1,
-  prependItem: {
-    value: true,
-  },
-},
-{
-  title: 'Tải file',
-  icon: 'download',
-
-  // action: handleItem2,
-  prependItem: {
-    value: true,
-    action: () => {
-      //
-
+    action: handleSaveUpdate,
+    prependItem: {
+      value: true,
     },
   },
-},
-{
-  title: 'Tải file',
-  icon: 'download',
+  {
+    title: t('save-and-add'),
+    icon: 'save',
 
-  // action: handleItem2,
-  prependItem: {
-    value: true,
-    action: () => {
-      //
+    action: handleSaveAdd,
+    prependItem: {
+      value: true,
     },
   },
-},
-{
-  title: 'Chỉnh sửa',
-  icon: 'edit',
-
-  // action: showToast,
-  prependItem: {
-    value: true,
-  },
-}]
+]
 
 interface Emit {
   (e: 'onCancel'): void
-  (e: 'onSave', event): void
+  (e: 'onSave', event: any, type: string): void
 }
 
 const onCancel = () => {
   emit('onCancel')
 }
 
-const handlerPreButton = event => {
-  emit('onSave', event)
+const handlerPreButton = (event: any) => {
+  emit('onSave', event, 'save')
 }
 </script>
 
@@ -98,6 +80,3 @@ const handlerPreButton = event => {
   </div>
 </template>
 
-<style scoped>
-
-</style>

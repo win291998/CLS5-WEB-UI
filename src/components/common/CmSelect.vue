@@ -71,7 +71,7 @@ const close = (e: any) => {
 }
 
 const optionsModel = computed(() => {
-  const optionsModels = props.items.map((item: any) => {
+  const optionsModels = props.items?.map((item: any) => {
     item = {
       ...item,
       keySearch: StringUtil.removeAccents(item.userTypeName),

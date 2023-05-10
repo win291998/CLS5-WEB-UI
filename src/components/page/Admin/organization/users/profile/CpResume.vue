@@ -109,7 +109,7 @@ const addExperiences = () => {
 }
 
 // delete experience item
-const removeExperience = index => {
+const removeExperience = (index: any) => {
   valuesComponent.value.listExperienceUser.splice(index, 1)
 }
 
@@ -156,12 +156,10 @@ const actionItemEdit = (dataAction: any, index: any, dataResend?: any) => {
 const actionItemDelete = (dataAction: any, index: any, dataResend?: any) => {
   switch (dataResend) {
     case 'EDUCATION':
-      console.log('actionItemDelete', dataAction, index)
       removeEducation(index)
 
       break
     case 'EXPERENCE':
-      console.log('actionItemDelete', dataAction, index)
       removeExperience(index)
 
       break
@@ -206,11 +204,6 @@ const updateDialogVisible = (event: any, type?: any) => {
  * update profile
  */
 const handleUpdataProfile = (education: any, edit: boolean) => {
-  console.log('education', education)
-  console.log('edit', edit)
-  console.log('dataProfile', valuesComponent.value?.listEducationUser.length)
-  console.log('dataProfile', valuesComponent.value?.listEducationUser)
-
   if (edit) { valuesComponent.value.listEducationUser[education?.index] = education }
   else {
     if (!valuesComponent.value?.listEducationUser || valuesComponent.value?.listEducationUser === null)
@@ -221,11 +214,6 @@ const handleUpdataProfile = (education: any, edit: boolean) => {
 }
 
 const handleUpdateExperences = (experences: any, edit: boolean) => {
-  console.log('education', experences)
-  console.log('edit', edit)
-  console.log('dataProfile', valuesComponent.value)
-  console.log('dataProfile', valuesComponent.value.listExperienceUser?.length)
-
   if (edit) { valuesComponent.value.listExperienceUser[experences?.index] = experences }
   else {
     if (!valuesComponent.value.listExperienceUser || valuesComponent.value.listExperienceUser === null)

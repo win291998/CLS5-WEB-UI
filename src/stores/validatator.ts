@@ -56,11 +56,11 @@ export const validatorStore = defineStore('validator', () => {
       MAX: 20,
     },
     USER_TYPE: {
-      FIELD: t('users.user.filters.user-role'),
+      FIELD: t('user-role'),
       MIN: 1,
     },
     STATUS: {
-      FIELD: t('common.status-name'),
+      FIELD: t('status-name'),
       MIN: 1,
     },
   })

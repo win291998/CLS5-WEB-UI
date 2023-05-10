@@ -37,7 +37,7 @@ const headers = reactive([
   { text: t('user-group-name'), value: 'nameGroup' },
   { text: t('date-register'), value: 'dateRegister' },
 
-  // { text: t('common.description'), value: 'description' },
+  // { text: t('description'), value: 'description' },
   { text: '', value: 'actions', width: 150 },
 ])
 const dataTableGroup = ref ([])
@@ -82,49 +82,37 @@ const getListIdStructureUser = async () => {
     typeId: 1,
   }
   await MethodsUtil.requestApiCustom(ApiUser.GetListIdStructureUser, TYPE_REQUEST.GET, params).then((value: any) => {
-    console.log(value)
-
     dataComponent.listId = value.data
   })
 }
 
 // search ở fillter header
 const handleSearch = async (value: any) => {
-  console.log(value)
-
   queryParams.pageNumber = 1
   queryParams.searchData = value
   await getPagingByUser(queryParams)
 }
 const handleAddGroup = async (value: any) => {
-  console.log('handleAddGroup')
   await getListIdStructureUser()
   isShowDialogAddGroup.value = true
 }
 const handleDeleteMultiple = async (value: any) => {
-  console.log('handleDeleteMultiple')
   dataComponent.deleteIds = dataComponent.selectedRowsIds
   isShowDialogNotiDelete.value = true
 }
 const handlePageClick = async (value: any) => {
-  console.log('handlePageClick')
+  // console.log('handlePageClick')
 }
 const selectedRows = (e: any) => {
-  console.log(e)
-
   dataComponent.selectedRowsIds = e
   disabledDelete.value = !(e.length > 0)
-  console.log(e.length > 0)
 }
 
 // Function to handle when click button Delete
 const handleDeleteItem = (context: any) => {
-  console.log(context)
-
   dataComponent.deleteIds = []
   dataComponent.deleteIds.push(context.id)
   isShowDialogNotiDelete.value = true
-  console.log(dataComponent.deleteIds)
 
   // this.modalContent = this.$t('users.user.action-modal.delete')
   // this.$bvModal.show(this.confirmModalId)
@@ -143,8 +131,6 @@ const deleteAction = async () => {
       await getPagingByUser(queryParams)
     })
     .catch((error: any) => {
-      console.log(error)
-
       toast('ERROR', t(error.message))
     })
 }
@@ -156,7 +142,6 @@ const confirmDialog = (event: any) => {
 }
 
 const confirmDialogAddGroup = async (listGroup: any) => {
-  console.log('confirmDialogAddGroup', listGroup)
   if (listGroup.length > 0) {
     queryBodyAdd.listId = listGroup
     await MethodsUtil.requestApiCustom(ApiUser.PostAddGroupUser, TYPE_REQUEST.POST, queryBodyAdd)
@@ -165,7 +150,6 @@ const confirmDialogAddGroup = async (listGroup: any) => {
         getPagingByUser(queryParams)
       })
       .catch((error: any) => {
-        console.log(error)
         toast('ERROR', t(error.message))
       })
   }

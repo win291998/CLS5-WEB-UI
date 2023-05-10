@@ -26,6 +26,7 @@ const config = reactive({
   padding: 25,
 })
 const nodes = ref({})
+const render = ref(0)
 const getListOrgStruct = async () => {
   const params = {
     role: StringJwt.getRole(),
@@ -47,11 +48,11 @@ const getListOrgStruct = async () => {
     // Cấu hình node roots cho vue tree
     const filteredKeys = Object.keys(result).filter(key => result[key].parentId === 0)
     config.roots = filteredKeys
+    render.value++
   })
 }
 const updateValueOrg = (value: any) => {
   values.value.listOrganizationalStructureId = value
-  console.log('modelValue', values.value)
 }
 getListOrgStruct()
 </script>
@@ -59,6 +60,7 @@ getListOrgStruct()
 <template>
   <div class="page-containter-box">
     <CmTreeView
+      :key="render"
       :nodes="nodes"
       :config="config"
       custom-id="ids"

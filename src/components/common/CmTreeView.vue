@@ -198,7 +198,6 @@ const onChangeOrgChecked = (val: any, node: any) => {
   node.children.forEach((childeNode: any) => {
     nodesTree.value[childeNode].orgPermissionValue = val ? nodesTree.value[childeNode].orgPermission : 0
   })
-  console.log(node)
 }
 </script>
 
@@ -307,6 +306,9 @@ const onChangeOrgChecked = (val: any, node: any) => {
     background-color: #D0D5DD;
     margin-left: -14px;
     margin-right: 8px;
+  }
+  .v-selection-control__input input{
+    display: none;
   }
   // .dot-tree::before {
   //   content: url('https://webcoban.vn/image/banana.png')

@@ -39,7 +39,6 @@ const checkPortal: any = async (next: any, to: any) => {
   store.components = []
   store.$dispose()
   const isLoggedIn = isUserLoggedIn()
-  console.log(to)
 
   if (to.meta.requireAuth) {
     const requireAuth: any = to.meta.requireAuth || {}

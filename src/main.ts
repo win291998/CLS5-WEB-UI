@@ -1,7 +1,7 @@
 /* eslint-disable import/order */
 import '@/@iconify/icons-bundle'
-import App from '@/App.vue'
 import i18n from '@/plugins/i18n'
+import App from '@/App.vue'
 import layoutsPlugin from '@/plugins/layouts'
 import lodash from '@/plugins/lodash'
 import vuetify from '@/plugins/vuetify'

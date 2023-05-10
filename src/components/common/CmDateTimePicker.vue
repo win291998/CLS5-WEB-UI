@@ -56,8 +56,6 @@ if (compAttrs.config && compAttrs.config.inline) {
 
 // v-field clear prop
 const onClear = (el: MouseEvent) => {
-  el.stopPropagation()
-
   nextTick(() => {
     emit('update:modelValue', '')
 

@@ -44,7 +44,7 @@ interface Emit {
 
 const props = withDefaults(defineProps<Props>(), ({
   listItem: () => ([]),
-  icon: 'chevron-down',
+  icon: 'tabler:chevron-down',
   isBorder: true,
   color: 'primary',
   isDiabledPrepend: false,
@@ -94,9 +94,9 @@ const clickItem = (item: object) => {
         activator="parent"
       >
         <template #activator>
-          <VueFeather
+          <VIcon
             v-if="icon"
-            :type="icon"
+            :icon="icon"
             size="18"
           />
         </template>
@@ -109,13 +109,13 @@ const clickItem = (item: object) => {
             @click="item?.action ? item?.action(item) : clickItem(item)"
           >
             <VListItemTitle class="jutify-content-center">
-              <VueFeather
+              <VIcon
                 v-if="item.icon"
-                :type="item.icon"
-                size="14"
+                :icon="item.icon"
+                size="18"
                 :class="[item.colorClass]"
               />
-              <span class="ml-25">{{ item.title }}</span>
+              <span class="ml-3">{{ item.title }}</span>
             </VListItemTitle>
           </VListItem>
         </VList>
@@ -142,6 +142,9 @@ const clickItem = (item: object) => {
   border-top-right-radius: 8px;
   border-bottom-right-radius: 8px;
   min-width: 40px;
+  &:focus{
+    box-shadow: none !important;
+  }
 }
 
 .button-group {
