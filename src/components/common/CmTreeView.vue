@@ -229,7 +229,6 @@ const onChangeOrgChecked = (val: any, node: any) => {
         />
         <CmCheckBox
           v-model:model-value="node.state.checked"
-          tooltip-label="Phân quyền theo cơ cấu tổ chức"
           :false-value="false"
           class="checkbox-tree-view"
           :true-value="true"
@@ -274,12 +273,12 @@ const onChangeOrgChecked = (val: any, node: any) => {
     inset-inline-end: 0;
   }
   .checkbox-wrapper {
-    left: 24px;
+    left: 17px;
     opacity: 0;
     position: absolute;
-    width: 36px;
-    height: 36px;
-    top: 4px;
+    width: 25px;
+    height: 25px;
+    top: 5;
     z-index: 1000;
   }
 
@@ -313,6 +312,9 @@ const onChangeOrgChecked = (val: any, node: any) => {
   // .dot-tree::before {
   //   content: url('https://webcoban.vn/image/banana.png')
   // }
+  input[type=checkbox] {
+    display: none;
+  }
 }
 </style>
 
