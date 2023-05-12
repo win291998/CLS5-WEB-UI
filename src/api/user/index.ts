@@ -7,6 +7,7 @@ const UserService = {
   GetTemplateExcelUpdateProficiencyUser: '/Proficiency/generate-excel-template-proficiency',
   DownloadFileSampleUser: 'user/excel-template-change-info',
   downloadSampleFileUpdateTitle: '/User/excel-template-change-title',
+  downloadSampleFileAddUser: '/user/generate-excel-template-create-users',
 
   // import file
   UpdateInforUserExcel: '/User/update-email-excel',
@@ -14,6 +15,7 @@ const UserService = {
   UpdateProficiencyUserExcel: '/Title/import-excel-create-proficiency',
   UpdateFileUserInfor: '/user/import-excel-change-info',
   updateTitleFromFile: '/User/import-excel-change-title',
+  AddUserFromFile: '/user/import-user-from-json',
 
   // export file
   exportUserToExcel: 'user/export-excel-users',

@@ -197,6 +197,27 @@ export default [
             name: 'admin-organization-user-import-file-update-user-title',
             component: () => import('@/pages/admin/organization/users/import-file/UpdateUserTitle.vue'),
           },
+          {
+            path: 'import-file-add-user',
+            meta: {
+              requireAuth: {
+                permissionKey: 'UserManaging',
+                permissionValue: 1,
+              },
+              breadcrumb: [
+                {
+                  title: 'user-list',
+                  to: { name: 'admin-organization-users-manager' },
+                },
+                {
+                  title: 'add-user-from-file',
+                  active: true,
+                },
+              ],
+            },
+            name: 'admin-organization-user-import-file-add-user',
+            component: () => import('@/pages/admin/organization/users/import-file/AddUser.vue'),
+          },
         ],
       },
       {

@@ -78,9 +78,9 @@ const storeValidate = validatorStore()
 const { schemaOption, Field, Form, useForm } = storeValidate
 
 const schema = reactive<any>({
-  schoolId: schemaOption.requiredString,
-  degreeId: schemaOption.requiredString,
-  graduationYear: schemaOption.requiredString,
+  schoolId: schemaOption.requiredString(),
+  degreeId: schemaOption.requiredString(),
+  graduationYear: schemaOption.requiredString(),
 })
 
 const { values, setValues, resetForm } = useForm({

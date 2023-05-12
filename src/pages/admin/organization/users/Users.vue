@@ -17,6 +17,9 @@ const CmAccodion = defineAsyncComponent(() => import('@/components/common/CmAcco
 const CpConfirmDialog = defineAsyncComponent(() => import('@/components/page/gereral/CpConfirmDialog.vue'))
 const CpModalUpdateStatus = defineAsyncComponent(() => import('@/components/page/Admin/organization/users/CpModalUpdateStatus.vue'))
 const CpCustomInfo = defineAsyncComponent(() => import('@/components/page/gereral/CpCustomInfo.vue'))
+const CpModalAddUserApi = defineAsyncComponent(() => import('@/components/page/Admin/organization/users/CpModalAddUserApi.vue'))
+const CpTableSub = defineAsyncComponent(() => import('@/components/page/gereral/CpTableSub.vue'))
+const CpTableSubIconList = defineAsyncComponent(() => import('@/components/page/gereral/CpTableSubIconList.vue'))
 
 /** params */
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
@@ -28,10 +31,10 @@ const router = useRouter()
 
 const headers = reactive([
   { text: '', value: 'checkbox', width: 50 },
-  { text: t('surname-name'), value: 'fullName' },
-  { text: t('role'), value: 'userTypeName' },
-  { text: t('status-name'), value: 'statusName', type: 'custom' },
-  { text: t('join-date'), value: 'registeredDate', type: 'custom' },
+  { text: t('surname-name'), value: 'fullName', width: 250 },
+  { text: t('role'), value: 'userTypeName', width: 100 },
+  { text: t('status-name'), value: 'statusName', type: 'custom', width: 150 },
+  { text: t('join-date'), value: 'registeredDate', type: 'custom', width: 100 },
   { text: t('organization'), value: 'organization', type: 'menu', width: 300 },
   { text: '', value: 'actions', width: 150 },
 ])
@@ -71,6 +74,7 @@ const data = reactive({
   showPassword: false,
   isShowDialogPasword: false,
   isShowDialogStatus: false,
+  isShowDialogAddUserApi: false,
   typeDialogRessetPass: 1,
   selectedItemId: 0,
   testingCode: '',
@@ -204,8 +208,6 @@ const copyTestingCode = () => {
 }
 
 const selectedRows = (e: any) => {
-  console.log(e)
-
   data.listId = e
 }
 
@@ -264,9 +266,9 @@ async function fectchListUsers() {
             return MethodsUtil.checkActionType(el, actionItem)
           })
         })
-        items.value = value.data.pageLists
-        totalRecord.value = value?.data?.totalRecord
       }
+      items.value = value.data.pageLists
+      totalRecord.value = value?.data?.totalRecord
     })
     .catch(() => {
       toast('ERROR', t('USR_GetFailed'))
@@ -276,19 +278,17 @@ async function fectchListUsers() {
 // search ở fillter header
 const handleSearch = async (value: any) => {
   queryParam.pageNumber = 1
-  queryParam.keyword = value.search
+  queryParam.keyword = value
   await fectchListUsers()
 }
 
 //  fillter header
-const handleFilterCombobox = (dataFilter: any) => {
-  console.log(dataFilter)
-
+const handleFilterCombobox = async (dataFilter: any) => {
   queryParam = {
     ...queryParam,
     ...dataFilter,
   }
-  fectchListUsers()
+  await fectchListUsers()
 }
 
 // hàm trả về các loại action từ header filter
@@ -305,11 +305,10 @@ const handleClickBtn = (type: string) => {
       break
   }
 }
-const actionAddFromFile = () => {
-  console.log('actionAddFromFile')
-}
+
 const actionAddFromApi = () => {
   console.log('actionAddFromApi')
+  data.isShowDialogAddUserApi = true
 }
 
 const exportExcel = async () => {
@@ -342,7 +341,9 @@ const actionAdd = [
   {
     title: t('add-from-file'),
     icon: 'tabler:file-plus',
-    action: actionAddFromFile,
+    action: () => {
+      router.push({ name: 'admin-organization-user-import-file-add-user' })
+    },
   },
   {
     title: t('add-from-api'),
@@ -413,6 +414,7 @@ window.hideAllPageLoading()
       ref="refTableUserList"
       :headers="headers"
       :items="items"
+      is-expand
       :total-record="totalRecord"
       @handlePageClick="handlePageClick"
       @update:selected="selectedRows"
@@ -461,6 +463,31 @@ window.hideAllPageLoading()
           </VChip>
         </div>
       </template>
+      <template #tableSub>
+        <VRow>
+          <VCol
+            col="12"
+            sm="12"
+            md="6"
+          >
+            <CpTableSub />
+          </VCol>
+          <VCol
+            col="12"
+            sm="6"
+            md="3"
+          >
+            <CpTableSubIconList />
+          </VCol>
+          <VCol
+            col="12"
+            sm="6"
+            md="3"
+          >
+            <CpTableSubIconList />
+          </VCol>
+        </VRow>
+      </template>
     </CmTable>
   </div>
   <CpConfirmDialog
@@ -508,6 +535,9 @@ window.hideAllPageLoading()
     :is-dialog-visible="data.isShowDialogStatus"
     @confirm="confirmDialogStatus"
     @update:is-dialog-visible="updateDialogVisibleStatus"
+  />
+  <CpModalAddUserApi
+    v-model:is-dialog-visible="data.isShowDialogAddUserApi"
   />
 </template>
 

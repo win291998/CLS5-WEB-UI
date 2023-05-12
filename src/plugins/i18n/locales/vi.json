@@ -2891,7 +2891,7 @@
   "add-user-from-file": "Thêm người dùng từ tập tin",
   "add-user-to-group-success": "Thêm người dùng thành công",
   "add-user-to-group-failed": "Thêm người dùng thất bại",
-  "add": "Thêm nhóm người dùng",
+  "group-add": "Thêm nhóm người dùng",
   "failure-list": "Danh sách nhóm người dùng thêm không thành công",
   "invalid-list": "Danh sách nhóm người dùng không hợp lệ",
   "success-list": "Danh sách nhóm người dùng thêm thành công",
@@ -3304,5 +3304,6 @@
   "UserInformation": "Thông tin cũ",
   "InfoUpdate": "Thông tin mới",
   "edit-user-from-file": "Cập nhật người dùng",
-  "code-log": "Mã"
+  "code-log": "Mã",
+  "BirthDay": "Ngày sinh"
 }
