@@ -19,3 +19,11 @@ declare type Tinline = typeof inline[number]
 export type Anchor = Tblock | Tinline | 'center' | 'center center' | `${Tblock} ${Tinline | 'center'}` | `${Tinline} ${Tblock | 'center'}`
 export const typeTab = ['button', 'underline'] as const
 export const typeLoading = ['FULL', 'COMPONENT', 'FULL-OPACITY', 'COMPONENT-OPACITY', null] as const
+export const typeSkeleton = [
+  'BulletListLoader',
+  'CodeLoader',
+  'ContentLoader',
+  'FacebookLoader',
+  'InstagramLoader',
+  'ListLoader',
+] as const

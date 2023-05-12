@@ -26,6 +26,9 @@ const props = defineProps({
   placeholder: {
     type: String,
   },
+  text: {
+    type: String,
+  },
 
 })
 
@@ -92,64 +95,71 @@ const emitModelValue = (val: string) => {
 </script>
 
 <template>
-  <!-- v-input -->
-  <VInput
-    v-bind="{ ...inputProps, ...rootAttrs, ...field }"
-    :model-value="modelValue"
-    :hide-details="props.hideDetails"
-    class="position-relative cm-datetime"
-  >
-    <template #default="{ isDirty, isValid, isReadonly }">
-      <!-- v-field -->
-      <VField
-        v-bind="fieldProps"
-        :active="focused || isDirty.value || isCalendarOpen"
-        :focused="focused || isCalendarOpen"
-        role="textbox"
-        :dirty="isDirty.value || props.dirty"
-        :error="isValid.value === false"
-        @click:clear="onClear"
-      >
-        <template #default="{ props: vFieldProps }">
-          <div v-bind="vFieldProps">
-            <!-- flat-picker  -->
-            <FlatPickr
-              v-if="!isInlinePicker"
-              v-bind="compAttrs"
-              ref="refFlatPicker"
-              :model-value="modelValue"
-              class="flat-picker-custom-style text-regular-md"
-              :disabled="isReadonly.value"
-              :placeholder="placeholder"
-              :options="flatpickrOptions"
-              @on-open="isCalendarOpen = true"
-              @on-close="isCalendarOpen = false"
-              @update:model-value="emitModelValue"
-            />
+  <div>
+    <!-- v-input -->
+    <div class="mb-1">
+      <label
+        class="text-medium-sm color-dark"
+      >{{ props.text }}</label>
+    </div>
+    <VInput
+      v-bind="{ ...inputProps, ...rootAttrs, ...field }"
+      :model-value="modelValue"
+      :hide-details="props.hideDetails"
+      class="position-relative cm-datetime"
+    >
+      <template #default="{ isDirty, isValid, isReadonly }">
+        <!-- v-field -->
+        <VField
+          v-bind="fieldProps"
+          :active="focused || isDirty.value || isCalendarOpen"
+          :focused="focused || isCalendarOpen"
+          role="textbox"
+          :dirty="isDirty.value || props.dirty"
+          :error="isValid.value === false"
+          @click:clear="onClear"
+        >
+          <template #default="{ props: vFieldProps }">
+            <div v-bind="vFieldProps">
+              <!-- flat-picker  -->
+              <FlatPickr
+                v-if="!isInlinePicker"
+                v-bind="compAttrs"
+                ref="refFlatPicker"
+                :model-value="modelValue"
+                class="flat-picker-custom-style text-regular-md"
+                :disabled="isReadonly.value"
+                :placeholder="placeholder"
+                :options="flatpickrOptions"
+                @on-open="isCalendarOpen = true"
+                @on-close="isCalendarOpen = false"
+                @update:model-value="emitModelValue"
+              />
 
-            <!-- simple input for inline prop -->
-            <input
-              v-if="isInlinePicker"
-              :value="modelValue"
-              class="flat-picker-custom-style text-regular-md"
-              type="text"
-            >
-          </div>
-        </template>
-      </VField>
-    </template>
-  </VInput>
+              <!-- simple input for inline prop -->
+              <input
+                v-if="isInlinePicker"
+                :value="modelValue"
+                class="flat-picker-custom-style text-regular-md"
+                type="text"
+              >
+            </div>
+          </template>
+        </VField>
+      </template>
+    </VInput>
 
-  <!-- flat picker for inline props -->
-  <FlatPickr
-    v-if="isInlinePicker"
-    v-bind="compAttrs"
-    ref="refFlatPicker"
-    :model-value="modelValue"
-    @update:model-value="emitModelValue"
-    @on-open="isCalendarOpen = true"
-    @on-close="isCalendarOpen = false"
-  />
+    <!-- flat picker for inline props -->
+    <FlatPickr
+      v-if="isInlinePicker"
+      v-bind="compAttrs"
+      ref="refFlatPicker"
+      :model-value="modelValue"
+      @update:model-value="emitModelValue"
+      @on-open="isCalendarOpen = true"
+      @on-close="isCalendarOpen = false"
+    />
+  </div>
 </template>
 
 <style lang="scss">
@@ -447,6 +457,9 @@ input[altinputclass="inlinePicker"] {
   line-height: 24px;
   border: $border-input;
   border-radius: $border-radius-input;
+}
+.cm-datetime .flatpickr-input[placeholder]{
+  color: $color-gray-900 !important;
 }
 .cm-datetime .v-field__outline__end,
 .cm-datetime .v-field__outline__start{

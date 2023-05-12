@@ -39,7 +39,10 @@ const handlerPreButton = () => {
 </script>
 
 <template>
-  <div class="d-flex justify-space-between my-8">
+  <div
+    class="d-flex justify-space-between my-8"
+    style="flex-wrap: wrap;"
+  >
     <div class="text-medium-lg">
       {{ title }}
     </div>

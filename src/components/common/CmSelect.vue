@@ -74,16 +74,19 @@ const optionsModel = computed(() => {
   const optionsModels = props.items?.map((item: any) => {
     item = {
       ...item,
-      keySearch: StringUtil.removeAccents(item.userTypeName),
+      keySearch: typeof item[props.customKey] === 'string' ? StringUtil.removeAccents(item[props.customKey]) : null,
     }
 
     return item
   })
+  console.log(optionsModels)
 
   return optionsModels || []
 })
 
 const fetchOptions = (options: any, search: any) => {
+  console.log(123)
+
   const searchKey = StringUtil.removeAccents(search)
 
   const optionsFuse = {

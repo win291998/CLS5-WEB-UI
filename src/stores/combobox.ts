@@ -15,15 +15,20 @@ export const comboboxStore = defineStore('combobox', () => {
   }
   const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 
-  const statuses = ref([])
-  const organizations = ref([])
-  const userType = ref([])
-  const groupUser = ref([])
+  const statusesCombobox = ref([])
+  const organizationsCombobox = ref([])
+  const userTypeCombobox = ref([])
+  const groupUserCombobox = ref([])
   const country = ref<combobox[]>([])
   const provinces = ref<combobox[]>([])
   const districts = ref<combobox[]>([])
   const wards = ref<combobox[]>([])
   const userLevels = ref<combobox[]>([])
+  const addFromCombobox = ref([
+    { key: t('direct'), value: 1 },
+    { key: t('add-from-file'), value: 2 },
+    { key: t('add-from-api'), value: 3 },
+  ])
 
   /** method */
   // Lấy danh sách trạng thái người dùng
@@ -32,7 +37,7 @@ export const comboboxStore = defineStore('combobox', () => {
     const res = await MethodsUtil.requestApiCustom(ComboboxService.StatusUser, TYPE_REQUEST.POST, params).then((value: any) => value)
 
     if (res.code === 200) {
-      statuses.value = res?.data?.map((item: any) => {
+      statusesCombobox.value = res?.data?.map((item: any) => {
         return {
           ...item,
           value: t(item.value),
@@ -45,14 +50,14 @@ export const comboboxStore = defineStore('combobox', () => {
   const fetchTypeUsersCombobox = async () => {
     const res = await MethodsUtil.requestApiCustom(ComboboxService.TypeUsers, TYPE_REQUEST.GET).then((value: any) => value)
     if (res.code === 200)
-      userType.value = res?.data || []
+      userTypeCombobox.value = res?.data || []
   }
 
   // Lấy danh sách nhóm người dùng
   const fetchGroupUserCombobox = async () => {
     const res = await MethodsUtil.requestApiCustom(ComboboxService.GroupUser, TYPE_REQUEST.GET).then((value: any) => value)
     if (res.code === 200)
-      groupUser.value = res?.data || []
+      groupUserCombobox.value = res?.data || []
   }
 
   // Lấy danh sách cơ cấu tổ chức
@@ -61,7 +66,7 @@ export const comboboxStore = defineStore('combobox', () => {
 
     // const res = await fetchData(ComboboxService.AllOrgStruct, TYPE_REQUEST.GET).then((value: any) => value)
     if (res.code === 200 && res.data)
-      organizations.value = res?.data || []
+      organizationsCombobox.value = res?.data || []
   }
 
   // Lấy danh sách cơ cấu tổ chức
@@ -70,7 +75,7 @@ export const comboboxStore = defineStore('combobox', () => {
 
     // const res = await fetchData(ComboboxService.AllOrgStruct, TYPE_REQUEST.GET).then((value: any) => value)
     if (res.code === 200 && res.data)
-      organizations.value = res?.data || []
+      organizationsCombobox.value = res?.data || []
   }
 
   // get country'
@@ -140,7 +145,7 @@ export const comboboxStore = defineStore('combobox', () => {
     //
   })
   onBeforeUnmount(() => {
-    organizations.value = []
+    organizationsCombobox.value = []
   })
 
   const listTopicCourse = ref([])
@@ -148,17 +153,29 @@ export const comboboxStore = defineStore('combobox', () => {
     const { data } = await MethodsUtil.requestApiCustom(ComboboxService.topicCourse, TYPE_REQUEST.GET)
     listTopicCourse.value = data
   }
+  const reset = () => {
+    statusesCombobox.value = []
+    organizationsCombobox.value = []
+    userTypeCombobox.value = []
+    groupUserCombobox.value = []
+    country.value = []
+    provinces.value = []
+    districts.value = []
+    wards.value = []
+    userLevels.value = []
+  }
   return {
-    organizations,
-    statuses,
-    userType,
-    groupUser,
+    organizationsCombobox,
+    statusesCombobox,
+    userTypeCombobox,
+    groupUserCombobox,
     country,
     provinces,
     districts,
     wards,
     userLevels,
     listTopicCourse,
+    addFromCombobox,
     fetchStatusUsersCombobox,
     fetchTypeUsersCombobox,
     fetchTOrgStructCombobox,
@@ -170,5 +187,6 @@ export const comboboxStore = defineStore('combobox', () => {
     fetchWards,
     getListTopicCourse,
     fetchUserLevels,
+    reset,
   }
 })

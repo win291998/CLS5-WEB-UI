@@ -61,8 +61,17 @@ const handleClickBtn = (type: string) => {
   emit('click', type)
 }
 
+const timer = ref<any>(null)
 const handleSearch = (value: any) => {
-  emit('search', value)
+  if (timer.value) {
+    clearTimeout(timer.value)
+    timer.value = null
+  }
+  timer.value = setTimeout(() => {
+    console.log(value)
+
+    emit('search', value)
+  }, 500)
 }
 </script>
 

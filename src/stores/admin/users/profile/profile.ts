@@ -123,7 +123,6 @@ export const profileUserManagerStore = defineStore('profileUserManager', () => {
   })
   const updateSchema = () => {
     schema.value = null
-    console.log(route.params.id)
 
     if (!Number(route.params.id))
       schema.value = { ...schemaInit, ...schemaPass }
@@ -169,8 +168,6 @@ export const profileUserManagerStore = defineStore('profileUserManager', () => {
   }
 
   const resetData = () => {
-    console.log('resetData')
-
     isShowButton.value = true
 
     router.replace({ name: 'admin-organization-users-profile-add', params: { tab: 'infor' } })
@@ -195,10 +192,9 @@ export const profileUserManagerStore = defineStore('profileUserManager', () => {
     idUpdate.value = null
 
     resetForm()
-    if (myFormUserInfor.value) {
+    if (myFormUserInfor.value)
       myFormUserInfor.value.resetForm()
-      console.log(myFormUserInfor.value)
-    }
+
     updateSchema()
     idUpdate.value = null
   }

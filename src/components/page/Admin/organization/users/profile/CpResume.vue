@@ -318,7 +318,7 @@ const handleUpdateExperences = (experences: any, edit: boolean) => {
                   size="16"
                   class="color-primary mr-2"
                 />
-                <span class="color-primary  align-center">{{ $t('add') }}</span>
+                <span class="color-primary  align-center">{{ $t('Add-new') }}</span>
               </BLink>
             </VCol>
           </VRow>
@@ -410,7 +410,7 @@ const handleUpdateExperences = (experences: any, edit: boolean) => {
                   size="16"
                   class="color-primary mr-2"
                 />
-                <span class="color-primary  align-center">{{ $t('add') }}</span>
+                <span class="color-primary  align-center">{{ $t('Add-new') }}</span>
               </BLink>
             </VCol>
           </VRow>
