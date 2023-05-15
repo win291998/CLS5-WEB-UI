@@ -7,6 +7,8 @@ interface Props {
   confirmationMsgSubTitle?: string
   isDialogVisible: boolean
   type: number
+  minWidth?: number
+  maxWidth?: number
   icon?: string
   variant?: string
   color?: string
@@ -27,6 +29,8 @@ const props = withDefaults(defineProps<Props>(), ({
   buttonOkName: 'ok-title',
   buttonCancleName: 'cancel-title',
   isHideFooter: false,
+  minWidth: 300,
+  maxWidth: 300,
 }))
 
 const emit = defineEmits<Emit>()
@@ -62,13 +66,14 @@ const onCancel = () => {
 <template>
   <!-- 👉 Confirm Dialog -->
   <VDialog
-    max-width="500"
+    :min-width="minWidth"
+    :max-width="maxWidth"
     :model-value="props.isDialogVisible"
     close-on-back
     @update:model-value="updateModelValue"
   >
-    <VCard class="text-center px-10 py-6">
-      <VCardText class="noti-content mb-2">
+    <VCard class="text-center pa-6">
+      <VCardText class="noti-content">
         <div class="d-flex justify-center mb-5">
           <div class="icon-noti">
             <VIcon
@@ -100,13 +105,14 @@ const onCancel = () => {
 
       <VCardActions
         v-if="!isHideFooter"
-        class="align-center justify-center gap-2"
+        class="align-center justify-center gap-2 noti-content"
       >
         <CmButton
           variant="outlined"
           bg-color="bg-white"
           color="dark"
           text-color="color-dark"
+          class="w-50"
           @click="onCancel"
         >
           {{ t(buttonCancleName) }}
@@ -114,6 +120,7 @@ const onCancel = () => {
 
         <CmButton
           variant="elevated"
+          class="w-50"
           :color="color || checkTypeDialog(type).color"
           @click="onConfirmation"
         >
@@ -126,7 +133,11 @@ const onCancel = () => {
 
 <style lang="scss">
 @use "@/styles/style-global.scss" as *;
-
+.v-dialog {
+  .v-card{
+    border-radius: 12px !important;
+  }
+}
 .text-title-noti {
   color: $color-gray-900;
 }

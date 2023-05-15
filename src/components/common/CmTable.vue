@@ -225,7 +225,6 @@ onMounted(() => {
       theme-color="#1849a9"
       :table-min-height="minHeight"
       :item-key="keyid"
-      fixed-expand
       click-row-to-expand
       hide-footer
       :body-row-class-name="rowClassName"

@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import DateUtil from '@/utils/DateUtil'
 import ApiUser from '@/api/user/index'
 import MethodsUtil from '@/utils/MethodsUtil'
-import DateUtil from '@/utils/DateUtil'
 import { TYPE_REQUEST } from '@/typescript/enums/enums'
 import StringUtil from '@/utils/StringUtil'
 import toast from '@/plugins/toast'
@@ -102,14 +102,14 @@ const disabledDelete = computed(() => !data.listId.length)
 // Function to handle when click button Delete
 const deleteItem = (id: number) => {
   data.deleteIds = [id as never]
-  modalContent.value = t('users.user.action-modal.delete')
+  modalContent.value = t('delete')
   isShowDialogNoti.value = true
 }
 
 // click  multi delete btn to show modal confirm
 const deleteItems = () => {
   data.deleteIds = data.listId
-  modalContent.value = t('users.user.action-modal.delete')
+  modalContent.value = t('delete')
   isShowDialogNoti.value = true
 }
 
@@ -370,6 +370,23 @@ const actionUpdate = [
 
 ]
 
+const handlerActionHeader = (type: any) => {
+  console.log(type)
+  switch (type) {
+    case 'handlerAddButton':
+
+      router.push({ name: 'admin-organization-users-profile-add', params: { tab: 'infor' } })
+      break
+    case 'handlerApproveButton':
+
+      router.push({ name: 'admin-organization-user-approve' })
+      break
+
+    default:
+      break
+  }
+}
+
 // watch
 watch(() => route.path, value => {
   // console.log(value)
@@ -391,7 +408,7 @@ window.hideAllPageLoading()
       :action-add="actionAdd"
       :action-update="actionUpdate"
       @exportExcel="exportExcel"
-      @click="router.push({ name: 'admin-organization-users-profile-add', params: { tab: 'infor' } })"
+      @click="handlerActionHeader"
     />
   </div>
   <div
@@ -493,8 +510,9 @@ window.hideAllPageLoading()
   <CpConfirmDialog
     :type="2"
     variant="outlined"
-    :confirmation-msg-sub-title="t('users.user.action-modal.delete')"
-    :confirmation-msg="t('users.branch.deleteUser')"
+    :max-width="400"
+    :confirmation-msg-sub-title="t('delete')"
+    :confirmation-msg="t('deleteUser')"
     :is-dialog-visible="isShowDialogNoti"
     @update:isDialogVisible="updateDialogVisible"
     @confirm="confirmDialog"

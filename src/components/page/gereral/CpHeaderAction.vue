@@ -1,13 +1,13 @@
 <script setup lang="ts">
 const props = withDefaults(defineProps<Props>(), ({
   isDelete: false,
-  disabledDelete: false,
   isBack: false,
   disabledBack: false,
   isApprove: false,
-  disabledApprove: false,
   isFillter: true,
   isAdd: false,
+  disabledDelete: false,
+  disabledApprove: false,
   disabledFillter: false,
 }))
 
@@ -151,10 +151,11 @@ const handleSearch = (value: any) => {
             bg-color="bg-white"
             color="color-dark-300"
             text-color="color-dark"
+            :size-icon="20"
+            icon="ic:round-filter-list"
+            :title="isShowFilter ? t('hide-filter') : t('show-filter')"
             @click="handleClickBtn('fillter')"
-          >
-            {{ isShowFilter ? t('hide-filter') : t('show-filter') }}
-          </CmButton>
+          />
         </VCol>
       </VRow>
     </VCol>
