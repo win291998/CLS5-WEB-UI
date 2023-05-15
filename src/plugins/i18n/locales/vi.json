@@ -3084,6 +3084,7 @@
   "SHA_Approved": "Đã duyệt",
   "SHA_NoApproved": "Đang chỉnh sửa",
   "SHA_Declined": "Trả lại",
+  "ActionDeclined": "Trả lại",
   "USR_ValueMaxLength10": "Giá trị có độ dài tối đa 10",
   "CSE_TimeFinishLargeTime": "Thời gian hoàn thành lớn hơn thời gian bài học",
   "QUE_AgreeExamFailed": "Duyệt kỳ thi thất bại",

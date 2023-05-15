@@ -218,6 +218,27 @@ export default [
             name: 'admin-organization-user-import-file-add-user',
             component: () => import('@/pages/admin/organization/users/import-file/AddUser.vue'),
           },
+          {
+            path: 'users-approve',
+            meta: {
+              requireAuth: {
+                permissionKey: 'UserManaging',
+                permissionValue: 1,
+              },
+              breadcrumb: [
+                {
+                  title: 'user-list',
+                  to: { name: 'admin-organization-users-manager' },
+                },
+                {
+                  title: 'browse-user',
+                  active: true,
+                },
+              ],
+            },
+            name: 'admin-organization-user-approve',
+            component: () => import('@/pages/admin/organization/users/approve/Approve.vue'),
+          },
         ],
       },
       {

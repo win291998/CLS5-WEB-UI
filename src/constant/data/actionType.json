@@ -60,7 +60,7 @@
       "id": 9,
       "name": "ActionAgree",
       "icon": "prime-check-circle",
-      "color": "color-success",
+      "color": "success",
       "note": "Duyệt"
     },
     {
@@ -109,6 +109,13 @@
       "id": 16,
       "name": "AddOrStructure",
       "icon": "tabler:circle-plus",
+      "color": "orange",
+      "note": ""
+    },
+    {
+      "id": 17,
+      "name": "ActionDeclined",
+      "icon": "bi:arrow-return-left",
       "color": "orange",
       "note": ""
     }

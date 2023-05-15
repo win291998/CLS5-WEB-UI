@@ -79,14 +79,11 @@ const optionsModel = computed(() => {
 
     return item
   })
-  console.log(optionsModels)
 
   return optionsModels || []
 })
 
 const fetchOptions = (options: any, search: any) => {
-  console.log(123)
-
   const searchKey = StringUtil.removeAccents(search)
 
   const optionsFuse = {

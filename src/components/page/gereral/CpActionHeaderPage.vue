@@ -34,7 +34,10 @@ interface Emit {
 const router = useRouter()
 
 const handlerPreButton = () => {
-  emit('click', 'handlerPreButton')
+  emit('click', 'handlerAddButton')
+}
+const handlerApproveButton = () => {
+  emit('click', 'handlerApproveButton')
 }
 </script>
 
@@ -92,6 +95,7 @@ const handlerPreButton = () => {
         <CmButton
           bg-color="bg-success"
           text-color="color-white"
+          @click="handlerApproveButton"
         >
           {{ titleAprove }}
         </CmButton>

@@ -125,7 +125,7 @@ if (window._.isEmpty(groupUserCombobox.value))
       sm="4"
     >
       <CmDateTimePicker
-        v-model="formFilter.timeFrom"
+        :model-value="formFilter.timeFrom"
         :text="LABEL.FILLTER4"
         placeholder="dd/mm/yyyy"
         @update:model-value="change"
@@ -137,7 +137,7 @@ if (window._.isEmpty(groupUserCombobox.value))
       sm="4"
     >
       <CmDateTimePicker
-        v-model="formFilter.timeTo"
+        :model-value="formFilter.timeTo"
         :text="LABEL.FILLTER5"
         placeholder="dd/mm/yyyy"
         @update:model-value="change"
