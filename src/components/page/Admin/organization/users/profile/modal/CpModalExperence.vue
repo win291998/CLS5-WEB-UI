@@ -30,7 +30,7 @@ const emit = defineEmits<Emit>()
 
 const CmDialogs = defineAsyncComponent(() => import('@/components/common/CmDialogs.vue'))
 const CmSelect = defineAsyncComponent(() => import('@/components/common/CmSelect.vue'))
-const CmTextArea = defineAsyncComponent(() => import('@/components/common/CmtextArea.vue'))
+const CmTextArea = defineAsyncComponent(() => import('@/components/common/CmTextArea.vue'))
 const CmDateTimePicker = defineAsyncComponent(() => import('@/components/common/CmDateTimePicker.vue'))
 const CmTextField = defineAsyncComponent(() => import('@/components/common/CmTextField.vue'))
 const CmCheckBox = defineAsyncComponent(() => import('@/components/common/CmCheckBox.vue'))

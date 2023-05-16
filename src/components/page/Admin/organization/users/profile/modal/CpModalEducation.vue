@@ -31,7 +31,7 @@ const emit = defineEmits<Emit>()
 const CmDialogs = defineAsyncComponent(() => import('@/components/common/CmDialogs.vue'))
 const CmSelect = defineAsyncComponent(() => import('@/components/common/CmSelect.vue'))
 const CmDateTimePicker = defineAsyncComponent(() => import('@/components/common/CmDateTimePicker.vue'))
-const CmTextArea = defineAsyncComponent(() => import('@/components/common/CmtextArea.vue'))
+const CmTextArea = defineAsyncComponent(() => import('@/components/common/CmTextArea.vue'))
 
 /**
  * lib

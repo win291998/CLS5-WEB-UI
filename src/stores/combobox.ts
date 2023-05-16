@@ -25,6 +25,10 @@ export const comboboxStore = defineStore('combobox', () => {
   const districts = ref<combobox[]>([])
   const wards = ref<combobox[]>([])
   const userLevels = ref<combobox[]>([])
+  const ownerCombobox = ref<any>({
+    data: [],
+    totalRecord: 0,
+  })
   const addFromCombobox = ref([
     { key: t('direct'), value: 1 },
     { key: t('add-from-file'), value: 2 },
@@ -152,6 +156,25 @@ export const comboboxStore = defineStore('combobox', () => {
       })
     })
   }
+
+  // get chủ sở hữu
+  const getComboboxOwner = async (vSelectOwner: any, loadMore?: any) => {
+    // loadMore dùng khi infinity scroll
+    const params = {
+      pageSize: vSelectOwner.pageSize,
+      pageNumber: vSelectOwner.pageNumber,
+      keyword: vSelectOwner.search,
+      excludeIds: vSelectOwner.excludeList,
+    }
+    await MethodsUtil.requestApiCustom(ComboboxService.Owner, TYPE_REQUEST.POST, params).then((value: any) => {
+      console.log(value)
+      ownerCombobox.value = {
+        data: value.data?.pageLists.map((item: any) => ({ ...item, name: `${item.lastName} ${item.firstName}` })),
+        totalRecord: value.data.totalRecord,
+      }
+    })
+  }
+
   onMounted(() => {
     //
   })
@@ -188,6 +211,7 @@ export const comboboxStore = defineStore('combobox', () => {
     listTopicCourse,
     addFromCombobox,
     titleUserCombobox,
+    ownerCombobox,
     fetchStatusUsersCombobox,
     fetchTypeUsersCombobox,
     fetchTOrgStructCombobox,
@@ -200,6 +224,7 @@ export const comboboxStore = defineStore('combobox', () => {
     fetchWards,
     getListTopicCourse,
     fetchUserLevels,
+    getComboboxOwner,
     reset,
   }
 })
