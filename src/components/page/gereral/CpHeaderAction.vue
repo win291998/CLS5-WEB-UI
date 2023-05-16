@@ -17,6 +17,7 @@ interface Emit {
   (e: 'click', type: string): void
   (e: 'deleteMultiple'): void
   (e: 'addHandler'): void
+  (e: 'back'): void
   (e: 'search', type: any): void
 }
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
@@ -52,6 +53,9 @@ const handleClickBtn = (type: string) => {
       break
     case 'addHandler':
       emit('addHandler')
+      break
+    case 'back':
+      emit('back')
       break
 
     default:

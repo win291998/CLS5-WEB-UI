@@ -271,9 +271,9 @@ export const profileUserManagerStore = defineStore('profileUserManager', () => {
   }
 
   const handleUser = (bvModalEvt: any, type: any) => {
-    values.firstName = values?.firstName.trim()
-    values.lastName = values?.lastName.trim()
-    values.userName = values?.userName.trim()
+    values.firstName = values?.firstName?.trim()
+    values.lastName = values?.lastName?.trim()
+    values.userName = values?.userName?.trim()
 
     if (idUpdate.value === null)
       handlesCreateUser(bvModalEvt, values, type)

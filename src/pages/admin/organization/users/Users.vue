@@ -14,6 +14,7 @@ const CpHeaderAction = defineAsyncComponent(() => import('@/components/page/gere
 const CpUserFilter = defineAsyncComponent(() => import('@/components/page/Admin/organization/users/CpUserFilter.vue'))
 const CmTable = defineAsyncComponent(() => import('@/components/common/CmTable.vue'))
 const CmAccodion = defineAsyncComponent(() => import('@/components/common/CmAccodion.vue'))
+const CmChip = defineAsyncComponent(() => import('@/components/common/CmChip.vue'))
 const CpConfirmDialog = defineAsyncComponent(() => import('@/components/page/gereral/CpConfirmDialog.vue'))
 const CpModalUpdateStatus = defineAsyncComponent(() => import('@/components/page/Admin/organization/users/CpModalUpdateStatus.vue'))
 const CpCustomInfo = defineAsyncComponent(() => import('@/components/page/gereral/CpCustomInfo.vue'))
@@ -41,7 +42,7 @@ const headers = reactive([
 
 const orgModels = {
   value: 1,
-  label: 'Cơ cấu tổ chức',
+  label: t('orgStruct'),
   icon: 'tabler-briefcase',
   colorClass: 'color-error',
   content: [],
@@ -467,7 +468,7 @@ window.hideAllPageLoading()
           <span>{{ DateUtil.formatDateToDDMM(context.registeredDate) }}</span>
         </div>
         <div v-if="col === 'statusName'">
-          <VChip
+          <CmChip
             class="ma-2"
             :class="MethodsUtil.checkStatusTypeUser(context.statusName)?.color"
           >
@@ -477,7 +478,7 @@ window.hideAllPageLoading()
               size="12"
             />
             <span>{{ t(MethodsUtil.checkStatusTypeUser(context.statusName)?.name) }}</span>
-          </VChip>
+          </CmChip>
         </div>
       </template>
       <template #tableSub>

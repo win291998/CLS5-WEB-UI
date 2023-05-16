@@ -249,7 +249,6 @@ defineExpose({
                 <CpOrganizationSelect
                   v-model="context.id"
                   :placeholder="t('name-structure')"
-                  :close-on-select="true"
                   @update:modelValue="changeOrg(context.key, $event)"
                 />
               </Field>

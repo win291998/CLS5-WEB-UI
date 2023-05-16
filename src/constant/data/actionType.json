@@ -119,5 +119,23 @@
       "color": "orange",
       "note": ""
     }
+  ],
+  "ApproveType": [
+    {
+      "id": 1,
+      "name": "approved",
+      "icon": "prime-check-circle",
+      "color": "color-success",
+      "value": 1,
+      "note": "Duyệt"
+    },
+    {
+      "id": 2,
+      "name": "rejected",
+      "icon": "tabler:circle-minus",
+      "color": "color-error",
+      "value": 2,
+      "note": "Từ chối"
+    }
   ]
 }

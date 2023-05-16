@@ -15,17 +15,17 @@ interface Props {
   rowClassName?: string
   customId?: string
 }
-
+const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 const headers = reactive([
   { text: 'Tổ chức' },
 ])
 const items = reactive([
   {
-    label: 'Cơ cấu tổ chức',
+    label: t('orgStruct'),
     icon: 'tabler:briefcase',
     colorClass: 'color-error',
     content: [
-      { content: 'Cơ cấu tổ chức' }, { content: 'Cơ cấu tổ chức' },
+      { content: t('orgStruct') }, { content: 'orgStruct' },
     ],
   },
   {
