@@ -59,6 +59,7 @@ const skeletonComponent = (type: string) => {
       height="500"
       width="100%"
       viewBox="0 0 100% 550"
+      :speed="1"
       primary-color="#F2F4F7"
       secondary-color="#D0D5DD"
     >

@@ -18,12 +18,12 @@ const { statusesCombobox, organizationsCombobox, userTypeCombobox, groupUserComb
 const { fetchStatusUsersCombobox, fetchTypeUsersCombobox, fetchTOrgStructCombobox, fetchGroupUserCombobox } = store
 
 const LABEL = Object.freeze({
-  FILLTER1: 'Tình trạng hoạt động',
-  FILLTER2: 'Cơ cấu tổ chức',
-  FILLTER3: 'Vai trò người dùng',
+  FILLTER1: t('status-action'),
+  FILLTER2: t('orgStruct'),
+  FILLTER3: t('role-user'),
   FILLTER4: t('start-day'),
   FILLTER5: t('to-day'),
-  FILLTER6: 'Được thêm từ',
+  FILLTER6: t('add-user-from'),
   FILLTER7: t('group-management'),
   FILLTER8: t('add-user-from'),
 })

@@ -3,6 +3,7 @@ import CmButton from '@/components/common/CmButton.vue'
 import { DialogType } from '@/constant/data/notification.json'
 
 interface Props {
+  keyModal?: string
   confirmationMsg: string
   confirmationMsgSubTitle?: string
   isDialogVisible: boolean
@@ -20,7 +21,7 @@ interface Props {
 
 interface Emit {
   (e: 'update:isDialogVisible', value: boolean): void
-  (e: 'confirm', value: boolean): void
+  (e: 'confirm', value: boolean, key?: string): void
 }
 
 const props = withDefaults(defineProps<Props>(), ({
@@ -53,7 +54,7 @@ const updateModelValue = (val: boolean) => {
 }
 
 const onConfirmation = () => {
-  emit('confirm', true)
+  emit('confirm', true, props?.keyModal)
   updateModelValue(false)
 }
 
@@ -144,65 +145,5 @@ const onCancel = () => {
 
 .text-title-sub-noti {
   color: $color-gray-500;
-}
-
-.icon-noti {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  block-size: 50px;
-  inline-size: 50px;
-
-  .ring1 {
-    position: absolute;
-    z-index: 5;
-    border-radius: 50%;
-    block-size: 32px;
-    inline-size: 32px;
-  }
-
-  .ring2 {
-    position: absolute;
-    z-index: 0;
-    border-radius: 50%;
-    block-size: 52px;
-    inline-size: 52px;
-  }
-
-  .ring1-type-0 {
-    background-color: $color-success-100;
-  }
-
-  .ring2-type-0 {
-    background-color: $color-success-50;
-  }
-
-  .ring1-type-1 {
-    background-color: $color-warning-100;
-  }
-
-  .ring2-type-1 {
-    background-color: $color-warning-50;
-  }
-
-  .ring1-type-2 {
-    background-color: $color-error-100;
-  }
-
-  .ring2-type-2 {
-    background-color: $color-error-50;
-  }
-
-  .ring1-type-3 {
-    background-color: $color-primary-100;
-  }
-
-  .ring2-type-3 {
-    background-color: $color-primary-50;
-  }
-
-  .noti-zindex {
-    z-index: 10;
-  }
 }
 </style>

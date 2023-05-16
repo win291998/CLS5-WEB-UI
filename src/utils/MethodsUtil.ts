@@ -107,9 +107,16 @@ export default class MethodsUtil {
 
   static checkStatusTypeUser = (key: number | string) => {
     if (typeof key === 'number')
-      return StatusTypeUser.find(item => item.id === key)
+      return StatusTypeUser.find((item: any) => item.id === key)
 
-    return StatusTypeUser.find(item => item.name === key)
+    return StatusTypeUser.find((item: any) => item.name === key)
+  }
+
+  static checkStatus = (key: number | string, data: any) => {
+    if (typeof key === 'number')
+      return data.find((item: any) => item.id === key)
+
+    return data.find((item: any) => item.name === key)
   }
 
   static formatFullName = (firstName: string, lastName: string) => {

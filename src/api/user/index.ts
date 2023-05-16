@@ -29,6 +29,12 @@ const UserService = {
   GetListCustomerRequest: '/Customer/get-list',
   GetRegisterConfig: '/RegistryConfiguration/get',
 
+  /** POST */
+  PostApproveCustomer: 'Customer/approve',
+
+  /** Put */
+  PutReturnCustomer: 'Customer/deny',
+
   /** delete */
   deleteCustomer: '/Customer/delete', // Xóa người dùng
 

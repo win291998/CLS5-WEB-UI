@@ -33,7 +33,7 @@ export default class ArraysUtil {
     return data.reduce((object, permiss) => {
       const { permissions, children, ...rest } = permiss // loại bỏ permissions ra khỏi object
 
-      const perId = permiss.orgId
+      const perId = permiss.orgId ? permiss.orgId : permiss.id
       object[`node-${perId}`] = rest
       object[`node-${perId}`].ids = permiss.id
       object[`node-${perId}`].text = t(object[`node-${perId}`].name)

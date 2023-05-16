@@ -49,10 +49,11 @@ const onCancel = async () => {
 }
 const onConfirm = async () => {
   myFormAdd.value.validate().then(async (success: any) => {
-    if (success) {
+    if (success.valid) {
       window.showAllPageLoading('FULL-OPACITY')
       await MethodsUtil.requestApiCustom(`${apiInfo.name}/${apiInfo.code}`, TYPE_REQUEST.GET)
         .then((data: any) => {
+          toast('SUCCESS', t('approve-success'))
           emit('confirm', data)
           emit('update:isDialogVisible', false)
         })

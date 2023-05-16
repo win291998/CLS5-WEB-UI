@@ -227,7 +227,9 @@ const onChangeOrgChecked = (val: any, node: any) => {
           v-if="!node.children.length"
           class="dot-tree"
         />
+
         <CmCheckBox
+          v-if="config.checkboxes"
           v-model:model-value="node.state.checked"
           :false-value="false"
           class="checkbox-tree-view"

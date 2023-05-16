@@ -197,10 +197,14 @@ defineExpose({
   items: props.items,
 })
 onUpdated(() => {
-  isLoading.value = false
+  setTimeout(() => {
+    isLoading.value = false
+  }, 1000)
 })
 onMounted(() => {
-  isLoading.value = false
+  setTimeout(() => {
+    isLoading.value = false
+  }, 1000)
 })
 
 // watch
@@ -332,7 +336,7 @@ onMounted(() => {
           >
             <div class="action-more px-2">
               <CmDropDown
-                :list-item="ArrayUtil.sliceArray(context?.actions, Globals.MAX_ITEM_ACTION)"
+                :list-item="ArrayUtil.sliceArray(context?.actions, Globals.MAX_ITEM_ACTION - 1)"
                 :data="context"
                 custom-key="name"
                 :type="1"
@@ -373,7 +377,6 @@ onMounted(() => {
             v-model="context[itemsHeader.value]"
             :max-height="100"
             :placeholder="t('organizational')"
-            close-on-select
             :type-org="itemsHeader?.typeOrg || 0"
             @update:modelValue="changeCellvalue($event, 'organizational', context?.key, itemsHeader.value, itemsHeader.valueId)"
           />

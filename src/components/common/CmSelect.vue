@@ -11,6 +11,7 @@ interface Props {/** ** Interface */
   multiple?: boolean
   disabled?: boolean
   returnObject?: boolean
+  appendToBody?: boolean
   customKey?: string
   itemValue?: string
   label?: string
@@ -31,6 +32,7 @@ const props = withDefaults(defineProps<Props>(), ({
   maxItem: Globals.MAX_ITEM_SELECT_MULT,
   multiple: false,
   returnObject: false,
+  appendToBody: true,
   customKey: 'key',
   itemValue: 'value',
   label: undefined,
@@ -128,6 +130,7 @@ watch(() => props.modelValue, newValue => {
         :class="{ 'is-invalid': !!errors?.length }"
         :disabled="disabled"
         :input-id="(option: any) => option.id"
+        :append-to-body="appendToBody "
         @open="open"
         @close="close"
         @update:modelValue="handleChangeValue"
@@ -187,5 +190,8 @@ watch(() => props.modelValue, newValue => {
 .cm-select .vs__dropdown-toggle{
   border-radius: $border-radius-xs;
   background: $color-input-default;
+}
+.vs__dropdown-menu{
+  z-index: 9999 !important;
 }
 </style>
