@@ -8,8 +8,10 @@ interface Props {/** ** Interface */
   modelValue?: any
   items?: Array<any>
   maxItem?: number
+  totalRecord?: number
   multiple?: boolean
   disabled?: boolean
+  isInfinityScroll?: boolean
   returnObject?: boolean
   appendToBody?: boolean
   customKey?: string
@@ -24,6 +26,7 @@ interface Props {/** ** Interface */
 interface Emit {
   (e: 'update:modelValue', value: any): void
   (e: 'open', value: any): void
+  (e: 'isIntersecting', value: any): void
 }
 
 /** ** Khởi tạo prop emit */
@@ -39,12 +42,18 @@ const props = withDefaults(defineProps<Props>(), ({
   bgColor: 'white',
   text: undefined,
   placeholder: 'Chọn',
+  totalRecord: 0,
+  isInfinityScroll: true,
 }))
 
 const emit = defineEmits<Emit>()
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 const stackValue = ref()
 const valueCurrent = ref(null)
+const observer = ref<any>(null)
+const load = ref()
+const ul = ref()
+const scrollTop = ref()
 
 /** method */
 
@@ -58,20 +67,6 @@ const messageError = computed(() => {
 const handleChangeValue = (e: any) => {
   emit('update:modelValue', valueCurrent.value)
 }
-
-const open = (e: any) => {
-  if (!props.multiple) {
-    stackValue.value = window._.clone(valueCurrent.value)
-    valueCurrent.value = null
-  }
-  emit('open', valueCurrent)
-}
-
-const close = (e: any) => {
-  if (!valueCurrent.value && !props.multiple)
-    valueCurrent.value = stackValue.value
-}
-
 const optionsModel = computed(() => {
   const optionsModels = props.items?.map((item: any) => {
     item = {
@@ -84,6 +79,31 @@ const optionsModel = computed(() => {
 
   return optionsModels || []
 })
+const hasNextPage = computed(() => {
+  return optionsModel.value.length < props.totalRecord
+})
+const open = (e: any) => {
+  if (!props.multiple) {
+    stackValue.value = window._.clone(valueCurrent.value)
+    valueCurrent.value = null
+  }
+  if (hasNextPage && props.isInfinityScroll) {
+    nextTick(() => {
+      observer.value.observe(load.value)
+    })
+  }
+  emit('open', valueCurrent)
+}
+
+const close = (e: any) => {
+  if (!valueCurrent.value && !props.multiple)
+    valueCurrent.value = stackValue.value
+  if (props.isInfinityScroll) {
+    observer.value.disconnect()
+    ul.value = null
+    scrollTop.value = 0
+  }
+}
 
 const fetchOptions = (options: any, search: any) => {
   const searchKey = StringUtil.removeAccents(search)
@@ -104,6 +124,21 @@ const fetchOptions = (options: any, search: any) => {
     : fuse.list
 }
 
+const infiniteScrollLoading = async ([{ isIntersecting, target }]: any) => {
+  if (isIntersecting) {
+    ul.value = target.offsetParent
+    scrollTop.value = target.offsetParent?.scrollTop
+    emit('isIntersecting', target)
+  }
+}
+onMounted(() => {
+  if (props.isInfinityScroll)
+    observer.value = new IntersectionObserver(infiniteScrollLoading)
+})
+onUpdated(() => {
+  if (ul.value && props.isInfinityScroll)
+    ul.value.scrollTop = scrollTop.value
+})
 watch(() => props.modelValue, newValue => {
   valueCurrent.value = newValue
 }, { immediate: true })
@@ -143,6 +178,17 @@ watch(() => props.modelValue, newValue => {
             v-else
             style="opacity: 0.5;"
           >{{ t('start-search') }}</em>
+        </template>
+        <template #list-footer>
+          <div v-if="isInfinityScroll">
+            <div
+              v-show="hasNextPage"
+              ref="load"
+              class="123"
+            >
+              <slot name="infinityItem" />
+            </div>
+          </div>
         </template>
       </ISelect>
       <div
@@ -193,5 +239,7 @@ watch(() => props.modelValue, newValue => {
 }
 .vs__dropdown-menu{
   z-index: 9999 !important;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
 }
 </style>

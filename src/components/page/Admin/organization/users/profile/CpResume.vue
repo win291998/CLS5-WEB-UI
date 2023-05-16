@@ -3,7 +3,7 @@ import { formatDateYears } from '@/utils/FilterUtil'
 import { ActionType } from '@/constant/data/actionType.json'
 import { validatorStore } from '@/stores/validatator'
 import { profileUserManagerStore } from '@/stores/admin/users/profile/profile'
-import CmtextArea from '@/components/common/CmtextArea.vue'
+import CmTextArea from '@/components/common/CmTextArea.vue'
 
 const CmDateTimePicker = defineAsyncComponent(() => import('@/components/common/CmDateTimePicker.vue'))
 const CpModalEducation = defineAsyncComponent(() => import('@/components/page/Admin/organization/users/profile/modal/CpModalEducation.vue'))

@@ -17,10 +17,12 @@ import type { typeSkeleton } from '@/typescript/enums/enums'
 
 interface Props {
   type: typeof typeSkeleton[number]
+  height?: number
 }
 
 const props = withDefaults(defineProps<Props>(), ({
   type: 'ContentLoader',
+  height: 500,
 }))
 const skeletonComponent = (type: string) => {
   let component = null
@@ -56,7 +58,7 @@ const skeletonComponent = (type: string) => {
   <div>
     <Component
       :is="skeletonComponent(type)"
-      height="500"
+      :height="height"
       width="100%"
       viewBox="0 0 100% 550"
       :speed="1"
