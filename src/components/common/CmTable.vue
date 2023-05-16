@@ -320,7 +320,7 @@ onMounted(() => {
                 :icon="actionItem?.icon"
                 :size="actionItem?.size || 18"
                 class="align-middle"
-                :class="`color-${actionItem?.color}`"
+                :class="actionItem?.color"
                 @click="actionItem?.action ? actionItem?.action(MethodsUtil.checlActionKey(actionItem, context)) : ''"
               />
               <VTooltip

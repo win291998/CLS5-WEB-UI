@@ -3310,5 +3310,6 @@
   "orgStruct": "Cơ cấu tổ chức",
   "status-action": "Tình trạng hoạt động",
   "role-user": "Vai trò người dùng",
-  "approve-success": "Duyệt người dùng thành công"
+  "approve-success": "Duyệt người dùng thành công",
+  "QuestionService.AddOrStructure": "Thêm"
 }
