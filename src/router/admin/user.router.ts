@@ -347,7 +347,26 @@ export default [
       {
         path: 'org-struct',
         name: 'admin-organization-org-struct',
-        component: () => import('@/pages/admin/organization/org-struct/OrgStruct.vue'),
+        redirect: { name: 'admin-organization-org-struct-list' },
+        meta: {
+          requireAuth: {
+            permissionKey: 'OrganizationalStructureManaging',
+            permissionValue: 1,
+          },
+        },
+        children: [
+          {
+            path: '',
+            name: 'admin-organization-org-struct-list',
+            component: () => import('@/pages/admin/organization/org-struct/OrgStruct.vue'),
+          },
+          {
+            path: 'org-struct/add/:parentId',
+            name: 'admin-organization-org-struct-add',
+            component: () => import('@/pages/admin/organization/org-struct/edit/EditOrgStruct.vue'),
+          },
+        ],
+        component: () => import('@/pages/admin/organization/org-struct/Index.vue'),
       },
       {
         path: 'position-title',

@@ -1,9 +1,4 @@
 <script setup lang="ts">
-import {
-  CodeLoader,
-  ContentLoader,
-} from 'vue-content-loader'
-
 const CmSkeleton = defineAsyncComponent(() => import('@/components/common/CmSkeleton.vue'))
 </script>
 

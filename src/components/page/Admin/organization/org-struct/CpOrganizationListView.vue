@@ -8,7 +8,13 @@ import { profileUserManagerStore } from '@/stores/admin/users/profile/profile'
 
 const SkTree = defineAsyncComponent(() => import('@/components/page/gereral/skeleton/SkTree.vue'))
 const CmTreeView = defineAsyncComponent(() => import('@/components/common/CmTreeView.vue'))
+
+/**
+ * lib
+ */
 const { t } = window.i18n()
+const route = useRoute()
+const router = useRouter()
 
 /**
  * store
@@ -56,6 +62,19 @@ const getListOrgStruct = async () => {
 const updateValueOrg = (value: any) => {
   values.value.listOrganizationalStructureId = value
 }
+const handleAction = (value: any, dataResend: any) => {
+  switch (value?.id) {
+    case 16:
+      console.log(value)
+      console.log(dataResend)
+
+      router.push({ name: 'admin-organization-org-struct-add', params: { parentId: dataResend.ids } })
+      break
+
+    default:
+      break
+  }
+}
 onUpdated(() => {
   setTimeout(() => {
     isLoading.value = false
@@ -83,7 +102,9 @@ getListOrgStruct()
       :is-org="false"
       :return-object="false"
       :type-flat-child="true"
+      is-action
       @update:model-value="updateValueOrg"
+      @handleAction="handleAction"
     />
   </div>
 </template>
