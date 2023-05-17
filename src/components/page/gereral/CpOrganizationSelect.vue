@@ -54,8 +54,8 @@ const getAllOrgStruct = async () => {
     const data = window._.cloneDeep(organizationsCombobox.value)
     if (props.excludeId) {
       const positionExclude = data.findIndex((item: any) => item[props.customKey] === props.excludeId)
-
-      organizationsCombobox.value = window._.pullAt(data, positionExclude)
+      window._.pullAt(data, positionExclude)
+      organizationsCombobox.value = data
     }
 
     options.value = ArrayUtil.formatSelectTree(organizationsCombobox.value, 'parentId', props.customKey)

@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { validatorStore } from '@/stores/validatator'
-import { comboboxStore } from '@/stores/combobox'
 import { orgStructManagerStore } from '@/stores/admin/org-struct/OrgStruct'
+import toast from '@/plugins/toast'
+
+const props = withDefaults(defineProps<Props>(), ({}))
 
 /**
  * component
@@ -17,17 +19,24 @@ const SkUser = defineAsyncComponent(() => import('@/components/page/gereral/skel
  * lib
  */
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
+const route = useRoute()
+const router = useRouter()
+
+interface Props {
+  emit?: any
+}
+const { emitEvent } = props.emit()
+
 /**
  * store
  */
 const storeValidate = validatorStore()
 const { schemaOption, Field, Form, useForm, yup } = storeValidate
 const { submitForm } = useForm()
-const storeCombobox = comboboxStore()
-const { ownerCombobox } = storeToRefs(storeCombobox)
-const { getComboboxOwner } = storeCombobox
+
 const storeOrgStruct = orgStructManagerStore()
-const { organization, myFormAddInforOrg, vSelectOwner } = storeToRefs(storeOrgStruct)
+const { organization, myFormAddInforOrg, vSelectOwner, isEdit } = storeToRefs(storeOrgStruct)
+const { getComboboxOwnerInf, resetForm } = storeOrgStruct
 
 /**
  * validate
@@ -45,6 +54,7 @@ const LABEL = Object.freeze({
 })
 
 const isShowButton = ref(true)
+const excludeId = ref()
 
 /**
  * method
@@ -53,39 +63,12 @@ const changeOrg = async () => {
 //
 }
 const backOrg = () => {
-  //
+  router.push({ name: 'admin-organization-org-struct-list', query: organization.value.id ? { navigateFrom: organization.value?.id } : {} })
 }
 const handleOrg = () => {
   //
 }
-const getComboboxOwnerInf = async (loadMore?: any) => {
-  // loadMore dùng khi infinity scroll
-  await getComboboxOwner(vSelectOwner.value).then((value: any) => {
-    console.log(ownerCombobox.value)
-    console.log(vSelectOwner.value)
-    if (ownerCombobox.value.data?.length) {
-      vSelectOwner.value.totalRecord = ownerCombobox.value.totalRecord
-      if (loadMore)
-        vSelectOwner.value.listCombobox = vSelectOwner.value.listCombobox.concat(ownerCombobox.value.data)
 
-      else
-        vSelectOwner.value.listCombobox = ownerCombobox.value?.data
-
-      if (vSelectOwner.value.itemSelected?.id && !loadMore) {
-        const indexOwner = vSelectOwner.value.listCombobox.findIndex((item: any) => item?.id === vSelectOwner.value.itemSelected.id)
-        if (indexOwner === -1) {
-          vSelectOwner.value.listCombobox.splice(0, 0, vSelectOwner.value?.itemSelected)
-          vSelectOwner.value.excludeList = [vSelectOwner.value?.itemSelected.id]
-        }
-      }
-    }
-
-    else {
-      vSelectOwner.value.listCombobox = []
-      vSelectOwner.value.totalRecord = 0
-    }
-  })
-}
 const isIntersecting = () => {
   vSelectOwner.value.pageNumber += 1
   getComboboxOwnerInf(true)
@@ -94,11 +77,27 @@ const handleSaveOrg = async () => {
   console.log(myFormAddInforOrg)
 
   myFormAddInforOrg.value.validate().then(async (success: any) => {
-    if (success.valid)
-      console.log(organization.value.id === organization.value.parentId)
+    if (success.valid) {
+      if (organization.value.id === organization.value.parentId)
+        toast('ERROR', t('parent-invalid'))
+
+      else if (isEdit.value === false)
+        emitEvent('save')
+      else emitEvent('update')
+    }
   })
 }
-getComboboxOwnerInf()
+const handleSaveUpdateOrg = () => {
+  myFormAddInforOrg.value.validate().then(async (success: any) => {
+    if (success.valid)
+      emitEvent('saveAndUpdate')
+  })
+}
+if (route.params.id)
+  excludeId.value = Number(route.params.id)
+onUnmounted(() => {
+  resetForm()
+})
 </script>
 
 <template>
@@ -150,6 +149,7 @@ getComboboxOwnerInf()
                 v-model="organization.parentId"
                 :text="LABEL.TITLE2"
                 :placeholder="LABEL.TITLE2"
+                :exclude-id="excludeId"
                 @update:modelValue="changeOrg"
               />
             </Field>
@@ -196,6 +196,7 @@ getComboboxOwnerInf()
           :title-save-and-update="t('save-and-update')"
           @onCancel="backOrg"
           @onSave="handleSaveOrg"
+          @onSaveUpdate="handleSaveUpdateOrg"
         />
       </div>
     </Form>

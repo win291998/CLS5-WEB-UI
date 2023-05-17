@@ -158,7 +158,7 @@ export const comboboxStore = defineStore('combobox', () => {
   }
 
   // get chủ sở hữu
-  const getComboboxOwner = async (vSelectOwner: any, loadMore?: any) => {
+  const getComboboxOwner = async (vSelectOwner?: any, loadMore?: any) => {
     // loadMore dùng khi infinity scroll
     const params = {
       pageSize: vSelectOwner.pageSize,

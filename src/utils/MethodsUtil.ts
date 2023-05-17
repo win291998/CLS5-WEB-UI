@@ -1,6 +1,8 @@
 import { useI18n } from 'vue-i18n'
 import { ActionType } from '@/constant/data/actionType.json'
 import { StatusTypeUser } from '@/constant/data/status.json'
+import ApiUser from '@/api/user/index'
+import { TYPE_REQUEST } from '@/typescript/enums/enums'
 import axios from '@axios'
 
 type CallbackFunction = (key: string) => any
@@ -129,6 +131,45 @@ export default class MethodsUtil {
       default:
         return `${lastName || '-'} ${firstName || '-'}`
     }
+  }
+
+  // Tìm kiếm thông tin người dùng trong phạm vi danh sách id
+  static searchUserInfoByIds = async (userIds: any, searchKey = null,
+    prosForSearch = null, pageSize = null, pageNumber: any = null,
+    orStructure = [], groupUser = [], categoryTitleId = [], titles = []) => {
+    if (userIds?.length > 0) {
+      const distinctUserIds = [...new Set(userIds)] // Lấy giá trị distict value
+      const params = {
+        userIds: distinctUserIds,
+        searchKey,
+        prosForSearch,
+        orStructure,
+        groupUser,
+        categoryTitleId,
+        titles,
+        pageSize,
+        pageNumber,
+      }
+      params.pageSize = pageSize === null ? userIds.length : pageSize
+      params.pageNumber = pageNumber === null ? 1 : pageNumber
+      const res = await MethodsUtil.requestApiCustom(ApiUser.getPagingUserByList, TYPE_REQUEST.GET, params).then((value: any) => value)
+      return res.data
+    }
+    return { pageLists: [], totalRecord: 0 }
+  }
+
+  static getAllChildrenOfTreeNodeIds = (node: any, nodes: any) => {
+    let listIds: any = []
+    node.children.forEach((item: any) => {
+      listIds.push(Number(item.split('-')?.[1]))
+      if (nodes[item]?.children?.length) {
+        const children = MethodsUtil.getAllChildrenOfTreeNodeIds(nodes[item], nodes)
+        console.log(nodes[item])
+        listIds = listIds.concat(children)
+      }
+    })
+
+    return listIds
   }
 
   // // kiểm tra quyền trên view

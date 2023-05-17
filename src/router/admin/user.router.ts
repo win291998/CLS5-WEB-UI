@@ -361,8 +361,13 @@ export default [
             component: () => import('@/pages/admin/organization/org-struct/OrgStruct.vue'),
           },
           {
-            path: 'org-struct/add/:parentId',
+            path: 'org-struct/:tab/add/:parentId',
             name: 'admin-organization-org-struct-add',
+            component: () => import('@/pages/admin/organization/org-struct/edit/EditOrgStruct.vue'),
+          },
+          {
+            path: 'org-struct/:tab/edit/:id',
+            name: 'admin-organization-org-struct-edit',
             component: () => import('@/pages/admin/organization/org-struct/edit/EditOrgStruct.vue'),
           },
         ],

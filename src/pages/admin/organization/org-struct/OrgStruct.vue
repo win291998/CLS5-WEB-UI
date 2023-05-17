@@ -23,7 +23,3 @@ const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
   </div>
 </template>
 
-  <style scoped>
-
-  </style>
--->

@@ -1,7 +1,22 @@
 <script setup lang="ts">
+import { orgStructManagerStore } from '@/stores/admin/org-struct/OrgStruct'
+
 const CmTab = defineAsyncComponent(() => import('@/components/common/CmTab.vue'))
 const CpInforOrgStructTab = defineAsyncComponent(() => import('@/components/page/Admin/organization/org-struct/edit/CpInforOrgStructTab.vue'))
 const CpTitleOrgStructTab = defineAsyncComponent(() => import('@/components/page/Admin/organization/org-struct/edit/CpTitleOrgStructTab.vue'))
+
+/**
+ * lib
+ */
+const route = useRoute()
+const router = useRouter()
+
+/**
+ * store
+ */
+const storeOrgStruct = orgStructManagerStore()
+const { idOrg, isEdit, organization } = storeToRefs(storeOrgStruct)
+const { getInforOrgById, addOrganizational, updateOrganizational, getComboboxOwnerInf } = storeOrgStruct
 
 /**
  *
@@ -9,18 +24,29 @@ const CpTitleOrgStructTab = defineAsyncComponent(() => import('@/components/page
  */
 const listTab = [
   {
-    key: 'infortab',
+    key: 'infor',
     title: 'info',
     component: CpInforOrgStructTab,
     isRendered: true,
   },
   {
-    key: 'titleTab',
+    key: 'title',
     title: 'title-position',
     component: CpTitleOrgStructTab,
     isRendered: false,
   },
 ]
+getComboboxOwnerInf()
+
+if (route.params.id) {
+  idOrg.value = Number(route.params.id)
+  isEdit.value = true
+  getInforOrgById()
+}
+
+else if (route.params.parentId) {
+  organization.value.parentId = Number(route.params.parentId)
+}
 </script>
 
 <template>
@@ -34,6 +60,9 @@ const listTab = [
         :list-tab="listTab"
         label="tab"
         type="button"
+        @save="addOrganizational(false)"
+        @update="updateOrganizational"
+        @saveAndUpdate="addOrganizational(true)"
       />
     </div>
   </div>
