@@ -28,9 +28,13 @@ const UserService = {
   GetOrganizationalStructure: '/organizationalstructure/get-all',
   GetListCustomerRequest: '/Customer/get-list',
   GetRegisterConfig: '/RegistryConfiguration/get',
+  GetOrgById: '/organizationalstructure/get-by-id',
+  getPagingUserByList: 'user/get-info-user-by-ids',
 
   /** POST */
   PostApproveCustomer: 'Customer/approve',
+  PostOrgCreate: 'organizationalstructure/create',
+  PostOrgUpdate: 'organizationalstructure/update',
 
   /** Put */
   PutReturnCustomer: 'Customer/deny',

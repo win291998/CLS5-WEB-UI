@@ -49,6 +49,7 @@ const getListOrgStruct = async () => {
         },
       }
     }
+    console.log(ArraysUtil.formatSelectTree(value.data, 'parentId', 'id'))
 
     const result = ArraysUtil.formatTreeData(ArraysUtil.unFlatMapTree(ArraysUtil.formatSelectTree(value.data, 'parentId', 'id')), config.roots, t, 'children')
     nodes.value = reactive(result)
@@ -62,13 +63,23 @@ const getListOrgStruct = async () => {
 const updateValueOrg = (value: any) => {
   values.value.listOrganizationalStructureId = value
 }
+const removeNode = (value: any) => {
+  console.log(MethodsUtil.getAllChildrenOfTreeNodeIds(value, nodes.value))
+}
 const handleAction = (value: any, dataResend: any) => {
+  console.log(value)
   switch (value?.id) {
+    case 2:
+      console.log(value)
+      console.log(dataResend)
+
+      removeNode(dataResend)
+      break
     case 16:
       console.log(value)
       console.log(dataResend)
 
-      router.push({ name: 'admin-organization-org-struct-add', params: { parentId: dataResend.ids } })
+      router.push({ name: 'admin-organization-org-struct-add', params: { tab: 'infor', parentId: dataResend.ids } })
       break
 
     default:
