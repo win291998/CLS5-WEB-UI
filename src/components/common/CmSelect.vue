@@ -242,4 +242,17 @@ watch(() => props.modelValue, newValue => {
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;
 }
+.vs__selected-options{
+  width: 90% !important;
+}
+.vs__selected{
+  max-width: 94%;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+.cm-select{
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
 </style>

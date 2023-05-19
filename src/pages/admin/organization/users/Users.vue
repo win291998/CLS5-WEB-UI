@@ -122,7 +122,7 @@ const deleteAction = async () => {
 
   await MethodsUtil.requestApiCustom(ApiUser.UsersDelete, TYPE_REQUEST.POST, params)
     .then(async (value: any) => {
-      toast('SUCCESS', value?.message)
+      toast('SUCCESS', t(value?.message))
       await fectchListUsers()
       data.deleteIds = []
       data.listId = []
@@ -378,7 +378,7 @@ const handlerActionHeader = (type: any) => {
 
       router.push({ name: 'admin-organization-users-profile-add', params: { tab: 'infor' } })
       break
-    case 'handlerApproveButton':
+    case 'handlerCustomButton':
 
       router.push({ name: 'admin-organization-user-approve' })
       break
@@ -401,11 +401,12 @@ window.hideAllPageLoading()
 <template>
   <div>
     <CpActionHeaderPage
-      :title-aprove="t('browse-user')"
+      :title-custom="t('browse-user')"
       :title="t('user-list')"
       is-update-btn
       is-export-btn
-      is-approve-btn
+      is-custom-btn
+      is-custom-group-btn
       :action-add="actionAdd"
       :action-update="actionUpdate"
       @exportExcel="exportExcel"

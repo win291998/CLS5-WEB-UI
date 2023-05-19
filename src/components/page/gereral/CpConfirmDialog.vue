@@ -30,8 +30,8 @@ const props = withDefaults(defineProps<Props>(), ({
   buttonOkName: 'ok-title',
   buttonCancleName: 'cancel-title',
   isHideFooter: false,
-  minWidth: 300,
-  maxWidth: 300,
+  minWidth: 400,
+  maxWidth: 400,
 }))
 
 const emit = defineEmits<Emit>()

@@ -53,13 +53,13 @@ const dataComponent = reactive({
   selectedRowsIds: [], // list id các row table được chọn
   listId: [],
 })
-const disabledDelete = ref(true)
 const isShowDialogNotiDelete = ref(false)
 const isShowDialogAddGroup = ref(false)
 const queryBodyAdd = reactive({
   id: props.idUser !== null ? props.idUser : Number(route.params.id),
   listId: [],
 })
+const disabledDelete = computed(() => !dataComponent.selectedRowsIds.length)
 
 /**
  * method
@@ -101,11 +101,11 @@ const handleDeleteMultiple = async (value: any) => {
   isShowDialogNotiDelete.value = true
 }
 const handlePageClick = async (value: any) => {
-  // console.log('handlePageClick')
+  queryParams.pageNumber = value
+  await getPagingByUser(queryParams)
 }
 const selectedRows = (e: any) => {
   dataComponent.selectedRowsIds = e
-  disabledDelete.value = !(e.length > 0)
 }
 
 // Function to handle when click button Delete
@@ -127,8 +127,9 @@ const deleteAction = async () => {
 
   await MethodsUtil.requestApiCustom(ApiUser.DeleteGroupWithUser, TYPE_REQUEST.POST, params)
     .then(async (value: any) => {
-      toast('SUCCESS', value?.message)
+      toast('SUCCESS', t(value?.message))
       await getPagingByUser(queryParams)
+      dataComponent.selectedRowsIds = []
     })
     .catch((error: any) => {
       toast('ERROR', t(error.message))

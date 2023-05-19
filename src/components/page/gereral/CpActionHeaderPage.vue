@@ -6,7 +6,9 @@ const props = withDefaults(defineProps<Props>(), ({
   actionExport: () => ([]),
   isUpdateBtn: false,
   isExportBtn: false,
-  isApproveBtn: false,
+  isCustomBtn: false,
+  isCustomGroupBtn: false,
+  bgCustom: 'bg-success',
 }))
 
 const emit = defineEmits<Emit>()
@@ -16,10 +18,12 @@ const CmDropDown = defineAsyncComponent(() => import('@/components/common/CmDrop
 const CmButtonGroup = defineAsyncComponent(() => import('@/components/common/CmButtonGroup.vue'))
 interface Props {
   title: string
-  titleAprove?: string
+  titleCustom?: string
+  bgCustom?: string
   isUpdateBtn?: boolean
   isExportBtn?: boolean
-  isApproveBtn?: boolean
+  isCustomGroupBtn?: boolean
+  isCustomBtn?: boolean
   actionUpdate?: Array<any>
   actionAdd?: Array<any>
   actionExport?: Array<any>
@@ -36,8 +40,8 @@ const router = useRouter()
 const handlerPreButton = () => {
   emit('click', 'handlerAddButton')
 }
-const handlerApproveButton = () => {
-  emit('click', 'handlerApproveButton')
+const handlerCustomButton = () => {
+  emit('click', 'handlerCustomButton')
 }
 </script>
 
@@ -87,20 +91,21 @@ const handlerApproveButton = () => {
         />
       </div>
       <div
-        v-if="isApproveBtn"
+        v-if="isCustomBtn"
         cols="12"
         md="3"
         class="d-flex justify-end  mr-2"
       >
         <CmButton
-          bg-color="bg-success"
+          :bg-color="bgCustom"
           text-color="color-white"
-          @click="handlerApproveButton"
+          @click="handlerCustomButton"
         >
-          {{ titleAprove }}
+          {{ titleCustom }}
         </CmButton>
       </div>
       <div
+        v-if="isCustomGroupBtn"
         cols="12"
         md="3"
         class="d-flex justify-end"

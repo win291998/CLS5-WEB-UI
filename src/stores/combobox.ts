@@ -20,6 +20,7 @@ export const comboboxStore = defineStore('combobox', () => {
   const userTypeCombobox = ref([])
   const groupUserCombobox = ref([])
   const titleUserCombobox = ref([])
+  const categoryTitleCombobox = ref([])
   const country = ref<combobox[]>([])
   const provinces = ref<combobox[]>([])
   const districts = ref<combobox[]>([])
@@ -58,6 +59,13 @@ export const comboboxStore = defineStore('combobox', () => {
     }
     await MethodsUtil.requestApiCustom(ComboboxService.Titles, TYPE_REQUEST.GET, params).then((value: any) => {
       titleUserCombobox.value = value?.data || []
+    })
+  }
+
+  // Lấy danh sách danh mục chức danh người dùng
+  const fetchCategoryTitleCombobox = async () => {
+    await MethodsUtil.requestApiCustom(ComboboxService.CategoryTitleCombobox, TYPE_REQUEST.GET).then((value: any) => {
+      categoryTitleCombobox.value = value?.data || []
     })
   }
 
@@ -212,6 +220,7 @@ export const comboboxStore = defineStore('combobox', () => {
     addFromCombobox,
     titleUserCombobox,
     ownerCombobox,
+    categoryTitleCombobox,
     fetchStatusUsersCombobox,
     fetchTypeUsersCombobox,
     fetchTOrgStructCombobox,
@@ -225,6 +234,7 @@ export const comboboxStore = defineStore('combobox', () => {
     getListTopicCourse,
     fetchUserLevels,
     getComboboxOwner,
+    fetchCategoryTitleCombobox,
     reset,
   }
 })

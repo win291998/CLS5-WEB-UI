@@ -4,6 +4,7 @@ import { orgStructManagerStore } from '@/stores/admin/org-struct/OrgStruct'
 const CmTab = defineAsyncComponent(() => import('@/components/common/CmTab.vue'))
 const CpInforOrgStructTab = defineAsyncComponent(() => import('@/components/page/Admin/organization/org-struct/edit/CpInforOrgStructTab.vue'))
 const CpTitleOrgStructTab = defineAsyncComponent(() => import('@/components/page/Admin/organization/org-struct/edit/CpTitleOrgStructTab.vue'))
+const CpUserOrgStructTab = defineAsyncComponent(() => import('@/components/page/Admin/organization/org-struct/edit/CpUserOrgStructTab.vue'))
 
 /**
  * lib
@@ -35,6 +36,12 @@ const listTab = [
     component: CpTitleOrgStructTab,
     isRendered: false,
   },
+  {
+    key: 'user',
+    title: 'user',
+    component: CpUserOrgStructTab,
+    isRendered: false,
+  },
 ]
 getComboboxOwnerInf()
 
@@ -43,10 +50,10 @@ if (route.params.id) {
   isEdit.value = true
   getInforOrgById()
 }
-
-else if (route.params.parentId) {
+if (route.params.tab)
+  listTab[listTab.findIndex(item => item.key === route.params.tab)].isRendered = true
+if (route.params.parentId)
   organization.value.parentId = Number(route.params.parentId)
-}
 </script>
 
 <template>
@@ -60,7 +67,6 @@ else if (route.params.parentId) {
         :list-tab="listTab"
         label="tab"
         type="button"
-        @save="addOrganizational(false)"
         @update="updateOrganizational"
         @saveAndUpdate="addOrganizational(true)"
       />

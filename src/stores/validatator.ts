@@ -21,6 +21,14 @@ export const validatorStore = defineStore('validator', () => {
       MAX_VALUE: 10000,
       MIN_VALUE: 0,
     },
+    DEFAULT_SELECT_SINGLE: {
+      FIELD: t(''),
+      MIN: 0,
+    },
+    DEFAULT_SELECT_LIST: {
+      FIELD: t('user-role'),
+      MIN: 0,
+    },
     CODE: {
       FIELD: t('common.code'),
       MAX: 50,
@@ -106,6 +114,9 @@ export const validatorStore = defineStore('validator', () => {
     defaultField: yup.string().max(CONFIG.DEFAULT_FIELD.MAX, ruleMessage.max(CONFIG.DEFAULT_FIELD.MAX)),
     defaultString: yup.string().required(ruleMessage.required()).max(CONFIG.DEFAULT_STRING.MAX, ruleMessage.max(CONFIG.DEFAULT_STRING.MAX)),
     defaultNumber: yup.number().typeError(ruleMessage.typeNumber).nullable().required(ruleMessage.required()).max(CONFIG.DEFAULT_NUMBER.MAX_VALUE, ruleMessage.max(CONFIG.DEFAULT_NUMBER.MAX_VALUE)).positive(ruleMessage.positive),
+    defaultSelectSingle: yup.number().typeError(ruleMessage.typeOption).required(ruleMessage.required()),
+    defaultSelectList: yup.array().typeError(ruleMessage.typeOption).required(ruleMessage.required()).min(CONFIG.DEFAULT_SELECT_LIST.MIN, ruleMessage.requiredOption(CONFIG.DEFAULT_SELECT_LIST.FIELD)),
+    defaultSelectObject: yup.object().required(ruleMessage.required()),
 
     requiredString: (field?: any) => yup.string().required(ruleMessage.required(field)).max(CONFIG.DEFAULT_STRING.MAX, ruleMessage.max(CONFIG.DEFAULT_STRING.MAX)),
     code: yup.string().max(CONFIG.CODE.MAX, ruleMessage.max(CONFIG.CODE.MAX)).nullable(),

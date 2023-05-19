@@ -15,6 +15,8 @@ const ComboboxService = {
   levels: '/Level/get-combobox',
   Titles: '/title/get-combobox',
   Owner: '/user/get-list-user',
+  CategoryTitleCombobox: '/categorytitle/get-combobox', // danh mục chức danh
+  proficiencylevelCombobox: '/proficiencylevel/get-combobox', // danh mục chức danh
 }
 
 export default ComboboxService
