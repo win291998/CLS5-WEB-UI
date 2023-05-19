@@ -4,7 +4,7 @@ import MethodsUtil from '@/utils/MethodsUtil'
 import { TYPE_REQUEST } from '@/typescript/enums/enums'
 import { ActionType } from '@/constant/data/actionType.json'
 import toast from '@/plugins/toast'
-import { orgStructManagerStore } from '@/stores/admin/org-struct/OrgStruct'
+import { orgStructManagerStore } from '@/stores/admin/org-struct/orgStruct'
 
 const props = withDefaults(defineProps<Props>(), ({
   idUser: null,

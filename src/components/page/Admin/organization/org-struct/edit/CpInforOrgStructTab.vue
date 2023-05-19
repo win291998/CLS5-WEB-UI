@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { validatorStore } from '@/stores/validatator'
-import { orgStructManagerStore } from '@/stores/admin/org-struct/OrgStruct'
+import { orgStructManagerStore } from '@/stores/admin/org-struct/orgStruct'
 import toast from '@/plugins/toast'
 
 const props = withDefaults(defineProps<Props>(), ({}))

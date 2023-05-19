@@ -2,7 +2,7 @@
 import ApiUser from '@/api/user/index'
 import MethodsUtil from '@/utils/MethodsUtil'
 import { TYPE_REQUEST } from '@/typescript/enums/enums'
-import { orgStructManagerStore } from '@/stores/admin/org-struct/OrgStruct'
+import { orgStructManagerStore } from '@/stores/admin/org-struct/orgStruct'
 import SkTree from '@/components/page/gereral/skeleton/SkTree.vue'
 
 const emit = defineEmits<Emit>()
@@ -73,7 +73,6 @@ const handleAction = (value: any, dataResend: any) => {
   }
 }
 onUpdated(() => {
-  console.log('val')
   setTimeout(() => {
     isLoading.value = false
   }, 200)

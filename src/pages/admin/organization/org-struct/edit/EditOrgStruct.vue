@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { orgStructManagerStore } from '@/stores/admin/org-struct/OrgStruct'
+import { orgStructManagerStore } from '@/stores/admin/org-struct/orgStruct'
 
 const CmTab = defineAsyncComponent(() => import('@/components/common/CmTab.vue'))
 const CpInforOrgStructTab = defineAsyncComponent(() => import('@/components/page/Admin/organization/org-struct/edit/CpInforOrgStructTab.vue'))
@@ -18,6 +18,17 @@ const router = useRouter()
 const storeOrgStruct = orgStructManagerStore()
 const { idOrg, isEdit, organization } = storeToRefs(storeOrgStruct)
 const { getInforOrgById, addOrganizational, updateOrganizational, getComboboxOwnerInf } = storeOrgStruct
+
+getComboboxOwnerInf()
+
+if (route.params.id) {
+  idOrg.value = Number(route.params.id)
+  isEdit.value = true
+  getInforOrgById()
+}
+
+if (route.params.parentId)
+  organization.value.parentId = Number(route.params.parentId)
 
 /**
  *
@@ -43,17 +54,8 @@ const listTab = [
     isRendered: false,
   },
 ]
-getComboboxOwnerInf()
-
-if (route.params.id) {
-  idOrg.value = Number(route.params.id)
-  isEdit.value = true
-  getInforOrgById()
-}
 if (route.params.tab)
   listTab[listTab.findIndex(item => item.key === route.params.tab)].isRendered = true
-if (route.params.parentId)
-  organization.value.parentId = Number(route.params.parentId)
 </script>
 
 <template>
