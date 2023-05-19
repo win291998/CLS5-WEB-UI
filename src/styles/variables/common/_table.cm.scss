@@ -25,7 +25,7 @@ $table-body-row-height: auto; // chiều cao các hàng phần body
 $table-body-row-font-size: $size-sm-small;  // kích thước chữ phần body
 $table-body-row-hover-font-color: unset; // màu chữ khi hover vào các row phần body
 $table-body-row-hover-background-color: none; // màu nền khi hover vào các row phần body
-$table-body-item-padding: $xl; // padding các row phần body
+$table-body-item-padding: $md $xl ; // padding các row phần body
 
 // Phần footer table
 $table-footer-background-color: $color-white; // màu nền phần footer

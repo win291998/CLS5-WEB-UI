@@ -9,6 +9,7 @@ const props = withDefaults(defineProps<Props>(), ({
   bgColor: 'white',
   type: 'text',
   maxlength: 50,
+  disabled: false,
 }))
 
 const emit = defineEmits<Emit>(); const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
@@ -26,6 +27,7 @@ interface Props {
   placeholder?: any
   type?: string
   maxlength?: number
+  disabled?: boolean
 }
 interface Emit {
   (e: 'update:modelValue', value: any): void
@@ -68,6 +70,7 @@ const messageError = computed(() => {
       <VTextField
         v-model="formModelValue"
         v-bind="field"
+        :disabled="disabled"
         :prepend-inner-icon="props.prependInnerIcon"
         :label="props.label"
         :bg-color="bgColor"

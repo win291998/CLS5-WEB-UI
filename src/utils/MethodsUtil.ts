@@ -76,8 +76,8 @@ export default class MethodsUtil {
   static requestApiCustom = (url = '', method = 'GET', payload?: any) => {
     if (url === undefined)
       return
-    const data = method === 'GET' ? null : payload || null
-    const params = method === 'GET' ? payload : null
+    const data = method === 'GET' || method === 'DELETE' ? null : payload || null
+    const params = method === 'GET' || method === 'DELETE' ? payload : null
 
     return window.axios({
       url,
@@ -170,6 +170,16 @@ export default class MethodsUtil {
     })
 
     return listIds
+  }
+
+  static createRandomId = (length: any) => {
+    let result = ''
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+    const charactersLength = characters.length
+    for (let i = 0; i < length; i += 1)
+      result += characters.charAt(Math.floor(Math.random() * charactersLength))
+
+    return `randomId-${result}`
   }
 
   // // kiểm tra quyền trên view

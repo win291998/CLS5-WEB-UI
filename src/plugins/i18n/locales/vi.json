@@ -599,6 +599,7 @@
   "time-binding": "Ràng buộc thời gian",
   "time-test": "Thời gian làm bài",
   "list-title": "Danh mục chức danh",
+  "list-title-plh": "Chọn danh mục chức danh",
   "valid-org-title-list": "Danh sách chức danh cơ cấu tổ chức hợp lệ",
   "valid-category-list": "Danh sách chức danh hợp lệ",
   "valid-proficiency-list": "Danh sách năng lực hợp lệ",
@@ -3311,5 +3312,9 @@
   "status-action": "Tình trạng hoạt động",
   "role-user": "Vai trò người dùng",
   "approve-success": "Duyệt người dùng thành công",
-  "QuestionService.AddOrStructure": "Thêm"
+  "QuestionService.AddOrStructure": "Thêm",
+  "orgstruct-delete-title": "Xóa cơ cấu tổ chức",
+  "add-titles": "Thêm chức danh",
+  "add-title-position": "Thêm vị trí chức danh",
+  "add-list-title": "Thêm danh mục chức danh"
 }

@@ -16,6 +16,7 @@ interface Props {
   modelValue: any
   options?: Options[]
   placeholder?: string
+  text?: string
   multiple?: boolean
   clearable?: boolean // true: Hiện thị button clear lựa chọn ở cuối input
   searchable?: boolean // true:  Cho phép search
@@ -39,6 +40,7 @@ interface Props {
   valueConsistsOf?: 'ALL' | 'BRANCH_PRIORITY' | 'LEAF_PRIORITY' | 'ALL_WITH_INDETERMINATE' | null // All: Hiện thị tất cả các lựa chọn, BRANCH_PRIORITY: Chỉ hiện thị nút nhánh nếu tất cả các con được lựa chọn, LEAF_PRIORITY:  Chỉ hiện thị nút con được chọn, ALL_WITH_INDETERMINATE: tất cả các nút được chọn kể cả intermindate
   normalizerCustomType?: Array<string> // custom key không lấy mặc định là id và lable
   isError?: boolean // trạng thái lỗi
+  errors?: any // trạng thái lỗi
 }
 interface Emit {
   (e: 'update', value: any, instanceId: any): void
@@ -105,6 +107,8 @@ const render = ref(true)
 
 /** ** function: xử lý khi tao tác trên node */
 const handleUpdate = (value: any, instanceId: any) => {
+  console.log(value)
+
   emit('update:modelValue', value)
 }
 
@@ -119,13 +123,19 @@ const limitText = (count: any) => {
 </script>
 
 <template>
+  <div class="mb-1">
+    <label
+      class="text-medium-sm color-dark"
+    >{{ props.text }}</label>
+  </div>
   <div
     v-if="render"
     :dir="rtl ? 'rtl' : 'ltr'"
+    class="mb-4"
   >
     <Treeselect
       v-model="modelValue"
-      :class="{ styleError: isError }"
+      :class="{ styleError: isError || errors?.length > 0 }"
       :value-format="props.valueFormat"
       :options="props.options"
       :placeholder="props.placeholder"
@@ -158,6 +168,12 @@ const limitText = (count: any) => {
         {{ node.raw.customLabel }}
       </template>
     </Treeselect>
+    <div
+      v-if="errors?.length > 0"
+      class="styleError text-error mt-2"
+    >
+      {{ errors[0] }}
+    </div>
   </div>
 </template>
 

@@ -23,6 +23,8 @@ interface Props {
   height?: number | string
   disabledOk?: boolean
   disabledCancel?: boolean
+  appendToBody?: boolean
+
 }
 
 interface Emit {
@@ -39,6 +41,7 @@ const props = withDefaults(defineProps<Props>(), ({
   isHideFooter: false,
   persistent: false,
   size: 'lg',
+  appendToBody: false,
 }))
 
 const emit = defineEmits<Emit>()
@@ -86,8 +89,8 @@ const sizeModal = computed(() => {
     class="dialog-common"
   >
     <VDialog
-      class="abc"
-      content-class="cm-dialogs"
+      class="cm-dialogs"
+      :content-class="`cm-dialogs ${appendToBody ? 'appendToBody' : ''}`"
       :model-value="props.isDialogVisible"
       :width="sizeModal"
       :height="height"
@@ -153,10 +156,15 @@ const sizeModal = computed(() => {
 .v-card-item {
   border-block-end: 1px solid $color-line-default;
 }
-.cm-dialogs {
-  .v-card-text {
-    // overflow: auto;
-    // max-height: 90vh;
+.cm-dialogs.appendToBody {
+  .v-card {
+    overflow: unset !important;
+    .v-card-text {
+      overflow: unset !important;
+      overflow-y: unset !important;
+      // max-height: 90vh;
+    }
+
   }
 }
 </style>

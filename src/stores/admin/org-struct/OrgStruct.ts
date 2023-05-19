@@ -5,6 +5,8 @@ import { comboboxStore } from '@/stores/combobox'
 import ApiUser from '@/api/user/index'
 import { TYPE_REQUEST } from '@/typescript/enums/enums'
 import toast from '@/plugins/toast'
+import StringJwt from '@/utils/Jwt'
+import ArraysUtil from '@/utils/ArrayUtil'
 
 export const orgStructManagerStore = defineStore('orgStructManager', () => {
   /**
@@ -23,6 +25,17 @@ export const orgStructManagerStore = defineStore('orgStructManager', () => {
   /**
    * data
    */
+  const nodes = ref({})
+  const render = ref(0)
+  const config = ref({
+    roots: [] as any[],
+    keyboardNavigation: false,
+    dragAndDrop: false,
+    checkboxes: false,
+    editable: false,
+    disabled: false,
+    padding: 25,
+  })
   const initValue = ref({
     id: undefined,
     code: null,
@@ -50,8 +63,32 @@ export const orgStructManagerStore = defineStore('orgStructManager', () => {
     excludeList: [],
     itemSelected: {} as any,
   })
+  const title = ref<any>({
+    description: null,
+    name: null,
+    level: 1,
+    categoryTitleId: null,
+    orStructureId: null,
+    proficiencyModel: [
+    ],
+    proficiencies: [], // danh sách cấp độ năng lực được chọn
+  })
+  const queryUser = ref({
+    orStructureId: null,
+    pageSize: 10,
+    pageNumber: 1,
+    search: '',
+  })
+  const dataTabUserOrg = ref({
+    list: [],
+    totalRecord: 0,
+  })
+  const proficiencies = ref()
+  const titleSelected = ref()
   const myFormAddInforOrg = ref()
-  const isEdit = ref(false)
+  const isEdit = ref(false) // trạng thái đang chỉnh sửa hay thêm mới
+  const isView = ref(false) // Trạng thái xem hay chỉnh sửa
+  const viewModeAddTitle = ref(false) // trạng thái thêm chức danh
   const idOrg = ref()
   const resetForm = () => {
     idOrg.value = null
@@ -61,6 +98,29 @@ export const orgStructManagerStore = defineStore('orgStructManager', () => {
     if (myFormAddInforOrg.value)
       myFormAddInforOrg.value.resetForm()
     organization.value = window._.cloneDeep(initValue.value)
+  }
+
+  const getListOrgStruct = async () => {
+    const params = {
+      role: StringJwt.getRole(),
+    }
+    await MethodsUtil.requestApiCustom(ApiUser.GetOrganizationalStructure, TYPE_REQUEST.GET, params).then((value: any) => {
+      // cấu hình dạng cây cho cơ cấu tổ chức
+      for (let i = 0; i < value.data.length; i++) {
+        value.data[i] = {
+          ...value.data[i],
+        }
+      }
+      const result = ArraysUtil.formatTreeData(ArraysUtil.unFlatMapTree(ArraysUtil.formatSelectTree(value.data, 'parentId', 'id')), config.value.roots, t, 'children')
+      console.log(result)
+
+      nodes.value = reactive(result)
+
+      // Cấu hình node roots cho vue tree
+      const filteredKeys = Object.keys(result).filter(key => result[key].parentId === 0)
+      config.value.roots = filteredKeys
+      render.value++
+    })
   }
   const getComboboxOwnerInf = async (loadMore?: any) => {
     console.log(loadMore)
@@ -179,16 +239,148 @@ export const orgStructManagerStore = defineStore('orgStructManager', () => {
         toast('ERROR', t(error.message))
       })
   }
+
+  // Reset data title
+  const resetDataTitle = () => {
+    title.value.description = null
+    title.value.name = null
+    title.value.level = 1
+    title.value.categoryTitleId = null
+    title.value.proficiencies = []
+    title.value.proficiencyModel = []
+    title.value.id = null
+  }
+
+  // Lấy dữ liệu user trong org
+  const fetchDataUserOrg = async () => {
+    await MethodsUtil.requestApiCustom(ApiUser.getPagingUserOrgByList, TYPE_REQUEST.GET, queryUser.value).then((value: any) => {
+      dataTabUserOrg.value.list = value.data?.pageLists || []
+      dataTabUserOrg.value.totalRecord = value.data?.totalRecord
+    })
+  }
+
+  // Lấy thông tin chức danh trong cctc qua id
+  const getInforTitleById = async (id: any) => {
+    console.log(id)
+
+    await MethodsUtil.requestApiCustom(ApiUser.getTitleById, TYPE_REQUEST.GET, { id }).then((value: any) => {
+      value.data.proficiencies = value.data.proficiencyModel
+      title.value = value.data
+      viewModeAddTitle.value = true
+    })
+  }
+
+  // thêm/cập nhật chức danh vào cơ cấu tổ chức
+  const handleModifineTitleOrg = async () => {
+    title.value.orStructureId = organization.value.id
+    title.value.level = Number(title.value.level)
+    if (title.value.id)
+      title.value.proficiencyModel = title.value.proficiencies
+
+    else
+      title.value.proficiencyModel = title.value.proficiencies.map(({ proficiencyLevelId }: any) => proficiencyLevelId)
+
+    if (title.value.id) {
+      await MethodsUtil.requestApiCustom(ApiUser.PostUpdateTitle, TYPE_REQUEST.POST, title.value)
+        .then((value: any) => {
+          if (value.code === 200) {
+            resetDataTitle()
+            toast('SUCCESS', t(value.message))
+            return value
+          }
+        })
+        .catch((error: any) => {
+          toast('ERROR', t(error.message))
+        })
+    }
+
+    else {
+      await MethodsUtil.requestApiCustom(ApiUser.PostCreateTitle, TYPE_REQUEST.POST, title.value)
+        .then((value: any) => {
+          if (value.code === 200) {
+            resetDataTitle()
+            toast('SUCCESS', t(value.message))
+            return value
+          }
+        })
+        .catch((error: any) => {
+          toast('ERROR', t(error.message))
+        })
+    }
+  }
+
+  // lấy danh sách năng lực
+  const getAllProficiency = async () => {
+    await MethodsUtil.requestApiCustom(ApiUser.getProficiencyData, TYPE_REQUEST.POST, {}).then((value: any) => {
+      value?.data?.forEach((item: any) => { item.id = MethodsUtil.createRandomId(5) })
+      proficiencies.value = value?.data
+    })
+  }
+
+  // thêm năng lực
+  const addProficiency = (data: any) => {
+    if (!title.value.proficiencies || title.value.proficiencies === null)
+      title.value.proficiencies = []
+    toast('SUCCESS', t('add-success'))
+    title.value.proficiencies.push(data)
+  }
+
+  // trở về list view
+  const backOrg = () => {
+    router.push({ name: 'admin-organization-org-struct-list', query: organization.value.id ? { navigateFrom: organization.value?.id } : {} })
+  }
+
+  // Lưu cơ cấu tổ chức
+  const handleSaveOrg = async () => {
+    console.log(myFormAddInforOrg)
+
+    myFormAddInforOrg.value.validate().then(async (success: any) => {
+      if (success.valid) {
+        if (organization.value.id === organization.value.parentId)
+          toast('ERROR', t('parent-invalid'))
+
+        else if (isEdit.value === false)
+          addOrganizational(false)
+        else updateOrganizational()
+      }
+    })
+  }
+
+  // Lưu và cập nhật cơ cấu tổ chức
+  const handleSaveUpdateOrg = () => {
+    myFormAddInforOrg.value.validate().then(async (success: any) => {
+      if (success.valid)
+        addOrganizational(true)
+    })
+  }
   return {
     idOrg,
     organization,
     myFormAddInforOrg,
     vSelectOwner,
     isEdit,
+    isView,
+    nodes,
+    config,
+    render,
+    title,
+    viewModeAddTitle,
+    proficiencies,
+    titleSelected,
     getComboboxOwnerInf,
     getInforOrgById,
     addOrganizational,
     updateOrganizational,
     resetForm,
+    getListOrgStruct,
+    handleModifineTitleOrg,
+    fetchDataUserOrg,
+    getInforTitleById,
+    getAllProficiency,
+    addProficiency,
+    backOrg,
+    handleSaveOrg,
+    handleSaveUpdateOrg,
+    resetDataTitle,
   }
 })

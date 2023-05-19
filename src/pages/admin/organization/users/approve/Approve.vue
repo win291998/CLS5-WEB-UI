@@ -100,7 +100,7 @@ const deleteAction = async () => {
 
   await MethodsUtil.requestApiCustom(ApiUser.deleteCustomer, TYPE_REQUEST.DELETE, params)
     .then(async (value: any) => {
-      toast('SUCCESS', value?.message)
+      toast('SUCCESS', t(value?.message))
       queryParam.pageNumber = 1
       await fectchListUsers()
       data.customerIds = []

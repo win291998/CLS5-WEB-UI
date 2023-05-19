@@ -56,7 +56,7 @@ const options = {
     return toast
   },
 }
-
+app.use(pinia)
 app.provide('globals', globals)
 app.provide('globalsReadOnly', globalsReadOnly)
 app.component(VueFeather.name, VueFeather)
@@ -65,7 +65,6 @@ windowDefineProperty(app)
 
 // Use plugins
 app.use(vuetify)
-app.use(pinia)
 app.use(Toast, options)
 app.use(lodash)
 app.use(i18n)

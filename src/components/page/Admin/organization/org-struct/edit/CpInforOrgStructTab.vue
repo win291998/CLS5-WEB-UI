@@ -35,8 +35,8 @@ const { schemaOption, Field, Form, useForm, yup } = storeValidate
 const { submitForm } = useForm()
 
 const storeOrgStruct = orgStructManagerStore()
-const { organization, myFormAddInforOrg, vSelectOwner, isEdit } = storeToRefs(storeOrgStruct)
-const { getComboboxOwnerInf, resetForm } = storeOrgStruct
+const { organization, myFormAddInforOrg, vSelectOwner, isEdit, isView } = storeToRefs(storeOrgStruct)
+const { getComboboxOwnerInf, resetForm, backOrg, handleSaveOrg, handleSaveUpdateOrg } = storeOrgStruct
 
 /**
  * validate
@@ -62,9 +62,7 @@ const excludeId = ref()
 const changeOrg = async () => {
 //
 }
-const backOrg = () => {
-  router.push({ name: 'admin-organization-org-struct-list', query: organization.value.id ? { navigateFrom: organization.value?.id } : {} })
-}
+
 const handleOrg = () => {
   //
 }
@@ -73,26 +71,7 @@ const isIntersecting = () => {
   vSelectOwner.value.pageNumber += 1
   getComboboxOwnerInf(true)
 }
-const handleSaveOrg = async () => {
-  console.log(myFormAddInforOrg)
 
-  myFormAddInforOrg.value.validate().then(async (success: any) => {
-    if (success.valid) {
-      if (organization.value.id === organization.value.parentId)
-        toast('ERROR', t('parent-invalid'))
-
-      else if (isEdit.value === false)
-        emitEvent('save')
-      else emitEvent('update')
-    }
-  })
-}
-const handleSaveUpdateOrg = () => {
-  myFormAddInforOrg.value.validate().then(async (success: any) => {
-    if (success.valid)
-      emitEvent('saveAndUpdate')
-  })
-}
 if (route.params.id)
   excludeId.value = Number(route.params.id)
 onUnmounted(() => {
@@ -127,6 +106,7 @@ onUnmounted(() => {
                 :errors="errors"
                 :text="LABEL.TITLE"
                 :placeholder="LABEL.TITLE"
+                :disabled="isView"
               />
             </Field>
           </VCol>
@@ -138,6 +118,7 @@ onUnmounted(() => {
               v-model="organization.code"
               :text="LABEL.TITLE1"
               :placeholder="LABEL.TITLE1"
+              :disabled="isView"
             />
           </VCol>
           <VCol
@@ -150,6 +131,7 @@ onUnmounted(() => {
                 :text="LABEL.TITLE2"
                 :placeholder="LABEL.TITLE2"
                 :exclude-id="excludeId"
+                :disabled="isView"
                 @update:modelValue="changeOrg"
               />
             </Field>
@@ -168,6 +150,7 @@ onUnmounted(() => {
               item-value="id"
               custom-key="name"
               :append-to-body="false"
+              :disabled="isView"
               @isIntersecting="isIntersecting"
             >
               <template #infinityItem>
@@ -181,6 +164,7 @@ onUnmounted(() => {
         <CmTextArea
           v-model:model-value="organization.description"
           :text="t('description')"
+          :disabled="isView"
         />
       </VSheet>
 
@@ -189,8 +173,8 @@ onUnmounted(() => {
         class="user-infor no-background py-5"
       >
         <CpActionFooterEdit
-          :is-save="isShowButton"
-          is-save-and-update
+          :is-save="!isView"
+          :is-save-and-update="!isView"
           :title-cancel="t('come-back')"
           :title-save="t('save')"
           :title-save-and-update="t('save-and-update')"

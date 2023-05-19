@@ -30,6 +30,9 @@ const UserService = {
   GetRegisterConfig: '/RegistryConfiguration/get',
   GetOrgById: '/organizationalstructure/get-by-id',
   getPagingUserByList: 'user/get-info-user-by-ids',
+  getPagingUserOrgByList: 'organizationalstructure/get-list-user',
+  getTitleById: 'title/get-by-id',
+  getProficiencyData: 'proficiency/get-all',
 
   /** POST */
   PostApproveCustomer: 'Customer/approve',
@@ -41,6 +44,8 @@ const UserService = {
 
   /** delete */
   deleteCustomer: '/Customer/delete', // Xóa người dùng
+  DeleteOrgStruct: '/organizationalstructure/delete-change-orstrucnew',
+  DeleteTitleOrgStruct: '/title/delete-list',
 
   UsersList: '/User/get-all-users-paging', // danh sách người dùng
   UsersDelete: '/user/delete', // Xóa người dùng
@@ -64,6 +69,8 @@ const UserService = {
   GetPagingUserGroup: '/usergroup/get-paging-user-group-by-list', // GetPagingUserGroup
   /** POST */
   PostAddGroupUser: 'usergroup/add-group-with-user',
+  PostCreateTitle: 'title/create',
+  PostUpdateTitle: 'title/update',
 }
 
 export default UserService

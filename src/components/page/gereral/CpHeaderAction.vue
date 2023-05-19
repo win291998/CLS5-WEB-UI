@@ -141,7 +141,6 @@ const handleSearch = (value: any) => {
             {{ addButtonName }}
           </CmButton>
           <CmTextField
-            label="Tìm kiếm"
             class="header-action-field ml-3"
             placeholder="Tìm kiếm"
             prepend-inner-icon="tabler-search"
