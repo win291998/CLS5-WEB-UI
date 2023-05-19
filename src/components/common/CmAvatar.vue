@@ -16,14 +16,14 @@ interface Props {
 
 /** ** Khởi tạo prop emit */
 const props = withDefaults(defineProps<Props>(), ({
-  color: '',
+  color: 'primary',
   variant: Globals.VARIANT_DEFAULT,
   size: Globals.SIZE_AVATAR_DEFAULT,
   isClassicBorder: false,
 }))
 
 const prefixColor = computed(() => {
-  if (props.variant === 'outlined')
+  if (['outlined', 'tonal'].includes(props.variant))
     return `color-${props.color}`
 
   return `btn-${props.color}`
@@ -68,8 +68,7 @@ const getAvatarName = (data: any) => {
 <template>
   <VAvatar
     class="cursor-pointer"
-    :class="[className, isClassicBorder ? 'border-avatar' : '']"
-    :color="prefixColor"
+    :class="[className, isClassicBorder ? 'border-avatar' : '', prefixColor]"
     :variant="variant"
     :rounded="rounded"
     :size="size"
@@ -81,7 +80,7 @@ const getAvatarName = (data: any) => {
     />
     <span
       v-else
-      :style="{ fontSize: `${size / 2}px` }"
+      :style="{ fontSize: `${size / 3}px` }"
     >{{ getAvatarName(data) }}</span>
   </VAvatar>
 </template>

@@ -35,7 +35,7 @@ const props = withDefaults(defineProps<Props>(), ({
   maxItem: Globals.MAX_ITEM_SELECT_MULT,
   multiple: false,
   returnObject: false,
-  appendToBody: true,
+  appendToBody: false,
   customKey: 'key',
   itemValue: 'value',
   label: undefined,
@@ -250,9 +250,5 @@ watch(() => props.modelValue, newValue => {
   white-space: nowrap !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
-}
-.cm-select{
-  overflow-x: hidden;
-  overflow-y: hidden;
 }
 </style>

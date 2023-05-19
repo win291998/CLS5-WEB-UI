@@ -3,7 +3,7 @@ import { validatorStore } from '@/stores/validatator'
 import MethodsUtil from '@/utils/MethodsUtil'
 import { TYPE_REQUEST } from '@/typescript/enums/enums'
 import toast from '@/plugins/toast'
-import { orgStructManagerStore } from '@/stores/admin/org-struct/OrgStruct'
+import { orgStructManagerStore } from '@/stores/admin/org-struct/orgStruct'
 import ComboboxService from '@/api/combobox/index'
 
 const props = withDefaults(defineProps<Props>(), ({

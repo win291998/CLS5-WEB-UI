@@ -9,7 +9,7 @@ const propsValue = withDefaults(defineProps<Props>(), ({
   checkbox: true,
   multiple: false,
   customKey: 'title',
-  dataResend: '',
+  dataResend: null,
   type: undefined,
   data: undefined,
   index: 0,

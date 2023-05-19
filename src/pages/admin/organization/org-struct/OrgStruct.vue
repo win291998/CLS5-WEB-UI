@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { orgStructManagerStore } from '@/stores/admin/org-struct/OrgStruct'
+import { orgStructManagerStore } from '@/stores/admin/org-struct/orgStruct'
 
 const CpHeaderPageOrgStruct = defineAsyncComponent(() => import('@/components/page/Admin/organization/org-struct/CpHeaderPageOrgStruct.vue'))
 const CpOrganizationListView = defineAsyncComponent(() => import('@/components/page/Admin/organization/org-struct/CpOrganizationListView.vue'))
