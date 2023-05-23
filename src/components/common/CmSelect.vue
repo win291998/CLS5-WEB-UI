@@ -131,6 +131,7 @@ const infiniteScrollLoading = async ([{ isIntersecting, target }]: any) => {
     emit('isIntersecting', target)
   }
 }
+
 onMounted(() => {
   if (props.isInfinityScroll)
     observer.value = new IntersectionObserver(infiniteScrollLoading)

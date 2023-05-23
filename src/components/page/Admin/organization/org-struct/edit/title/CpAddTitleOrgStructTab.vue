@@ -105,7 +105,6 @@ const handleDeleteItem = (context: any) => {
   isShowDialogNotiDelete.value = true
 }
 const handlePageClick = async (value: any) => {
-  console.log(value)
   dataComponent.pageNumber = value
 }
 const getProficiency = computed(() => {
@@ -120,7 +119,6 @@ const getProficiency = computed(() => {
 
 const handleSaveTitle = async () => {
   myFormAddTitleOrg.value.validate().then(async (success: any) => {
-    console.log(success)
     if (success.valid) {
       await handleModifineTitleOrg().then(value => {
         emit('addTitleSuccess')
@@ -137,7 +135,6 @@ const handlerActionHeader = (type: any) => {
         titleSelected.value[item.proficiencyId] = titleSelected.value[item.proficiencyId] ? titleSelected.value[item.proficiencyId] + 1 : 1
       })
       dataComponent.isShowDialogAddCapacity = true
-      console.log(type)
 
       break
 
@@ -150,8 +147,6 @@ const handleDeleteMultiple = async (value: any) => {
   isShowDialogNotiDelete.value = true
 }
 const selectedRows = (e: any) => {
-  console.log(e)
-
   dataComponent.selectedRowsIds = e
 }
 const disabledDelete = computed(() => !(dataComponent.selectedRowsIds.length > 0))

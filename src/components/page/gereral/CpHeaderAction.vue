@@ -72,8 +72,6 @@ const handleSearch = (value: any) => {
     timer.value = null
   }
   timer.value = setTimeout(() => {
-    console.log(value)
-
     emit('search', value)
   }, 500)
 }
@@ -130,7 +128,7 @@ const handleSearch = (value: any) => {
       md="7"
       sm="8"
     >
-      <VRow>
+      <VRow class="ma-0">
         <VCol class="d-flex justify-end pr-0">
           <CmButton
             v-if="isAdd"

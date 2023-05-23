@@ -112,7 +112,6 @@ const deleteAction = async () => {
     })
 }
 const approveItems = async (id?: any) => {
-  console.log('approve')
   if (id)
     data.customerIds = [id]
 
@@ -121,11 +120,9 @@ const approveItems = async (id?: any) => {
   await MethodsUtil.requestApiCustom(ApiUser.GetRegisterConfig, TYPE_REQUEST.GET).then((value: any) => {
     configRegister.value = value.data
     isShowDialogApprove.value = true
-    console.log(value)
   })
 }
 const rebackItems = async (id?: any) => {
-  console.log('approve')
   if (id)
     data.customerIds = [id]
 
@@ -206,8 +203,6 @@ const handlePageClick = async (page: any) => {
 
 // hàm trả về các loại action khi click
 const actionItem = (type: any) => {
-  console.log(type)
-
   switch (type[0]?.name) {
     case 'ActionDelete':
       deleteItem(type[1].id)
@@ -241,7 +236,6 @@ const handleModalApproveAccept = async (infor: any) => {
     })
 }
 const confirmDialogApprove = (infor: any) => {
-  console.log(infor)
   handleModalApproveAccept(infor)
 }
 

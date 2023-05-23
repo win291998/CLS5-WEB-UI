@@ -9,6 +9,7 @@ interface Props {
   pageSize?: number // Số lượng item hiện thị
   customSelect?: Array<number> // Flag custom option số lượng items trên trang
   currentPage?: number // Trang hiện tại
+  type: number //  thể loại 1: table bình thường, 2: trong modal
 }
 
 // Giá trị mặc định props
@@ -66,7 +67,10 @@ watch([() => props.currentPage], ([newValue]) => {
     v-if="showPagination"
     class="pagination-container"
   >
-    <div class="d-flex pagination-flex flex-wrap ">
+    <div
+      class="d-flex  flex-wrap "
+      :class="[props.type === 1 ? 'pagination-flex' : 'pagination-flex-modal']"
+    >
       <div
         v-if="showPageSelect === true"
         class="d-flex align-center mb-2 mt-1 pagination-select"
@@ -142,6 +146,9 @@ watch([() => props.currentPage], ([newValue]) => {
 
 .pagination-flex {
   justify-content: space-between;
+}
+.pagination-flex-modal {
+  justify-content: center;
 }
 
 @media (max-width: 587px) {

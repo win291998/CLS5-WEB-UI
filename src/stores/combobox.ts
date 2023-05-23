@@ -175,7 +175,6 @@ export const comboboxStore = defineStore('combobox', () => {
       excludeIds: vSelectOwner.excludeList,
     }
     await MethodsUtil.requestApiCustom(ComboboxService.Owner, TYPE_REQUEST.POST, params).then((value: any) => {
-      console.log(value)
       ownerCombobox.value = {
         data: value.data?.pageLists.map((item: any) => ({ ...item, name: `${item.lastName} ${item.firstName}` })),
         totalRecord: value.data.totalRecord,
@@ -190,10 +189,10 @@ export const comboboxStore = defineStore('combobox', () => {
     organizationsCombobox.value = []
   })
 
-  const listTopicCourse = ref([])
-  const getListTopicCourse = async () => {
+  const listTopicCourseCombobox = ref([])
+  const getlistTopicCourseCombobox = async () => {
     const { data } = await MethodsUtil.requestApiCustom(ComboboxService.topicCourse, TYPE_REQUEST.GET)
-    listTopicCourse.value = data
+    listTopicCourseCombobox.value = data
   }
   const reset = () => {
     statusesCombobox.value = []
@@ -216,7 +215,7 @@ export const comboboxStore = defineStore('combobox', () => {
     districts,
     wards,
     userLevels,
-    listTopicCourse,
+    listTopicCourseCombobox,
     addFromCombobox,
     titleUserCombobox,
     ownerCombobox,
@@ -231,7 +230,7 @@ export const comboboxStore = defineStore('combobox', () => {
     fetchDistricts,
     fetchProvinces,
     fetchWards,
-    getListTopicCourse,
+    getlistTopicCourseCombobox,
     fetchUserLevels,
     getComboboxOwner,
     fetchCategoryTitleCombobox,

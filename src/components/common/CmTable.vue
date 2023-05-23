@@ -22,6 +22,8 @@ const props = withDefaults(defineProps<Props>(), ({
   totalRecord: 0,
   minHeight: 100,
   customKeyError: 'errors',
+  typePagination: 1,
+  disiablePagination: false,
 }))
 const emit = defineEmits<Emit>()
 const SkTable = defineAsyncComponent(() => import('@/components/page/gereral/skeleton/SkTable.vue'))
@@ -60,6 +62,8 @@ interface Props {
   pageNumber?: number
   selected?: Item[]
   customKeyError?: string
+  typePagination?: number
+  disiablePagination?: boolean
 }
 interface Emit {
   (e: 'handleClickRow', dataRow: object, index: number): void
@@ -69,7 +73,7 @@ interface Emit {
   (e: 'changeCellvalue', value: string, field: string, key: number, keyCustomValue?: any, keyCustomIdValue?: any): void
   (e: 'handlePageClick', page: number, size: number): void
   (e: 'update:pageNumber', page: number): void
-  (e: 'update:size', size: number): void
+  (e: 'update:pageSize', size: number): void
   (e: 'update:selected', data: Item): void
 
 }
@@ -137,7 +141,6 @@ const checkedAll = (value: any) => {
   const data = props.returnObject ? props.items : selectedRows.value
   emit('update:selected', data)
   emit('checkedAll', !value, selectedRows)
-  emit('update:selected', selectedRows.value)
 }
 
 /** event */
@@ -173,7 +176,7 @@ const updateRowsPerPageSelect = (e: number) => {
 const pageSizeChange = (page: number, size: number) => {
   pageSize.value = size
   emit('update:pageNumber', page)
-  emit('update:size', size)
+  emit('update:pageSize', size)
   emit('handlePageClick', page, size)
 
   updateRowsPerPageSelect(size)
@@ -405,8 +408,12 @@ onMounted(() => {
     >
       <slot name="action-footer" />
     </div>
-    <div class="customize-footer">
+    <div
+      v-if="!disiablePagination"
+      class="customize-footer"
+    >
       <CmPagination
+        :type="typePagination"
         :total-items="totalRecord || items.length"
         :current-page="props.pageNumber"
         @pageClick="pageSizeChange"

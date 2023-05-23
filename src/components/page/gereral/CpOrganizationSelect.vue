@@ -54,7 +54,6 @@ const options = ref()
 const getAllOrgStruct = async () => {
   if (!window._.isEmpty(organizationsCombobox.value)) {
     const data = window._.cloneDeep(organizationsCombobox.value)
-    console.log(typeof props.excludeId)
 
     if (props.excludeId && typeof props.excludeId === 'number') {
       const positionExclude = data.findIndex((item: any) => item[props.customKey] === props.excludeId)

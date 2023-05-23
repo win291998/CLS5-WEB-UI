@@ -2,9 +2,10 @@
 import { orgStructManagerStore } from '@/stores/admin/org-struct/orgStruct'
 
 const CmTab = defineAsyncComponent(() => import('@/components/common/CmTab.vue'))
-const CpInforOrgStructTab = defineAsyncComponent(() => import('@/components/page/Admin/organization/org-struct/edit/CpInforOrgStructTab.vue'))
-const CpTitleOrgStructTab = defineAsyncComponent(() => import('@/components/page/Admin/organization/org-struct/edit/CpTitleOrgStructTab.vue'))
-const CpUserOrgStructTab = defineAsyncComponent(() => import('@/components/page/Admin/organization/org-struct/edit/CpUserOrgStructTab.vue'))
+const CpInforOrgStructTab = defineAsyncComponent(() => import('@/components/page/Admin/organization/org-struct/edit/infor/CpInforOrgStructTab.vue'))
+const CpTitleOrgStructTab = defineAsyncComponent(() => import('@/components/page/Admin/organization/org-struct/edit/title/CpTitleOrgStructTab.vue'))
+const CpUserOrgStructTab = defineAsyncComponent(() => import('@/components/page/Admin/organization/org-struct/edit/user/CpUserOrgStructTab.vue'))
+const CpCourseOrgStructTab = defineAsyncComponent(() => import('@/components/page/Admin/organization/org-struct/edit/course/CpCourseOrgStructTab.vue'))
 
 /**
  * lib
@@ -51,6 +52,12 @@ const listTab = [
     key: 'user',
     title: 'user',
     component: CpUserOrgStructTab,
+    isRendered: false,
+  },
+  {
+    key: 'course',
+    title: 'course',
+    component: CpCourseOrgStructTab,
     isRendered: false,
   },
 ]

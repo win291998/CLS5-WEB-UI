@@ -61,8 +61,6 @@ const onCancel = async () => {
 
 // thay đổi lựa chọn năng lực
 const changeProficiency = async (value: any) => {
-  console.log(value)
-
   levelsExclude.value = title.value.proficiencies.map((item: any) => item.id)
 
   dataComponent.proficiencyId = value.id
@@ -82,7 +80,6 @@ const changeProficiency = async (value: any) => {
 const onConfirm = async () => {
   myFormAddProficiencies.value.validate().then(async (success: any) => {
     if (success.valid) {
-      console.log(dataComponent.proficiencyLevelId)
       const level: any = levelsModal.value.find((x: any) => x.key === dataComponent.proficiencyLevelId)
       const params = {
         proficiencyId: dataComponent.proficiencyId,
@@ -91,7 +88,6 @@ const onConfirm = async () => {
         proficiencyName: dataComponent.proficiency?.name,
         id: dataComponent.proficiencyLevelId,
       }
-      console.log(params)
 
       addProficiency(params)
       emit('update:isDialogVisible', false)
@@ -100,7 +96,6 @@ const onConfirm = async () => {
 }
 const getListAddProficiency = computed(() => {
   const listExcludedIds = title.value.proficiencies.map((item: any) => item.proficiencyId)
-  console.log()
   if (proficiencies.value) {
     const cloneProficiencies = JSON.parse(JSON.stringify(proficiencies.value))
     cloneProficiencies.forEach((element: any) => {

@@ -3316,5 +3316,8 @@
   "orgstruct-delete-title": "Xóa cơ cấu tổ chức",
   "add-titles": "Thêm chức danh",
   "add-title-position": "Thêm vị trí chức danh",
-  "add-list-title": "Thêm danh mục chức danh"
+  "add-list-title": "Thêm danh mục chức danh",
+  "choose-all-titles": "Chọn chức danh cho tất cả",
+  "choose-titles": "Chọn chức danh",
+  "choose-topic": "Chọn chủ đề"
 }

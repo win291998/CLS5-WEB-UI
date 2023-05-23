@@ -237,7 +237,6 @@ export default class ArraysUtil {
     dataChild = parent.children.map((item: any) => {
       if (groupedNodes[item[customId]]) {
         item = { ...item, children: groupedNodes[item[customId]] }
-        console.log(item)
         const children = ArraysUtil.mapChildToParent(item, groupedNodes, customId)
 
         return { ...item, children }

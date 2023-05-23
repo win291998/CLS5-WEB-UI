@@ -164,7 +164,6 @@ export default class MethodsUtil {
       listIds.push(Number(item.split('-')?.[1]))
       if (nodes[item]?.children?.length) {
         const children = MethodsUtil.getAllChildrenOfTreeNodeIds(nodes[item], nodes)
-        console.log(nodes[item])
         listIds = listIds.concat(children)
       }
     })

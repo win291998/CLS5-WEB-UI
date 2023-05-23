@@ -33,11 +33,16 @@ const UserService = {
   getPagingUserOrgByList: 'organizationalstructure/get-list-user',
   getTitleById: 'title/get-by-id',
   getProficiencyData: 'proficiency/get-all',
+  GetUserExclude: '/user/get-list-user-id-by-structure',
 
   /** POST */
   PostApproveCustomer: 'Customer/approve',
   PostOrgCreate: 'organizationalstructure/create',
   PostOrgUpdate: 'organizationalstructure/update',
+  PostPeopleRolevalue: '/user/get-paging-people-by-rolevalue',
+  PostAddUserOrg: '/organizationalstructure/add-user',
+  PostUpdateUserOrg: '/organizationalstructure/update-user',
+  PostDeleteUserOrg: '/organizationalstructure/delete-user',
 
   /** Put */
   PutReturnCustomer: 'Customer/deny',
@@ -45,7 +50,7 @@ const UserService = {
   /** delete */
   deleteCustomer: '/Customer/delete', // Xóa người dùng
   DeleteOrgStruct: '/organizationalstructure/delete-change-orstrucnew',
-  DeleteTitleOrgStruct: '/title/delete-list',
+  DeleteTitleOrgStruct: '/title/delete-listIds',
 
   UsersList: '/User/get-all-users-paging', // danh sách người dùng
   UsersDelete: '/user/delete', // Xóa người dùng

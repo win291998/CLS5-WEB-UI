@@ -53,7 +53,7 @@ const isShowFilter = ref<boolean>(false)
     <div>
       <VRow>
         <VCol>
-          <span>Tự động gán người dùng vào nội dung</span>
+          <span>{{ t('auto-assign-content') }}</span>
           <VRow class="ma-1">
             <CmCheckBox
               :model-value="isCourse"
