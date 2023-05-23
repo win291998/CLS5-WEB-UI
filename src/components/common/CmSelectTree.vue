@@ -107,8 +107,6 @@ const render = ref(true)
 
 /** ** function: xử lý khi tao tác trên node */
 const handleUpdate = (value: any, instanceId: any) => {
-  console.log(value)
-
   emit('update:modelValue', value)
 }
 

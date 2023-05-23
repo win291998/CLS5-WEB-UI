@@ -16,7 +16,7 @@ const props = withDefaults(defineProps<Props>(), ({
 const CpHeaderAction = defineAsyncComponent(() => import('@/components/page/gereral/CpHeaderAction.vue'))
 const CmTable = defineAsyncComponent(() => import('@/components/common/CmTable.vue'))
 const CpActionHeaderPage = defineAsyncComponent(() => import('@/components/page/gereral/CpActionHeaderPage.vue'))
-const CpAddTitleOrfStructTab = defineAsyncComponent(() => import('@/components/page/Admin/organization/org-struct/edit/CpAddTitleOrgStructTab.vue'))
+const CpAddTitleOrfStructTab = defineAsyncComponent(() => import('@/components/page/Admin/organization/org-struct/edit/title/CpAddTitleOrgStructTab.vue'))
 const CpActionFooterEdit = defineAsyncComponent(() => import('@/components/page/gereral/CpActionFooterEdit.vue'))
 const CpConfirmDialog = defineAsyncComponent(() => import('@/components/page/gereral/CpConfirmDialog.vue'))
 
@@ -75,12 +75,8 @@ const getPagingByTitles = async () => {
     dataComponent.totalRecord = value?.data?.totalRecord
   })
 }
-if (organization.value.id && organization.value.id !== null) {
-  queryParams.orStructureId = organization.value.id
-  getPagingByTitles()
-}
+
 const handlerActionHeader = (type: any) => {
-  console.log(type)
   switch (type) {
     case 'handlerCustomButton':
       title.value.id = null
@@ -106,10 +102,7 @@ const handlePageClick = async (value: any) => {
   queryParams.pageNumber = value
   await getPagingByTitles()
 }
-const handleAddGroup = async (value: any) => {
-  // await getListIdStructureUser()
-  isShowDialogAddGroup.value = true
-}
+
 const handleDeleteMultiple = async (value: any) => {
   dataComponent.deleteIds = dataComponent.selectedRowsIds
   isShowDialogNotiDelete.value = true
@@ -122,6 +115,11 @@ const handleDeleteItem = (context: any) => {
   isShowDialogNotiDelete.value = true
 }
 
+const reset = () => {
+  dataComponent.deleteIds = []
+  dataComponent.selectedRowsIds = []
+}
+
 // delete action
 const deleteAction = async () => {
   const params = {
@@ -131,6 +129,7 @@ const deleteAction = async () => {
   await MethodsUtil.requestApiCustom(ApiUser.DeleteTitleOrgStruct, TYPE_REQUEST.DELETE, params)
     .then(async (value: any) => {
       toast('SUCCESS', t(value?.message))
+      reset()
       await handlePageClick(1)
     })
     .catch((error: any) => {
@@ -153,12 +152,17 @@ const addTitleSuccess = async () => {
 
 // Chỉnh sửa chức danh trong cctc
 const handleEditTitle = async (content: any) => {
-  console.log(content)
   await getInforTitleById(content?.id)
 }
 onUnmounted(() => {
   viewModeAddTitle.value = false
 })
+watch(() => organization.value.id, val => {
+  if (organization.value.id && organization.value.id !== null) {
+    queryParams.orStructureId = organization.value.id
+    getPagingByTitles()
+  }
+}, { deep: true, immediate: true })
 
 /** ***************************************************************************** */
 </script>
@@ -184,7 +188,6 @@ onUnmounted(() => {
           is-delete
           :disabled-delete="disabledDelete"
           @search="handleSearch"
-          @add-handler="handleAddGroup"
           @deleteMultiple="handleDeleteMultiple"
         />
       </div>
@@ -201,21 +204,6 @@ onUnmounted(() => {
             <div v-if="col === 'actions'">
               <span class="px-2">
                 <VIcon
-                  :icon="ActionType[1].icon"
-                  :size="18"
-                  class="align-middle"
-                  :class="ActionType[1].color"
-                  @click="handleDeleteItem(context)"
-                />
-                <VTooltip
-                  activator="parent"
-                  location="start"
-                >
-                  {{ t(ActionType[1].name) }}
-                </VTooltip>
-              </span>
-              <span class="px-2">
-                <VIcon
                   :icon="ActionType[0].icon"
                   :size="18"
                   class="align-middle"
@@ -227,6 +215,21 @@ onUnmounted(() => {
                   location="start"
                 >
                   {{ t(ActionType[0].name) }}
+                </VTooltip>
+              </span>
+              <span class="px-2">
+                <VIcon
+                  :icon="ActionType[1].icon"
+                  :size="18"
+                  class="align-middle"
+                  :class="ActionType[1].color"
+                  @click="handleDeleteItem(context)"
+                />
+                <VTooltip
+                  activator="parent"
+                  location="start"
+                >
+                  {{ t(ActionType[1].name) }}
                 </VTooltip>
               </span>
             </div>

@@ -41,20 +41,15 @@ const removeNode = (node: any) => {
     excludeListOrg: nodeChildrenIds,
   }
   emit('deleteNode', deleteData)
-  console.log(nodeChildrenIds)
 }
 
 const handleAction = (value: any, dataResend: any) => {
-  console.log(value)
   switch (value?.id) {
     case 1:
       isView.value = false
       router.push({ name: 'admin-organization-org-struct-edit', params: { tab: 'infor', id: dataResend.ids } })
       break
     case 2:
-      console.log(value)
-      console.log(dataResend)
-
       removeNode(dataResend)
       break
     case 4:
@@ -62,8 +57,6 @@ const handleAction = (value: any, dataResend: any) => {
       router.push({ name: 'admin-organization-org-struct-edit', params: { tab: 'infor', id: dataResend.ids } })
       break
     case 16:
-      console.log(value)
-      console.log(dataResend)
       isView.value = false
       router.push({ name: 'admin-organization-org-struct-add', params: { tab: 'infor', parentId: dataResend.ids } })
       break
@@ -79,7 +72,6 @@ onUpdated(() => {
 })
 
 watch(render, val => {
-  console.log(val)
   isLoading.value = true
 })
 isView.value = true

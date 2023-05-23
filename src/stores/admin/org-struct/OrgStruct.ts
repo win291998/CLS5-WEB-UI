@@ -90,10 +90,11 @@ export const orgStructManagerStore = defineStore('orgStructManager', () => {
   const isView = ref(false) // Trạng thái xem hay chỉnh sửa
   const viewModeAddTitle = ref(false) // trạng thái thêm chức danh
   const idOrg = ref()
+  const userIds = ref<Array<any>>([])
+  const listTitles = ref()
   const resetForm = () => {
     idOrg.value = null
     isEdit.value = false
-    console.log(myFormAddInforOrg.value)
 
     if (myFormAddInforOrg.value)
       myFormAddInforOrg.value.resetForm()
@@ -112,7 +113,6 @@ export const orgStructManagerStore = defineStore('orgStructManager', () => {
         }
       }
       const result = ArraysUtil.formatTreeData(ArraysUtil.unFlatMapTree(ArraysUtil.formatSelectTree(value.data, 'parentId', 'id')), config.value.roots, t, 'children')
-      console.log(result)
 
       nodes.value = reactive(result)
 
@@ -123,10 +123,7 @@ export const orgStructManagerStore = defineStore('orgStructManager', () => {
     })
   }
   const getComboboxOwnerInf = async (loadMore?: any) => {
-    console.log(loadMore)
-
     // loadMore dùng khi infinity scroll
-    console.log(vSelectOwner.value)
 
     if (vSelectOwner.value) {
       await getComboboxOwner(vSelectOwner.value).then((value: any) => {
@@ -159,12 +156,10 @@ export const orgStructManagerStore = defineStore('orgStructManager', () => {
       organizationalStructureId: idOrg.value,
     }
     await MethodsUtil.requestApiCustom(ApiUser.GetOrgById, TYPE_REQUEST.GET, params).then(async (value: any) => {
-      console.log(value)
       if (value.data.parentId === 0)
         value.data.parentId = null
       if (value.data?.ownerId) {
         vSelectOwner.value.excludeList = [value.data?.ownerId]
-        console.log([value.data?.ownerId])
 
         await MethodsUtil.searchUserInfoByIds([value.data?.ownerId]).then((users: any) => {
           if (users?.pageLists.length) {
@@ -178,7 +173,6 @@ export const orgStructManagerStore = defineStore('orgStructManager', () => {
           }
         })
       }
-      console.log(value.data)
 
       organization.value = value.data
     })
@@ -191,12 +185,10 @@ export const orgStructManagerStore = defineStore('orgStructManager', () => {
     }))(organization.value)
     if (params.parentId === null)
       params.parentId = 0
-    console.log(params, isUpdate)
 
     await MethodsUtil.requestApiCustom(ApiUser.PostOrgCreate, TYPE_REQUEST.POST, organization.value)
       .then(async (value: any) => {
         if (value.code === 200) {
-          console.log(value)
           if (isUpdate === false) { router.push({ name: 'admin-organization-org-struct-list', query: { navigateFrom: value.data } }) }
           else {
             window.showAllPageLoading('COMPONENT')
@@ -211,8 +203,6 @@ export const orgStructManagerStore = defineStore('orgStructManager', () => {
         }
       })
       .catch((error: any) => {
-        console.log(error)
-
         toast('ERROR', t(error.message))
       })
   }
@@ -261,8 +251,6 @@ export const orgStructManagerStore = defineStore('orgStructManager', () => {
 
   // Lấy thông tin chức danh trong cctc qua id
   const getInforTitleById = async (id: any) => {
-    console.log(id)
-
     await MethodsUtil.requestApiCustom(ApiUser.getTitleById, TYPE_REQUEST.GET, { id }).then((value: any) => {
       value.data.proficiencies = value.data.proficiencyModel
       title.value = value.data
@@ -332,8 +320,6 @@ export const orgStructManagerStore = defineStore('orgStructManager', () => {
 
   // Lưu cơ cấu tổ chức
   const handleSaveOrg = async () => {
-    console.log(myFormAddInforOrg)
-
     myFormAddInforOrg.value.validate().then(async (success: any) => {
       if (success.valid) {
         if (organization.value.id === organization.value.parentId)
@@ -353,6 +339,31 @@ export const orgStructManagerStore = defineStore('orgStructManager', () => {
         addOrganizational(true)
     })
   }
+
+  // danh sách id người dùng
+  const fetchUserIds = async () => {
+    const params = {
+      id: organization.value?.id,
+      typeId: 3,
+    }
+    await MethodsUtil.requestApiCustom(ApiUser.GetUserExclude, TYPE_REQUEST.GET, params).then((value: any) => {
+      userIds.value = value?.data
+    })
+  }
+
+  // danh sách chức danh
+  const getPagingByTitles = async () => {
+    const params = {
+      orStructureId: organization.value.id,
+      pageNumber: 1,
+      pageSize: 1000,
+      search: '',
+    }
+    await MethodsUtil.requestApiCustom(ApiUser.GetListTitle, TYPE_REQUEST.POST, params).then((value: any) => {
+      listTitles.value = value?.data?.pageLists
+    })
+  }
+
   return {
     idOrg,
     organization,
@@ -367,6 +378,8 @@ export const orgStructManagerStore = defineStore('orgStructManager', () => {
     viewModeAddTitle,
     proficiencies,
     titleSelected,
+    userIds,
+    listTitles,
     getComboboxOwnerInf,
     getInforOrgById,
     addOrganizational,
@@ -382,5 +395,7 @@ export const orgStructManagerStore = defineStore('orgStructManager', () => {
     handleSaveOrg,
     handleSaveUpdateOrg,
     resetDataTitle,
+    fetchUserIds,
+    getPagingByTitles,
   }
 })

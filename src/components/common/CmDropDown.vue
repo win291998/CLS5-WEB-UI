@@ -93,11 +93,6 @@ const textButton = computed(() => {
 
   return ''
 })
-const checkIconAction = (data: any) => {
-  console.log(data)
-
-  console.log(MethodsUtil.checlActionKey(data))
-}
 </script>
 
 <template>

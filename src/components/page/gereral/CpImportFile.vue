@@ -112,8 +112,6 @@ const dowloadSampleFile = async () => {
 // thay đổi dữ liệu trên bảng
 const changeCellvalue = (event: any, field: string, key: number, keyCustomValue?: any, keyCustomIdValue?: any) => {
   if (field === 'organizational') {
-    console.log(keyCustomValue, keyCustomIdValue)
-
     paramsImport.invalidData[key][keyCustomIdValue] = event
     const org: any = organizationsCombobox.value.find((item: any) => item.id === event)
     paramsImport.invalidData[key][keyCustomValue] = org?.name

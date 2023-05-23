@@ -308,12 +308,10 @@ const handleClickBtn = (type: string) => {
 }
 
 const actionAddFromApi = () => {
-  console.log('actionAddFromApi')
   data.isShowDialogAddUserApi = true
 }
 
 const exportExcel = async () => {
-  console.log('exportExcel')
   window.showAllPageLoading()
   const params = {
     statusIds: queryParam.statusList,
@@ -372,7 +370,6 @@ const actionUpdate = [
 ]
 
 const handlerActionHeader = (type: any) => {
-  console.log(type)
   switch (type) {
     case 'handlerAddButton':
 
