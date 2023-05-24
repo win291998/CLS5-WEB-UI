@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { useRoute } from 'vue-router'
 import MethodsUtil from '@/utils/MethodsUtil'
 import { TYPE_REQUEST } from '@/typescript/enums/enums'
-import ApiGroupUser from '@/api/group-user/index'
+import ApiGroupUser from '@/api/user'
 import type { Params } from '@/typescript/interface/params'
 import toast from '@/plugins/toast'
 

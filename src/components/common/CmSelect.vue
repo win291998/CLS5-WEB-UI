@@ -25,6 +25,7 @@ interface Props {/** ** Interface */
 }
 interface Emit {
   (e: 'update:modelValue', value: any): void
+  (e: 'update:persistent', value: any): void
   (e: 'open', value: any): void
   (e: 'isIntersecting', value: any): void
 }
@@ -92,6 +93,8 @@ const open = (e: any) => {
       observer.value.observe(load.value)
     })
   }
+  emit('update:persistent', true)
+
   emit('open', valueCurrent)
 }
 
@@ -103,6 +106,9 @@ const close = (e: any) => {
     ul.value = null
     scrollTop.value = 0
   }
+  setTimeout(() => {
+    emit('update:persistent', false)
+  }, 150)
 }
 
 const fetchOptions = (options: any, search: any) => {
@@ -171,6 +177,18 @@ watch(() => props.modelValue, newValue => {
         @close="close"
         @update:modelValue="handleChangeValue"
       >
+        <template #option="item">
+          <slot
+            name="option"
+            :data="item"
+          />
+        </template>
+        <template #selected-option="item">
+          <slot
+            name="option"
+            :data="item"
+          />
+        </template>
         <template #no-options="{ search, searching }">
           <template v-if="searching">
             {{ t('no-search', { search: `${search}` }) }}

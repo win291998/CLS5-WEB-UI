@@ -3319,5 +3319,12 @@
   "add-list-title": "Thêm danh mục chức danh",
   "choose-all-titles": "Chọn chức danh cho tất cả",
   "choose-titles": "Chọn chức danh",
-  "choose-topic": "Chọn chủ đề"
+  "choose-topic": "Chọn chủ đề",
+  "topic-training-title": "Chủ đề đào tạo",
+  "Select-topic": "Lựa chọn chủ đề",
+  "Delete-topic": "Xóa chủ đề",
+  "topic-survey": "Chủ đề khảo sát",
+  "topic-training-route": "chủ đề lộ trình đào tạo",
+  "topic-forum": "Chủ đề diễn đàn",
+  "Delete-course":"Xóa khóa học"
 }

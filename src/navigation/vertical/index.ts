@@ -22,4 +22,11 @@ export default [
       },
     ],
   },
+  {
+    title: 'Quản lý đào tạo',
+    icon: { icon: 'tabler-file' },
+    children: [
+      { title: 'Quản lý chủ đề', to: { name: 'topic-list' } },
+    ],
+  },
 ] as VerticalNavItems

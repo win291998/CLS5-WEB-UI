@@ -291,7 +291,7 @@ export default [
                   to: { name: 'admin-organization-user-groups' },
                 },
                 {
-                  title: 'common.add',
+                  title: 'QuestionService.ActionEdit',
                   active: true,
                 },
               ],

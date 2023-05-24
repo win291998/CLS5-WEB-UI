@@ -32,7 +32,8 @@ const positionBorder = (value: number) => {
   <CmButton
     v-for="(item, index) in listItem"
     :key="index"
-    :class="`color-${color}-300 ${positionBorder(index)} button-group`"
+    :class="`${positionBorder(index)} button-group`"
+    :color="color"
     variant="outlined"
     @click="item?.action"
   >
@@ -55,28 +56,29 @@ const positionBorder = (value: number) => {
 .button-group {
   background-color: $color-white;
   text-transform: unset;
+  padding: 10px 12px !important;
 }
 .button-group-prepend {
-  border-top-right-radius: unset;
-  border-bottom-right-radius: unset;
-  border-right: unset;
+  border-top-right-radius: unset !important;
+  border-bottom-right-radius: unset!important;
+  border-right: unset!important;
 }
 
 .button-group-append {
-  border-top-left-radius: unset;
-  border-bottom-left-radius: unset;
-  border-left: unset;
+  border-top-left-radius: unset!important;
+  border-bottom-left-radius: unset!important;
+  // border-left: unset!important;
 }
 
 .button-group-default {
   border-radius: 0;
 }
 
-.active {
-  background: $color-primary !important;
-}
+// .active {
+//   background: $color-primary-600 !important;
+// }
 
-.button-group:focus {
-  background: $color-primary-100 !important;
-}
+// .button-group:focus {
+//   background: $color-primary-100 !important;
+// }
 </style>

@@ -58,7 +58,6 @@ const getTabActive = () => {
 }
 
 getTabActive()
-
 const activeTab = (value: any) => {
   value.isRendered = true
   router.push({ name: props.routeName || undefined, params: { [props.label]: value.key } })
@@ -80,7 +79,7 @@ watch(() => route.params[props.label], val => {
 
 <template>
   <div class="tabs w-100">
-    <div :class="`w-100 ${type}-tabs`">
+    <div :class="`w-100 ${type}-tabs my-6`">
       <VTabs
         v-if="!hide"
         v-model="tabActive"
@@ -93,7 +92,7 @@ watch(() => route.params[props.label], val => {
           :key="index"
           :disabled="item.isDisabled"
           :value="item"
-          :class="`item-tab ${tabActive.key === item.key ? 'active' : ''} `"
+          :class="`item-tab ${tabActive?.key === item?.key ? 'active' : ''} `"
         >
           <VIcon
             v-if="item.icon"
@@ -127,6 +126,7 @@ watch(() => route.params[props.label], val => {
     <div v-else>
       <Component
         :is="tabActive?.component"
+        :key="tabActive?.key"
         :emit="useEmitter"
         :data-general="dataGeneral"
         v-bind="tabActive?.dataTab"
