@@ -13,7 +13,7 @@ const CmButton = defineAsyncComponent(() => import('@/components/common/CmButton
 const CmButtonGroup = defineAsyncComponent(() => import('@/components/common/CmButtonGroup.vue'))
 const CmTextField = defineAsyncComponent(() => import('@/components/common/CmTextField.vue'))
 interface Props {
-  listItemButtonGroup?: any[]
+  listItemButtonGroup?: Item[]
   isShowAddGroup?: boolean
   isShowDelete?: boolean
   isShowMove?: boolean
@@ -26,11 +26,19 @@ interface Props {
   isDisabledDelete: boolean
 
 }
+interface Item {
+  title: string
+  icon?: string
+  colorClass?: string
+  action?: any
+  key?: any
+}
 interface Emit {
   (e: 'update:keySearch', key: string): void
   (e: 'clickAdd'): void
   (e: 'clickDelete'): void
   (e: 'clickMoveMultiple'): void
+  (e: 'clickExport'): void
 }
 
 const showAdd = () => {
@@ -48,6 +56,9 @@ const handleSearch = (val: string) => {
     emit('update:keySearch', val)
   }, 500)
 }
+const exportExcel = () => {
+  emit('clickExport')
+}
 </script>
 
 <template>
@@ -61,7 +72,8 @@ const handleSearch = (val: string) => {
           v-if="isShowExportExcel"
           :title="props.buttonPrepend"
           icon="tabler:download"
-          color="50-primary"
+          color="primary"
+          @click="exportExcel"
         />
         <CmButtonGroup
           v-if="props.isShowAddGroup"
@@ -75,6 +87,7 @@ const handleSearch = (val: string) => {
           v-if="props.isShowAdd"
           :title="props.buttonAdd"
           class="ml-1"
+          variant="flat"
           color="primary"
           @click="showAdd"
         />

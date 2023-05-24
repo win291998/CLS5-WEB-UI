@@ -64,13 +64,14 @@ const handlerCustomButton = () => {
           v-if="!actionExport?.length"
           :title="t('export-excel')"
           icon="tabler:download"
-          color="50-primary"
+          color="primary"
+          variant="tonal"
           @click="emit('exportExcel')"
         />
         <CmDropDown
           v-else
           :title="t('export-excel')"
-          color="dark"
+          color="secondary"
           :list-item="actionExport"
           :type="2"
           icon="tabler:chevron-down"
@@ -84,7 +85,7 @@ const handlerCustomButton = () => {
       >
         <CmDropDown
           :title="t('Update')"
-          color="dark"
+          color="secondary"
           :list-item="actionUpdate"
           :type="2"
           icon="tabler:chevron-down"
@@ -97,7 +98,7 @@ const handlerCustomButton = () => {
         class="d-flex justify-end  mr-2"
       >
         <CmButton
-          :bg-color="bgCustom"
+          color="success"
           text-color="color-white"
           @click="handlerCustomButton"
         >
@@ -131,7 +132,6 @@ const handlerCustomButton = () => {
   &-field {
     inline-size: $input-min-width;
     max-inline-size: $input-min-width;
-
     // min-inline-size: $input-min-width;
   }
 }

@@ -28,8 +28,6 @@ export const useImportFileStore = defineStore('importFile', () => {
     if (data && data.length > 0) {
       data.forEach((item: any) => {
         if (item.isSuccess === false) {
-          console.log(item[customKeyError.value])
-
           if (item[customKeyError.value]) {
             item.messageErr = ''
             item[customKeyError.value].forEach((err: any) => {

@@ -71,7 +71,8 @@ const handlerPreButton = () => {
         <CmButton
           :title="t('export-excel')"
           icon="tabler:download"
-          color="50-primary"
+          color="primary"
+          variant="tonal"
           @click="emit('exportExcel')"
         />
       </div>
@@ -94,7 +95,10 @@ const handlerPreButton = () => {
         md="3"
         class="d-flex justify-end"
       >
-        <CmSwitch :list-item="action" />
+        <CmSwitch
+          color="secondary"
+          :list-item="action"
+        />
       </div>
     </div>
   </div>

@@ -157,49 +157,135 @@ const abcd = (val: any) => {
     hello win
   </CmButtonGroup>
 
-  <VBtn @click="loadMultiplecomponents([1, 2, 3])">
-    loading
-  </VBtn>
+  <VDivider />
   <CmButton
-    ref="button123"
-    is-load
+    variant="flat"
     color="primary"
-    @click="handleClick"
   >
-    <template #append>
-      1
-    </template>
-    hello
-    <template #prepend>
-      2
-    </template>
+    primary
   </CmButton>
   <CmButton
-    title=""
-    icon="activity"
-    text="button "
-    is-load
-    color="success"
-    @click="handleClick"
-  />
-  <CmButton
-    text="button"
-    is-load
-    color="success"
     variant="outlined"
-    @click="handleClick"
+    color="primary"
   >
-    hello222
+    primary
   </CmButton>
   <CmButton
-    is-load
-    text="button "
+    variant="tonal"
+    color="primary"
+  >
+    primary
+  </CmButton>
+  <CmButton
+    variant="flat"
+    color="warning"
+  >
+    warning
+  </CmButton>
+  <CmButton
+    variant="outlined"
+    color="warning"
+  >
+    warning
+  </CmButton>
+  <CmButton
+    variant="tonal"
+    color="warning"
+  >
+    warning
+  </CmButton>
+  <CmButton
+    variant="flat"
+    color="secondary"
+  >
+    secondary
+  </CmButton>
+  <CmButton
+    variant="outlined"
+    color="secondary"
+  >
+    secondary
+  </CmButton>
+  <CmButton
+    variant="tonal"
+    color="secondary"
+  >
+    secondary
+  </CmButton>
+  <CmButton
+    variant="flat"
+    color="error"
+  >
+    error
+  </CmButton>
+  <CmButton
     variant="outlined"
     color="error"
-    @click="handleClick"
   >
-    hello123
+    error
   </CmButton>
+  <CmButton
+    variant="tonal"
+    color="error"
+  >
+    error
+  </CmButton>
+  <CmButton
+    variant="flat"
+    color="success"
+  >
+    success
+  </CmButton>
+  <CmButton
+    variant="outlined"
+    color="success"
+  >
+    success
+  </CmButton>
+  <CmButton
+    variant="tonal"
+    color="success"
+  >
+    success
+  </CmButton>
+  <CmButton
+    variant="flat"
+    color="purple"
+  >
+    purple
+  </CmButton>
+  <CmButton
+    variant="outlined"
+    color="purple"
+  >
+    purple
+  </CmButton>
+  <CmButton
+    variant="tonal"
+    color="purple"
+  >
+    purple
+  </CmButton>
+  <CmButton
+    variant="flat"
+    color="orange"
+  >
+    orange
+  </CmButton>
+  <CmButton
+    variant="outlined"
+    color="orange"
+  >
+    orange
+  </CmButton>
+  <CmButton
+    variant="tonal"
+    color="orange"
+  >
+    orange
+  </CmButton>
+
+  <VDivider />
   <CmButton
     text="button "
     color="error"

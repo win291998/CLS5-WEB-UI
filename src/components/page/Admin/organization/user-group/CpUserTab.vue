@@ -13,8 +13,8 @@ const { t } = window.i18n()
 
 const TITLE = Object.freeze({
   BUTTON_EXCEL: t('export-excel'),
-  TITLE_PAGE: t('Danh sách nhóm người dùng'),
-  BUTTON_ADD: t('add'),
+  TITLE_PAGE: t('user-list'),
+  BUTTON_ADD: t('Add-new'),
   BUTTON_MOVE: t('Chuyển nhóm'),
   BUTTON_DELETE: t('Xóa người dùng'),
 })
@@ -171,7 +171,7 @@ const handleDeleteMultiple = () => {
   />
   <CpConfirmDialog
     v-model:is-dialog-visible="isShowModalConfirmDelete"
-    :type="1"
+    :type="2"
     :confirmation-msg="t('Are-you-sure-you-want-to-delete-the-ability-group?')"
     @confirm="handleDeleteMultiple"
   />

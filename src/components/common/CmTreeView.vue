@@ -96,17 +96,17 @@ const configTree = computed(() => {
       style: 'font-size: 18px; height: 18px; width: 18px;',
       type: 'shape',
       width: '32',
-      fill: 'currentColor',
+      fill: ' #1D2939',
       height: '32',
-      stroke: 'black',
+      stroke: ' #1D2939',
       viewBox: '0 0 24 24',
       draw: 'M12 14.975q-.2 0-.388-.075t-.312-.2l-4.6-4.6q-.275-.275-.275-.7t.275-.7q.275-.275.7-.275t.7.275l3.9 3.9l3.9-3.9q.275-.275.7-.275t.7.275q.275.275.275.7t-.275.7l-4.6 4.6q-.15.15-.325.213t-.375.062Z',
     },
     closedIcon: {
       style: 'font-size: 18px; height: 18px; width: 18px;',
       type: 'shape',
-      stroke: 'black',
-      fill: 'currentColor',
+      stroke: ' #1D2939',
+      fill: ' #1D2939',
       width: '32',
       height: '32',
       viewBox: '0 0 24 24',
@@ -264,6 +264,12 @@ const onChangeOrgChecked = (val: any, node: any) => {
           :true-value="true"
           :indeterminate="node.state.indeterminate"
         />
+        <VIcon
+          v-if="node.icon"
+          :size="24"
+          :icon="node.icon"
+          class="m-0"
+        />
       </template>
       <template
         #after-input="{ node }"
@@ -347,15 +353,15 @@ const onChangeOrgChecked = (val: any, node: any) => {
     margin-left: -14px;
     margin-right: 24px;
   }
-  .v-selection-control__input input{
-    display: none;
-  }
+  // .v-selection-control__input input{
+  //   display: none;
+  // }
   // .dot-tree::before {
   //   content: url('https://webcoban.vn/image/banana.png')
   // }
-  input[type=checkbox] {
-    display: none;
-  }
+  // input[type=checkbox] {
+  //   display: none;
+  // }
 }
 </style>
 

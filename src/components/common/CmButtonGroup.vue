@@ -19,7 +19,7 @@ import type { size } from '@/typescript/enums/enums'
 */
 
 interface Props {
-  listItem: ListItem[]
+  listItem: Item[]
   icon?: string
   color?: string
   isBorder?: boolean
@@ -29,7 +29,7 @@ interface Props {
   title: string
   type?: string
 }
-interface ListItem {
+interface Item {
   title: string
   icon?: string
   colorClass?: string
@@ -152,13 +152,13 @@ const clickItem = (item: object) => {
  height:  -webkit-fill-available;
 }
 
-.text-style-btn {
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 600;
-  line-height: 20px;
-  padding-block: 10px;
-  padding-inline: 16px;
-  text-transform: inherit;
-}
+// .text-style-btn {
+//   font-size: 14px;
+//   font-style: normal;
+//   font-weight: 600;
+//   line-height: 20px;
+//   padding-block: 10px;
+//   padding-inline: 16px;
+//   text-transform: inherit;
+// }
 </style>

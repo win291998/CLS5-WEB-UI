@@ -18,7 +18,7 @@ interface Props {
   buttonOkName?: string
   buttonCancleName?: string
   isHideFooter?: boolean
-  persistent?: boolean
+  persistent?: boolean // ngăn không cho tắt modal
   size?: typeof sizeDialog[] | string
   height?: number | string
   disabledOk?: boolean
@@ -119,12 +119,11 @@ const sizeModal = computed(() => {
         <VDivider class="mb-1" />
         <template #actions>
           <div class="d-flex justify-end my-3 w-100">
+            <slot name="actions" />
             <CmButton
               variant="outlined"
-              bg-color="bg-white"
-              color="dark"
+              color="secondary"
               :disabled="disabledCancel"
-              text-color="color-dark"
               @click="onCancel"
             >
               {{ t(buttonCancleName) }}
