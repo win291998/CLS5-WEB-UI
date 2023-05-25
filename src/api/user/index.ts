@@ -8,6 +8,7 @@ const UserService = {
   DownloadFileSampleUser: 'user/excel-template-change-info',
   downloadSampleFileUpdateTitle: '/User/excel-template-change-title',
   downloadSampleFileAddUser: '/user/generate-excel-template-create-users',
+  DownloadSampleFileAddOrg: '/organizationalstructure/generate-excel-template-organizationcal-structure',
 
   // import file
   UpdateInforUserExcel: '/User/update-email-excel',
@@ -16,9 +17,11 @@ const UserService = {
   UpdateFileUserInfor: '/user/import-excel-change-info',
   updateTitleFromFile: '/User/import-excel-change-title',
   AddUserFromFile: '/user/import-user-from-json',
+  AddOrgFromFile: '/organizationalstructure/import-file-create-organization-structures',
 
   // export file
   exportUserToExcel: 'user/export-excel-users',
+  exportOrgStructToExcel: 'organizationalstructure/export-excel-organizationcal-structure',
 
   /// user type
   RoleFeaturePermission: '/usertype/get-feature-permission-by-portal',
@@ -43,6 +46,8 @@ const UserService = {
   PostAddUserOrg: '/organizationalstructure/add-user',
   PostUpdateUserOrg: '/organizationalstructure/update-user',
   PostDeleteUserOrg: '/organizationalstructure/delete-user',
+  PostCreateFromXml: '/hrm/update-structure',
+  PostCreateTitleFromXml: '/hrm/update-title',
 
   /** Put */
   PutReturnCustomer: 'Customer/deny',

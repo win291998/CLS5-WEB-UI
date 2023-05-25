@@ -272,7 +272,13 @@ onBeforeUnmount(() => {
   >
   <div class="cp-import-file-action-footer mt-3">
     <div class="cp-import-file-btn-footer ">
-      <CmButton @click="() => { router.push({ name: props.config.routerBack }) }">
+      <CmButton
+        variant="outlined"
+        bg-color="bg-white"
+        color="dark"
+        text-color="color-dark"
+        @click="() => { router.push({ name: props.config.routerBack }) }"
+      >
         {{ titleButtonCancel }}
       </CmButton>
     </div>

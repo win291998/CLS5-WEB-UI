@@ -41,24 +41,28 @@ const listTab = [
     title: 'info',
     component: CpInforOrgStructTab,
     isRendered: true,
+    isDisabled: false,
   },
   {
     key: 'title',
     title: 'title-position',
     component: CpTitleOrgStructTab,
     isRendered: false,
+    isDisabled: !isEdit.value,
   },
   {
     key: 'user',
     title: 'user',
     component: CpUserOrgStructTab,
     isRendered: false,
+    isDisabled: !isEdit.value,
   },
   {
     key: 'course',
     title: 'course',
     component: CpCourseOrgStructTab,
     isRendered: false,
+    isDisabled: !isEdit.value,
   },
 ]
 if (route.params.tab)

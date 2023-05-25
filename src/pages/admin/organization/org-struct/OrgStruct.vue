@@ -4,17 +4,20 @@ import { orgStructManagerStore } from '@/stores/admin/org-struct/orgStruct'
 const CpHeaderPageOrgStruct = defineAsyncComponent(() => import('@/components/page/Admin/organization/org-struct/CpHeaderPageOrgStruct.vue'))
 const CpOrganizationListView = defineAsyncComponent(() => import('@/components/page/Admin/organization/org-struct/CpOrganizationListView.vue'))
 const CpDeleteNodeOrg = defineAsyncComponent(() => import('@/components/page/Admin/organization/org-struct/modal/CpDeleteNodeOrg.vue'))
+const CpModalAddOrgApi = defineAsyncComponent(() => import('@/components/page/Admin/organization/org-struct/modal/CpModalAddOrgApi.vue'))
 
 /**
  * lib
  */
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
+const router = useRouter()
+
 /**
  * store
  */
 const storeOrgStruct = orgStructManagerStore()
-const { render } = storeToRefs(storeOrgStruct)
-const { getListOrgStruct } = storeOrgStruct
+const { render, apiType } = storeToRefs(storeOrgStruct)
+const { getListOrgStruct, exportExcel, handleAddFromApi } = storeOrgStruct
 
 /**
  *
@@ -22,6 +25,8 @@ const { getListOrgStruct } = storeOrgStruct
  */
 const data = reactive({
   isShowDialogDeleteNode: false,
+  isShowDialogAddOrgApi: false,
+  view: false,
 })
 const deleteOrgStructData = ref()
 const deleteNode = (dataDel: any) => {
@@ -31,6 +36,27 @@ const deleteNode = (dataDel: any) => {
 const reloadOrgStruct = async () => {
   await getListOrgStruct()
   render.value++
+}
+const handleAddOrg = async (type: any) => {
+  switch (type) {
+    case 'handlerAddButton':
+      router.push({ name: 'admin-organization-org-struct-add', params: { tab: 'infor' } })
+      break
+    case 'actionAddFromApi':
+      apiType.value = 'org'
+      data.isShowDialogAddOrgApi = true
+      break
+    case 'actionAddFromApiTitle':
+      apiType.value = 'title'
+      data.isShowDialogAddOrgApi = true
+      break
+
+    default:
+      break
+  }
+}
+const changeView = (view: boolean) => {
+  data.view = view
 }
 </script>
 
@@ -42,18 +68,31 @@ const reloadOrgStruct = async () => {
       is-update-btn
       is-export-btn
       is-approve-btn
+      @exportExcel="exportExcel"
+      @changeView="changeView"
+      @click="handleAddOrg"
     />
   </div>
   <div>
     <CpOrganizationListView
+      v-if="!data.view"
       @delete-node="deleteNode"
     />
+    <div v-else>
+      view
+    </div>
   </div>
   <div>
     <CpDeleteNodeOrg
       v-model:is-dialog-visible="data.isShowDialogDeleteNode"
       :delete-org-struct-data="deleteOrgStructData"
       @deleteSuccess="reloadOrgStruct"
+    />
+  </div>
+  <div>
+    <CpModalAddOrgApi
+      v-model:is-dialog-visible="data.isShowDialogAddOrgApi"
+      @confirm="handleAddFromApi"
     />
   </div>
 </template>
