@@ -384,6 +384,9 @@ const handlerActionHeader = (type: any) => {
       break
   }
 }
+const handleAddFromApi = (model: any) => {
+  console.log(model)
+}
 
 // watch
 watch(() => route.path, value => {
@@ -555,6 +558,7 @@ window.hideAllPageLoading()
   />
   <CpModalAddUserApi
     v-model:is-dialog-visible="data.isShowDialogAddUserApi"
+    @confirm="handleAddFromApi"
   />
 </template>
 

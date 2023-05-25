@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia'
 import MethodsUtil from '@/utils/MethodsUtil'
-import { validatorStore } from '@/stores/validatator'
 import { comboboxStore } from '@/stores/combobox'
 import ApiUser from '@/api/user/index'
 import { TYPE_REQUEST } from '@/typescript/enums/enums'
@@ -27,6 +26,8 @@ export const orgStructManagerStore = defineStore('orgStructManager', () => {
    */
   const nodes = ref({})
   const render = ref(0)
+  const apiType = ref('org')
+  const xmlTitleData = ref<any>()
   const config = ref({
     roots: [] as any[],
     keyboardNavigation: false,
@@ -363,7 +364,49 @@ export const orgStructManagerStore = defineStore('orgStructManager', () => {
       listTitles.value = value?.data?.pageLists
     })
   }
-
+  const exportExcel = async () => {
+    window.showAllPageLoading()
+    const params = {
+      language:
+          localStorage.getItem('lang') === null
+            ? 'vi'
+            : localStorage.getItem('lang'),
+    }
+    await MethodsUtil.dowloadSampleFile(
+      ApiUser.exportOrgStructToExcel,
+      'POST',
+      'organizationalstructure.xlsx',
+      params,
+    )
+    window.hideAllPageLoading()
+  }
+  const handleAddFromApi = async (model: any) => {
+    if (apiType.value === 'title') {
+      model.forEach((element: any) => {
+        if (!element.Level || element.Level.length === 0)
+          element.Level = null
+        if (!element.TitleId || element.TitleId.length === 0)
+          element.TitleId = null
+      })
+    }
+    const params = {
+      isSave: false,
+      data: model,
+    }
+    await MethodsUtil.requestApiCustom(apiType.value === 'org' ? ApiUser.PostCreateFromXml : ApiUser.PostCreateTitleFromXml, TYPE_REQUEST.POST, params).then((value: any) => {
+      console.log(value)
+      if (value.code === 200) {
+        if (apiType.value === 'title') {
+          xmlTitleData.value = value.data
+          return 'xmlTitleModalId'
+        }
+        else {
+          xmlTitleData.value = value.data
+          return 'xmlModalId'
+        }
+      }
+    })
+  }
   return {
     idOrg,
     organization,
@@ -380,6 +423,7 @@ export const orgStructManagerStore = defineStore('orgStructManager', () => {
     titleSelected,
     userIds,
     listTitles,
+    apiType,
     getComboboxOwnerInf,
     getInforOrgById,
     addOrganizational,
@@ -397,5 +441,7 @@ export const orgStructManagerStore = defineStore('orgStructManager', () => {
     resetDataTitle,
     fetchUserIds,
     getPagingByTitles,
+    exportExcel,
+    handleAddFromApi,
   }
 })

@@ -4,12 +4,14 @@ import CmButton from './CmButton.vue'
 interface Props {
   listItem: item[]
   color?: string
+  modelValue: any
 }
 interface item {
   title?: string
   icon?: string
   colorClass?: string
   action?: any
+  value: any
 }
 
 const propsValue = withDefaults(defineProps<Props>(), ({
@@ -32,8 +34,8 @@ const positionBorder = (value: number) => {
   <CmButton
     v-for="(item, index) in listItem"
     :key="index"
-    :class="`${positionBorder(index)} button-group`"
-    :color="color"
+    :class="`${positionBorder(index)} button-group ${item.value === modelValue ? 'active' : ''}`"
+    color="color"
     variant="outlined"
     @click="item?.action"
   >
@@ -74,9 +76,9 @@ const positionBorder = (value: number) => {
   border-radius: 0;
 }
 
-// .active {
-//   background: $color-primary-600 !important;
-// }
+.active {
+  background: $color-primary-300 !important;
+}
 
 // .button-group:focus {
 //   background: $color-primary-100 !important;

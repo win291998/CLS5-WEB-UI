@@ -58,7 +58,7 @@ const handleAction = (value: any, dataResend: any) => {
       break
     case 16:
       isView.value = false
-      router.push({ name: 'admin-organization-org-struct-add', params: { tab: 'infor', parentId: dataResend.ids } })
+      router.push({ name: 'admin-organization-org-struct-add-parent', params: { tab: 'infor', parentId: dataResend.ids } })
       break
 
     default:

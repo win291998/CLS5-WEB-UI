@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import axios from 'axios'
 import { validatorStore } from '@/stores/validatator'
 import MethodsUtil from '@/utils/MethodsUtil'
 import { TYPE_REQUEST } from '@/typescript/enums/enums'
@@ -52,7 +51,7 @@ const onConfirm = async () => {
   myFormAdd.value.validate().then(async (success: any) => {
     if (success.valid) {
       window.showAllPageLoading('FULL-OPACITY')
-      await axios.get(`${apiInfo.name}/${apiInfo.code}`)
+      await MethodsUtil.requestApiCustom(`${apiInfo.name}/${apiInfo.code}`, TYPE_REQUEST.GET)
         .then((data: any) => {
           toast('SUCCESS', t('approve-success'))
           emit('confirm', data)

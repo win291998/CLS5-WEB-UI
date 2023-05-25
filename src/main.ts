@@ -10,7 +10,6 @@ import router from '@/router'
 import { globals } from '@/typescript/global/property'
 import { globalsReadOnly } from '@/typescript/global/property.read'
 import windowDefineProperty from '@/typescript/global/public/propertyGlobal.public'
-import Toast from 'vue-toastification'
 
 // Import the CSS or use your own!
 import '@core/scss/template/index.scss'
@@ -23,6 +22,7 @@ import VueFeather from 'vue-feather'
 import Vue3EasyDataTable from 'vue3-easy-data-table'
 import 'vue3-easy-data-table/dist/style.css'
 import { configStore } from '@/stores/index'
+import Toast from 'vue-toastification'
 
 const pinia = createPinia()
 
@@ -46,6 +46,7 @@ const options = {
   closeButton: 'button',
   icon: true,
   rtl: false,
+  containerClassName: 'v-theme--light',
   filterBeforeCreate: (toast: any, toasts: any) => {
     if (toasts.filter((item: any) => item.type === toast.type).length !== 0) {
       // Returning false discards the toast

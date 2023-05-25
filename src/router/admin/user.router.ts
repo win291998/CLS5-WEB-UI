@@ -361,14 +361,42 @@ export default [
             component: () => import('@/pages/admin/organization/org-struct/OrgStruct.vue'),
           },
           {
-            path: 'org-struct/:tab/add/:parentId',
+            path: 'org-struct/:tab/add',
             name: 'admin-organization-org-struct-add',
+            component: () => import('@/pages/admin/organization/org-struct/edit/EditOrgStruct.vue'),
+          },
+          {
+            path: 'org-struct/:tab/add/:parentId',
+            name: 'admin-organization-org-struct-add-parent',
             component: () => import('@/pages/admin/organization/org-struct/edit/EditOrgStruct.vue'),
           },
           {
             path: 'org-struct/:tab/edit/:id',
             name: 'admin-organization-org-struct-edit',
             component: () => import('@/pages/admin/organization/org-struct/edit/EditOrgStruct.vue'),
+          },
+
+          /** import */
+          {
+            path: 'import-file',
+            meta: {
+              requireAuth: {
+                permissionKey: 'OrganizationalStructureManaging',
+                permissionValue: 1,
+              },
+              breadcrumb: [
+                {
+                  title: 'org-struct',
+                  to: { name: 'admin-organization-org-struct' },
+                },
+                {
+                  title: 'import-file-org',
+                  active: true,
+                },
+              ],
+            },
+            name: 'admin-organization-org-struct-import-file',
+            component: () => import('@/pages/admin/organization/org-struct/import/ImportOrgStructFromFile.vue'),
           },
         ],
         component: () => import('@/pages/admin/organization/org-struct/Index.vue'),

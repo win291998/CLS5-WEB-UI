@@ -3326,5 +3326,7 @@
   "topic-survey": "Chủ đề khảo sát",
   "topic-training-route": "chủ đề lộ trình đào tạo",
   "topic-forum": "Chủ đề diễn đàn",
-  "Delete-course":"Xóa khóa học"
+  "Delete-course": "Xóa khóa học",
+  "import-file-org": "Thêm cơ cấu tổ chức từ file",
+  "add-org": "Thêm cơ cấu tổ chức"
 }
