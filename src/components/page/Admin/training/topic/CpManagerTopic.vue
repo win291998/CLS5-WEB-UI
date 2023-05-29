@@ -159,7 +159,14 @@ const confirm = (val: DataInput) => {
 }
 
 const isShowModalDelete = ref<boolean>(false)
-
+interface DataDelete {
+  listId: number[]
+  topicIdNew: number | null
+}
+const dataDelete = reactive<DataDelete>({
+  listId: [],
+  topicIdNew: null,
+})
 const handleAction = (value: any, node: any) => {
   switch (value?.id) {
     case 1:
@@ -167,6 +174,7 @@ const handleAction = (value: any, node: any) => {
       getDetailTopic(node.ids)
       break
     case 2:
+      dataDelete.listId = [node.ids]
       isShowModalDelete.value = true
       break
     case 16:
@@ -192,6 +200,18 @@ const listItemButtonGroup = [
     },
   },
 ]
+
+// Xóa chủ đề
+const confirmDelete = (topicId: number) => {
+  dataDelete.topicIdNew = topicId
+  MethodsUtil.requestApiCustom(sharedService.DeleteTopic, TYPE_REQUEST.DELETE, dataDelete).then(res => {
+    toast('SUCCESS', t('success-delete-gift-group'))
+    isShowModalEdit.value = false
+    getInformationTopic()
+  }).catch((res: any) => {
+    toast('ERROR', t('error'))
+  })
+}
 </script>
 
 <template>
@@ -217,7 +237,6 @@ const listItemButtonGroup = [
       @handle-action="handleAction"
     />
   </div>
-
   <CpMdEditTopic
     v-model:is-show="isShowModalEdit"
     :data-tree="dataTree"
@@ -234,7 +253,7 @@ const listItemButtonGroup = [
     v-model:is-show="isShowModalDelete"
     :data-tree="dataTree"
     :placeholder-select-topic="TITLE.PLACEHOLDER_PARENT_TOPIC"
-    @confirm="confirm"
+    @confirm="confirmDelete"
   />
 </template>
 

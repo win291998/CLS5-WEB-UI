@@ -43,7 +43,7 @@ interface Props {
 
 const isShowFilter = ref(props.isFillter)
 
-const handleClickBtn = (type: string) => {
+function handleClickBtn(type: string) {
   switch (type) {
     case 'fillter':
       isShowFilter.value = !isShowFilter.value
@@ -66,7 +66,7 @@ const handleClickBtn = (type: string) => {
 }
 
 const timer = ref<any>(null)
-const handleSearch = (value: any) => {
+function handleSearch(value: any) {
   if (timer.value) {
     clearTimeout(timer.value)
     timer.value = null

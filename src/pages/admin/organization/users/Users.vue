@@ -263,6 +263,8 @@ async function fectchListUsers() {
             ...titleModels,
             content: titleData,
           }
+          console.log(item.actions)
+
           item.actions = item.actions.map((el: any) => {
             return MethodsUtil.checkActionType(el, actionItem)
           })

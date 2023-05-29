@@ -3328,5 +3328,11 @@
   "topic-forum": "Chủ đề diễn đàn",
   "Delete-course": "Xóa khóa học",
   "import-file-org": "Thêm cơ cấu tổ chức từ file",
-  "add-org": "Thêm cơ cấu tổ chức"
+  "add-org": "Thêm cơ cấu tổ chức",
+  "list-type-cost":"Danh sách loại chi phí",
+  "add-type-cost":"Thêm loại chi phí",
+  "type-name-cost": "Tên loại chi phí",
+  "cost-course": "Chi phí khóa học",
+  "add-cost": "Thêm chi phí",
+  "cost-exam":"Chi phí kỳ thi"
 }

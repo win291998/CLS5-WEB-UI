@@ -1,4 +1,8 @@
 <script setup lang="ts">
+const emit = defineEmits<Emit>()
+const { t } = window.i18n()
+
+// eslint-disable-next-line vue/define-macros-order
 const props = withDefaults(defineProps<Props>(), ({
   isShowAddGroup: true,
   isShowDelete: true,
@@ -6,9 +10,9 @@ const props = withDefaults(defineProps<Props>(), ({
   isDisabledMove: false,
   isDisabledDelete: false,
   isShowExportExcel: true,
+  buttonAdd: 'Add-new',
+  buttonPrepend: 'export-excel',
 }))
-
-const emit = defineEmits<Emit>()
 const CmButton = defineAsyncComponent(() => import('@/components/common/CmButton.vue'))
 const CmButtonGroup = defineAsyncComponent(() => import('@/components/common/CmButtonGroup.vue'))
 const CmTextField = defineAsyncComponent(() => import('@/components/common/CmTextField.vue'))
@@ -70,14 +74,15 @@ const exportExcel = () => {
       <VCol class="d-flex justify-end">
         <CmButton
           v-if="isShowExportExcel"
-          :title="props.buttonPrepend"
+          :title="t(props.buttonPrepend)"
           icon="tabler:download"
+          variant="tonal"
           color="primary"
           @click="exportExcel"
         />
         <CmButtonGroup
           v-if="props.isShowAddGroup"
-          :title="props.buttonAdd"
+          :title="t(props.buttonAdd)"
           color="primary"
           class="ml-1"
           :list-item="props.listItemButtonGroup"
@@ -85,7 +90,7 @@ const exportExcel = () => {
         />
         <CmButton
           v-if="props.isShowAdd"
-          :title="props.buttonAdd"
+          :title="t(props.buttonAdd)"
           class="ml-1"
           variant="flat"
           color="primary"

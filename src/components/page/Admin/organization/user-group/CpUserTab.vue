@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { routeLocationKey } from 'vue-router'
 import CpHeaderAction from './CpHeaderAction.vue'
 import CpMdAddUser from './Modal/CpMdAddUser.vue'
 import CpMdMoveGroup from './Modal/CpMdMoveGroup.vue'

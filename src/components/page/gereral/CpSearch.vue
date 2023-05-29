@@ -11,7 +11,7 @@ interface Props {
 }
 const timer = ref<any>(null)
 
-const handleSearch = (val: string) => {
+function handleSearch(val: string) {
   if (timer) {
     clearTimeout(timer.value)
     timer.value = null

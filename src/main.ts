@@ -1,7 +1,7 @@
 /* eslint-disable import/order */
 import '@/@iconify/icons-bundle'
-import i18n from '@/plugins/i18n'
 import App from '@/App.vue'
+import i18n from '@/plugins/i18n'
 import layoutsPlugin from '@/plugins/layouts'
 import lodash from '@/plugins/lodash'
 import vuetify from '@/plugins/vuetify'
@@ -12,17 +12,17 @@ import { globalsReadOnly } from '@/typescript/global/property.read'
 import windowDefineProperty from '@/typescript/global/public/propertyGlobal.public'
 
 // Import the CSS or use your own!
-import '@core/scss/template/index.scss'
 import '@/styles/styles.scss'
+import '@core/scss/template/index.scss'
 
 // import { createPinia } from 'pinia'
 
+import { configStore } from '@/stores/index'
 import { createApp } from 'vue'
 import VueFeather from 'vue-feather'
+import Toast from 'vue-toastification'
 import Vue3EasyDataTable from 'vue3-easy-data-table'
 import 'vue3-easy-data-table/dist/style.css'
-import { configStore } from '@/stores/index'
-import Toast from 'vue-toastification'
 
 const pinia = createPinia()
 

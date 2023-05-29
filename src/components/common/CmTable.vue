@@ -40,13 +40,13 @@ interface HeaderCustom extends Header {
   config?: any
   valueId?: any
 }
-interface groupOptions {
+interface GroupOptions {
   allowEmptySelect?: boolean
   collapsable?: boolean
   enabled?: boolean
 }
 interface Props {
-  groupOptions?: groupOptions
+  groupOptions?: GroupOptions
   headers: HeaderCustom[]
   items?: Item[]
   rowClassName?: string
@@ -96,7 +96,7 @@ const indeterminate = computed(() => {
 const keyid = computed(() => {
   return props?.isImportFile ? 'key' : props.customId
 })
-const checkActionShow = (action: Array<any>) => {
+function checkActionShow(action: Array<any>) {
   return action?.filter((item: any) => item.isShow === true)?.length > 0
 }
 watch(() => props.items, (val: Item[]) => {
@@ -109,6 +109,7 @@ watch(() => props.items, (val: Item[]) => {
       selectedRows.value.push([keyid.value])
   })
 }, { immediate: true })
+// eslint-disable-next-line vue/no-dupe-keys
 const pageSize = ref(props.pageSize) // số lượng item trên 1 page
 
 /** method */
@@ -122,7 +123,7 @@ const pageSize = ref(props.pageSize) // số lượng item trên 1 page
 // }
 
 // click chọn tất cả hoặc bỏ tất cả
-const checkedAll = (value: any) => {
+function checkedAll(value: any) {
   if (!value) {
     props.items?.forEach(element => {
       if (!(element?.isDisabled && element?.isDisabled === true))
@@ -145,13 +146,13 @@ const checkedAll = (value: any) => {
 
 /** event */
 // sự kiện click vào hàng
-const showRow = (item: ClickRowArgument) => {
+function showRow(item: ClickRowArgument) {
   const index = props.items.findIndex((row: any) => row.key === item.key)
   emit('handleClickRow', item, index)
 }
 
 // sự kiện click chọn item
-const checkedItem = (index: number, value: boolean | undefined) => {
+function checkedItem(index: number, value: boolean | undefined) {
   // eslint-disable-next-line vue/no-mutating-props
   props.items[index].isSelected = !value
   const itemSelected = props.items.filter((x: Item) => x.isSelected === true)
@@ -163,17 +164,17 @@ const checkedItem = (index: number, value: boolean | undefined) => {
 }
 
 // Cập nhật table theo pagination
-const updatePage = (paginationNumber: number) => {
+function updatePage(paginationNumber: number) {
   dataTable.value?.updatePage(paginationNumber)
 }
 
 // Cập nhật số lượng item trên  table theo pagination
-const updateRowsPerPageSelect = (e: number) => {
+function updateRowsPerPageSelect(e: number) {
   dataTable.value?.updateRowsPerPageActiveOption(e)
 }
 
 // thay đổi số lượng item trên trang
-const pageSizeChange = (page: number, size: number) => {
+function pageSizeChange(page: number, size: number) {
   pageSize.value = size
   emit('update:pageNumber', page)
   emit('update:pageSize', size)
@@ -186,12 +187,12 @@ const pageSizeChange = (page: number, size: number) => {
 }
 
 // kiểm tra cột lỗi
-const isErrorcell = (field: string, data: any) => {
+function isErrorcell(field: string, data: any) {
   return data[props.customKeyError]?.filter((x: any) => x.location.toLowerCase() === field.toLowerCase()).length > 0
 }
 
 // thay đổi dữ liệu trên bảng
-const changeCellvalue = (event: any, field: string, key: number, keyCustomValue?: any, keyCustomIdValue?: any) => {
+function changeCellvalue(event: any, field: string, key: number, keyCustomValue?: any, keyCustomIdValue?: any) {
   emit('changeCellvalue', event, field, key, keyCustomValue, keyCustomIdValue)
 }
 defineExpose({
@@ -276,6 +277,7 @@ onMounted(() => {
           name="rowItem"
           :col="itemsHeader.value"
           :context="context"
+          :data-col="itemsHeader"
         />
         <span
           v-if="itemsHeader.value === 'select' && context?.isSuccess === false"

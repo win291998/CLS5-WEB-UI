@@ -17,6 +17,9 @@ const ComboboxService = {
   Owner: '/user/get-list-user',
   CategoryTitleCombobox: '/categorytitle/get-combobox', // danh mục chức danh
   proficiencylevelCombobox: '/proficiencylevel/get-combobox', // danh mục chức danh
+  GetComboboxCourse: '/course/get-combobox-course', // Danh sách khóa học
+  GetComboboxCostType: '/costtype/get-combobox', // Danh sách loại chi phí
+  GetComboboxExam: '/exam/get-combobox-exam', // Danh sách kỳ thi
 }
 
 export default ComboboxService

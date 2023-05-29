@@ -37,6 +37,7 @@ const UserService = {
   getTitleById: 'title/get-by-id',
   getProficiencyData: 'proficiency/get-all',
   GetUserExclude: '/user/get-list-user-id-by-structure',
+  GetListInforUser: '/user/get-info-user-by-ids',
 
   /** POST */
   PostApproveCustomer: 'Customer/approve',

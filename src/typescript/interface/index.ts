@@ -24,3 +24,7 @@ export interface infImageCard {
 }
 
 export type typeToast = typeof typeStatusToast[number]
+
+export interface Any {
+  [e: string]: any
+}
