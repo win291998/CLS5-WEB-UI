@@ -31,6 +31,7 @@ interface Emit {
   (e: 'cancel', type?: string): void
   (e: 'confirm', type?: string): void
   (e: 'show'): void
+  (e: 'hide'): void
 }
 
 const props = withDefaults(defineProps<Props>(), ({
@@ -68,6 +69,8 @@ const onDialogHidden = (e: any) => {
 watch(() => props.isDialogVisible, val => {
   if (val)
     emit('show')
+  else
+    emit('hide')
 })
 const sizeModal = computed(() => {
   switch (props.size) {

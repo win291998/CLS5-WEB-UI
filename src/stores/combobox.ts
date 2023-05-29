@@ -1,11 +1,8 @@
 import { defineStore } from 'pinia'
-import readXlsxFile from 'read-excel-file'
-import type { Config } from '@/typescript/interface/import'
-import toast from '@/plugins/toast'
 import MethodsUtil from '@/utils/MethodsUtil'
-import ObjectUtil from '@/utils/ObjectUtil'
 import ComboboxService from '@/api/combobox/index'
 import { TYPE_REQUEST } from '@/typescript/enums/enums'
+import type { Any } from '@/typescript/interface'
 
 export const comboboxStore = defineStore('combobox', () => {
   /** variable */
@@ -30,6 +27,28 @@ export const comboboxStore = defineStore('combobox', () => {
     data: [],
     totalRecord: 0,
   })
+
+  // Lấy danh sách khóa học
+  const courseCombobox = ref<Any>([])
+  const getComboboxCourse = async () => {
+    const { data } = await MethodsUtil.requestApiCustom(ComboboxService.GetComboboxCourse, TYPE_REQUEST.GET)
+    courseCombobox.value = data
+  }
+
+  // Lấy danh sách loại chi phí
+  const costTypeCombobox = ref<Any[]>([])
+  const getCostTypeCombobox = async () => {
+    const { data } = await MethodsUtil.requestApiCustom(ComboboxService.GetComboboxCostType, TYPE_REQUEST.GET)
+    costTypeCombobox.value = data
+  }
+
+  // Lấy danh sách loại chi phí
+  const examCombobox = ref<Any[]>([])
+  const getExamCombobox = async () => {
+    const { data } = await MethodsUtil.requestApiCustom(ComboboxService.GetComboboxExam, TYPE_REQUEST.GET)
+    examCombobox.value = data
+  }
+
   const addFromCombobox = ref([
     { key: t('direct'), value: 1 },
     { key: t('add-from-file'), value: 2 },
@@ -204,6 +223,7 @@ export const comboboxStore = defineStore('combobox', () => {
     districts.value = []
     wards.value = []
     userLevels.value = []
+    courseCombobox.value = []
   }
   return {
     organizationsCombobox,
@@ -235,5 +255,11 @@ export const comboboxStore = defineStore('combobox', () => {
     getComboboxOwner,
     fetchCategoryTitleCombobox,
     reset,
+    getComboboxCourse,
+    courseCombobox,
+    costTypeCombobox,
+    getCostTypeCombobox,
+    examCombobox,
+    getExamCombobox,
   }
 })

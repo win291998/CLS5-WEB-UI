@@ -5,7 +5,7 @@ import Globals from '@/constant/Globals'
 import StringUtil from '@/utils/StringUtil'
 
 interface Props {/** ** Interface */
-  modelValue?: any
+  modelValue?: unknown
   items?: Array<any>
   maxItem?: number
   totalRecord?: number
@@ -65,7 +65,7 @@ const messageError = computed(() => {
   return ''
 })
 
-const handleChangeValue = (e: any) => {
+function handleChangeValue(e: any) {
   emit('update:modelValue', valueCurrent.value)
 }
 const optionsModel = computed(() => {
@@ -83,7 +83,7 @@ const optionsModel = computed(() => {
 const hasNextPage = computed(() => {
   return optionsModel.value.length < props.totalRecord
 })
-const open = (e: any) => {
+function open(e: any) {
   if (!props.multiple) {
     stackValue.value = window._.clone(valueCurrent.value)
     valueCurrent.value = null
@@ -98,7 +98,7 @@ const open = (e: any) => {
   emit('open', valueCurrent)
 }
 
-const close = (e: any) => {
+function close(e: any) {
   if (!valueCurrent.value && !props.multiple)
     valueCurrent.value = stackValue.value
   if (props.isInfinityScroll) {
@@ -111,7 +111,7 @@ const close = (e: any) => {
   }, 150)
 }
 
-const fetchOptions = (options: any, search: any) => {
+function fetchOptions(options: any, search: any) {
   const searchKey = StringUtil.removeAccents(search)
 
   const optionsFuse = {
@@ -130,7 +130,7 @@ const fetchOptions = (options: any, search: any) => {
     : fuse.list
 }
 
-const infiniteScrollLoading = async ([{ isIntersecting, target }]: any) => {
+async function infiniteScrollLoading([{ isIntersecting, target }]: any) {
   if (isIntersecting) {
     ul.value = target.offsetParent
     scrollTop.value = target.offsetParent?.scrollTop
@@ -269,5 +269,9 @@ watch(() => props.modelValue, newValue => {
   white-space: nowrap !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
+}
+
+.cm-select {
+  margin-bottom: $xs;
 }
 </style>

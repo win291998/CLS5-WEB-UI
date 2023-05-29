@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { JSXComponent, PropType } from 'vue'
+import type { JSXComponent } from 'vue'
 
 type IconValue = string | JSXComponent
 
@@ -40,11 +40,11 @@ watch(() => props.modelValue, (val: any) => {
 }, { immediate: true })
 
 /** Method */
-const handleChangeText = () => {
+function handleChangeText() {
   emit('change', formModelValue.value)
 }
 
-const handleUpdateText = () => {
+function handleUpdateText() {
   emit('update:modelValue', formModelValue.value)
 }
 
@@ -101,6 +101,7 @@ const messageError = computed(() => {
   line-height: 24px;
   border: $border-input;
   border-radius: $border-radius-input !important;
+  margin-bottom: $xs;
 }
 .vTextField .v-field__outline__end,
 .vTextField .v-field__outline__start{

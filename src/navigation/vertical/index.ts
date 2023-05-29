@@ -27,6 +27,7 @@ export default [
     icon: { icon: 'tabler-file' },
     children: [
       { title: 'Quản lý chủ đề', to: { name: 'topic-list' } },
+      { title: 'Quản lý chi phí', to: { name: 'cost-list' } },
     ],
   },
 ] as VerticalNavItems

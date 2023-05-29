@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import CmSelectTree from '@/components/common/CmSelectTree.vue'
-import ArrayUtil from '@/utils/ArrayUtil'
-import { comboboxStore } from '@/stores/combobox'
+import CmSelectTree from '@/components/common/CmSelectTree.vue';
+import { comboboxStore } from '@/stores/combobox';
+import ArrayUtil from '@/utils/ArrayUtil';
 
 interface Props {/** ** Interface */
   modelValue?: any
@@ -51,7 +51,7 @@ const organizationsValue = ref<any>(props.modelValue)
 
 const options = ref()
 
-const getAllOrgStruct = async () => {
+async function getAllOrgStruct() {
   if (!window._.isEmpty(organizationsCombobox.value)) {
     const data = window._.cloneDeep(organizationsCombobox.value)
 
@@ -72,7 +72,7 @@ const getAllOrgStruct = async () => {
   }
 }
 
-const handleChangeSelect = (data: any) => {
+function handleChangeSelect(data: any) {
   emit('update:modelValue', data)
 }
 
@@ -109,4 +109,3 @@ onMounted(async () => {
     />
   </div>
 </template>
-

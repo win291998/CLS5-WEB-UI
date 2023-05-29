@@ -23,6 +23,25 @@ export default [
 
         ],
       },
+      {
+        path: 'cost',
+        name: 'cost-list',
+
+        // requireAuth: {
+        //   permissionKey: 'UserTypeManaging',
+        //   permissionValue: 1,
+        // },
+        component: () => import('@/pages/admin/training/cost/Index.vue'),
+        redirect: { name: 'manager-cost', params: { tab: 'cost-type' } },
+        children: [
+          {
+            path: ':tab',
+            name: 'manager-cost',
+            component: () => import('@/pages/admin/training/cost/Cost.vue'),
+          },
+
+        ],
+      },
     ],
   },
 ]

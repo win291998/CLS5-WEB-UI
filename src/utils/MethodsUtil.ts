@@ -4,10 +4,23 @@ import { StatusTypeUser } from '@/constant/data/status.json'
 import ApiUser from '@/api/user/index'
 import { TYPE_REQUEST } from '@/typescript/enums/enums'
 import axios from '@axios'
+import UserService from '@/api/user/index'
+import type { Any } from '@/typescript/interface'
 
 type CallbackFunction = (key: string) => any
 
 export default class MethodsUtil {
+  static getListInforUser = (listId: number, params?: Any) => {
+    const payload = {
+      userIds: [],
+      pageSize: 1,
+      pageNumber: 1,
+      ...params,
+    }
+    const { data } = MethodsUtil.requestApiCustom(UserService.GetListInforUser, TYPE_REQUEST.GET, payload)
+    return data
+  }
+
   /**
    * @name: chuyển đổi rem qua pixel
    * @param rem

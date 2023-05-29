@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import type { ClickRowArgument, Header, Item } from 'vue3-easy-data-table'
-import CpTableSub from '../page/gereral/CpTableSub.vue'
-import CmPagination from './CmPagination.vue'
 import svgChecked from '@/assets/images/svg/checkbox-tick.svg?raw'
 import svgIndeterminate from '@/assets/images/svg/indeterminate.svg?raw'
 import CmDropDown from '@/components/common/CmDropDown.vue'
 import Globals from '@/constant/Globals'
 import ArrayUtil from '@/utils/ArrayUtil'
+import { computed, ref } from 'vue'
+import type { ClickRowArgument, Header, Item } from 'vue3-easy-data-table'
+import CpTableSub from '../page/gereral/CpTableSub.vue'
+import CmPagination from './CmPagination.vue'
 
 //* ***********interface */
 interface HeaderTable extends Header {
@@ -72,7 +72,7 @@ const indeterminate = computed(() => {
 
 /* *********** method */
 // click chọn tất cả hoặc bỏ tất cả
-const checkedAll = (value: any) => {
+function checkedAll(value: any) {
   selectedRows.value = []
   selectedRows.value = !value ? rowCanCheck.value.map(item => item[props.customId]) : []
 
@@ -86,12 +86,12 @@ const checkedAll = (value: any) => {
 
 /* ***********event */
 // sự kiện click vào hàng
-const showRow = (item: ClickRowArgument) => {
+function showRow(item: ClickRowArgument) {
   emit('handleClickRow', item)
 }
 
 // sự kiện click chọn item
-const checkedItem = (rows: any, item: any) => {
+function checkedItem(rows: any, item: any) {
   emit('itemSelected', item)
   emit('selectedRows', rows)
 
@@ -105,17 +105,17 @@ const checkedItem = (rows: any, item: any) => {
 }
 
 // Cập nhật table theo pagination
-const updatePage = (paginationNumber: number) => {
+function updatePage(paginationNumber: number) {
   dataTable.value.updatePage(paginationNumber)
 }
 
 // Cập nhật số lượng item trên  table theo pagination
-const updateRowsPerPageSelect = (e: number) => {
+function updateRowsPerPageSelect(e: number) {
   dataTable.value.updateRowsPerPageActiveOption(e)
 }
 
 // thay đổi số lượng item trên trang
-const pageSizeChange = (page: number, size: number) => {
+function pageSizeChange(page: number, size: number) {
   currentPage.value = page
   pageSize.value = size
   updatePage(page)
@@ -123,12 +123,12 @@ const pageSizeChange = (page: number, size: number) => {
 }
 
 // check level
-const classLevelTreeTable = (item: any) => {
+function classLevelTreeTable(item: any) {
   return `group-child-${item.level}`
 }
 
 // click mở colap
-const toggleRowSelection = (row: any, type: boolean | null = null) => {
+function toggleRowSelection(row: any, type: boolean | null = null) {
   let typeNew: any = null
   const indexParent = props.items.findIndex(item => item[props.customId] === row[props.customId]) // check vị trí item click đóng mở
 

@@ -20,12 +20,12 @@ const items = route?.meta?.breadcrumb as any
       <template #title="{ item }">
         <div>
           <VIcon
-            v-if="item.icon"
-            :icon="item.icon"
+            v-if="item?.icon"
+            :icon="item?.icon"
             :size="24"
             class="color-icon-default"
           />
-          <span :to="item.to"> {{ t(item.title) }}</span>
+          <span :to="item?.to"> {{ t(item?.title) }}</span>
         </div>
       </template>
       <template #divider>
