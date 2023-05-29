@@ -40,7 +40,7 @@ export default [
 
   // quản lý người dùng
   {
-    path: '/organization',
+    path: 'organization',
     name: 'admin-organization',
     redirect: { name: 'admin-organization-permission' },
     children: [

@@ -1,6 +1,6 @@
 export default [
   {
-    path: '/training',
+    path: 'training',
     name: 'admin-training',
     redirect: { name: 'topic-list' },
     children: [
