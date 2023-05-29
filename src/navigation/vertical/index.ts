@@ -23,6 +23,13 @@ export default [
     ],
   },
   {
+    title: 'Quản lý nội dung',
+    icon: { icon: 'tabler-file' },
+    children: [
+      { title: 'Ngân hàng câu hỏi', to: { name: 'admin-content' } },
+    ],
+  },
+  {
     title: 'Quản lý đào tạo',
     icon: { icon: 'tabler-file' },
     children: [

@@ -52,20 +52,20 @@ interface Emit {
 }
 const tabActive = ref<any>({})
 
-const getTabActive = () => {
+function getTabActive() {
   if (route.params[props.label] && !tabActive.value[props.label])
     tabActive.value = props.listTab.find(e => e.key === route.params[props.label]) as object
 }
 
 getTabActive()
-const activeTab = (value: any) => {
+function activeTab(value: any) {
   value.isRendered = true
   router.push({ name: props.routeName || undefined, params: { [props.label]: value.key } })
   tabActive.value = value
   emit('activeTab', tabActive.value)
 }
 
-const useEmitter = () => {
+function useEmitter() {
   const emitEvent = (event: any, data: any) => {
     emit(event, data)
   }
@@ -79,7 +79,7 @@ watch(() => route.params[props.label], val => {
 
 <template>
   <div class="tabs w-100">
-    <div :class="`w-100 ${type}-tabs my-6`">
+    <div :class="`w-100 ${type}-tabs`">
       <VTabs
         v-if="!hide"
         v-model="tabActive"

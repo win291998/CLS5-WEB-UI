@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { validatorStore } from '@/stores/validatator'
 import { comboboxStore } from '@/stores/combobox'
-import { load } from '@/stores/loadComponent'
 import { profileUserManagerStore } from '@/stores/admin/users/profile/profile'
 
 const emit = defineEmits<Emit>()
@@ -21,8 +20,8 @@ const CmRadioGroup = defineAsyncComponent(() => import('@/components/common/CmRa
 const CpUserProfileAvatarEdit = defineAsyncComponent(() => import('@/components/page/gereral/CpUserProfileAvatarEdit.vue'))
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 const storeValidate = validatorStore()
-const storeCombobox = comboboxStore()
 const { Field, Form } = storeValidate
+const storeCombobox = comboboxStore()
 const { userTypeCombobox, statusesCombobox } = storeToRefs(storeCombobox)
 const { fetchTypeUsersCombobox, fetchStatusUsersCombobox } = storeCombobox
 const storeProfileUserManager = profileUserManagerStore()
@@ -44,7 +43,7 @@ const formUserInfor = ref()
 const valuesComponent = ref(computed(() => values.value))
 
 // method
-const handleFormValue = (value: any) => {
+function handleFormValue(value: any) {
   //
 }
 

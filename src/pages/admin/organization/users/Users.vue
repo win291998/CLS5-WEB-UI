@@ -3,7 +3,6 @@ import DateUtil from '@/utils/DateUtil'
 import ApiUser from '@/api/user/index'
 import MethodsUtil from '@/utils/MethodsUtil'
 import { TYPE_REQUEST } from '@/typescript/enums/enums'
-import StringUtil from '@/utils/StringUtil'
 import toast from '@/plugins/toast'
 
 // mock api
@@ -21,6 +20,7 @@ const CpCustomInfo = defineAsyncComponent(() => import('@/components/page/gerera
 const CpModalAddUserApi = defineAsyncComponent(() => import('@/components/page/Admin/organization/users/CpModalAddUserApi.vue'))
 const CpTableSub = defineAsyncComponent(() => import('@/components/page/gereral/CpTableSub.vue'))
 const CpTableSubIconList = defineAsyncComponent(() => import('@/components/page/gereral/CpTableSubIconList.vue'))
+const CpImportXml = defineAsyncComponent(() => import('@/components/page/Admin/organization/users/modal/CpImportXml.vue'))
 
 /** params */
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
@@ -29,14 +29,13 @@ const refTableUserList = ref()
 const isShowFilter = ref(true)
 const route = useRoute()
 const router = useRouter()
-
 const headers = reactive([
   { text: '', value: 'checkbox', width: 50 },
-  { text: t('surname-name'), value: 'fullName', width: 250 },
-  { text: t('role'), value: 'userTypeName', width: 100 },
-  { text: t('status-name'), value: 'statusName', type: 'custom', width: 150 },
-  { text: t('join-date'), value: 'registeredDate', type: 'custom', width: 100 },
-  { text: t('organization'), value: 'organization', type: 'menu', width: 300 },
+  { text: t('surname-name'), value: 'fullName' },
+  { text: t('role'), value: 'userTypeName' },
+  { text: t('status-name'), value: 'statusName', type: 'custom' },
+  { text: t('join-date'), value: 'registeredDate', type: 'custom' },
+  { text: t('organization'), value: 'organization', type: 'menu' },
   { text: '', value: 'actions', width: 150 },
 ])
 
@@ -76,6 +75,7 @@ const data = reactive({
   isShowDialogPasword: false,
   isShowDialogStatus: false,
   isShowDialogAddUserApi: false,
+  isShowDialogImportXml: false,
   typeDialogRessetPass: 1,
   selectedItemId: 0,
   testingCode: '',
@@ -97,25 +97,27 @@ let queryParam = reactive({
   userTypeList: null,
 })
 const disabledDelete = computed(() => !data.listId.length)
+const dataCustomAddUserBaseVn = ref()
+const userXml = ref()
 
 /** ***************************** Method *****************************/
 
 // Function to handle when click button Delete
-const deleteItem = (id: number) => {
+function deleteItem(id: number) {
   data.deleteIds = [id as never]
   modalContent.value = t('delete')
   isShowDialogNoti.value = true
 }
 
 // click  multi delete btn to show modal confirm
-const deleteItems = () => {
+function deleteItems() {
   data.deleteIds = data.listId
   modalContent.value = t('delete')
   isShowDialogNoti.value = true
 }
 
 // delete action
-const deleteAction = async () => {
+async function deleteAction() {
   const params = {
     listId: data.deleteIds,
   }
@@ -133,18 +135,18 @@ const deleteAction = async () => {
 }
 
 // hành động của dialog
-const confirmDialog = (event: any) => {
+function confirmDialog(event: any) {
   if (event)
     deleteAction()
 }
 
 // cập nhật trạng thái dialog
-const updateDialogVisible = (event: any) => {
+function updateDialogVisible(event: any) {
   isShowDialogNoti.value = event
 }
 
 // reset password
-const handleRefresh = async () => {
+async function handleRefresh() {
   const params = {
     userId: data.selectedItemId,
   }
@@ -156,18 +158,18 @@ const handleRefresh = async () => {
   })
 }
 
-const confirmDialogResetPass = (event: any) => {
+function confirmDialogResetPass(event: any) {
   if (event)
     handleRefresh()
 }
 
-const updateDialogVisibleResset = (event: any) => {
+function updateDialogVisibleResset(event: any) {
   if (data.showPassword)
     data.isShowDialogPasword = event
 }
 
 // reset status
-const handleRefreshStatus = async (status: number) => {
+async function handleRefreshStatus(status: number) {
   const params = {
     userId: data.selectedItemId,
     statusId: status,
@@ -183,16 +185,16 @@ const handleRefreshStatus = async (status: number) => {
     })
 }
 
-const confirmDialogStatus = (status: any) => {
+function confirmDialogStatus(status: any) {
   handleRefreshStatus(status)
 }
 
-const updateDialogVisibleStatus = (event: any) => {
+function updateDialogVisibleStatus(event: any) {
   data.isShowDialogStatus = event
 }
 
 // coppy code
-const copyTestingCode = () => {
+function copyTestingCode() {
   const testingCodeToCopy = document.querySelector('#testing-code') as HTMLInputElement
 
   testingCodeToCopy?.setAttribute('type', 'text')
@@ -208,18 +210,18 @@ const copyTestingCode = () => {
   window?.getSelection()?.removeAllRanges()
 }
 
-const selectedRows = (e: any) => {
+function selectedRows(e: any) {
   data.listId = e
 }
 
 // click pagination
-const handlePageClick = async (page: any) => {
+async function handlePageClick(page: any) {
   queryParam.pageNumber = page
   await fectchListUsers()
 }
 
 // hàm trả về các loại action khi click
-const actionItem = (type: any) => {
+function actionItem(type: any) {
   switch (type[0]?.name) {
     case 'ActionDelete':
       deleteItem(type[1].id)
@@ -279,14 +281,14 @@ async function fectchListUsers() {
 }
 
 // search ở fillter header
-const handleSearch = async (value: any) => {
+async function handleSearch(value: any) {
   queryParam.pageNumber = 1
   queryParam.keyword = value
   await fectchListUsers()
 }
 
 //  fillter header
-const handleFilterCombobox = async (dataFilter: any) => {
+async function handleFilterCombobox(dataFilter: any) {
   queryParam = {
     ...queryParam,
     ...dataFilter,
@@ -295,7 +297,7 @@ const handleFilterCombobox = async (dataFilter: any) => {
 }
 
 // hàm trả về các loại action từ header filter
-const handleClickBtn = (type: string) => {
+function handleClickBtn(type: string) {
   switch (type) {
     case 'fillter':
       isShowFilter.value = !isShowFilter.value
@@ -309,11 +311,11 @@ const handleClickBtn = (type: string) => {
   }
 }
 
-const actionAddFromApi = () => {
+function actionAddFromApi() {
   data.isShowDialogAddUserApi = true
 }
 
-const exportExcel = async () => {
+async function exportExcel() {
   window.showAllPageLoading()
   const params = {
     statusIds: queryParam.statusList,
@@ -371,7 +373,7 @@ const actionUpdate = [
 
 ]
 
-const handlerActionHeader = (type: any) => {
+function handlerActionHeader(type: any) {
   switch (type) {
     case 'handlerAddButton':
 
@@ -386,8 +388,13 @@ const handlerActionHeader = (type: any) => {
       break
   }
 }
-const handleAddFromApi = (model: any) => {
+function handleAddFromApi(model: any) {
   console.log(model)
+  model.forEach((element: any) => {
+    element.isSelected = true
+  })
+  userXml.value = model
+  data.isShowDialogImportXml = true
 }
 
 // watch
@@ -430,7 +437,7 @@ window.hideAllPageLoading()
       @search="handleSearch"
     />
   </div>
-  <div>
+  <div id="cap-report-overview">
     <CmTable
       ref="refTableUserList"
       :headers="headers"
@@ -560,6 +567,11 @@ window.hideAllPageLoading()
   />
   <CpModalAddUserApi
     v-model:is-dialog-visible="data.isShowDialogAddUserApi"
+    @confirm="handleAddFromApi"
+  />
+  <CpImportXml
+    v-model:is-dialog-visible="data.isShowDialogImportXml"
+    :users="userXml"
     @confirm="handleAddFromApi"
   />
 </template>

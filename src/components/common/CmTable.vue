@@ -20,7 +20,7 @@ const props = withDefaults(defineProps<Props>(), ({
   pageSize: Globals.PAGINATION_PAGE_SIZE_DEFAULT,
   customId: 'id',
   totalRecord: 0,
-  minHeight: 100,
+  minHeight: 200,
   customKeyError: 'errors',
   typePagination: 1,
   disiablePagination: false,
@@ -111,6 +111,7 @@ watch(() => props.items, (val: Item[]) => {
 }, { immediate: true })
 // eslint-disable-next-line vue/no-dupe-keys
 const pageSize = ref(props.pageSize) // số lượng item trên 1 page
+const serverfile = window.SERVER_FILE || ''
 
 /** method */
 // cập nhật selectedRows
@@ -262,6 +263,18 @@ onMounted(() => {
       >
         <div>
           <slot name="tableSub" />
+        </div>
+      </template>
+      <template #empty-message>
+        <div class="d-flex justify-center">
+          <div>
+            <VImg
+              :width="300"
+              aspect-ratio="16/9"
+              cover
+              :src="`${serverfile}/badge/eventDefault.png`"
+            />
+          </div>
         </div>
       </template>
       <!--

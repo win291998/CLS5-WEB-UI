@@ -14,3 +14,9 @@ declare module 'vue-select' {
   const ISelect: DefineComponent<{}, {}, any>
   export default ISelect
 }
+declare module 'dom-to-image' {
+  import { DefineComponent } from 'vue'
+  const domToImage: DefineComponent<{}, {}, any>
+  export default domToImage
+}
+
