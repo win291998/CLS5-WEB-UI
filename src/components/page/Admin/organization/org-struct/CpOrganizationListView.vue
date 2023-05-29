@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import ApiUser from '@/api/user/index'
 import MethodsUtil from '@/utils/MethodsUtil'
-import { TYPE_REQUEST } from '@/typescript/enums/enums'
 import { orgStructManagerStore } from '@/stores/admin/org-struct/orgStruct'
 import SkTree from '@/components/page/gereral/skeleton/SkTree.vue'
 
@@ -29,10 +27,10 @@ const { getListOrgStruct } = storeOrgStruct
 
 const isLoading = ref(true)
 
-const updateValueOrg = (value: any) => {
+function updateValueOrg(value: any) {
   //
 }
-const removeNode = (node: any) => {
+function removeNode(node: any) {
   const nodeChildrenIds = MethodsUtil.getAllChildrenOfTreeNodeIds(node, nodes.value)
 
   nodeChildrenIds.push(node.ids)
@@ -43,7 +41,7 @@ const removeNode = (node: any) => {
   emit('deleteNode', deleteData)
 }
 
-const handleAction = (value: any, dataResend: any) => {
+function handleAction(value: any, dataResend: any) {
   switch (value?.id) {
     case 1:
       isView.value = false
@@ -76,6 +74,7 @@ watch(render, val => {
 })
 isView.value = true
 getListOrgStruct()
+render.value++
 </script>
 
 <template>

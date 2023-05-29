@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const props = withDefaults(defineProps<Props>(), ({
+const props = withDefaults(defineProps<Props>(), {
   isDelete: false,
   isBack: false,
   disabledBack: false,
@@ -9,7 +9,7 @@ const props = withDefaults(defineProps<Props>(), ({
   disabledDelete: false,
   disabledApprove: false,
   disabledFillter: false,
-}))
+})
 
 const emit = defineEmits<Emit>()
 
@@ -21,8 +21,12 @@ interface Emit {
   (e: 'search', type: any): void
 }
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
-const CmButton = defineAsyncComponent(() => import('@/components/common/CmButton.vue'))
-const CmTextField = defineAsyncComponent(() => import('@/components/common/CmTextField.vue'))
+const CmButton = defineAsyncComponent(
+  () => import('@/components/common/CmButton.vue'),
+)
+const CmTextField = defineAsyncComponent(
+  () => import('@/components/common/CmTextField.vue'),
+)
 
 /*
   isDelete: Hiện thị button delete
@@ -93,9 +97,7 @@ function handleSearch(value: any) {
           :disabled="disabledDelete"
           @click="handleClickBtn('delete')"
         >
-          <VIcon
-            icon="tabler:trash"
-          />
+          <VIcon icon="tabler:trash" />
         </CmButton>
         <CmButton
           v-if="isBack"
@@ -105,9 +107,7 @@ function handleSearch(value: any) {
           class="mr-3"
           @click="handleClickBtn('back')"
         >
-          <VIcon
-            icon="tabler:corner-down-left"
-          />
+          <VIcon icon="tabler:corner-down-left" />
         </CmButton>
         <CmButton
           v-if="isApprove"
@@ -116,9 +116,7 @@ function handleSearch(value: any) {
           color="success"
           @click="handleClickBtn('approve')"
         >
-          <VIcon
-            icon="mdi-checkbox-marked-circle-outline"
-          />
+          <VIcon icon="mdi-checkbox-marked-circle-outline" />
         </CmButton>
       </div>
     </VCol>

@@ -1,7 +1,11 @@
-/* eslint-disable import/order */
 import '@/@iconify/icons-bundle'
-import App from '@/App.vue'
+import { createApp } from 'vue'
+import VueFeather from 'vue-feather'
+import Vue3EasyDataTable from 'vue3-easy-data-table'
+import Toast from 'vue-toastification'
+
 import i18n from '@/plugins/i18n'
+import App from '@/App.vue'
 import layoutsPlugin from '@/plugins/layouts'
 import lodash from '@/plugins/lodash'
 import vuetify from '@/plugins/vuetify'
@@ -10,19 +14,14 @@ import router from '@/router'
 import { globals } from '@/typescript/global/property'
 import { globalsReadOnly } from '@/typescript/global/property.read'
 import windowDefineProperty from '@/typescript/global/public/propertyGlobal.public'
+import 'vue3-easy-data-table/dist/style.css'
+import { configStore } from '@/stores/index'
 
 // Import the CSS or use your own!
 import '@/styles/styles.scss'
 import '@core/scss/template/index.scss'
 
 // import { createPinia } from 'pinia'
-
-import { configStore } from '@/stores/index'
-import { createApp } from 'vue'
-import VueFeather from 'vue-feather'
-import Toast from 'vue-toastification'
-import Vue3EasyDataTable from 'vue3-easy-data-table'
-import 'vue3-easy-data-table/dist/style.css'
 
 const pinia = createPinia()
 
@@ -38,6 +37,8 @@ const options = {
   closeOnClick: true,
   pauseOnFocusLoss: true,
   pauseOnHover: true,
+  transition: 'Vue-Toastification__bounce',
+  maxToasts: 4,
 
   // draggable: true,
   // draggablePercent: 0.6,
@@ -70,6 +71,7 @@ app.use(Toast, options)
 app.use(lodash)
 app.use(i18n)
 app.use(layoutsPlugin)
+
 app.component('EasyDataTable', Vue3EasyDataTable)
 
 app.use(router)

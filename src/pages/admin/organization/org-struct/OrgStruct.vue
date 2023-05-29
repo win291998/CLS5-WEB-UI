@@ -29,15 +29,15 @@ const data = reactive({
   view: false,
 })
 const deleteOrgStructData = ref()
-const deleteNode = (dataDel: any) => {
+function deleteNode(dataDel: any) {
   deleteOrgStructData.value = dataDel
   data.isShowDialogDeleteNode = true
 }
-const reloadOrgStruct = async () => {
+async function reloadOrgStruct() {
   await getListOrgStruct()
   render.value++
 }
-const handleAddOrg = async (type: any) => {
+async function handleAddOrg(type: any) {
   switch (type) {
     case 'handlerAddButton':
       router.push({ name: 'admin-organization-org-struct-add', params: { tab: 'infor' } })
@@ -55,7 +55,7 @@ const handleAddOrg = async (type: any) => {
       break
   }
 }
-const changeView = (view: boolean) => {
+function changeView(view: boolean) {
   data.view = view
 }
 </script>
@@ -96,4 +96,3 @@ const changeView = (view: boolean) => {
     />
   </div>
 </template>
-

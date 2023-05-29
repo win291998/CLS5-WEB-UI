@@ -100,7 +100,7 @@ watch(() => props.config, value => {
 }, { immediate: true })
 
 /** Method */
-const dowloadSampleFile = async () => {
+async function dowloadSampleFile() {
   MethodsUtil.dowloadSampleFile(
     props.config?.dowloadSample?.urlFileDefault || '',
     props.config?.dowloadSample?.method || 'GET',
@@ -110,7 +110,7 @@ const dowloadSampleFile = async () => {
 }
 
 // thay đổi dữ liệu trên bảng
-const changeCellvalue = (event: any, field: string, key: number, keyCustomValue?: any, keyCustomIdValue?: any) => {
+function changeCellvalue(event: any, field: string, key: number, keyCustomValue?: any, keyCustomIdValue?: any) {
   if (field === 'organizational') {
     paramsImport.invalidData[key][keyCustomIdValue] = event
     const org: any = organizationsCombobox.value.find((item: any) => item.id === event)
@@ -120,11 +120,11 @@ const changeCellvalue = (event: any, field: string, key: number, keyCustomValue?
   else { paramsImport.invalidData[key][field] = event as never }
 }
 
-const handleEditTable = () => {
+function handleEditTable() {
   isEditing.value = !isEditing.value
 }
 
-const updateFromFileHandle = async () => {
+async function updateFromFileHandle() {
   const back = await updateFromFile()
   if (back === 'back' && props?.config?.routerBack) {
     store.$dispose()
@@ -139,11 +139,11 @@ const isShowTemplateImport = computed(() => {
   return paramsImport.validData.length || paramsImport.invalidData.length
 })
 
-const uploadFile = (val: string | number | undefined) => {
+function uploadFile(val: string | number | undefined) {
   type.value = val
   inputFile.value.click()
 }
-const filterUpdate = (event: any) => {
+function filterUpdate(event: any) {
   emit('filter', event)
 }
 

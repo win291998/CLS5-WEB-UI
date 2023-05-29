@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import Treeselect from 'vue3-treeselect'
 import 'vue3-treeselect/dist/vue3-treeselect.css'
-import { Teleport } from 'vue'
 import { defaultSetting } from '@/constant/data/settingDefault.json'
 import Globals from '@/constant/Globals'
 
@@ -82,7 +81,7 @@ const emit = defineEmits<Emit>()
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 
 /** ** Chuẩn hóa dữ liệu */
-const normalizer = (node: any) => {
+function normalizer(node: any) {
   return {
     id: node[props?.normalizerCustomType[0]],
     label: node[props?.normalizerCustomType[1]],
@@ -106,11 +105,11 @@ const render = ref(true)
 // }
 
 /** ** function: xử lý khi tao tác trên node */
-const handleUpdate = (value: any, instanceId: any) => {
+function handleUpdate(value: any, instanceId: any) {
   emit('update:modelValue', value)
 }
 
-const limitText = (count: any) => {
+function limitText(count: any) {
   return t('and-count-more', { count })
 }
 
@@ -129,7 +128,6 @@ const limitText = (count: any) => {
   <div
     v-if="render"
     :dir="rtl ? 'rtl' : 'ltr'"
-    class="mb-4"
   >
     <Treeselect
       v-model="modelValue"
