@@ -59,9 +59,11 @@ function getTabActive() {
 
 getTabActive()
 function activeTab(value: any) {
-  value.isRendered = true
-  router.push({ name: props.routeName || undefined, params: { [props.label]: value.key } })
-  tabActive.value = value
+  // value.isRendered = true
+  const tab = props.listTab.find(x => x.key === value) as tab
+  tab.isRendered = true
+  router.push({ name: props.routeName || undefined, params: { [props.label]: value } })
+  tabActive.value = tab.isRendered
   emit('activeTab', tabActive.value)
 }
 
@@ -91,7 +93,7 @@ watch(() => route.params[props.label], val => {
           v-for="(item, index) in listTab"
           :key="index"
           :disabled="item.isDisabled"
-          :value="item"
+          :value="item?.key"
           :class="`item-tab ${tabActive?.key === item?.key ? 'active' : ''} `"
         >
           <VIcon

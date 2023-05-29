@@ -1,8 +1,9 @@
 export default [
   {
-    path: '/content',
+    path: 'content',
     name: 'admin-content',
     redirect: { name: 'question' },
+
     // meta: {
     //   requireAuth: {
     //     permissionKey: 'OrganizationalStructureManaging',

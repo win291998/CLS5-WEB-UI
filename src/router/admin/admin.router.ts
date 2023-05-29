@@ -1,6 +1,7 @@
 import user from '@/router/admin/user.router'
 import training from '@/router/admin/training.router'
 import question from '@/router/admin/question.router'
+import course from '@/router/admin/course.router'
 
 export default [
   // quản lý admin
@@ -19,6 +20,7 @@ export default [
       ...user,
       ...training,
       ...question,
+      ...course,
     ],
   },
 
