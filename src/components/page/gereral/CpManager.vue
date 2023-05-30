@@ -7,6 +7,7 @@ import toast from '@/plugins/toast'
 import type { Params } from '@/typescript/interface/params'
 import MethodsUtil from '@/utils/MethodsUtil'
 import DateUtil from '@/utils/DateUtil'
+import type { Any } from '@/typescript/interface'
 
 const props = withDefaults(defineProps<Props>(), {
   header: () => ([]),
@@ -21,9 +22,12 @@ const props = withDefaults(defineProps<Props>(), {
 })
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 
+const router = useRouter()
 interface Api {
   api: string
   method: string
+  payload: Any
+  fileName: string
 }
 interface Props {
   header: Header[]
@@ -37,8 +41,10 @@ interface Props {
   apiGetDetail: Api
   apiEdit: Api
   apiDelete: Api
+  apiExportExcel: Api
   titlePage: string
   routeReport: string
+  routerEdit?: string | null
 }
 
 const TITLE = Object.freeze({
@@ -56,24 +62,33 @@ const queryParams = reactive<QueryParams>({
 const isEdit = ref<boolean>(false)
 const isShowModalEdit = ref<boolean>(false)
 function showModalEdit() {
-  isEdit.value = false
-  isShowModalEdit.value = true
+  if (!props.routerEdit) {
+    isEdit.value = false
+    isShowModalEdit.value = true
+  }
+  else {
+    router.push({ name: `${props.routerEdit}-add` })
+  }
 }
 const dataDetail = ref<any>({})
 async function getDataDetail(id: number) {
-  const { data } = await MethodsUtil.requestApiCustom(props.apiGetDetail.api, props.apiGetDetail.method, { id })
-  dataDetail.value = data
+  if (!props.routerEdit) {
+    const { data } = await MethodsUtil.requestApiCustom(props.apiGetDetail.api, props.apiGetDetail.method, { id })
+    dataDetail.value = data
+  }
+  else {
+    router.push({ name: `${props.routerEdit}-edit`, params: { id } })
+  }
 }
 
 // xóa item
 const isShowModalDelete = ref<boolean>(false)
-const listId = ref<Item[] | undefined>([])
+const listId = ref<number[] | undefined>([])
 function showModalDelete(id?: number) {
   if (id)
     listId.value = [id]
   isShowModalDelete.value = true
 }
-const router = useRouter()
 async function actionItem(type: any) {
   switch (type[0]?.name) {
     case 'ActionDelete':
@@ -93,7 +108,7 @@ async function actionItem(type: any) {
 }
 
 // lấy data table
-const items = ref<Item>([])
+const items = ref<Item[]>([])
 const totalRecord = ref<number>(0)
 async function getDataTable() {
   const { data } = await MethodsUtil.requestApiCustom(props.apiList.api, props.apiList.method, queryParams)
@@ -124,6 +139,8 @@ function handlePageClick(pageNumber: number, pageSize: number) {
 
 // Xác nhận thêm hoặc sửa
 function handlerAdd(data: any) {
+  console.log(props.apiAdd)
+
   MethodsUtil.requestApiCustom(props.apiAdd.api, props.apiAdd.method, data).then(() => {
     isShowModalEdit.value = false
     getDataTable()
@@ -143,11 +160,11 @@ function handlerEdit(data: any) {
 }
 
 function confirmModal(val: any) {
-  if (isEdit)
-    handlerEdit(val)
+  console.log(isEdit)
 
-  else
-    handlerAdd(val)
+  if (isEdit.value)
+    handlerEdit(val)
+  else handlerAdd(val)
 }
 
 function confirmDelete() {
@@ -159,15 +176,24 @@ function confirmDelete() {
     toast('ERROR', t(err.response.data.errors[0].message))
   })
 }
+
+function cancelModalDelete() {
+  listId.value = []
+}
+function exportExcel() {
+  MethodsUtil.dowloadSampleFile(props.apiExportExcel.api, props.apiExportExcel.method, props.apiExportExcel.fileName, props.apiExportExcel?.payload)
+}
 </script>
 
 <template>
   <CpHeaderAction
+    class="mt-6"
     :title-page="titlePage"
     :is-show-add-group="false"
     :is-disabled-delete="!listId?.length"
     @click-add="showModalEdit"
     @update:key-search="handlerSearch"
+    @click-export="exportExcel"
   />
   <CmTable
     v-model:selected="listId"
@@ -196,5 +222,6 @@ function confirmDelete() {
     :type="2"
     :confirmation-msg="t('delete')"
     @confirm="confirmDelete"
+    @update:is-dialog-visible="cancelModalDelete"
   />
 </template>

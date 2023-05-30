@@ -79,7 +79,7 @@
   color: $color-success-600 !important;
 }
 .color-primary {
-  color: $color-primary !important;
+  color: $color-primary-600 !important;
 }
 
 // full color
@@ -451,4 +451,9 @@ span {
   .noti-zindex {
     z-index: 10;
   }
+}
+
+
+.w-max-content {
+  width: max-content;
 }

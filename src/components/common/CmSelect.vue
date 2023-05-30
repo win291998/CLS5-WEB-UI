@@ -5,8 +5,8 @@ import Globals from '@/constant/Globals'
 import StringUtil from '@/utils/StringUtil'
 
 interface Props {/** ** Interface */
-  modelValue?: unknown
-  items?: Array<any>
+  modelValue?: any
+  items: any
   maxItem?: number
   totalRecord?: number
   multiple?: boolean
@@ -68,17 +68,21 @@ const messageError = computed(() => {
 function handleChangeValue(e: any) {
   emit('update:modelValue', valueCurrent.value)
 }
+
 const optionsModel = computed(() => {
-  const optionsModels = props.items?.map((item: any) => {
-    item = {
-      ...item,
-      keySearch: typeof item[props.customKey] === 'string' ? StringUtil.removeAccents(item[props.customKey]) : null,
-    }
+  if (props.items.length) {
+    const optionsModels = props.items?.map((item: any) => {
+      item = {
+        ...item,
+        keySearch: typeof item[props.customKey] === 'string' ? StringUtil.removeAccents(item[props.customKey]) : null,
+      }
 
-    return item
-  })
+      return item
+    })
 
-  return optionsModels || []
+    return optionsModels || []
+  }
+  return []
 })
 const hasNextPage = computed(() => {
   return optionsModel.value.length < props.totalRecord

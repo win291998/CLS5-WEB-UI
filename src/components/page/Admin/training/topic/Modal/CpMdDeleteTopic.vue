@@ -15,14 +15,14 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<Emit>()
 interface Props {
   isShow: boolean
-  title: string
-  topicName: string
-  description: string
-  dataTree: any
-  customKey: string
-  placeholderSelectTopic: string
-  topicParent: string
-  symbol: string
+  title?: string
+  topicName?: string
+  description?: string
+  dataTree?: any
+  customKey?: string
+  placeholderSelectTopic?: string
+  topicParent?: string
+  symbol?: string
 }
 
 interface Emit {
@@ -37,11 +37,11 @@ watch(() => props.dataTree, val => {
 }, { immediate: true, deep: true })
 
 const topicIdNew = ref<number | null>(null)
-const cancelModal = () => {
+function cancelModal() {
   topicIdNew.value = null
   emit('update:isShow', false)
 }
-const confirmModal = () => {
+function confirmModal() {
   // formEditTopic.value.validate().then((status: any) => {
   //   if (status.valid)
   emit('confirm', topicIdNew.value)
@@ -66,4 +66,3 @@ const confirmModal = () => {
     />
   </CmDialogs>
 </template>
-
