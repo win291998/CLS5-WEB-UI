@@ -50,20 +50,21 @@ interface Emit {
   (e: string, data: any): void
   (e: 'activeTab', data: tab): void
 }
-const tabActive = ref<any>({})
-
+const tabActive = ref<string>('')
+const dataTab = ref<any>(null)
 function getTabActive() {
-  if (route.params[props.label] && !tabActive.value[props.label])
-    tabActive.value = props.listTab.find(e => e.key === route.params[props.label]) as object
+  if (route.params[props.label] && !dataTab.value) {
+    dataTab.value = props.listTab.find(e => e.key === route.params[props.label]) as object
+    console.log(dataTab.value)
+    tabActive.value = dataTab.value?.key
+  }
 }
-
 getTabActive()
 function activeTab(value: any) {
   // value.isRendered = true
-  const tab = props.listTab.find(x => x.key === value) as tab
-  tab.isRendered = true
+  dataTab.value = props.listTab.find(x => x.key === value) as tab
+  dataTab.value.isRendered = true
   router.push({ name: props.routeName || undefined, params: { [props.label]: value } })
-  tabActive.value = tab.isRendered
   emit('activeTab', tabActive.value)
 }
 
@@ -94,7 +95,7 @@ watch(() => route.params[props.label], val => {
           :key="index"
           :disabled="item.isDisabled"
           :value="item?.key"
-          :class="`item-tab ${tabActive?.key === item?.key ? 'active' : ''} `"
+          :class="`item-tab ${dataTab?.key === item?.key ? 'active' : ''} `"
         >
           <VIcon
             v-if="item.icon"
@@ -120,18 +121,18 @@ watch(() => route.params[props.label], val => {
             :is="item?.component"
             :emit="useEmitter"
             :data-general="dataGeneral"
-            v-bind="tabActive?.dataTab"
+            v-bind="dataTab?.dataTab"
           />
         </div>
       </div>
     </div>
     <div v-else>
       <Component
-        :is="tabActive?.component"
-        :key="tabActive?.key"
+        :is="dataTab?.component"
+        :key="dataTab?.key"
         :emit="useEmitter"
         :data-general="dataGeneral"
-        v-bind="tabActive?.dataTab"
+        v-bind="dataTab?.dataTab"
       />
     </div>
   </div>

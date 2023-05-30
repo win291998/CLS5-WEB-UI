@@ -20,7 +20,7 @@ const props = withDefaults(defineProps<Props>(), ({
   pageSize: Globals.PAGINATION_PAGE_SIZE_DEFAULT,
   customId: 'id',
   totalRecord: 0,
-  minHeight: 200,
+  minHeight: 300,
   customKeyError: 'errors',
   typePagination: 1,
   disiablePagination: false,
@@ -39,6 +39,7 @@ interface HeaderCustom extends Header {
   combobox?: any
   config?: any
   valueId?: any
+  isDate?: boolean
 }
 interface GroupOptions {
   allowEmptySelect?: boolean
@@ -60,7 +61,7 @@ interface Props {
   minHeight?: number
   isActionFooter?: boolean
   pageNumber?: number
-  selected?: Item[]
+  selected?: Item[] | number[]
   customKeyError?: string
   typePagination?: number
   disiablePagination?: boolean

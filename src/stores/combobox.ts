@@ -9,6 +9,7 @@ export const comboboxStore = defineStore('combobox', () => {
   interface combobox {
     key: number
     value: string
+    text?: string
   }
   const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 
@@ -27,6 +28,16 @@ export const comboboxStore = defineStore('combobox', () => {
     data: [],
     totalRecord: 0,
   })
+
+  // Lấy danh sách loại trường
+  const typeSchoolCombobox = ref<Any>([])
+  const getComboboxTypeSchool = async () => {
+    const { data } = await MethodsUtil.requestApiCustom(ComboboxService.GetSchoolType, TYPE_REQUEST.GET)
+    data.forEach((element: combobox) => {
+      element.text = t(element.value)
+    })
+    typeSchoolCombobox.value = data
+  }
 
   // Lấy danh sách khóa học
   const courseCombobox = ref<Any>([])
@@ -261,5 +272,7 @@ export const comboboxStore = defineStore('combobox', () => {
     getCostTypeCombobox,
     examCombobox,
     getExamCombobox,
+    getComboboxTypeSchool,
+    typeSchoolCombobox,
   }
 })

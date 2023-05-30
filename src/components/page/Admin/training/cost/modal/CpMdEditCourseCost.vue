@@ -3,8 +3,8 @@ import CmDialogs from '@/components/common/CmDialogs.vue'
 import CmTextField from '@/components/common/CmTextField.vue'
 import { validatorStore } from '@/stores/validatator'
 import CmtextArea from '@/components/common/CmtextArea.vue'
-import CmSelect from '@/components/common/CmSelect.vue'
 import { comboboxStore } from '@/stores/combobox'
+import CmSelect from '@/components/common/CmSelect.vue'
 
 // Khởi tạo
 const props = withDefaults(defineProps<Props>(), ({
@@ -20,7 +20,7 @@ if (!courseCombobox.value.length && route.params.tab === 'cost-course')
   getComboboxCourse()
 if (!costTypeCombobox.value.length)
   getCostTypeCombobox()
-if (!examCombobox.value.length)
+if (!examCombobox.value.length && route.params.tab === 'exam-course')
   getExamCombobox()
 
 const { t } = window.i18n() // Khai báo biến ngôn ngữ
@@ -85,20 +85,6 @@ function resetData() {
 watch(() => props.dataDetail, (val: DataInput) => {
   dataInput.value = val
 })
-const dataCombobox = computed(() => {
-  if (route.params.tab === 'cost-exam') {
-    return {
-      combobox: examCombobox,
-      text: t('exam-management'),
-      variable: 'examId',
-    }
-  }
-  return {
-    combobox: courseCombobox,
-    text: t('course'),
-    variable: 'courseId',
-  }
-})
 </script>
 
 <template>
@@ -125,40 +111,61 @@ const dataCombobox = computed(() => {
           :placeholder="t('cost-name')"
         />
       </Field>
-      <Field
+      <!--
+        <Field
         v-slot="{ field, errors }"
         v-model="dataInput.costTypeId"
         name="costTypeId"
         type="text"
-      >
-        <CmSelect
-          :field="field"
-          :errors="errors"
-          :items="costTypeCombobox"
-          item-value="key"
-          custom-key="value"
-          :model-value="dataInput.costTypeId"
-          :text="t('cost-type')"
-          :placeholder="t('type-name-cost')"
-        />
-      </Field>
-      <Field
+        >
+      -->
+      <!--
+        :field="field"
+        :errors="errors"
+      -->
+
+      <CmSelect
+        :items="costTypeCombobox"
+        item-value="key"
+        custom-key="value"
+        :model-value="dataInput.costTypeId"
+        :text="t('cost-type')"
+        :placeholder="t('type-name-cost')"
+      />
+
+      <!-- </Field> -->
+      <!--
+        <Field
         v-slot="{ field, errors }"
         v-model="dataInput.courseId"
         name="courseId"
         type="text"
-      >
-        <CmSelect
-          :field="field"
-          :errors="errors"
-          :items="dataCombobox.combobox"
-          item-value="key"
-          custom-key="value"
-          :model-value="dataInput[dataCombobox.variable]"
-          :text="dataCombobox.text"
-          :placeholder="dataCombobox.text"
-        />
-      </Field>
+        >
+      -->
+      <!--
+        :field="field"
+        :errors="errors"
+      -->
+      <CmSelect
+        v-if="route.params.tab === 'cost-exam'"
+        :items="examCombobox"
+        item-value="key"
+        custom-key="value"
+        :model-value="dataInput.examId"
+        :text="t('exam-management')"
+        :placeholder="t('exam-management')"
+      />
+      <CmSelect
+        v-if="route.params.tab === 'cost-course'"
+        :items="courseCombobox"
+        item-value="key"
+        custom-key="value"
+        :model-value="dataInput.courseId"
+        :text="t('course')"
+        :placeholder="t('course')"
+      />
+
+      <!-- </Field> -->
       <Field
         v-slot="{ field, errors }"
         v-model="dataInput.unitPrice"

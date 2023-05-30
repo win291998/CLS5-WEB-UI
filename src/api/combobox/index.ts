@@ -20,6 +20,7 @@ const ComboboxService = {
   GetComboboxCourse: '/course/get-combobox-course', // Danh sách khóa học
   GetComboboxCostType: '/costtype/get-combobox', // Danh sách loại chi phí
   GetComboboxExam: '/exam/get-combobox-exam', // Danh sách kỳ thi
+  GetSchoolType: '/school/get-combobox-school-types',
 }
 
 export default ComboboxService
