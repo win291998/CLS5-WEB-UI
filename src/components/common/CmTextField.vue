@@ -41,11 +41,12 @@ watch(() => props.modelValue, (val: any) => {
 
 /** Method */
 function handleChangeText() {
-  emit('change', formModelValue.value)
+  emit('change', props.type === 'number' ? Number(formModelValue.value) : formModelValue.value)
+  emit('update:modelValue', props.type === 'number' ? Number(formModelValue.value) : formModelValue.value)
 }
 
 function handleUpdateText() {
-  emit('update:modelValue', formModelValue.value)
+  emit('update:modelValue', props.type === 'number' ? Number(formModelValue.value) : formModelValue.value)
 }
 
 const messageError = computed(() => {
@@ -75,6 +76,7 @@ const messageError = computed(() => {
         :label="props.label"
         :bg-color="bgColor"
         :placeholder="placeholder"
+        :error="errors?.length > 0 ?? false"
         :error-messages="messageError"
         :type="type"
         :maxlength="maxlength"

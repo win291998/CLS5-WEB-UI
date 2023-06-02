@@ -48,15 +48,16 @@ const options = {
   icon: true,
   rtl: false,
   containerClassName: 'v-theme--light',
-  filterBeforeCreate: (toast: any, toasts: any) => {
-    if (toasts.filter((item: any) => item.type === toast.type).length !== 0) {
-      // Returning false discards the toast
-      return false
-    }
 
-    // You can modify the toast if you want
-    return toast
-  },
+  // filterBeforeCreate: (toast: any, toasts: any) => {
+  //   if (toasts.filter((item: any) => item.type === toast.type).length !== 0) {
+  //     // Returning false discards the toast
+  //     return false
+  //   }
+
+  //   // You can modify the toast if you want
+  //   return toast
+  // },
 }
 app.use(pinia)
 app.provide('globals', globals)

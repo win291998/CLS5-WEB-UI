@@ -46,7 +46,7 @@ const config = reactive({
 
 const dataTree = ref<any[]>([])
 const isRender = ref<boolean>(false)
-const getInformationTopic = async () => {
+async function getInformationTopic() {
   isRender.value = false
   const { data } = await MethodsUtil.requestApiCustom(sharedService.GetInformationTopic, TYPE_REQUEST.GET, { typeId: props.typeId })
   for (let i = 0; i < data.length; i++) {
@@ -100,12 +100,12 @@ const dataInput = ref<DataInput>({
 // Thêm chủ đề
 const isShowModalEdit = ref<boolean>(false)
 const isEdit = ref<boolean>(false)
-const showModalEdit = (id: number | null = null) => {
+function showModalEdit(id: number | null = null) {
   if (id)
     dataInput.value.parentId = id
   isShowModalEdit.value = true
 }
-const getDetailTopic = async (id: number) => {
+async function getDetailTopic(id: number) {
   const { data } = await MethodsUtil.requestApiCustom(sharedService.GetDetailTopic, TYPE_REQUEST.GET, { id })
   dataInput.value = {
     ...data,
@@ -113,7 +113,7 @@ const getDetailTopic = async (id: number) => {
   }
   isShowModalEdit.value = true
 }
-const handleAddTopic = async (val: DataInput) => {
+async function handleAddTopic(val: DataInput) {
   let mes = t('add-success')
   let status: typeToast = 'SUCCESS'
   const payload = {
@@ -132,7 +132,7 @@ const handleAddTopic = async (val: DataInput) => {
     })
 }
 
-const handleEditTopic = async (val: DataInput) => {
+async function handleEditTopic(val: DataInput) {
   let mes = t('USR_UpdateSuccess')
   let status: typeToast = 'SUCCESS'
   const payload = {
@@ -151,7 +151,7 @@ const handleEditTopic = async (val: DataInput) => {
     })
 }
 
-const confirm = (val: DataInput) => {
+function confirm(val: DataInput) {
   if (isEdit)
     handleEditTopic(val)
   else
@@ -167,7 +167,7 @@ const dataDelete = reactive<DataDelete>({
   listId: [],
   topicIdNew: null,
 })
-const handleAction = (value: any, node: any) => {
+function handleAction(value: any, node: any) {
   switch (value?.id) {
     case 1:
       isEdit.value = true
@@ -185,7 +185,7 @@ const handleAction = (value: any, node: any) => {
   }
 }
 
-const exportExcel = () => {
+function exportExcel() {
   MethodsUtil.dowloadSampleFile(sharedService.PostExportExcelTopic, TYPE_REQUEST.POST, 'topic.xlsx', { lang: 'vi', topicType: props.typeId })
 }
 
@@ -202,7 +202,7 @@ const listItemButtonGroup = [
 ]
 
 // Xóa chủ đề
-const confirmDelete = (topicId: number) => {
+function confirmDelete(topicId: number) {
   dataDelete.topicIdNew = topicId
   MethodsUtil.requestApiCustom(sharedService.DeleteTopic, TYPE_REQUEST.DELETE, dataDelete).then(res => {
     toast('SUCCESS', t('success-delete-gift-group'))
@@ -256,4 +256,3 @@ const confirmDelete = (topicId: number) => {
     @confirm="confirmDelete"
   />
 </template>
-

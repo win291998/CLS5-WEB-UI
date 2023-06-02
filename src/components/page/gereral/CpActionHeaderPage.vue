@@ -19,11 +19,13 @@ const CmButtonGroup = defineAsyncComponent(() => import('@/components/common/CmB
 interface Props {
   title: string
   titleCustom?: string
+  titleCustomAdd?: string
   bgCustom?: string
   isUpdateBtn?: boolean
   isExportBtn?: boolean
   isCustomGroupBtn?: boolean
   isCustomBtn?: boolean
+  isCustomAddBtn?: boolean
   actionUpdate?: Array<any>
   actionAdd?: Array<any>
   actionExport?: Array<any>
@@ -37,10 +39,10 @@ interface Emit {
 
 const router = useRouter()
 
-const handlerPreButton = () => {
+function handlerPreButton() {
   emit('click', 'handlerAddButton')
 }
-const handlerCustomButton = () => {
+function handlerCustomButton() {
   emit('click', 'handlerCustomButton')
 }
 </script>
@@ -100,11 +102,25 @@ const handlerCustomButton = () => {
         <CmButton
           color="success"
           text-color="color-white"
-          @click="handlerCustomButton"
+          @click="handlerPreButton"
         >
           {{ titleCustom }}
         </CmButton>
       </div>
+      <div
+        v-if="isCustomAddBtn"
+        cols="12"
+        md="3"
+        class="d-flex justify-end  mr-2"
+      >
+        <CmButton
+          @click="handlerCustomAddButton"
+        >
+          {{ titleCustomAdd }}
+        </CmButton>
+      </div>
+      <slot />
+
       <div
         v-if="isCustomGroupBtn"
         cols="12"

@@ -125,7 +125,6 @@ export const orgStructManagerStore = defineStore('orgStructManager', () => {
   }
   const getComboboxOwnerInf = async (loadMore?: any) => {
     // loadMore dùng khi infinity scroll
-
     if (vSelectOwner.value) {
       await getComboboxOwner(vSelectOwner.value).then((value: any) => {
         if (ownerCombobox.value.data?.length) {
@@ -204,7 +203,7 @@ export const orgStructManagerStore = defineStore('orgStructManager', () => {
         }
       })
       .catch((error: any) => {
-        toast('ERROR', t(error.message))
+        toast('ERROR', t(error.response.data.message))
       })
   }
 
@@ -227,7 +226,7 @@ export const orgStructManagerStore = defineStore('orgStructManager', () => {
       toast('SUCCESS', t('USR_UpdateSuccess'))
     })
       .catch((error: any) => {
-        toast('ERROR', t(error.message))
+        toast('ERROR', t(error.response.data.message))
       })
   }
 
@@ -279,7 +278,7 @@ export const orgStructManagerStore = defineStore('orgStructManager', () => {
           }
         })
         .catch((error: any) => {
-          toast('ERROR', t(error.message))
+          toast('ERROR', t(error.response.data.message))
         })
     }
 
@@ -293,7 +292,7 @@ export const orgStructManagerStore = defineStore('orgStructManager', () => {
           }
         })
         .catch((error: any) => {
-          toast('ERROR', t(error.message))
+          toast('ERROR', t(error.response.data.message))
         })
     }
   }
@@ -394,7 +393,6 @@ export const orgStructManagerStore = defineStore('orgStructManager', () => {
       data: model,
     }
     await MethodsUtil.requestApiCustom(apiType.value === 'org' ? ApiUser.PostCreateFromXml : ApiUser.PostCreateTitleFromXml, TYPE_REQUEST.POST, params).then((value: any) => {
-      console.log(value)
       if (value.code === 200) {
         if (apiType.value === 'title') {
           xmlTitleData.value = value.data

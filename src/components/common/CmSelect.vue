@@ -22,11 +22,14 @@ interface Props {/** ** Interface */
   placeholder?: string
   errors?: any
   field?: any
+  excludeId?: any
 }
 interface Emit {
   (e: 'update:modelValue', value: any): void
   (e: 'update:persistent', value: any): void
   (e: 'open', value: any): void
+  (e: 'search', value: any): void
+  (e: 'search:blur', value: any): void
   (e: 'isIntersecting', value: any): void
 }
 
@@ -44,7 +47,8 @@ const props = withDefaults(defineProps<Props>(), ({
   text: undefined,
   placeholder: 'Chọn',
   totalRecord: 0,
-  isInfinityScroll: true,
+  isInfinityScroll: false,
+  excludeId: [],
 }))
 
 const emit = defineEmits<Emit>()
@@ -69,7 +73,10 @@ function handleChangeValue(e: any) {
   emit('update:modelValue', valueCurrent.value)
 }
 const optionsModel = computed(() => {
-  const optionsModels = props.items?.map((item: any) => {
+  const exclude = props.items.filter((item: any) => !props.excludeId.includes(item[props.itemValue]))
+
+  const optionsModels = exclude?.map((item: any) => {
+    item[props.customKey] = t(item[props.customKey])
     item = {
       ...item,
       keySearch: typeof item[props.customKey] === 'string' ? StringUtil.removeAccents(item[props.customKey]) : null,
@@ -111,7 +118,12 @@ function close(e: any) {
   }, 150)
 }
 
+const searchData = window._.debounce((val: any) => {
+  emit('search', val)
+}, 500) //
 function fetchOptions(options: any, search: any) {
+  if (props.isInfinityScroll)
+    return optionsModel.value
   const searchKey = StringUtil.removeAccents(search)
 
   const optionsFuse = {
@@ -175,7 +187,9 @@ watch(() => props.modelValue, newValue => {
         :append-to-body="appendToBody "
         @open="open"
         @close="close"
+        @search:blur="emit('search:blur')"
         @update:modelValue="handleChangeValue"
+        @search="searchData"
       >
         <template #option="item">
           <slot

@@ -15,6 +15,7 @@ $color-gray-800: rgb(var(--v-gray-800)); // gray/800
 $color-gray-900: rgb(var(--v-gray-900)); // gray/900
 
 /** primary */
+$color-primary: rgb(var(--v-primary-600));
 $color-primary-25: rgb(var(--v-primary-25)); // primary/25
 $color-primary-50: rgb(var(--v-primary-50)); // primary/50
 $color-primary-100: rgb(var(--v-primary-100)); // primary/100
@@ -41,17 +42,17 @@ $color-error-800: rgb(var(--v-error-800)); // error/800
 $color-error-900: rgb(var(--v-error-900)); // error/900
 
 /** warning */
-$color-warning-25: rgb(var(--v-primary-25)); // warning/25
-$color-warning-50: rgb(var(--v-primary-50)); // warning/50
-$color-warning-100: rgb(var(--v-primary-100)); // warning/100
-$color-warning-200: rgb(var(--v-primary-200)); // warning/200
-$color-warning-300: rgb(var(--v-primary-300)); // warning/300
-$color-warning-400: rgb(var(--v-primary-400)); // warning/400
-$color-warning-500: rgb(var(--v-primary-500)); // warning/500
-$color-warning-600: rgb(var(--v-primary-600)); // warning/600
-$color-warning-700: rgb(var(--v-primary-700)); // warning/700
-$color-warning-800: rgb(var(--v-primary-800)); // warning/800
-$color-warning-900: rgb(var(--v-primary-900)); // warning/900
+$color-warning-25: rgb(var(--v-warning-25)); // warning/25
+$color-warning-50: rgb(var(--v-warning-50)); // warning/50
+$color-warning-100: rgb(var(--v-warning-100)); // warning/100
+$color-warning-200: rgb(var(--v-warning-200)); // warning/200
+$color-warning-300: rgb(var(--v-warning-300)); // warning/300
+$color-warning-400: rgb(var(--v-warning-400)); // warning/400
+$color-warning-500: rgb(var(--v-warning-500)); // warning/500
+$color-warning-600: rgb(var(--v-warning-600)); // warning/600
+$color-warning-700: rgb(var(--v-warning-700)); // warning/700
+$color-warning-800: rgb(var(--v-warning-800)); // warning/800
+$color-warning-900: rgb(var(--v-warning-900)); // warning/900
 
 /** success */
 $color-success-25: rgb(var(--v-success-25)); // success/25
@@ -122,7 +123,7 @@ $color-pink-50: #fdf2fa;
 
 // **main*//
 $color-vertical-layout: $color-gray-50;
-$color-primary: rgba(var(--v-color-primary));
+
 
 /** color general */
 $color-default: #1849a9; // càu chủ đạo

@@ -69,14 +69,14 @@ const isShowDialogAddGroup = ref(false)
  * method
  */
 // danh sách chức danh
-const getPagingByTitles = async () => {
+async function getPagingByTitles() {
   await MethodsUtil.requestApiCustom(ApiUser.GetListTitle, TYPE_REQUEST.POST, queryParams).then((value: any) => {
     dataTableTitles.value = value?.data?.pageLists
     dataComponent.totalRecord = value?.data?.totalRecord
   })
 }
 
-const handlerActionHeader = (type: any) => {
+function handlerActionHeader(type: any) {
   switch (type) {
     case 'handlerCustomButton':
       title.value.id = null
@@ -88,40 +88,40 @@ const handlerActionHeader = (type: any) => {
   }
 }
 
-const selectedRows = (e: any) => {
+function selectedRows(e: any) {
   dataComponent.selectedRowsIds = e
 }
 
 // search ở fillter header
-const handleSearch = async (value: any) => {
+async function handleSearch(value: any) {
   queryParams.pageNumber = 1
   queryParams.search = value
   await getPagingByTitles()
 }
-const handlePageClick = async (value: any) => {
+async function handlePageClick(value: any) {
   queryParams.pageNumber = value
   await getPagingByTitles()
 }
 
-const handleDeleteMultiple = async (value: any) => {
+async function handleDeleteMultiple(value: any) {
   dataComponent.deleteIds = dataComponent.selectedRowsIds
   isShowDialogNotiDelete.value = true
 }
 
 // Function to handle when click button Delete
-const handleDeleteItem = (context: any) => {
+function handleDeleteItem(context: any) {
   dataComponent.deleteIds = []
   dataComponent.deleteIds.push(context.id)
   isShowDialogNotiDelete.value = true
 }
 
-const reset = () => {
+function reset() {
   dataComponent.deleteIds = []
   dataComponent.selectedRowsIds = []
 }
 
 // delete action
-const deleteAction = async () => {
+async function deleteAction() {
   const params = {
     listId: dataComponent.deleteIds,
   }
@@ -133,25 +133,25 @@ const deleteAction = async () => {
       await handlePageClick(1)
     })
     .catch((error: any) => {
-      toast('ERROR', t(error.message))
+      toast('ERROR', t(error.response.data.message))
     })
 }
 
 // hành động của dialog
-const confirmDialog = (event: any) => {
+function confirmDialog(event: any) {
   if (event)
     deleteAction()
 }
 
 // thêm chức danh thành công
-const addTitleSuccess = async () => {
+async function addTitleSuccess() {
   viewModeAddTitle.value = false
   await getPagingByTitles()
   await fetchDataUserOrg()
 }
 
 // Chỉnh sửa chức danh trong cctc
-const handleEditTitle = async (content: any) => {
+async function handleEditTitle(content: any) {
   await getInforTitleById(content?.id)
 }
 onUnmounted(() => {
@@ -260,4 +260,3 @@ watch(() => organization.value.id, val => {
     />
   </div>
 </template>
-

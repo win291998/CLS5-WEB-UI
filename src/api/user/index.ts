@@ -32,7 +32,6 @@ const UserService = {
   GetListCustomerRequest: '/Customer/get-list',
   GetRegisterConfig: '/RegistryConfiguration/get',
   GetOrgById: '/organizationalstructure/get-by-id',
-  getPagingUserByList: 'user/get-info-user-by-ids',
   getPagingUserOrgByList: 'organizationalstructure/get-list-user',
   getTitleById: 'title/get-by-id',
   getProficiencyData: 'proficiency/get-all',
@@ -82,6 +81,7 @@ const UserService = {
   PostAddGroupUser: 'usergroup/add-group-with-user',
   PostCreateTitle: 'title/create',
   PostUpdateTitle: 'title/update',
+  PostGetTeacher: '/user/get-combobox-administrator-teacher',
 
   /** Nhóm người dùng */
   ListGroup: '/usergroup/get-all-paging',

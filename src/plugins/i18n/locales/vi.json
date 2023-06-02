@@ -1661,7 +1661,7 @@
   "QuestionService.ExamDeclined": "Trả lại",
   "QuestionService.ExamEditing": "Đang chỉnh sửa",
   "QuestionService.ExamEnd": "Kết thúc",
-  "QuestionService.ExamPending": "Đang chờ",
+  "QuestionService.ExamPending": "Chờ duyệt",
   "QuestionService.ExamUpcoming": "Sắp diễn ra",
   "QuestionService.Failed": "Nhận diện thất bại",
   "QuestionService.Finish": "Kết thúc",
@@ -3329,10 +3329,16 @@
   "Delete-course": "Xóa khóa học",
   "import-file-org": "Thêm cơ cấu tổ chức từ file",
   "add-org": "Thêm cơ cấu tổ chức",
-  "list-type-cost":"Danh sách loại chi phí",
-  "add-type-cost":"Thêm loại chi phí",
+  "list-type-cost": "Danh sách loại chi phí",
+  "add-type-cost": "Thêm loại chi phí",
   "type-name-cost": "Tên loại chi phí",
   "cost-course": "Chi phí khóa học",
   "add-cost": "Thêm chi phí",
-  "cost-exam":"Chi phí kỳ thi"
+  "cost-exam": "Chi phí kỳ thi",
+  "author-name": "Tác giả",
+  "duration-time": "Thời Lượng",
+  "CopyCourse": "Sao chép khóa học",
+  "QuestionService.ActionAgree": "Duyệt",
+  "Admin-supper": "Quản trị cao nhất",
+  "choose-admin-supper": "Chọn người duyệt khóa học"
 }

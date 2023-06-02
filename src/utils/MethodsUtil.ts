@@ -1,9 +1,8 @@
-import { useI18n } from 'vue-i18n'
+import jwt_decode from 'jwt-decode'
 import { ActionType } from '@/constant/data/actionType.json'
 import { StatusTypeUser } from '@/constant/data/status.json'
 import ApiUser from '@/api/user/index'
 import { TYPE_REQUEST } from '@/typescript/enums/enums'
-import axios from '@axios'
 import UserService from '@/api/user/index'
 import type { Any } from '@/typescript/interface'
 
@@ -89,8 +88,8 @@ export default class MethodsUtil {
   static requestApiCustom = (url = '', method = 'GET', payload?: any) => {
     if (url === undefined)
       return
-    const data = method === 'GET' || method === 'DELETE' ? null : payload || null
-    const params = method === 'GET' || method === 'DELETE' ? payload : null
+    const data = (method === 'GET' || method === 'DELETE') ? null : (payload || null)
+    const params = (method === 'GET' || method === 'DELETE') ? payload : null
 
     return window.axios({
       url,
@@ -134,6 +133,10 @@ export default class MethodsUtil {
     return data.find((item: any) => item.name === key)
   }
 
+  static checkType = (key: number | string, data: any, customkey = 'id') => {
+    return data.find((item: any) => item[customkey] === key)
+  }
+
   static formatFullName = (firstName: string, lastName: string) => {
     const lang = localStorage.getItem('lang') === null ? 'vi' : localStorage.getItem('lang')
     switch (lang) {
@@ -165,7 +168,7 @@ export default class MethodsUtil {
       }
       params.pageSize = pageSize === null ? userIds.length : pageSize
       params.pageNumber = pageNumber === null ? 1 : pageNumber
-      const res = await MethodsUtil.requestApiCustom(ApiUser.getPagingUserByList, TYPE_REQUEST.GET, params).then((value: any) => value)
+      const res = await MethodsUtil.requestApiCustom(ApiUser.GetListInforUser, TYPE_REQUEST.GET, params).then((value: any) => value)
       return res.data
     }
     return { pageLists: [], totalRecord: 0 }
@@ -195,20 +198,34 @@ export default class MethodsUtil {
   }
 
   // // kiểm tra quyền trên view
-  // const checkPermission = (key, value) => {
-  //   let permission = store.getters['app/permission']
-  //   if (permission === null) {
-  //     const token = useJwt.getToken()
-  //     if (!token)
-  //       return false
-  //     permission = parseJwt(token)
-  //     store.commit('app/UPDATE_PERMISSION', permission)
-  //   }
-  //   const propertyValue = permission[key]
-  //   if (!propertyValue)
-  //     return false
-  //   const valueNumber = parseInt(propertyValue, 10)
+  static checkPermission = (permission: any, key: any, value: any) => {
+    if (permission === null) {
+      const token = window.localStorage.getItem('accessToken')
+      if (!token)
+        return false
+      permission = jwt_decode(token)
+    }
+    const propertyValue = permission[key]
+    if (!propertyValue)
+      return false
+    const valueNumber = parseInt(propertyValue, 10)
 
-  //   return valueNumber && (valueNumber & value) === value
-  // }
+    return valueNumber && (valueNumber & value) === value
+  }
+
+  // lấy thuộc tính theo danh sách
+  static getPropertyByArray = (data: any, property: any) => {
+    const properties: any = []
+    data?.forEach((element: any) => {
+      if (element[property] && !properties.includes(element[property]))
+        properties.push(element[property])
+    })
+    return properties
+  }
+
+  // Lấy danh sách thông tin người dùng từ danh sách id
+  // Tham số đầu vào là danh sách các id
+  static getUserInfoByIds = async (userIds: any) => {
+    return await this.searchUserInfoByIds(userIds)
+  }
 }

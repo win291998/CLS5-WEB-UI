@@ -41,4 +41,22 @@ export default class DateUtil {
       return ''
     return moment(String(value)).format('DD/MM/YYYY')
   }
+
+  static formatSecond = (value: any) => {
+    value = Math.round(value)
+    if (value < 60)
+      return `${value}s`
+    if (value >= 60 && value < 3600) {
+      const minute = Math.floor(value / 60)
+      const second = value % 60
+      return value === 0 ? `${minute}m` : `${minute}m${second}s`
+    }
+    if (value >= 3600) {
+      const minute = Math.floor(value / 60)
+      const hour = Math.floor(minute / 60)
+      const remainMinute = minute - (hour * 60)
+      return remainMinute === 0 ? `${hour}h` : `${hour}h${remainMinute}m`
+    }
+    return ''
+  }
 }

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import jwt_decode from 'jwt-decode'
 import { validatorStore } from '@/stores/validatator'
 import { comboboxStore } from '@/stores/combobox'
 import { profileUserManagerStore } from '@/stores/admin/users/profile/profile'
@@ -62,14 +63,11 @@ if (window._.isEmpty(userTypeCombobox.value))
   fetchTypeUsersCombobox()
 
 const isOwner = computed(() => {
-  // const token = useJwt.getToken()
-  // if (!token)
-  //   return true
-  // const permission = parseJwt(token)
-  // if (Number(permission?.OwnerId) === Number(this.$route.params.id))
-  //   return true
-
-  return false
+  const token = window.localStorage.getItem('accessToken')
+  if (!token)
+    return true
+  const permission: any = jwt_decode(token)
+  return Number(permission?.OwnerId) === Number(route.params.id)
 })
 if (Number(route.params.id) >= 0)
   titleTable.value?.checkGetListOrgStruct()

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { validatorStore } from '@/stores/validatator'
 import { orgStructManagerStore } from '@/stores/admin/org-struct/orgStruct'
-import toast from '@/plugins/toast'
 
 const props = withDefaults(defineProps<Props>(), ({}))
 
@@ -59,15 +58,15 @@ const excludeId = ref()
 /**
  * method
  */
-const changeOrg = async () => {
+async function changeOrg() {
 //
 }
 
-const handleOrg = () => {
+function handleOrg() {
   //
 }
 
-const isIntersecting = () => {
+function isIntersecting() {
   vSelectOwner.value.pageNumber += 1
   getComboboxOwnerInf(true)
 }
@@ -190,4 +189,3 @@ onUnmounted(() => {
 <style scoped lang="scss">
 @use "/src/styles/style-global" as *;
 </style>
-
