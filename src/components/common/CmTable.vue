@@ -110,7 +110,7 @@ watch(() => props.items, (val: Item[]) => {
       selectedRows.value.push([keyid.value])
   })
 }, { immediate: true })
-// eslint-disable-next-line vue/no-dupe-keys
+
 const pageSize = ref(props.pageSize) // số lượng item trên 1 page
 const serverfile = window.SERVER_FILE || ''
 
@@ -228,14 +228,14 @@ onMounted(() => {
     <EasyDataTable
       ref="dataTable"
       alternating
-      table-class-name="customize-table"
+      :table-class-name="['customize-table', isExpand ? 'table-expand' : '']"
       :headers="headers"
       :items="items"
       :rows-per-page="pageSize"
       theme-color="#1849a9"
       :table-min-height="minHeight"
       :item-key="keyid"
-      click-row-to-expand
+      :click-row-to-expand="isExpand"
       hide-footer
       :body-row-class-name="rowClassName"
       @click-row="showRow"
@@ -559,5 +559,8 @@ onMounted(() => {
   .vue3-easy-data-table__body tr{
     cursor: pointer;
   }
+}
+.table-expand .vue3-easy-data-table__header th:nth-child(1){
+  padding: unset !important;
 }
 </style>

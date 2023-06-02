@@ -44,10 +44,10 @@ let apiInfo = reactive({
 })
 const myFormAdd = ref()
 
-const onCancel = async () => {
+async function onCancel() {
   emit('update:isDialogVisible', false)
 }
-const onConfirm = async () => {
+async function onConfirm() {
   myFormAdd.value.validate().then(async (success: any) => {
     if (success.valid) {
       window.showAllPageLoading('FULL-OPACITY')

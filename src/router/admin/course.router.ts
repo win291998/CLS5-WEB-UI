@@ -11,9 +11,14 @@ export default [
     // },
     children: [
       {
-        path: '',
+        path: 'course-list',
         name: 'course-list',
         component: () => import('@/pages/admin/course/Course.vue'),
+      },
+      {
+        path: 'course-approve',
+        name: 'course-approve',
+        component: () => import('@/pages/admin/course/approve/Approve.vue'),
       },
     ],
   },

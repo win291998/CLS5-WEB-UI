@@ -38,4 +38,11 @@ export default [
       { title: 'Quản lý học tập', to: { name: 'education' } },
     ],
   },
+  {
+    title: 'Tổ chức đào tạo',
+    icon: { icon: 'tabler-file' },
+    children: [
+      { title: 'Quản lý khóa học', to: { name: 'course-list' } },
+    ],
+  },
 ] as VerticalNavItems

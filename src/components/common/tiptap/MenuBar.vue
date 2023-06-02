@@ -147,7 +147,6 @@ export default {
   },
   methods: {
     mathText() {
-      console.log(213)
       const a = katex.render('e^2')
       this.editor.chain().focus().insertContent(a).run()
     },

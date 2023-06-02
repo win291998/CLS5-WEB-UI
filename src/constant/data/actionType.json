@@ -108,7 +108,7 @@
     {
       "id": 16,
       "name": "AddOrStructure",
-      "icon": "tabler:circle-plus",
+      "icon": "tabler:download",
       "color": "color-orange",
       "note": ""
     },
@@ -117,6 +117,14 @@
       "name": "ActionDeclined",
       "icon": "bi:arrow-return-left",
       "color": "color-orange",
+      "note": ""
+    },
+    {
+      "id": 18,
+      "name": "CopyCourse",
+      "key": "QuestionService.CopyCourse",
+      "icon": "tabler:copy",
+      "color": "color-primary",
       "note": ""
     }
   ],

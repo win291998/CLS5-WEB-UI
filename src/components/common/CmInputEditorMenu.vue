@@ -3,8 +3,6 @@ import 'katex/dist/katex.min.css'
 import katex from 'katex'
 
 function insertA() {
-  console.log(123)
-
   const htmlString = katex.renderToString('c = \\pm\\sqrt{a^2 + b^2}', {
     throwOnError: false,
   })

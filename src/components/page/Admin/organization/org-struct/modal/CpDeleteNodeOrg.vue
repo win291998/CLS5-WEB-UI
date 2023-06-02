@@ -34,10 +34,10 @@ const LABEL = Object.freeze({
 
 const selectedId = ref<any>(null)
 
-const onCancel = async () => {
+async function onCancel() {
   emit('update:isDialogVisible', false)
 }
-const onConfirm = async () => {
+async function onConfirm() {
   let params: any = {
     id: props.deleteOrgStructData.deletedId,
   }
@@ -53,7 +53,7 @@ const onConfirm = async () => {
     emit('deleteSuccess')
   })
     .catch((error: any) => {
-      toast('ERROR', t(error.message))
+      toast('ERROR', t(error.response.data.message))
     })
 }
 watch(() => props.isDialogVisible, isShow => {

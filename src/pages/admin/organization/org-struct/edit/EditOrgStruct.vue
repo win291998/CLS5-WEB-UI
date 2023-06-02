@@ -73,7 +73,6 @@ if (route.params.tab)
   <div>
     <div
       class="d-flex justify-content-center mb-5"
-      style="margin-top: 20px;"
     >
       <CmTab
         :is-render="true"

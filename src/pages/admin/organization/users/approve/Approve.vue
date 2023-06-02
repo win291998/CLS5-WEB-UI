@@ -61,7 +61,7 @@ const keyModal = ref('')
  * method
  */
 // filter
-const handleFilter = async (dataFilter: any) => {
+async function handleFilter(dataFilter: any) {
   queryParam = {
     ...queryParam,
     ...dataFilter,
@@ -70,12 +70,12 @@ const handleFilter = async (dataFilter: any) => {
 }
 
 // cập nhật trạng thái dialog
-const updateDialogVisible = (event: any) => {
+function updateDialogVisible(event: any) {
   isShowDialogNoti.value = event
 }
 
 // Function to handle when click button Delete
-const deleteItem = (id: number) => {
+function deleteItem(id: number) {
   data.customerIds = [id as never]
   modalContent.content = t('deleteUser')
   modalContent.subContent = t('delete')
@@ -84,7 +84,7 @@ const deleteItem = (id: number) => {
 }
 
 // click  multi delete btn to show modal confirm
-const deleteItems = () => {
+function deleteItems() {
   data.customerIds = data.listId
   modalContent.content = t('deleteUser')
   modalContent.subContent = t('delete')
@@ -93,7 +93,7 @@ const deleteItems = () => {
 }
 
 // delete action
-const deleteAction = async () => {
+async function deleteAction() {
   const params = {
     ids: data.customerIds,
   }
@@ -111,7 +111,7 @@ const deleteAction = async () => {
       toast('ERROR', t('USR_DeleteFail'))
     })
 }
-const approveItems = async (id?: any) => {
+async function approveItems(id?: any) {
   if (id)
     data.customerIds = [id]
 
@@ -122,7 +122,7 @@ const approveItems = async (id?: any) => {
     isShowDialogApprove.value = true
   })
 }
-const rebackItems = async (id?: any) => {
+async function rebackItems(id?: any) {
   if (id)
     data.customerIds = [id]
 
@@ -133,7 +133,7 @@ const rebackItems = async (id?: any) => {
   keyModal.value = 'back'
   isShowDialogNoti.value = true
 }
-const handleReturnCustomer = async () => {
+async function handleReturnCustomer() {
   const params = {
     ids: [...data.customerIds],
   }
@@ -143,12 +143,12 @@ const handleReturnCustomer = async () => {
       fectchListUsers()
     })
     .catch((error: any) => {
-      toast('ERROR', t(error.message))
+      toast('ERROR', t(error.response.data.message))
     })
 }
 
 // hành động của dialog
-const confirmDialog = (event: any, key: string) => {
+function confirmDialog(event: any, key: string) {
   if (event) {
     switch (key) {
       case 'delete':
@@ -165,7 +165,7 @@ const confirmDialog = (event: any, key: string) => {
 }
 
 // hàm trả về các loại action từ header filter
-const handleClickBtn = (type: string) => {
+function handleClickBtn(type: string) {
   switch (type) {
     case 'fillter':
       isShowFilter.value = !isShowFilter.value
@@ -186,23 +186,23 @@ const handleClickBtn = (type: string) => {
 }
 
 // search ở fillter header
-const handleSearch = async (value: any) => {
+async function handleSearch(value: any) {
   queryParam.pageNumber = 1
   queryParam.keyword = value
   await fectchListUsers()
 }
-const selectedRows = (e: any) => {
+function selectedRows(e: any) {
   data.listId = e
 }
 
 // click pagination
-const handlePageClick = async (page: any) => {
+async function handlePageClick(page: any) {
   queryParam.pageNumber = page
   await fectchListUsers()
 }
 
 // hàm trả về các loại action khi click
-const actionItem = (type: any) => {
+function actionItem(type: any) {
   switch (type[0]?.name) {
     case 'ActionDelete':
       deleteItem(type[1].id)
@@ -218,7 +218,7 @@ const actionItem = (type: any) => {
       break
   }
 }
-const handleModalApproveAccept = async (infor: any) => {
+async function handleModalApproveAccept(infor: any) {
   const params = {
     userTypeId: infor.userTypeId,
     orgId: infor.organizationalStructureId,
@@ -232,10 +232,10 @@ const handleModalApproveAccept = async (infor: any) => {
       fectchListUsers()
     })
     .catch((error: any) => {
-      toast('ERROR', t(error.message))
+      toast('ERROR', t(error.response.data.messagee))
     })
 }
-const confirmDialogApprove = (infor: any) => {
+function confirmDialogApprove(infor: any) {
   handleModalApproveAccept(infor)
 }
 
@@ -344,4 +344,3 @@ window.hideAllPageLoading()
     @confirm="confirmDialogApprove"
   />
 </template>
-

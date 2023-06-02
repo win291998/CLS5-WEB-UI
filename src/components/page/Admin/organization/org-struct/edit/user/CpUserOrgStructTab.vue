@@ -57,11 +57,11 @@ const isEditUser = ref(false)
 const disabledOk = ref(false)
 
 /** method */
-const reset = () => {
+function reset() {
   dataComponent.deleteIds = []
   dataComponent.selectedRowsIds = []
 }
-const handlerActionHeader = (type: any) => {
+function handlerActionHeader(type: any) {
   switch (type) {
     case 'handlerCustomButton':
       isEditUser.value = false
@@ -74,39 +74,39 @@ const handlerActionHeader = (type: any) => {
 }
 
 // search ở fillter header
-const handleSearch = async (value: any) => {
+async function handleSearch(value: any) {
   queryParams.pageNumber = 1
   queryParams.search = value
   getPagingByUser()
 }
 
 // Function to handle when click button Delete
-const handleDeleteItem = (context: any) => {
+function handleDeleteItem(context: any) {
   dataComponent.deleteIds = []
   dataComponent.deleteIds.push(context.userId)
   isShowDialogNotiDelete.value = true
 }
-const handleDeleteMultiple = async (value: any) => {
+async function handleDeleteMultiple(value: any) {
   dataComponent.deleteIds = dataComponent.selectedRowsIds
   isShowDialogNotiDelete.value = true
 }
 
 // Chỉnh sửa chức danh trong cctc
-const handleEditTitle = async (content: any) => {
+async function handleEditTitle(content: any) {
   userEdit.value = content
   isEditUser.value = true
   isShowDialogAddUser.value = true
 }
-const handlePageClick = async (value: any) => {
+async function handlePageClick(value: any) {
   queryParams.pageNumber = value
   await getPagingByUser()
 }
-const selectedRows = (e: any) => {
+function selectedRows(e: any) {
   dataComponent.selectedRowsIds = e
 }
 
 // lưu người dùng
-const saveUsers = async (params: any) => {
+async function saveUsers(params: any) {
   if (params?.listUser?.length) {
     disabledOk.value = true
     await MethodsUtil.requestApiCustom(isEditUser.value ? ApiUser.PostUpdateUserOrg : ApiUser.PostAddUserOrg, TYPE_REQUEST.POST, params).then((value: any) => {
@@ -117,7 +117,7 @@ const saveUsers = async (params: any) => {
       isShowDialogAddUser.value = false
     })
       .catch((error: any) => {
-        toast('ERROR', t(error.message))
+        toast('ERROR', t(error.response.data.message))
       })
   }
 
@@ -127,7 +127,7 @@ const saveUsers = async (params: any) => {
 }
 
 // delete action
-const deleteAction = async () => {
+async function deleteAction() {
   const params = {
     orStructureId: organization.value.id,
     listUser: dataComponent.deleteIds,
@@ -140,12 +140,12 @@ const deleteAction = async () => {
       await handlePageClick(1)
     })
     .catch((error: any) => {
-      toast('ERROR', t(error.message))
+      toast('ERROR', t(error.response.data.message))
     })
 }
 
 // hành động của dialog
-const confirmDialog = (event: any) => {
+function confirmDialog(event: any) {
   if (event)
     deleteAction()
 }
@@ -271,4 +271,3 @@ watch(() => organization.value.id, val => {
     />
   </div>
 </template>
-

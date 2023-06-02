@@ -73,11 +73,11 @@ interface Emit {
 }
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 
-const handleChange = (event: any) => {
+function handleChange(event: any) {
   emit('change', event)
 }
 
-const handleClickItem = (event: any) => {
+function handleClickItem(event: any) {
   // if (propsValue.multiple)
   //   event.stopPropagation()
 }
@@ -158,7 +158,7 @@ const textButton = computed(() => {
               class="mr-2"
               :class="[item.colorClass, MethodsUtil.checlActionKey(item)[0]?.color]"
             />
-            <span class="text-medium-sm">{{ t(item[customKey]) }}
+            <span>{{ t(item[customKey]) }}
             </span>
           </VListItemTitle>
           <template #append>
@@ -194,4 +194,3 @@ const textButton = computed(() => {
   }
 }
 </style>
-

@@ -59,13 +59,13 @@ const headers = reactive([
 ])
 
 /** method */
-const reset = () => {
+function reset() {
   dataComponent.deleteIds = []
   dataComponent.selectedRowsIds = []
 }
 
 // danh sách id khóa học
-const fetchAllCourseId = async () => {
+async function fetchAllCourseId() {
   const params = { id: organization.value.id, typeId: 3 }
   await MethodsUtil.requestApiCustom(CourseService.GetCourseExclude, TYPE_REQUEST.GET, params).then((value: any) => {
     dataComponent.excludeListId = value?.data
@@ -73,13 +73,13 @@ const fetchAllCourseId = async () => {
 }
 
 // search ở fillter header
-const handleSearch = async (value: any) => {
+async function handleSearch(value: any) {
   queryParams.pageNumber = 1
   queryParams.search = value
   getPagingByCourse()
 }
 
-const handlerActionHeader = (type: any) => {
+function handlerActionHeader(type: any) {
   switch (type) {
     case 'handlerCustomButton':
 
@@ -92,20 +92,20 @@ const handlerActionHeader = (type: any) => {
 }
 
 // xóa một
-const handleDeleteItem = (context: any) => {
+function handleDeleteItem(context: any) {
   dataComponent.deleteIds = []
   dataComponent.deleteIds.push(context.id)
   isShowDialogNotiDelete.value = true
 }
 
 // xóa nhiều
-const handleDeleteMultiple = async (value: any) => {
+async function handleDeleteMultiple(value: any) {
   dataComponent.deleteIds = dataComponent.selectedRowsIds
   isShowDialogNotiDelete.value = true
 }
 
 // delete action
-const deleteAction = async () => {
+async function deleteAction() {
   const params = {
     orStructureId: organization.value.id,
     courseModel: dataComponent.deleteIds,
@@ -118,18 +118,18 @@ const deleteAction = async () => {
       queryParams.pageNumber = 1
     })
     .catch((error: any) => {
-      toast('ERROR', t(error.message))
+      toast('ERROR', t(error.response.data.message))
     })
 }
 
 // hành động của dialog
-const confirmDialog = (event: any) => {
+function confirmDialog(event: any) {
   if (event)
     deleteAction()
 }
 
 // thêm khóa học
-const saveAddCourseOrg = async (listCourse: any) => {
+async function saveAddCourseOrg(listCourse: any) {
   const listIds = listCourse.map(({ id }: any) => id)
   const params = {
     orStructureId: organization.value.id,
@@ -145,7 +145,7 @@ const saveAddCourseOrg = async (listCourse: any) => {
       isShowDialogAddCourse.value = false
     })
       .catch((error: any) => {
-        toast('ERROR', t(error.message))
+        toast('ERROR', t(error.response.data.message))
       })
   }
 
@@ -260,4 +260,3 @@ watch(queryParams, val => {
     />
   </div>
 </template>
-

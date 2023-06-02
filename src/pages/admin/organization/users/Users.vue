@@ -265,7 +265,6 @@ async function fectchListUsers() {
             ...titleModels,
             content: titleData,
           }
-          console.log(item.actions)
 
           item.actions = item.actions.map((el: any) => {
             return MethodsUtil.checkActionType(el, actionItem)
@@ -389,7 +388,6 @@ function handlerActionHeader(type: any) {
   }
 }
 function handleAddFromApi(model: any) {
-  console.log(model)
   model.forEach((element: any) => {
     element.isSelected = true
   })
