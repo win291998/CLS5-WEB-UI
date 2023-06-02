@@ -11,6 +11,7 @@ export const comboboxStore = defineStore('combobox', () => {
   interface combobox {
     key: any
     value: string
+    text?: string
   }
   const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 
@@ -52,6 +53,16 @@ export const comboboxStore = defineStore('combobox', () => {
     data: [],
     totalRecord: 0,
   })
+
+  // Lấy danh sách loại trường
+  const typeSchoolCombobox = ref<Any>([])
+  const getComboboxTypeSchool = async () => {
+    const { data } = await MethodsUtil.requestApiCustom(ComboboxService.GetSchoolType, TYPE_REQUEST.GET)
+    data.forEach((element: combobox) => {
+      element.text = t(element.value)
+    })
+    typeSchoolCombobox.value = data
+  }
 
   // Lấy danh sách khóa học
   const courseCombobox = ref<Any>([])
@@ -213,7 +224,9 @@ export const comboboxStore = defineStore('combobox', () => {
       provinceId,
     }
 
-    if (provinceId === null) { districts.value = [] }
+    if (provinceId === null) {
+      districts.value = []
+    }
     else {
       await MethodsUtil.requestApiCustom(ComboboxService.Districts, TYPE_REQUEST.GET, params).then((value: any) => {
         districts.value = value.data
@@ -227,7 +240,9 @@ export const comboboxStore = defineStore('combobox', () => {
       districtId,
     }
 
-    if (districtId === null) { wards.value = [] }
+    if (districtId === null) {
+      wards.value = []
+    }
     else {
       await MethodsUtil.requestApiCustom(ComboboxService.Wards, TYPE_REQUEST.GET, params).then((value: any) => {
         wards.value = value.data
@@ -335,5 +350,7 @@ export const comboboxStore = defineStore('combobox', () => {
     getComboboxTopic,
     getComboboxFormStudy,
     getComboboxStatusCourse,
+    getComboboxTypeSchool,
+    typeSchoolCombobox,
   }
 })

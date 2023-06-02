@@ -42,6 +42,37 @@ export default [
 
         ],
       },
+      {
+        path: 'education',
+        name: 'education',
+
+        // requireAuth: {
+        //   permissionKey: 'UserTypeManaging',
+        //   permissionValue: 1,
+        // },
+        component: () => import('@/pages/admin/training/cost/Index.vue'),
+        redirect: { name: 'manager-education', params: { tab: 'cost-type' } },
+        children: [
+          {
+            path: ':tab',
+            name: 'manager-education',
+            component: () => import('@/pages/admin/training/education/Education.vue'),
+            children: [
+              {
+                path: 'add',
+                name: 'manager-education-add',
+                component: () => import('@/pages/admin/training/education/Education.vue'),
+              },
+              {
+                path: 'edit/:id',
+                name: 'manager-education-edit',
+                component: () => import('@/pages/admin/training/education/Education.vue'),
+              },
+            ],
+          },
+
+        ],
+      },
     ],
   },
 ]

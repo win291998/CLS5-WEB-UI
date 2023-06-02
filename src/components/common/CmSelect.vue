@@ -5,8 +5,8 @@ import Globals from '@/constant/Globals'
 import StringUtil from '@/utils/StringUtil'
 
 interface Props {/** ** Interface */
-  modelValue?: unknown
-  items?: Array<any>
+  modelValue?: any
+  items: any
   maxItem?: number
   totalRecord?: number
   multiple?: boolean
@@ -29,7 +29,7 @@ interface Emit {
   (e: 'update:persistent', value: any): void
   (e: 'open', value: any): void
   (e: 'search', value: any): void
-  (e: 'search:blur', value: any): void
+  (e: 'search:blur', value?: any): void
   (e: 'isIntersecting', value: any): void
 }
 
@@ -72,20 +72,23 @@ const messageError = computed(() => {
 function handleChangeValue(e: any) {
   emit('update:modelValue', valueCurrent.value)
 }
+
 const optionsModel = computed(() => {
-  const exclude = props.items.filter((item: any) => !props.excludeId.includes(item[props.itemValue]))
+  if (props.items.length) {
+    const exclude = props.items.filter((item: any) => !props.excludeId.includes(item[props.itemValue]))
+    const optionsModels = exclude?.map((item: any) => {
+      item[props.customKey] = t(item[props.customKey])
+      item = {
+        ...item,
+        keySearch: typeof item[props.customKey] === 'string' ? StringUtil.removeAccents(item[props.customKey]) : null,
+      }
 
-  const optionsModels = exclude?.map((item: any) => {
-    item[props.customKey] = t(item[props.customKey])
-    item = {
-      ...item,
-      keySearch: typeof item[props.customKey] === 'string' ? StringUtil.removeAccents(item[props.customKey]) : null,
-    }
+      return item
+    })
 
-    return item
-  })
-
-  return optionsModels || []
+    return optionsModels || []
+  }
+  return []
 })
 const hasNextPage = computed(() => {
   return optionsModel.value.length < props.totalRecord

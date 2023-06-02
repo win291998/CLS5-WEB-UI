@@ -24,6 +24,7 @@ const ComboboxService = {
   GetComboboxFormStudy: '/course/get-combobox-form-of-study', // danh sách hình thức học
   GetComboboxStatusCourse: '/course/get-combobox-course-status', // danh sách trại thái khóa học
   GetComboboxCourseApprove: '/User/get-combobox-course-approver', // danh sách trại thái khóa học
+  GetSchoolType: '/school/get-combobox-school-types',
 }
 
 export default ComboboxService

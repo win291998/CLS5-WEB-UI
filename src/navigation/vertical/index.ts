@@ -35,6 +35,7 @@ export default [
     children: [
       { title: 'Quản lý chủ đề', to: { name: 'topic-list' } },
       { title: 'Quản lý chi phí', to: { name: 'cost-list' } },
+      { title: 'Quản lý học tập', to: { name: 'education' } },
     ],
   },
   {

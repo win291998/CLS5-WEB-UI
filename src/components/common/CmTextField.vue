@@ -12,7 +12,8 @@ const props = withDefaults(defineProps<Props>(), ({
   disabled: false,
 }))
 
-const emit = defineEmits<Emit>(); const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
+const emit = defineEmits<Emit>()
+const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 
 /** ** Interface */
 

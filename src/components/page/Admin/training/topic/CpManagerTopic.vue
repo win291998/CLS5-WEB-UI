@@ -193,7 +193,7 @@ const router = useRouter()
 const listItemButtonGroup = [
   {
     title: 'Thêm từ tập tin',
-    icon: 'file-plus',
+    icon: 'tabler:file-plus',
     key: 'importFile',
     action: () => {
       router.push({ name: 'admin-organization-user-groups-import' })
@@ -204,7 +204,7 @@ const listItemButtonGroup = [
 // Xóa chủ đề
 function confirmDelete(topicId: number) {
   dataDelete.topicIdNew = topicId
-  MethodsUtil.requestApiCustom(sharedService.DeleteTopic, TYPE_REQUEST.DELETE, dataDelete).then(res => {
+  MethodsUtil.requestApiCustom(sharedService.DeleteTopic, TYPE_REQUEST.DELETE, dataDelete).then(() => {
     toast('SUCCESS', t('success-delete-gift-group'))
     isShowModalEdit.value = false
     getInformationTopic()

@@ -37,6 +37,14 @@ const UserService = {
   getProficiencyData: 'proficiency/get-all',
   GetUserExclude: '/user/get-list-user-id-by-structure',
   GetListInforUser: '/user/get-info-user-by-ids',
+  GetListSchool: '/school/get-all',
+  GetDetailSchool: '/school/get-by-id',
+  GetListDegree: '/degree/get-all',
+  GetDetailDegree: '/degree/get-by-id',
+  GetListAcademicrank: '/academicrank/get-all',
+  GetDetailAcademicrank: '/academicrank/get-by-id',
+  GetListAcademicdegree: '/academicdegree/get-all',
+  GetDetailAcademicdegree: '/academicdegree/get-by-id',
 
   /** POST */
   PostApproveCustomer: 'Customer/approve',
@@ -48,9 +56,25 @@ const UserService = {
   PostDeleteUserOrg: '/organizationalstructure/delete-user',
   PostCreateFromXml: '/hrm/update-structure',
   PostCreateTitleFromXml: '/hrm/update-title',
+  PostCreateSchool: '/school/create',
+  PostUpdateSchool: '/school/update',
+  PostDeleteSchool: '/school/delete',
+  PostCreateDegree: '/degree/create',
+  PostDeleteDegree: '/degree/delete',
+  PostCreateAcademicrank: '/academicrank/create',
+  PostUpdateAcademicrank: '/academicrank/update',
+  PostDeleteAcademicrank: '/academicrank/delete-list',
+  PostUpdateAcademicdegree: '/academicdegree/update',
+  PostCreateAcademicdegree: '/academicdegree/create',
+  PostDeleteAcademicdegree: '/academicdegree/delete-list',
+  PostExporExcelSchool: '/School/export-excel-school',
+  PostExporExcelDegree: '/degree/export-excel-degree',
+  PostExporExcelAcademicrank: '/academicrank/export-excel-academic-rank',
+  PostExporExcelAcademidegree: '/academicdegree/export-excel-academic-degree',
 
   /** Put */
   PutReturnCustomer: 'Customer/deny',
+  PutUpdateDegree: '/degree/update',
 
   /** delete */
   deleteCustomer: '/Customer/delete', // Xóa người dùng

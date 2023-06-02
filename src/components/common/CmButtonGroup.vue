@@ -55,17 +55,17 @@ const props = withDefaults(defineProps<Props>(), ({
 
 const emit = defineEmits<Emit>()
 
-const handlerPrepend = (event: any) => {
+function handlerPrepend(event: any) {
   emit('clickPrepend')
 }
 
 const buttonActive = ref(false)
 
-const activeButton = () => {
+function activeButton() {
   buttonActive.value = !buttonActive.value
 }
 
-const clickItem = (item: object) => {
+function clickItem(item: object) {
   emit('clickItem', item)
 }
 </script>
@@ -110,8 +110,8 @@ const clickItem = (item: object) => {
           >
             <VListItemTitle class="jutify-content-center">
               <VIcon
-                v-if="item.icon"
-                :icon="item.icon"
+                v-if="item?.icon"
+                :icon="item?.icon"
                 size="18"
                 :class="[item.colorClass]"
               />

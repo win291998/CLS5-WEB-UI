@@ -3340,5 +3340,14 @@
   "CopyCourse": "Sao chép khóa học",
   "QuestionService.ActionAgree": "Duyệt",
   "Admin-supper": "Quản trị cao nhất",
-  "choose-admin-supper": "Chọn người duyệt khóa học"
+  "choose-admin-supper": "Chọn người duyệt khóa học",
+  "List-school": "Danh sách trường",
+  "list-degree": "Danh sách bằng cấp",
+  "type-degree": "Loại bằng cấp",
+  "Academecrank": "Học vị",
+  "list-academecrank": "Danh sách học hàm",
+  "academicrankName": "Tên học hàm",
+  "academic-degree": "Học hàm",
+  "list-academedegree": "Danh sách học vị",
+  "academidegreeName": "Tên học vị"
 }
