@@ -179,3 +179,12 @@ watch(() => route.params[props.label], val => {
   margin-block-start: 5px;
 }
 </style>
+
+<style lang="scss">
+.cm-tabs {
+  .v-slide-group__content {
+   display: flex;
+   flex-wrap: wrap !important;
+  }
+}
+</style>

@@ -102,7 +102,7 @@ function handlerCustomButton() {
         <CmButton
           color="success"
           text-color="color-white"
-          @click="handlerPreButton"
+          @click="handlerCustomButton"
         >
           {{ titleCustom }}
         </CmButton>
@@ -114,7 +114,7 @@ function handlerCustomButton() {
         class="d-flex justify-end  mr-2"
       >
         <CmButton
-          @click="handlerCustomAddButton"
+          @click="handlerPreButton"
         >
           {{ titleCustomAdd }}
         </CmButton>

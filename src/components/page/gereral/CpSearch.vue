@@ -11,15 +11,9 @@ interface Props {
 }
 const timer = ref<any>(null)
 
-function handleSearch(val: string) {
-  if (timer) {
-    clearTimeout(timer.value)
-    timer.value = null
-  }
-  timer.value = setTimeout(() => {
-    emit('update:keySearch', val)
-  }, 500)
-}
+const handleSearch = window._.debounce((val: any) => {
+  emit('update:keySearch', val)
+}, 500)
 
 /**
  * dùng component search cẩn thận khi dùng v-model hoặc dùng event update:keySearch
@@ -31,7 +25,6 @@ function handleSearch(val: string) {
   <div>
     <CmTextField
       style="widht: 400px"
-      label="Tìm kiếm"
       class="header-action-field"
       placeholder="Tìm kiếm"
       prepend-inner-icon="tabler-search"

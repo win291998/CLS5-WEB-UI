@@ -43,11 +43,11 @@ watch(() => props.modelValue, (val: any) => {
 /** Method */
 function handleChangeText() {
   emit('change', props.type === 'number' ? Number(formModelValue.value) : formModelValue.value)
-  emit('update:modelValue', props.type === 'number' ? Number(formModelValue.value) : formModelValue.value)
+  emit('update:modelValue', props.type === 'number' ? Number(formModelValue.value || 0) : formModelValue.value)
 }
 
 function handleUpdateText() {
-  emit('update:modelValue', props.type === 'number' ? Number(formModelValue.value) : formModelValue.value)
+  emit('update:modelValue', props.type === 'number' ? Number(formModelValue.value || 0) : formModelValue.value)
 }
 
 const messageError = computed(() => {
@@ -65,7 +65,7 @@ const messageError = computed(() => {
       class="mb-1"
     >
       <label
-        class="text-label-default"
+        class="text-medium-sm color-dark"
       >{{ props.text }}</label>
     </div>
     <div class="vTextField">
@@ -104,7 +104,6 @@ const messageError = computed(() => {
   line-height: 24px;
   border: $border-input;
   border-radius: $border-radius-input !important;
-  margin-bottom: $xs;
 }
 .vTextField .v-field__outline__end,
 .vTextField .v-field__outline__start{

@@ -22,6 +22,12 @@ const Globals = Object.freeze({
   imageTypes: ['.tif', '.tiff', '.bmp', '.jpg', '.jpeg', '.gif', '.png', '.eps', '.raw', '.cr2', '.nef', '.orf', '.sr2'],
   otherFileExtention: '.rar, .zip, .txt, .doc, .docx, .pptx, .pptm, .ppt, .pdf, .xls, .xlsm, .xlsx, application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
 
+  /** Avatar */
+  avatar: {
+    offsetX: 30,
+    offsetY: 30,
+    size: 160,
+  },
 })
 
 export default Globals

@@ -117,7 +117,7 @@ export const courseApproveManagerStore = defineStore('courseApproveManager', () 
         return false
       })
   }
-  async function handleUpdatePointCourse(params?: any) {
+  async function handleUpdatePointCourse() {
     await myFormScore.value.validate().then(async (res: any) => {
       await handlerAddPoint()
     })

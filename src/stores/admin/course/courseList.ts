@@ -73,14 +73,16 @@ export const courseListManagerStore = defineStore('courseListManager', () => {
   /** method */
   /* ==> thực hiện các action được chọn ở header page CP */
   function handlerActionHeader(type: any) {
+    console.log(type)
+
     switch (type) {
       case 'handlerAddButton':
 
-        router.push({ name: 'admin-organization-users-profile-add', params: { tab: 'infor' } })
+        router.push({ name: 'course-add', params: { tab: 'infor' } })
         break
       case 'handlerCustomButton':
 
-        router.push({ name: 'admin-organization-user-approve' })
+        router.push({ name: 'course-approve' })
         break
 
       default:

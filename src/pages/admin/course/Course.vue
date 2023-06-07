@@ -20,10 +20,12 @@ const CpHeaderAction = defineAsyncComponent(() => import('@/components/page/gere
 const CpConfirmDialog = defineAsyncComponent(() => import('@/components/page/gereral/CpConfirmDialog.vue'))
 const CpMdApproveCourse = defineAsyncComponent(() => import('@/components/page/Admin/course/modal/CpMdApproveCourse.vue'))
 const CpMdRatioPointContent = defineAsyncComponent(() => import('@/components/page/Admin/course/modal/CpMdRatioPointContent.vue'))
+const CpMdFeedBack = defineAsyncComponent(() => import('@/components/page/Admin/course/modal/CpMdFeedBack.vue'))
 
 /** lib */
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 const route = useRoute()
+const router = useRouter()
 
 /** Store */
 const storeCourseListManager = courseListManagerStore()
@@ -42,7 +44,7 @@ const {
 
 const storeCourseApproveManager = courseApproveManagerStore()
 const { idModalSendApproveCourse, idModalSendRatioPoint } = storeToRefs(storeCourseApproveManager)
-const { sendApproveCourse, handleUpdatePointCourse } = storeCourseApproveManager
+const { sendApproveCourse } = storeCourseApproveManager
 
 const queryParamsInit = {
   dateFrom: null,
@@ -112,9 +114,13 @@ const headers = reactive([
   { text: t('date-update'), value: 'modifiedDateString' },
   { text: '', value: 'actions', width: 150 },
 ])
+const isShowModalFeedBack = ref(false)
+const dataFeedBack = ref<any>()
 
 // hàm trả về các loại action khi click
 function actionItem(type: any) {
+  console.log(type)
+
   switch (type[0]?.name) {
     case 'ActionDelete':
       deleteItem(type[1].id)
@@ -125,9 +131,45 @@ function actionItem(type: any) {
     case 'approve':
       approve(type[1].id)
       break
+    case 'ActionViewFeedBack':
+      handleViewFeedBack(type[1].id)
+      break
+    case 'ActionEdit':
+      router.push({ name: 'course-edit', params: { tab: 'infor', id: type[1].id } })
+      break
     default:
       break
   }
+}
+
+// hàm trả về các loại action từ header filter
+function handleClickBtn(type: string) {
+  switch (type) {
+    case 'fillter':
+      isShowFilter.value = !isShowFilter.value
+      break
+    case 'delete':
+      deleteItems()
+      break
+
+    case 'approve':
+      approveCourses()
+      break
+
+    default:
+      break
+  }
+}
+async function handleViewFeedBack(id: number) {
+  isShowModalFeedBack.value = true
+
+  const params = {
+    id,
+  }
+  await MethodsUtil.requestApiCustom(CourseService.GetFeedBackCourse, TYPE_REQUEST.GET, params).then((value: any) => {
+    console.log(value)
+    dataFeedBack.value = value.data?.feedback
+  })
 }
 async function handleApproveCourse() {
   queryParams.value = queryParamsInit
@@ -179,25 +221,6 @@ async function fetchListCourse() {
       totalRecord.value = value.data.totalRecord
     }
   })
-}
-
-// hàm trả về các loại action từ header filter
-function handleClickBtn(type: string) {
-  switch (type) {
-    case 'fillter':
-      isShowFilter.value = !isShowFilter.value
-      break
-    case 'delete':
-      deleteItems()
-      break
-
-    case 'approve':
-      approveCourses()
-      break
-
-    default:
-      break
-  }
 }
 
 // chạy
@@ -286,7 +309,6 @@ window.hideAllPageLoading()
     />
     <CpMdRatioPointContent
       v-model:is-dialog-visible="idModalSendRatioPoint"
-      @confirm="handleUpdatePointCourse"
     />
     <CpConfirmDialog
       :type="2"
@@ -297,6 +319,10 @@ window.hideAllPageLoading()
       :is-dialog-visible="isShowDialogNotiDelete"
       @update:isDialogVisible="($event) => updateDialogVisible($event)"
       @confirm="confirmDialogDelete"
+    />
+    <CpMdFeedBack
+      v-model:is-show-modal-feed-back="isShowModalFeedBack"
+      :data-feed-back="dataFeedBack"
     />
   </div>
 </template>

@@ -70,15 +70,9 @@ function handleClickBtn(type: string) {
 }
 
 const timer = ref<any>(null)
-function handleSearch(value: any) {
-  if (timer.value) {
-    clearTimeout(timer.value)
-    timer.value = null
-  }
-  timer.value = setTimeout(() => {
-    emit('search', value)
-  }, 500)
-}
+const handleSearch = window._.debounce((value: any) => {
+  emit('search', value)
+}, 500)
 </script>
 
 <template>
@@ -127,7 +121,7 @@ function handleSearch(value: any) {
       sm="8"
     >
       <VRow class="ma-0">
-        <VCol class="d-flex justify-end pr-0">
+        <VCol class="d-flex justify-end align-center pa-0">
           <CmButton
             v-if="isAdd"
             class="ml-3"

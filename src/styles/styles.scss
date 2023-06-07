@@ -1,4 +1,7 @@
 @use "./variables/global" as *;
+html, body{
+  font-family: $font-family-custom !important;
+}
 .text-primary {
   color: $color-primary-600 !important
 }
@@ -330,7 +333,16 @@ span {
 }
 
 .text-error {
-  color: $color-error-600 !important
+  color: $color-error-600 !important;
+  line-height: 12px;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
+  transition-duration: 150ms;
+  font-size: 12px;
+  padding: 6px 16px 0;
+  font-weight: 400px;
 }
 
 //icon notifi

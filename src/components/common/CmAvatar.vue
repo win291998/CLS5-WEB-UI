@@ -10,8 +10,11 @@ interface Props {
   size?: number
   className?: string
   isClassicBorder?: boolean
-  data?: string
+  data?: any
   icon?: string
+  text?: string
+  isAvatar?: boolean
+  isText?: boolean
 }
 
 /** ** Khởi tạo prop emit */
@@ -20,6 +23,10 @@ const props = withDefaults(defineProps<Props>(), ({
   variant: Globals.VARIANT_DEFAULT,
   size: Globals.SIZE_AVATAR_DEFAULT,
   isClassicBorder: false,
+  isAvatar: false,
+  isText: false,
+  text: '',
+  icon: 'tabler:camera',
 }))
 
 const prefixColor = computed(() => {
@@ -29,7 +36,7 @@ const prefixColor = computed(() => {
   return `btn-${props.color}`
 })
 
-const getAvatarName = (data: any) => {
+function getAvatarName(data: any) {
   if (data) {
     if (data?.firstName && data.lastName) {
       let firstName = 'F'
@@ -73,15 +80,26 @@ const getAvatarName = (data: any) => {
     :rounded="rounded"
     :size="size"
   >
-    <slot v-if="icon" />
     <VImg
-      v-else-if="src"
+      v-if="src"
       :src="src"
     />
     <span
-      v-else
+      v-else-if="isAvatar"
       :style="{ fontSize: `${size / 3}px` }"
     >{{ getAvatarName(data) }}</span>
+    <span
+      v-else-if="isText"
+    >
+      {{ text }}
+    </span>
+    <slot v-else>
+      <VIcon
+        v-if="icon"
+        :icon="icon"
+        :size="size / 5"
+      />
+    </slot>
   </VAvatar>
 </template>
 
