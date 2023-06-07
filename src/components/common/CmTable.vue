@@ -24,6 +24,7 @@ const props = withDefaults(defineProps<Props>(), ({
   customKeyError: 'errors',
   typePagination: 1,
   disiablePagination: false,
+  isUpdateRowForce: false,
 }))
 const emit = defineEmits<Emit>()
 const SkTable = defineAsyncComponent(() => import('@/components/page/gereral/skeleton/SkTable.vue'))
@@ -65,6 +66,7 @@ interface Props {
   customKeyError?: string
   typePagination?: number
   disiablePagination?: boolean
+  isUpdateRowForce?: boolean
 }
 interface Emit {
   (e: 'handleClickRow', dataRow: object, index: number): void
@@ -101,7 +103,7 @@ function checkActionShow(action: Array<any>) {
   return action?.filter((item: any) => item.isShow === true)?.length > 0
 }
 watch(() => props.items, (val: Item[]) => {
-  isLoading.value = true
+  // isLoading.value = true
   props.items.forEach((element, index) => {
     element.originIndex = index
     element.isSelected = !!element.isSelected
@@ -116,13 +118,13 @@ const serverfile = window.SERVER_FILE || ''
 
 /** method */
 // cập nhật selectedRows
-// const updateSelectedRows = () => {
-//   selectedRows.value = []
-//   props.items?.forEach((item: any) => {
-//     if (item.isSelected)
-//       selectedRows.value.push(item[keyid.value])
-//   })
-// }
+function updateSelectedRows() {
+  selectedRows.value = []
+  props.items?.forEach((item: any) => {
+    if (item.isSelected)
+      selectedRows.value.push(item[keyid.value])
+  })
+}
 
 // click chọn tất cả hoặc bỏ tất cả
 function checkedAll(value: any) {
@@ -199,24 +201,29 @@ function changeCellvalue(event: any, field: string, key: number, keyCustomValue?
 }
 defineExpose({
   checkedAll,
+  updateSelectedRows,
   selectedRows: selectedRows.value,
   items: props.items,
 })
 onUpdated(() => {
   setTimeout(() => {
     isLoading.value = false
-  }, 1000)
+  }, 500)
 })
 onMounted(() => {
   setTimeout(() => {
     isLoading.value = false
-  }, 1000)
+  }, 500)
 })
 
 // watch
-// watch(() => props.items, value => {
-//   updateSelectedRows()
-// }, { deep: true, immediate: true })
+if (props.isUpdateRowForce) {
+  watch(() => props.selected, value => {
+    console.log(value)
+
+    updateSelectedRows()
+  }, { deep: true, immediate: true })
+}
 </script>
 
 <template>
@@ -228,7 +235,7 @@ onMounted(() => {
     <EasyDataTable
       ref="dataTable"
       alternating
-      :table-class-name="['customize-table', isExpand ? 'table-expand' : '']"
+      :table-class-name="`customize-table ${isExpand ? 'table-expand' : ''}`"
       :headers="headers"
       :items="items"
       :rows-per-page="pageSize"
@@ -236,6 +243,7 @@ onMounted(() => {
       :table-min-height="minHeight"
       :item-key="keyid"
       :click-row-to-expand="isExpand"
+      :current-page="pageNumber"
       hide-footer
       :body-row-class-name="rowClassName"
       @click-row="showRow"
@@ -424,6 +432,7 @@ onMounted(() => {
     >
       <slot name="action-footer" />
     </div>
+
     <div
       v-if="!disiablePagination"
       class="customize-footer"
@@ -563,4 +572,7 @@ onMounted(() => {
 .table-expand .vue3-easy-data-table__header th:nth-child(1){
   padding: unset !important;
 }
+.cm-dialogs  .vue3-easy-data-table__main {
+    max-height: 400px !important
+ }
 </style>

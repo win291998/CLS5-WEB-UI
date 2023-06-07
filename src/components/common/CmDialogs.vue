@@ -24,7 +24,8 @@ interface Props {
   disabledOk?: boolean
   disabledCancel?: boolean
   appendToBody?: boolean
-
+  isDivSpace?: boolean
+  isOk?: boolean
 }
 
 interface Emit {
@@ -43,6 +44,8 @@ const props = withDefaults(defineProps<Props>(), ({
   persistent: false,
   size: 'lg',
   appendToBody: false,
+  isDivSpace: true,
+  isOk: true,
 }))
 
 const emit = defineEmits<Emit>()
@@ -51,18 +54,18 @@ const CmButton = defineAsyncComponent(() => import('@/components/common/CmButton
 
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 
-const onCancel = () => {
+function onCancel() {
   emit('cancel')
 }
 
-const onConfirmation = () => {
+function onConfirmation() {
   emit('confirm')
 }
 
-const onDialogShown = (e: any) => {
+function onDialogShown(e: any) {
   // console.log('onDialogShown', e)
 }
-const onDialogHidden = (e: any) => {
+function onDialogHidden(e: any) {
   // console.log('onDialogHidden', e)
 }
 
@@ -89,7 +92,7 @@ const sizeModal = computed(() => {
 <template>
   <VRow
     justify="center"
-    class="dialog-common"
+    class="dialog-common ma-0"
   >
     <VDialog
       class="cm-dialogs"
@@ -119,8 +122,14 @@ const sizeModal = computed(() => {
         >
           <slot />
         </template>
-        <VDivider class="mb-1" />
-        <template #actions>
+        <VDivider
+          v-if="isDivSpace"
+          class="mb-1"
+        />
+        <template
+          v-if="!isHideFooter"
+          #actions
+        >
           <div class="d-flex justify-end my-3 w-100">
             <slot name="actions" />
             <CmButton
@@ -133,6 +142,7 @@ const sizeModal = computed(() => {
             </CmButton>
 
             <CmButton
+              v-if="isOk"
               variant="elevated"
               :disabled="disabledOk"
               :color="color"

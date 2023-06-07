@@ -21,6 +21,10 @@ export const validatorStore = defineStore('validator', () => {
       MAX_VALUE: 10000,
       MIN_VALUE: 0,
     },
+    DEFAULT_NUMBER_100: {
+      MAX_VALUE: 100,
+      MIN_VALUE: 0,
+    },
     DEFAULT_NUMBER_RATIO: {
       MAX_VALUE: 100,
       MIN_VALUE: 0,
@@ -121,11 +125,12 @@ export const validatorStore = defineStore('validator', () => {
     defaultString: yup.string().required(ruleMessage.required()).max(CONFIG.DEFAULT_STRING.MAX, ruleMessage.max(CONFIG.DEFAULT_STRING.MAX)),
     defaultNumber: yup.number().typeError(ruleMessage.typeNumber).test('positive', ruleMessage.positive, (value: any) => value >= 0).nullable().required(ruleMessage.required()).max(CONFIG.DEFAULT_NUMBER.MAX_VALUE, ruleMessage.max(CONFIG.DEFAULT_NUMBER.MAX_VALUE)),
     defaultSelectSingle: yup.number().typeError(ruleMessage.typeOption).required(ruleMessage.required()),
-    defaultSelectList: yup.array().typeError(ruleMessage.typeOption).required(ruleMessage.required()).min(CONFIG.DEFAULT_SELECT_LIST.MIN, ruleMessage.requiredOption(CONFIG.DEFAULT_SELECT_LIST.FIELD)),
+    defaultSelectList: yup.array().of(yup.number()).min(1, ruleMessage.typeArray).required(ruleMessage.required()),
     defaultSelectObject: yup.object().required(ruleMessage.required()),
     defaultNumberRatio: yup.number().typeError(ruleMessage.typeNumber).test('positive', ruleMessage.positive, (value: any) => value >= 0).nullable().required(ruleMessage.required()).max(CONFIG.DEFAULT_NUMBER_RATIO.MAX_VALUE, ruleMessage.maxValue(CONFIG.DEFAULT_NUMBER_RATIO.MAX_VALUE)).min(CONFIG.DEFAULT_NUMBER_RATIO.MIN_VALUE, ruleMessage.minValue(CONFIG.DEFAULT_NUMBER_RATIO.MAX_VALUE)),
     defaultNumberYub: yup.number(),
-
+    defaultNumber100Yub: yup.number().typeError(ruleMessage.typeNumber).test('positive', ruleMessage.positive, (value: any) => value >= 0).nullable().required(ruleMessage.required()).max(CONFIG.DEFAULT_NUMBER_100.MAX_VALUE, ruleMessage.maxValue(CONFIG.DEFAULT_NUMBER_100.MAX_VALUE)),
+    defaultNumber100YubNoRequire: yup.number().typeError(ruleMessage.typeNumber).test('positive', ruleMessage.positive, (value: any) => value >= 0).nullable().max(CONFIG.DEFAULT_NUMBER_100.MAX_VALUE, ruleMessage.maxValue(CONFIG.DEFAULT_NUMBER_100.MAX_VALUE)),
     requiredString: (field?: any) => yup.string().required(ruleMessage.required(field)).max(CONFIG.DEFAULT_STRING.MAX, ruleMessage.max(CONFIG.DEFAULT_STRING.MAX)),
     code: yup.string().max(CONFIG.CODE.MAX, ruleMessage.max(CONFIG.CODE.MAX)).nullable(),
     require: yup.string().required(ruleMessage.required()),

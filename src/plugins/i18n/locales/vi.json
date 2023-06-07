@@ -3349,5 +3349,20 @@
   "academicrankName": "Tên học hàm",
   "academic-degree": "Học hàm",
   "list-academedegree": "Danh sách học vị",
-  "academidegreeName": "Tên học vị"
+  "academidegreeName": "Tên học vị",
+  "infor_course": "Thông tin khóa học",
+  "noti-browers-not-video": "Trình duyệt của bạn không hỗ trợ thẻ video",
+  "video-processing": "Video đang được xử lý...",
+  "choose-formId": "Chọn loại hình đào tạo",
+  "delete-author": "Xóa tác giả",
+  "delete-author-warning": "Bạn có chắc chắn muốn xóa tác giả?",
+  "delete-author-success": "Xóa tác giả thành công",
+  "number-credit": "Số tín chỉ",
+  "owner-invalid": "Vui lòng chọn chủ khóa học",
+  "author-invalid": "Thêm ít nhất một tác giả vào khóa học",
+  "not-than-100-credit": "Số tín chỉ không được lớn hơn 100",
+  "course-edit": "Chỉnh sửa khóa học",
+  "course-attend-dk": "Điều kiện tham gia",
+  "capacity-required": "Năng lực yêu cầu",
+  "course-required": "Khóa học yêu cầu"
 }

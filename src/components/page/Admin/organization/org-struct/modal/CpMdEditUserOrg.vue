@@ -1,6 +1,5 @@
 <!-- eslint-disable @typescript-eslint/indent -->
 <script setup lang="ts">
-import { validatorStore } from '@/stores/validatator'
 import ApiUser from '@/api/user/index'
 import MethodsUtil from '@/utils/MethodsUtil'
 import { TYPE_REQUEST } from '@/typescript/enums/enums'
@@ -86,7 +85,7 @@ const autoAssignConfig = reactive({
 
 /** method */
 // hàm trả về các loại action từ header filter
-const handleClickBtn = (type: string) => {
+function handleClickBtn(type: string) {
   switch (type) {
     case 'fillter':
       isShowFilter.value = !isShowFilter.value
@@ -97,16 +96,16 @@ const handleClickBtn = (type: string) => {
 }
 
 // search ở fillter header
-const handleSearch = async (value: any) => {
+async function handleSearch(value: any) {
   queryParams.pageNumber = 1
   queryParams.searchData = value
   getUserAsignOrg()
 }
 
-const onCancel = async () => {
+async function onCancel() {
   emit('update:isDialogVisible', false)
 }
-const onConfirm = async () => {
+async function onConfirm() {
   dataComponent.titleId = null
   if (props.disabledOk)
     return
@@ -114,22 +113,22 @@ const onConfirm = async () => {
   emit('confirm', autoAssignConfig)
   emit('update:isDialogVisible', false)
 }
-const handlePageClick = async (value: any) => {
+async function handlePageClick(value: any) {
   queryParams.pageNumber = value
   getUserAsignOrg()
 }
-const changeTitleAll = (idTitle: any) => {
+function changeTitleAll(idTitle: any) {
   items.value.forEach((item: any) => { item.titleId = idTitle })
   tableAsignUser.value.checkedAll()
 }
-const changeCellvalue = (id: any, content: any) => {
+function changeCellvalue(id: any, content: any) {
   items.value[content.originIndex] = content
 }
-const changeDataFilter = (content: any) => {
+function changeDataFilter(content: any) {
   autoAssignConfig.isCourse = content?.isCourse
   autoAssignConfig.isTraining = content?.isTraining
 }
-const selectedRows = (users: any) => {
+function selectedRows(users: any) {
   autoAssignConfig.listUser = users.map((item: any) => ({ userId: item.userId, titleId: item.titleId }))
 }
 async function getUserAsignOrg() {
@@ -253,4 +252,3 @@ watch(() => props.isDialogVisible, isShow => {
     </div>
   </CmDialogs>
 </template>
-

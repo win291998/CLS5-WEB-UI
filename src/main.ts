@@ -29,7 +29,15 @@ loadFonts()
 
 // Create vue app
 const app = createApp(App)
+function warnHandler(msg, vm, trace) {
+  // Log cảnh báo vào console
+  // console.warn('Cảnh báo:', msg, vm, trace)
 
+  // Có thể thực hiện các hành động khác ở đây nếu cần thiết
+}
+
+// Thiết lập hàm xử lý cảnh báo
+app.config.warnHandler = warnHandler
 const options = {
   // You can set your default options here
   position: 'top-right',
@@ -59,6 +67,7 @@ const options = {
   //   return toast
   // },
 }
+console.warn = () => {}
 app.use(pinia)
 app.provide('globals', globals)
 app.provide('globalsReadOnly', globalsReadOnly)

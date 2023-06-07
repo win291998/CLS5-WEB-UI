@@ -4,8 +4,11 @@ import { StatusTypeUser } from '@/constant/data/status.json'
 import ApiUser from '@/api/user/index'
 import { TYPE_REQUEST } from '@/typescript/enums/enums'
 import UserService from '@/api/user/index'
+import ServerFileService from '@/api/server-file/index'
+
 import type { Any } from '@/typescript/interface'
 
+const SERVERFILE = process.env.VUE_APP_BASE_SERVER_FILE
 type CallbackFunction = (key: string) => any
 
 export default class MethodsUtil {
@@ -115,6 +118,7 @@ export default class MethodsUtil {
 
     dataFormat.icon = action?.icon
     dataFormat.color = action?.color
+    dataFormat.name = action?.name
 
     return dataFormat
   }
@@ -227,5 +231,24 @@ export default class MethodsUtil {
   // Tham số đầu vào là danh sách các id
   static getUserInfoByIds = async (userIds: any) => {
     return await this.searchUserInfoByIds(userIds)
+  }
+
+  static async uploadFile(model: any) {
+    const formData = new FormData()
+    formData.append('IsSecure', model.isSecure)
+    formData.append('files', model.files)
+    if (model.IsBackground)
+      formData.append('IsBackground ', model.IsBackground)
+    if (model.fileType)
+      formData.append('FileType', model.fileType)
+    const userData = JSON.parse(localStorage.getItem('userData') || '')
+    if (userData)
+      formData.append('UserId', userData.id)
+    try {
+      return await MethodsUtil.requestApiCustom(`${SERVERFILE}${ServerFileService.UploadFile}`, TYPE_REQUEST.POST, formData)
+    }
+    catch (err: any) {
+      return err?.response?.data
+    }
   }
 }

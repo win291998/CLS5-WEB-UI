@@ -18,7 +18,7 @@ const CmTextField = defineAsyncComponent(() => import('@/components/common/CmTex
 const CmSelect = defineAsyncComponent(() => import('@/components/common/CmSelect.vue'))
 const CpTitleTable = defineAsyncComponent(() => import('./CpTitleTable.vue'))
 const CmRadioGroup = defineAsyncComponent(() => import('@/components/common/CmRadioGroup.vue'))
-const CpUserProfileAvatarEdit = defineAsyncComponent(() => import('@/components/page/gereral/CpUserProfileAvatarEdit.vue'))
+const CmImgUpload = defineAsyncComponent(() => import('@/components/common/CmImgUpload.vue'))
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 const storeValidate = validatorStore()
 const { Field, Form } = storeValidate
@@ -94,9 +94,11 @@ window.hideAllPageLoading()
             cols="12"
             md="2"
           >
-            <CpUserProfileAvatarEdit
+            <CmImgUpload
               v-if="valuesComponent"
               v-model:src="valuesComponent.avatar"
+              is-avatar
+              is-badge
               :tooltip="t('system-management.100x100')"
             />
           </VCol>

@@ -19,4 +19,9 @@ declare module 'dom-to-image' {
   const domToImage: DefineComponent<{}, {}, any>
   export default domToImage
 }
+declare module 'vue3-tags-input' {
+  import { DefineComponent } from 'vue'
+  const Vue3TagsInput: DefineComponent<{}, {}, any>
+  export default Vue3TagsInput
+}
 

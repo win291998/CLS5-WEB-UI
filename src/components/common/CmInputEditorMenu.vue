@@ -30,6 +30,8 @@ function insertA() {
 <style lang="scss" scoped>
 .menu-box{
   border: 1px solid rgba(var(--v-border-color));
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
   padding: 5px;
   .menu-list{
     display: flex;

@@ -58,6 +58,7 @@
     "vue3-apexcharts": "^1.4.1",
     "vue3-easy-data-table": "^1.5.42",
     "vue3-perfect-scrollbar": "^1.6.1",
+    "vue3-tags-input": "^1.0.11",
     "vue3-tiptap-katex": "^1.0.54",
     "vue3-treeselect": "^0.1.10",
     "vue3-treeview": "^0.4.1",

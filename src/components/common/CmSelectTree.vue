@@ -25,7 +25,7 @@ interface Props {
   clearOnSelect?: boolean
   maxItem?: number // giới hạn hiện thị
   maxHeight?: number // giới hạn chiều cao
-  closeOnSelect?: boolean
+  closeOnSelect?: boolean // đóng option khi chọn
   alwaysOpen?: boolean // true: luôn mở bảng chọn option
   appendToBody?: boolean
   customLable?: boolean // true: hiện thị customLabel
@@ -166,7 +166,7 @@ function limitText(count: any) {
     </Treeselect>
     <div
       v-if="errors?.length > 0"
-      class="styleError text-error mt-2"
+      class="styleError text-error"
     >
       {{ errors[0] }}
     </div>

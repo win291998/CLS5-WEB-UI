@@ -21,6 +21,7 @@ export const comboboxStore = defineStore('combobox', () => {
   const groupUserCombobox = ref([])
   const titleUserCombobox = ref([])
   const topicCombobox = ref<any>([])
+  const authorIdCombobox = ref<any>([])
   const formOfStudyCombobox = ref<any>([])
   const categoryTitleCombobox = ref([])
   const country = ref<combobox[]>([])
@@ -53,6 +54,15 @@ export const comboboxStore = defineStore('combobox', () => {
     data: [],
     totalRecord: 0,
   })
+  const getAuthorIdCombobox = async () => {
+    await MethodsUtil.requestApiCustom(ComboboxService.GetAuthCourse, TYPE_REQUEST.GET).then(async (value: any) => {
+      const users = await MethodsUtil.getUserInfoByIds(value.data)
+      users.pageLists.forEach((element: any) => {
+        element.fullName = StringUtil.formatFullName(element.firstName, element.lastName)
+      })
+      authorIdCombobox.value = users.pageLists
+    })
+  }
 
   // Lấy danh sách loại trường
   const typeSchoolCombobox = ref<Any>([])
@@ -328,6 +338,8 @@ export const comboboxStore = defineStore('combobox', () => {
     isDisplayHome,
     compoboxStatusCourse,
     compoboxCourseApprove,
+    typeSchoolCombobox,
+    authorIdCombobox,
     getComboboxApprover,
     fetchStatusUsersCombobox,
     fetchTypeUsersCombobox,
@@ -351,6 +363,6 @@ export const comboboxStore = defineStore('combobox', () => {
     getComboboxFormStudy,
     getComboboxStatusCourse,
     getComboboxTypeSchool,
-    typeSchoolCombobox,
+    getAuthorIdCombobox,
   }
 })

@@ -22,10 +22,10 @@ const CmButton = defineAsyncComponent(() => import('@/components/common/CmButton
 const CmButtonGroup = defineAsyncComponent(() => import('@/components/common/CmButtonGroup.vue'))
 
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
-const handleSaveUpdate = (event: any) => {
+function handleSaveUpdate(event: any) {
   emit('onSaveGroup', event, 'save-update')
 }
-const handleSaveAdd = (event: any) => {
+function handleSaveAdd(event: any) {
   emit('onSaveGroup', event, 'save-add')
 }
 const action = [
@@ -56,11 +56,11 @@ interface Emit {
   (e: 'onSaveGroup', event: any, type: string): void
 }
 
-const onCancel = () => {
+function onCancel() {
   emit('onCancel')
 }
 
-const handlerPreButton = (event: any) => {
+function handlerPreButton(event: any) {
   emit('onSaveGroup', event, 'save')
 }
 </script>
@@ -75,7 +75,7 @@ const handlerPreButton = (event: any) => {
         text-color="color-dark"
         @click="onCancel"
       >
-        {{ t(titleCancel) }}
+        {{ t(titleCancel || '') }}
       </CmButton>
     </div>
     <div
@@ -97,7 +97,7 @@ const handlerPreButton = (event: any) => {
         color="primary"
         @click="emit('onSaveUpdate')"
       >
-        {{ t(titleSaveAndUpdate) }}
+        {{ t(titleSaveAndUpdate || '') }}
       </CmButton>
     </div>
     <div>
@@ -108,9 +108,8 @@ const handlerPreButton = (event: any) => {
         :title="titleSaveGroup"
         @click-prepend="handlerPreButton($event)"
       >
-        {{ t(titleSaveGroup) }}
+        {{ t(titleSaveGroup || '') }}
       </CmButtonGroup>
     </div>
   </div>
 </template>
-
