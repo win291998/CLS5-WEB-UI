@@ -469,3 +469,28 @@ span {
 .w-max-content {
   width: max-content;
 }
+
+[class*="primary"]:focus {
+  z-index: 99;
+  box-shadow: 0px 1px 2px #1018280d, 0px 0px 0px 4px rgb(var(--v-primary-100)) !important;
+}
+
+[class*="warning"]:focus {
+  z-index: 99;
+  box-shadow: 0px 1px 2px #1018280d, 0 0 0 4px rgb(var(--v-warning-100)) !important;
+}
+
+[class*="secondary"]:focus {
+  z-index: 99;
+  box-shadow: 0 1px 2px #1018280d, 0 0 0 4px rgb(var(--v-gray-100)) !important;
+}
+
+[class*="success"]:focus {
+  z-index: 99;
+  box-shadow: 0 1px 2px #1018280d, 0 0 0 4px rgb(var(--v-success-100)) !important;
+}
+
+[class*="error"]:focus {
+  z-index: 99;
+  box-shadow: 0 1px 2px #1018280d, 0 0 0 4px rgb(var(--v-error-100)) !important;
+}

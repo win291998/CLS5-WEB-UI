@@ -121,6 +121,16 @@ export const comboboxStore = defineStore('combobox', () => {
     })
   }
 
+  // Lấy danh sách sự kiện
+  const eventTypeCombobox = ref<Any>([])
+  const getComboboxEventType = async () => {
+    const { data } = await MethodsUtil.requestApiCustom(ComboboxService.GetComboboxEventType, TYPE_REQUEST.GET)
+    data.forEach((element: combobox) => {
+      element.text = t(element.value)
+    })
+    eventTypeCombobox.value = data
+  }
+
   // Lấy danh sách loại chi phí
   const costTypeCombobox = ref<Any[]>([])
   const getCostTypeCombobox = async () => {
@@ -319,6 +329,8 @@ export const comboboxStore = defineStore('combobox', () => {
     wards.value = []
     userLevels.value = []
     courseCombobox.value = []
+
+    eventTypeCombobox.value = []
   }
   return {
     organizationsCombobox,
@@ -348,6 +360,9 @@ export const comboboxStore = defineStore('combobox', () => {
     typeSchoolCombobox,
     authorIdCombobox,
     categoryCostCombobox,
+    eventTypeCombobox,
+
+    // function
     getComboboxApprover,
     fetchStatusUsersCombobox,
     fetchTypeUsersCombobox,
@@ -372,5 +387,6 @@ export const comboboxStore = defineStore('combobox', () => {
     getComboboxStatusCourse,
     getComboboxTypeSchool,
     getAuthorIdCombobox,
+    getComboboxEventType,
   }
 })

@@ -33,6 +33,14 @@ export default [
     component: () => import('@/pages/guilde/demo.vue'),
   },
   {
+    path: '/guilde/calender',
+    meta: {
+      layout: 'blank',
+    },
+    name: 'guilde-calender',
+    component: () => import('@/pages/guilde/calender.vue'),
+  },
+  {
     path: '/guilde/demo/:tabActive',
     name: 'guilde-demo-tab',
     component: () => import('@/pages/guilde/demo.vue'),

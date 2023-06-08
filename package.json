@@ -13,6 +13,7 @@
     "@casl/ability": "^6.5.0",
     "@casl/vue": "^2.2.1",
     "@floating-ui/dom": "1.2.8",
+    "@fullcalendar/vue": "^6.1.8",
     "@riophae/vue-treeselect": "^0.4.0",
     "@tabler/icons": "^2.20.0",
     "@tiptap/extension-collaboration": "^2.0.3",

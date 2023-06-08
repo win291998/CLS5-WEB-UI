@@ -36,6 +36,7 @@ export default [
       { title: 'Quản lý chủ đề', to: { name: 'topic-list' } },
       { title: 'Quản lý chi phí', to: { name: 'cost-list' } },
       { title: 'Quản lý học tập', to: { name: 'education' } },
+      { title: 'Lịch đào tạo', to: { name: 'admin-calendar' } },
     ],
   },
   {
@@ -43,6 +44,7 @@ export default [
     icon: { icon: 'tabler-file' },
     children: [
       { title: 'Quản lý khóa học', to: { name: 'course-list' } },
+      { title: 'Quản lý kỳ thi', to: { name: 'list-exam' } },
     ],
   },
 ] as VerticalNavItems

@@ -133,15 +133,15 @@ function clickItem(item: object) {
 .button-group-prepend {
   border-end-end-radius: unset;
   border-start-end-radius: unset;
-  border-top-left-radius: 8px;
-  border-bottom-left-radius: 8px;
+  border-top-left-radius: $border-radius-xs;
+  border-bottom-left-radius: $border-radius-xs;
 }
 
 .button-group-append {
   border-end-start-radius: unset;
   border-start-start-radius: unset;
-  border-top-right-radius: 8px;
-  border-bottom-right-radius: 8px;
+  border-top-right-radius: $border-radius-xs;
+  border-bottom-right-radius: $border-radius-xs;
   min-width: 40px;
   &:focus{
     box-shadow: none !important;

@@ -4,6 +4,7 @@ import ApiUser from '@/api/user/index'
 import MethodsUtil from '@/utils/MethodsUtil'
 import { TYPE_REQUEST } from '@/typescript/enums/enums'
 import toast from '@/plugins/toast'
+import CmCollapse from '@/components/common/CmCollapse.vue'
 
 // mock api
 
@@ -420,12 +421,16 @@ window.hideAllPageLoading()
       @click="handlerActionHeader"
     />
   </div>
-  <div
+  <!--
+    <div
     v-if="isShowFilter"
     class="filter-action"
-  >
+    >
+  -->
+  <CmCollapse :is-show="isShowFilter">
     <CpUserFilter @update="handleFilterCombobox" />
-  </div>
+  </CmCollapse>
+  <!-- </div> -->
   <div>
     <CpHeaderAction
       is-delete

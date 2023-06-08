@@ -67,5 +67,13 @@ export const useUserGroupStore = defineStore('useUserGroupStore', () => {
     return status
   }
 
+  const $reset = () => {
+    listUserInGroup.value = []
+    queryParams.groupId = 0
+    queryParams.search = ''
+    queryParams.pageNumber = 1
+    queryParams.pageSize = 10
+  }
+
   return { queryParams, listUserInGroup, totalRecord, getListUser, moveUser, deleteItem, excludeIds }
 })
