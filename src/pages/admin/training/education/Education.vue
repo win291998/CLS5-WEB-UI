@@ -1,10 +1,9 @@
 <script lang="ts" setup>
-import CpEditSchool from '@/components/page/Admin/training/education/CpMdEditEducation.vue'
+import CpEditSchool from '@/components/page/Admin/training/education/CpEditSchool.vue'
 import UserService from '@/api/user'
 import CmTab from '@/components/common/CmTab.vue'
-import CpManager from '@/components/page/gereral/CpManager.vue'
+import CpManaging from '@/components/page/gereral/CpManaging.vue'
 import { TYPE_REQUEST } from '@/typescript/enums/enums'
-
 import CpMdEditEducation from '@/components/page/Admin/training/education/CpMdEditEducation.vue'
 
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
@@ -12,7 +11,7 @@ const route = useRoute()
 const ComponentSchool = computed(() => {
   if (route.name === 'manager-education-add' || route.name === 'manager-education-edit')
     return CpEditSchool
-  return CpManager
+  return CpManaging
 })
 const listtab = [
   {
@@ -58,7 +57,7 @@ const listtab = [
   {
     key: 'degree',
     title: 'degree',
-    component: CpManager,
+    component: CpManaging,
     dataTab: {
       titlePage: t('list-degree'),
       header: [
@@ -108,7 +107,7 @@ const listtab = [
   {
     key: 'academecrank',
     title: 'Academecrank',
-    component: CpManager,
+    component: CpManaging,
     dataTab: {
       titlePage: t('list-academecrank'),
       header: [
@@ -159,7 +158,7 @@ const listtab = [
   {
     key: 'academic-degree',
     title: 'academic-degree',
-    component: CpManager,
+    component: CpManaging,
     dataTab: {
       titlePage: t('list-academedegree'),
       header: [

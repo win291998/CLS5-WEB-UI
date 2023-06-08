@@ -10,6 +10,7 @@ const props = withDefaults(defineProps<Props>(), ({
   isDisabledMove: false,
   isDisabledDelete: false,
   isShowExportExcel: true,
+  isFillter: false,
   buttonAdd: 'Add-new',
   buttonPrepend: 'export-excel',
 }))
@@ -28,6 +29,7 @@ interface Props {
   buttonPrepend: string
   isDisabledMove: boolean
   isDisabledDelete: boolean
+  isFillter: boolean
 
 }
 interface Item {
@@ -45,13 +47,13 @@ interface Emit {
   (e: 'clickExport'): void
 }
 
-const showAdd = () => {
+function showAdd() {
   emit('clickAdd')
 }
 
 // Tìm kiếm
 const timer = ref<any>(null)
-const handleSearch = (val: string) => {
+function handleSearch(val: string) {
   if (timer) {
     clearTimeout(timer.value)
     timer.value = null
@@ -60,7 +62,7 @@ const handleSearch = (val: string) => {
     emit('update:keySearch', val)
   }, 500)
 }
-const exportExcel = () => {
+function exportExcel() {
   emit('clickExport')
 }
 </script>
@@ -126,13 +128,30 @@ const exportExcel = () => {
         <slot name="buttonBottom" />
       </VCol>
       <VCol class="d-flex justify-end pr-0">
-        <CmTextField
-          label="Tìm kiếm"
-          class="header-action-field"
-          placeholder="Tìm kiếm"
-          prepend-inner-icon="tabler-search"
-          @update:model-value="handleSearch"
-        />
+        <VRow>
+          <VCol>
+            <CmTextField
+              label="Tìm kiếm"
+              class="header-action-field"
+              placeholder="Tìm kiếm"
+              prepend-inner-icon="tabler-search"
+              @update:model-value="handleSearch"
+            />
+          </VCol>
+          <VCol>
+            <CmButton
+              v-if="isFillter"
+              class="ml-3"
+              :disabled="disabledFillter"
+              variant="outlined"
+              color="secondary"
+              :size-icon="20"
+              icon="ic:round-filter-list"
+              :title="isShowFilter ? t('hide-filter') : t('show-filter')"
+              @click="handleClickBtn('fillter')"
+            />
+          </VCol>
+        </VRow>
       </VCol>
     </VRow>
   </div>

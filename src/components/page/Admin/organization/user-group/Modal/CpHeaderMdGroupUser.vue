@@ -11,15 +11,18 @@ interface Props {
   categoryTitleId: number[] | null
   groupId: number[] | null
   organizationalStructureId: number[] | null
-  isCourse: boolean
-  isTraining: boolean
+  isCourse?: boolean
+  isTraining?: boolean
   listGroupUser?: any[]
   listCategoryTitle?: any[]
   listTitle?: any[]
+  isShowHeader: boolean
 }
 
 // Khởi tạo biến đa ngôn ngữ
-const props = withDefaults(defineProps<Props>(), ({}))
+const props = withDefaults(defineProps<Props>(), ({
+  isShowHeader: true,
+}))
 const emit = defineEmits<Emit>()
 const { t } = window.i18n()
 const LABEL = Object.freeze({
@@ -50,7 +53,7 @@ const isShowFilter = ref<boolean>(false)
     <div class="my-6">
       <h3>{{ LABEL.TITLE_MODAL }}</h3>
     </div>
-    <div>
+    <div v-if="isShowHeader">
       <VRow>
         <VCol>
           <span>{{ t('auto-assign-content') }}</span>
@@ -169,4 +172,3 @@ const isShowFilter = ref<boolean>(false)
     </VRow>
   </div>
 </template>
-

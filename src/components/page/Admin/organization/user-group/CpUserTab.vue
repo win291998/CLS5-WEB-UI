@@ -34,7 +34,7 @@ const { listUserInGroup, totalRecord, queryParams } = storeToRefs(store)
 const { moveUser, deleteItem, getListUser } = store
 
 // Tìm kiếm người dùng
-const handleSearch = (val: string) => {
+function handleSearch(val: string) {
   store.queryParams.search = val
   store.queryParams.pageNumber = 1
 }
@@ -43,11 +43,12 @@ watch(queryParams.value, val => {
 })
 
 const isShowAddUser = ref(false)
-const showModalAdd = () => {
+function showModalAdd() {
   isShowAddUser.value = true
 }
 
 onBeforeUnmount(() => {
+  store.$reset()
   store.$dispose()
 })
 
@@ -70,29 +71,29 @@ const dataMove = reactive<DataMove>({
   newGroup: null,
   userIds: [],
 })
-const showModalShowMove = (data: any) => {
+function showModalShowMove(data: any) {
   dataMove.userIds = [data.userId]
   isShowModalMove.value = true
 }
-const handleSubmit = async (val: any | null) => {
+async function handleSubmit(val: any | null) {
   dataMove.isTotal = !dataMove.userIds.length
   dataMove.newGroup = val
   const isHidden = await moveUser(dataMove)
   isShowModalMove.value = isHidden
 }
-const moveMultipleUser = () => {
+function moveMultipleUser() {
   dataMove.userIds = listSelected.value
   isShowModalMove.value = true
 }
 
 // Xóa người dùng khỏi nhóm
 const isShowModalConfirmDelete = ref<boolean>(false)
-const showModalDeleteUser = (val: any | null) => {
+function showModalDeleteUser(val: any | null) {
   if (val)
     listSelected.value = [val.userId]
   isShowModalConfirmDelete.value = true
 }
-const handleDeleteMultiple = () => {
+function handleDeleteMultiple() {
   deleteItem(listSelected.value)
 }
 </script>
@@ -175,4 +176,3 @@ const handleDeleteMultiple = () => {
     @confirm="handleDeleteMultiple"
   />
 </template>
-

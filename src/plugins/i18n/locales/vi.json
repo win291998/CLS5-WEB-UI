@@ -3375,5 +3375,7 @@
   "list-cost": "Danh sách chi phí",
   "delete-cost": "Xóa chi phí",
   "confirm-delete-cost": "Bạn có chắc chắn muốn xóa sự chi phí này không ?",
-  "survey-course": "Đánh giá sau đào tạo"
+  "survey-course": "Đánh giá sau đào tạo",
+  "see-all": "Xem tất cả",
+  "from-date-to-date":"Từ ngày đến ngày"
 }

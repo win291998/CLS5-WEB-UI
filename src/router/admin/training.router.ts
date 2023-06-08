@@ -24,6 +24,34 @@ export default [
         ],
       },
       {
+        path: 'calendar',
+        name: 'admin-calendar',
+
+        // requireAuth: {
+        //   permissionKey: 'UserTypeManaging',
+        //   permissionValue: 1,
+        // },
+        component: () => import('@/pages/admin/training/topic/Index.vue'),
+        redirect: { name: 'manager-calendar' },
+        children: [
+          {
+            path: '',
+            name: 'manager-calendar',
+            component: () => import('@/pages/admin/training/calendar/Calendar.vue'),
+          },
+          {
+            path: ':tab/add',
+            name: 'manager-calendar-add',
+            component: () => import('@/pages/admin/training/calendar/edit/EditCalendar.vue'),
+          },
+          {
+            path: ':tab/edit/:id',
+            name: 'manager-calendar-edit',
+            component: () => import('@/pages/admin/training/calendar/edit/EditCalendar.vue'),
+          },
+        ],
+      },
+      {
         path: 'cost',
         name: 'cost-list',
 

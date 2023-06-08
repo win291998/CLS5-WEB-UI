@@ -111,61 +111,52 @@ watch(() => props.dataDetail, (val: DataInput) => {
           :placeholder="t('cost-name')"
         />
       </Field>
-      <!--
-        <Field
+
+      <Field
         v-slot="{ field, errors }"
         v-model="dataInput.costTypeId"
         name="costTypeId"
         type="text"
-        >
-      -->
-      <!--
-        :field="field"
-        :errors="errors"
-      -->
+      >
+        <CmSelect
+          :field="field"
+          :errors="errors"
+          :items="costTypeCombobox"
+          item-value="key"
+          custom-key="value"
+          :model-value="dataInput.costTypeId"
+          :text="t('cost-type')"
+          :placeholder="t('type-name-cost')"
+        />
+      </Field>
 
-      <CmSelect
-        :items="costTypeCombobox"
-        item-value="key"
-        custom-key="value"
-        :model-value="dataInput.costTypeId"
-        :text="t('cost-type')"
-        :placeholder="t('type-name-cost')"
-      />
-
-      <!-- </Field> -->
-      <!--
-        <Field
+      <Field
         v-slot="{ field, errors }"
         v-model="dataInput.courseId"
         name="courseId"
         type="text"
-        >
-      -->
-      <!--
-        :field="field"
-        :errors="errors"
-      -->
-      <CmSelect
-        v-if="route.params.tab === 'cost-exam'"
-        :items="examCombobox"
-        item-value="key"
-        custom-key="value"
-        :model-value="dataInput.examId"
-        :text="t('exam-management')"
-        :placeholder="t('exam-management')"
-      />
-      <CmSelect
-        v-if="route.params.tab === 'cost-course'"
-        :items="courseCombobox"
-        item-value="key"
-        custom-key="value"
-        :model-value="dataInput.courseId"
-        :text="t('course')"
-        :placeholder="t('course')"
-      />
-
-      <!-- </Field> -->
+      >
+        <CmSelect
+          v-if="route.params.tab === 'cost-exam'"
+          :field="field"
+          :errors="errors"
+          :items="examCombobox"
+          item-value="key"
+          custom-key="value"
+          :model-value="dataInput.examId"
+          :text="t('exam-management')"
+          :placeholder="t('exam-management')"
+        />
+        <CmSelect
+          v-if="route.params.tab === 'cost-course'"
+          :items="courseCombobox"
+          item-value="key"
+          custom-key="value"
+          :model-value="dataInput.courseId"
+          :text="t('course')"
+          :placeholder="t('course')"
+        />
+      </Field>
       <Field
         v-slot="{ field, errors }"
         v-model="dataInput.unitPrice"

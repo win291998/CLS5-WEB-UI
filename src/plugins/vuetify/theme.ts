@@ -18,7 +18,7 @@ const theme: VuetifyOptions['theme'] = {
 
         'secondary': '#475467',
         'success': '#28C76F',
-        'info': '#00CFE8',
+        'info': '#0086C9',
         'warning': '#dc6803',
         'error': '#d92d20',
         'background': '#F8F7FA',
@@ -43,6 +43,18 @@ const theme: VuetifyOptions['theme'] = {
         'shadow-key-ambient-opacity': 'rgba(var(--v-theme-on-surface), 0.04)',
 
         'white': '#ffffff',
+
+        'info-25': '#F5FBFF',
+        'info-50': '#F0F9FF',
+        'info-100': '#E0F2FE',
+        'info-200': '#B9E6FE',
+        'info-300': '#7CD4FD',
+        'info-400': '#36BFFA',
+        'info-500': '#0BA5EC',
+        'info-600': 'var(--v-theme-info)',
+        'info-700': '#026AA2',
+        'info-800': '#065986',
+        'info-900': '#0B4A6F',
 
         'primary-25': '#f5faff',
         'primary-50': '#eff8ff',

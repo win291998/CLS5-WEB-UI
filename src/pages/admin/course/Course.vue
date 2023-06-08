@@ -8,6 +8,7 @@ import { StatusTypeFormStudy } from '@/constant/data/status.json'
 import StringJwt from '@/utils/Jwt'
 import CourseService from '@/api/course/index'
 import { TYPE_REQUEST } from '@/typescript/enums/enums'
+import CmCollapse from '@/components/common/CmCollapse.vue'
 
 window.showAllPageLoading('COMPONENT')
 
@@ -239,15 +240,14 @@ window.hideAllPageLoading()
         @click="handlerActionHeader"
       />
     </div>
-    <div
-      v-if="isShowFilter"
-      class="filter-action"
-    >
+
+    <CmCollapse :is-show="isShowFilter">
       <CpCourseFilter
         :data-filter="queryParams"
         @update="($event: any) => handleFilterCombobox($event)"
       />
-    </div>
+    </CmCollapse>
+
     <div>
       <CpHeaderAction
         is-delete

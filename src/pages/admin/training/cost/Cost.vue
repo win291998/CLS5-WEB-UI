@@ -2,7 +2,7 @@
 import SharedService from '@/api/shared'
 import CmTab from '@/components/common/CmTab.vue'
 import CpMdEditTypeCost from '@/components/page/Admin/training/cost/modal/CpMdEditTypeCost.vue'
-import CpManager from '@/components/page/gereral/CpManager.vue'
+import CpManaging from '@/components/page/gereral/CpManaging.vue'
 import { TYPE_REQUEST } from '@/typescript/enums/enums'
 import CpMdEditCourseCost from '@/components/page/Admin/training/cost/modal/CpMdEditCourseCost.vue'
 
@@ -11,7 +11,7 @@ const listtab = [
   {
     key: 'cost-type',
     title: 'cost-type',
-    component: CpManager,
+    component: CpManaging,
     dataTab: {
       titlePage: t('cost-type'),
       header: [
@@ -56,7 +56,7 @@ const listtab = [
   {
     key: 'cost-course',
     title: 'cost-course',
-    component: CpManager,
+    component: CpManaging,
     dataTab: {
       titlePage: t('cost-course'),
       header: [
@@ -110,7 +110,7 @@ const listtab = [
   {
     key: 'cost-exam',
     title: 'cost-exam',
-    component: CpManager,
+    component: CpManaging,
     dataTab: {
       titlePage: t('cost-exam'),
       header: [

@@ -19,6 +19,8 @@ const props = withDefaults(defineProps<Props>(), {
   apiDetail: null,
   titlePage: '',
   routeReport: '',
+  customId: 'id',
+  isShowExportExcel: true,
 })
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 
@@ -28,6 +30,7 @@ interface Api {
   method: string
   payload: Any
   fileName: string
+  [e: string]: any
 }
 interface Props {
   header: Header[]
@@ -45,19 +48,26 @@ interface Props {
   titlePage: string
   routeReport: string
   routerEdit?: string | null
+  params?: Any
+  customId: string
+  isShowExportExcel: boolean
 }
 
-const TITLE = Object.freeze({
-  TITLE_PAGE: t('list-cost'),
-})
 interface QueryParams extends Params {
   keyword: string
+  [e: string]: any
 }
-const queryParams = reactive<QueryParams>({
+const queryParams = ref<QueryParams>({
   keyword: '',
   pageNumber: 1,
   pageSize: 10,
 })
+watch(() => props.params, (val: Any) => {
+  queryParams.value = {
+    ...queryParams.value,
+    ...val,
+  }
+}, { immediate: true })
 
 const isEdit = ref<boolean>(false)
 const isShowModalEdit = ref<boolean>(false)
@@ -92,7 +102,7 @@ function showModalDelete(id?: number) {
 async function actionItem(type: any) {
   switch (type[0]?.name) {
     case 'ActionDelete':
-      showModalDelete(type[1].id)
+      showModalDelete(type[1][props.customId])
       break
     case 'ActionEdit':
       await getDataDetail(type[1].id)
@@ -111,7 +121,7 @@ async function actionItem(type: any) {
 const items = ref<Item[]>([])
 const totalRecord = ref<number>(0)
 async function getDataTable() {
-  const { data } = await MethodsUtil.requestApiCustom(props.apiList.api, props.apiList.method, queryParams)
+  const { data } = await MethodsUtil.requestApiCustom(props.apiList.api, props.apiList.method, queryParams.value)
   if (data) {
     data.pageLists.forEach((element: Item) => {
       element.actions = props.actionsTable
@@ -126,22 +136,25 @@ async function getDataTable() {
 getDataTable()
 
 function handlerSearch(val: string) {
-  queryParams.keyword = val
-  queryParams.pageNumber = 1
-  queryParams.pageSize = 10
+  queryParams.value.keyword = val
+  queryParams.value.pageNumber = 1
+  queryParams.value.pageSize = 10
   getDataTable()
 }
 function handlePageClick(pageNumber: number, pageSize: number) {
-  queryParams.pageNumber = pageNumber
-  queryParams.pageSize = pageSize
+  queryParams.value.pageNumber = pageNumber
+  queryParams.value.pageSize = pageSize
   getDataTable()
 }
 
 // Xác nhận thêm hoặc sửa
 function handlerAdd(data: any) {
-  console.log(props.apiAdd)
+  const payload = {
+    ...data,
+    ...props.apiAdd.params,
+  }
 
-  MethodsUtil.requestApiCustom(props.apiAdd.api, props.apiAdd.method, data).then(() => {
+  MethodsUtil.requestApiCustom(props.apiAdd.api, props.apiAdd.method, payload).then(() => {
     isShowModalEdit.value = false
     getDataTable()
     toast('SUCCESS', t('add-success'))
@@ -150,7 +163,11 @@ function handlerAdd(data: any) {
   })
 }
 function handlerEdit(data: any) {
-  MethodsUtil.requestApiCustom(props.apiEdit.api, props.apiEdit.method, data).then(() => {
+  const payload = {
+    ...data,
+    ...props.apiAdd.params,
+  }
+  MethodsUtil.requestApiCustom(props.apiEdit.api, props.apiEdit.method, payload).then(() => {
     isShowModalEdit.value = false
     getDataTable()
     toast('SUCCESS', t('USR_UpdateSuccess'))
@@ -160,15 +177,17 @@ function handlerEdit(data: any) {
 }
 
 function confirmModal(val: any) {
-  console.log(isEdit)
-
   if (isEdit.value)
     handlerEdit(val)
   else handlerAdd(val)
 }
 
 function confirmDelete() {
-  MethodsUtil.requestApiCustom(props.apiDelete.api, props.apiDelete.method, { listId: listId.value }).then(() => {
+  const payload = {
+    [props.apiDelete.label || 'listId']: listId.value,
+    ...props.apiDelete.params,
+  }
+  MethodsUtil.requestApiCustom(props.apiDelete.api, props.apiDelete.method, payload).then(() => {
     isShowModalDelete.value = false
     getDataTable()
     toast('SUCCESS', t('USR_DeleteSuccess'))
@@ -191,7 +210,9 @@ function exportExcel() {
     :title-page="titlePage"
     :is-show-add-group="false"
     :is-disabled-delete="!listId?.length"
+    :is-show-export-excel="isShowExportExcel"
     @click-add="showModalEdit"
+    @click-delete="() => { isShowModalDelete = true }"
     @update:key-search="handlerSearch"
     @click-export="exportExcel"
   />
@@ -200,9 +221,13 @@ function exportExcel() {
     :headers="header"
     :items="items"
     :total-record="totalRecord"
+    :custom-id="customId"
     @handlePageClick="handlePageClick"
   >
     <template #rowItem="{ col, context, dataCol }">
+      <div v-if="dataCol?.isFullName">
+        {{ MethodsUtil.formatFullName(context.firstName, context.lastName) }}
+      </div>
       <div v-if="dataCol?.isDate">
         {{ DateUtil.formatDateToDDMM(context[col]) }}
       </div>

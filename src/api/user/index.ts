@@ -45,6 +45,13 @@ const UserService = {
   GetDetailAcademicrank: '/academicrank/get-by-id',
   GetListAcademicdegree: '/academicdegree/get-all',
   GetDetailAcademicdegree: '/academicdegree/get-by-id',
+  GetDataCalender: '/event/get-list-event',
+  GetEventTypeCombobox: '/event/get-event-type-combobox',
+  GetDetailEvent: '/event/get-detail-event',
+  GetEventUser: '/event/get-paging-event-users',
+  GetEventGroupUser: '/event/get-paging-event-groups',
+  GetEventOrganizationalStructure: '/event/get-all-organizational-structure-id-by-event-id',
+  GetInfoUserAddEvent: '/event/get-info-user-add-event',
 
   /** POST */
   PostApproveCustomer: 'Customer/approve',
@@ -71,6 +78,10 @@ const UserService = {
   PostExporExcelDegree: '/degree/export-excel-degree',
   PostExporExcelAcademicrank: '/academicrank/export-excel-academic-rank',
   PostExporExcelAcademidegree: '/academicdegree/export-excel-academic-degree',
+  PostUpdateEventCalendar: '/event/update-event',
+  PostCreateEventCalendar: '/event/create-event',
+  PostDeleteUserFromEvent: '/event/remove-user-from-event',
+  PostAddUserToEvent: '/event/add-user-to-event',
 
   /** Put */
   PutReturnCustomer: 'Customer/deny',

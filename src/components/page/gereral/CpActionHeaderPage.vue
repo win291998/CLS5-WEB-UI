@@ -49,13 +49,13 @@ function handlerCustomButton() {
 
 <template>
   <div
-    class="d-flex justify-space-between my-8"
+    class="d-flex justify-space-between my-6"
     style="flex-wrap: wrap;"
   >
     <div class="text-medium-lg">
       {{ title }}
     </div>
-    <div class="d-flex">
+    <div class="d-flex justify-end">
       <div
         v-if="isExportBtn"
         cols="12"
@@ -101,17 +101,17 @@ function handlerCustomButton() {
       >
         <CmButton
           color="success"
-          text-color="color-white"
           @click="handlerCustomButton"
         >
           {{ titleCustom }}
         </CmButton>
       </div>
+      <slot name="actions" />
       <div
         v-if="isCustomAddBtn"
         cols="12"
         md="3"
-        class="d-flex justify-end  mr-2"
+        class="d-flex justify-end ml-2"
       >
         <CmButton
           @click="handlerPreButton"

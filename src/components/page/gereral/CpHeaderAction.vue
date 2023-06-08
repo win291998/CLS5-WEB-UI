@@ -65,7 +65,6 @@ function handleClickBtn(type: string) {
     default:
       break
   }
-
   emit('click', type)
 }
 

@@ -41,6 +41,7 @@ interface HeaderCustom extends Header {
   config?: any
   valueId?: any
   isDate?: boolean
+  [e: string]: any
 }
 interface GroupOptions {
   allowEmptySelect?: boolean

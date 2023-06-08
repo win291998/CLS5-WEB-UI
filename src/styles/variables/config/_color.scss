@@ -1,6 +1,19 @@
 /**  white */
 $color-white: #fff;
 
+/**  info */
+$color-info-25: rgb(var(--v-info-25)); // info/25
+$color-info-50: rgb(var(--v-info-50)); // info/50
+$color-info-100: rgb(var(--v-info-100)); // info/100
+$color-info-200: rgb(var(--v-info-200)); // info/200
+$color-info-300: rgb(var(--v-info-300)); // info/300
+$color-info-400: rgb(var(--v-info-400)); // info/400
+$color-info-500: rgb(var(--v-info-500)); // info/500
+$color-info-600: rgb(var(--v-info-600)); // info/600
+$color-info-700: rgb(var(--v-info-700)); // info/700
+$color-info-800: rgb(var(--v-info-800)); // info/800
+$color-info-900: rgb(var(--v-info-900)); // info/900
+
 /**  gray */
 $color-gray-25: rgb(var(--v-gray-25)); // gray/25
 $color-gray-50: rgb(var(--v-gray-50)); // gray/50

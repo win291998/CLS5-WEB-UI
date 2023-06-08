@@ -69,11 +69,11 @@ onBeforeUnmount(() => {
   }
 })
 
-const unLoadButton = () => {
+function unLoadButton() {
   unLoadComponent(indexLoad.value)
 }
 
-const handleClick = () => {
+function handleClick() {
   if (props.isLoad)
     loadComponent(indexLoad.value)
 
@@ -179,32 +179,7 @@ defineExpose({
   border: 1px solid rgb(var(--v-warning-300)) !important;
 }
 
-[class$="primary"]:focus {
-  z-index: 999;
-  box-shadow: 0px 1px 2px #1018280d, 0px 0px 0px 4px rgb(var(--v-primary-100));
-}
-
-[class$="warning"]:focus {
-  z-index: 999;
-  box-shadow: 0px 1px 2px #1018280d, 0 0 0 4px rgb(var(--v-warning-100));
-}
-
-[class$="secondary"]:focus {
-  z-index: 999;
-  box-shadow: 0 1px 2px #1018280d, 0 0 0 4px rgb(var(--v-gray-100));
-}
-
-[class$="success"]:focus {
-  z-index: 999;
-  box-shadow: 0 1px 2px #1018280d, 0 0 0 4px rgb(var(--v-success-100));
-}
-
-[class$="error"]:focus {
-  z-index: 999;
-  box-shadow: 0 1px 2px #1018280d, 0 0 0 4px rgb(var(--v-error-100));
-}
-
 .v-btn--variant-outlined {
-  background-color: white !important;
+  background-color: transparent !important;
 }
 </style>
