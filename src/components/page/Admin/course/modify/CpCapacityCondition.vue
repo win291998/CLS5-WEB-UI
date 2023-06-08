@@ -5,6 +5,7 @@ const CpActionHeaderPage = defineAsyncComponent(() => import('@/components/page/
 const CpMdAddCapacity = defineAsyncComponent(() => import('@/components/page/Admin/course/modal/CpMdAddCapacity.vue'))
 const CpHeaderAction = defineAsyncComponent(() => import('@/components/page/gereral/CpHeaderAction.vue'))
 const CmTable = defineAsyncComponent(() => import('@/components/common/CmTable.vue'))
+const CpConfirmDialog = defineAsyncComponent(() => import('@/components/page/gereral/CpConfirmDialog.vue'))
 
 /** lib */
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
@@ -24,8 +25,8 @@ const headers = reactive([
  * Store
  */
 const storeConditionInforManager = conditionManagerStore()
-const { disabledDeleteCapacity, queryParamsCapacity, itemsCapacity, totalRecordCapacity } = storeToRefs(storeConditionInforManager)
-const { deleteItemsCapacity, handleSearchCapacity, handlePageClickCapacity, selectedRowsCapacity, getCapacityRequired } = storeConditionInforManager
+const { disabledDeleteCapacity, queryParamsCapacity, itemsCapacity, totalRecordCapacity, isShowDialogNotiDeleteCapacity } = storeToRefs(storeConditionInforManager)
+const { deleteItemsCapacity, handleSearchCapacity, handlePageClickCapacity, selectedRowsCapacity, getCapacityRequired, confirmDialogDeleteCapacity, addCapacity } = storeConditionInforManager
 
 /** method */
 /* ==> thực hiện các action được chọn ở header page CP */
@@ -33,9 +34,6 @@ function handlerActionHeader(type: any) {
   console.log(type)
   if (type === 'handlerAddButton')
     isShowModalAddCapacity.value = true
-}
-function addCapacity(params: any) {
-//
 }
 
 // hàm trả về các loại action từ header filter
@@ -83,25 +81,7 @@ onMounted(async () => {
         :total-record="totalRecordCapacity"
         @handlePageClick="handlePageClickCapacity"
         @update:selected="selectedRowsCapacity"
-      >
-        <!--
-          <template #rowItem="{ col, context }">
-          <div v-if="col === 'fullname'">
-          <CpCustomInfo
-          :context="context"
-          />
-          </div>
-          <div v-if="col === 'isOwner'">
-          <CmRadio
-          v-model="isOwner"
-          name="isOwner"
-          :value="context.userId"
-          @change="selectedOwner(context)"
-          />
-          </div>
-          </template>
-        -->
-      </CmTable>
+      />
     </div>
     <div>
       <CpMdAddCapacity
@@ -110,5 +90,13 @@ onMounted(async () => {
         @saveChange="($event) => addCapacity($event)"
       />
     </div>
+    <CpConfirmDialog
+      v-model:is-dialog-visible="isShowDialogNotiDeleteCapacity"
+      :type="2"
+      variant="outlined"
+      :confirmation-msg="t('delete-proficiency')"
+      :confirmation-msg-sub-title="t('confirm-delete-proficiency')"
+      @confirm="confirmDialogDeleteCapacity"
+    />
   </div>
 </template>

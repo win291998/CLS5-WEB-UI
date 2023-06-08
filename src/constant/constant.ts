@@ -12,5 +12,7 @@ const constant = Object.freeze({
     { value: 10, key: 'register_asc', title: 'system-management.most-register-course' },
     { value: 11, key: 'register_desc', title: 'system-management.least-register-course' },
   ],
+  MIN_NUMBER: 0,
+  MAX_NUMBER: 10000,
 })
 export default constant

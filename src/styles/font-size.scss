@@ -3,7 +3,7 @@
 /*** Regular */
 .display-regular-2xl {
   /* Display 2xl/Regular */
-  font-family: Inter, sans-serif;
+  font-family: Inter;
   font-size: 72px;
   font-style: normal;
   font-weight: 400;
@@ -13,7 +13,7 @@
 
 .display-regular-xl {
   /* Display xl/Regular */
-  font-family: Inter, sans-serif;
+  font-family: Inter;
   font-size: 60px;
   font-style: normal;
   font-weight: 400;
@@ -23,7 +23,7 @@
 
 .display-regular-lg {
   /* Display lg/Regular */
-  font-family: Inter, sans-serif;
+  font-family: Inter;
   font-size: 48px;
   font-style: normal;
   font-weight: 400;
@@ -33,7 +33,7 @@
 
 .display-regular-md {
   /* Display md/Regular */
-  font-family: Inter, sans-serif;
+  font-family: Inter;
   font-size: 36px;
   font-style: normal;
   font-weight: 400;
@@ -43,7 +43,7 @@
 
 .display-regular-sm {
   /* Display sm/Regular */
-  font-family: Inter, sans-serif;
+  font-family: Inter;
   font-size: 30px;
   font-style: normal;
   font-weight: 400;
@@ -52,7 +52,7 @@
 
 .display-regular-xs {
   /* Display xs/Regular */
-  font-family: Inter, sans-serif;
+  font-family: Inter;
   font-size: 24px;
   font-style: normal;
   font-weight: 400;
@@ -61,7 +61,7 @@
 
 .text-regular-xl {
   /* Text xl/Regular */
-  font-family: Inter, sans-serif;
+  font-family: Inter;
   font-size: 20px;
   font-style: normal;
   font-weight: 400;
@@ -70,7 +70,7 @@
 
 .text-regular-lg {
   /* Text lg/Regular */
-  font-family: Inter, sans-serif;
+  font-family: Inter;
   font-size: 18px;
   font-style: normal;
   font-weight: 400;
@@ -80,7 +80,7 @@
 .text-regular-md {
   color: $color-gray-900;
   /* Text md/Regular */
-  font-family: Inter, sans-serif;
+  font-family: Inter;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -90,7 +90,7 @@
 .text-regular-sm {
   color: $color-gray-900;
   /* Text sm/Regular */
-  font-family: Inter, sans-serif;
+  font-family: Inter;
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -99,7 +99,7 @@
 
 .text-regular-xs {
   /* Text xs/Regular */
-  font-family: Inter, sans-serif;
+  font-family: Inter;
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
@@ -110,114 +110,113 @@
 
 .display-medium-2xl {
   /* Display 2xl/Medium */
-  font-family: Inter, sans-serif;
+  font-family: Inter;
   font-size: 72px;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: -0.02em;
   line-height: 90px;
 }
 
 .display-medium-xl {
   /* Display xl/Medium */
-  font-family: Inter, sans-serif;
+  font-family: Inter;
   font-size: 60px;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: -0.02em;
   line-height: 72px;
 }
 
 .display-medium-lg {
   /* Display lg/Medium */
-  font-family: Inter, sans-serif;
+  font-family: Inter;
   font-size: 48px;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: -0.02em;
   line-height: 60px;
 }
 
 .display-medium-md {
   /* Display md/Medium */
-  font-family: Inter, sans-serif;
+  font-family: Inter;
   font-size: 36px;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: -0.02em;
   line-height: 44px;
 }
 
 .display-medium-sm {
   /* Display sm/Medium */
-  font-family: Inter, sans-serif;
+  font-family: Inter;
   font-size: 30px;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 38px;
 }
 
 .display-medium-xs {
   /* Display xs/Medium */
-  font-family: Inter, sans-serif;
+  font-family: Inter;
   font-size: 24px;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 32px;
 }
 
 .text-medium-xl {
   /* Text xl/Medium */
-  font-family: Inter, sans-serif;
+  font-family: Inter;
   font-size: 20px;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 30px;
 }
 
 .text-medium-lg {
   /* Text lg/Medium */
   color: $color-gray-900;
-  font-family: Inter, sans-serif;
+  font-family: Inter;
   font-size: 18px;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 28px;
 }
 
 .text-medium-md {
   /* Text md/Medium */
   color: $color-gray-700;
-  font-family: Inter, sans-serif;
+  font-family: Inter;
   font-size: 16px;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 24px;
 }
 
 .text-medium-sm {
   /* Text sm/Medium */
-  font-family: Inter, sans-serif;
+  font-family: Inter;
   font-size: 14px;
   font-style: normal;
-  font-weight: 600 !important;
+  font-weight: 500 !important;
   line-height: 20px;
 }
 
 .text-medium-xs {
   /* Text xs/Medium */
-  font-family: Inter, sans-serif;
+  font-family: Inter;
   font-size: 12px;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 18px;
 }
-
 /*** semibold */
 
 .display-semibold-2xl {
   /* Display 2xl/semibold */
-  font-family: Inter, sans-serif;
+  font-family: Inter;
   font-size: 72px;
   font-style: normal;
   font-weight: 600;
@@ -227,7 +226,7 @@
 
 .display-semibold-xl {
   /* Display xl/semibold */
-  font-family: Inter, sans-serif;
+  font-family: Inter;
   font-size: 60px;
   font-style: normal;
   font-weight: 600;
@@ -237,7 +236,7 @@
 
 .display-semibold-lg {
   /* Display lg/semibold */
-  font-family: Inter, sans-serif;
+  font-family: Inter;
   font-size: 48px;
   font-style: normal;
   font-weight: 600;
@@ -247,7 +246,7 @@
 
 .display-semibold-md {
   /* Display md/semibold */
-  font-family: Inter, sans-serif;
+  font-family: Inter;
   font-size: 36px;
   font-style: normal;
   font-weight: 600;
@@ -257,7 +256,7 @@
 
 .display-semibold-sm {
   /* Display sm/semibold */
-  font-family: Inter, sans-serif;
+  font-family: Inter;
   font-size: 30px;
   font-style: normal;
   font-weight: 600;
@@ -266,7 +265,7 @@
 
 .display-semibold-xs {
   /* Display xs/semibold */
-  font-family: Inter, sans-serif;
+  font-family: Inter;
   font-size: 24px;
   font-style: normal;
   font-weight: 600;
@@ -275,7 +274,7 @@
 
 .text-semibold-xl {
   /* Text xl/semibold */
-  font-family: Inter, sans-serif;
+  font-family: Inter;
   font-size: 20px;
   font-style: normal;
   font-weight: 600;
@@ -284,7 +283,7 @@
 
 .text-semibold-lg {
   /* Text lg/semibold */
-  font-family: Inter, sans-serif;
+  font-family: Inter;
   font-size: 18px;
   font-style: normal;
   font-weight: 600;
@@ -293,7 +292,7 @@
 
 .text-semibold-md {
   /* Text md/semibold */
-  font-family: Inter, sans-serif;
+  font-family: Inter;
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
@@ -302,7 +301,7 @@
 
 .text-semibold-sm {
   /* Text sm/semibold */
-  font-family: Inter, sans-serif;
+  font-family: Inter;
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
@@ -311,7 +310,7 @@
 
 .text-semibold-xs {
   /* Text xs/semibold */
-  font-family: Inter, sans-serif;
+  font-family: Inter;
   font-size: 12px;
   font-style: normal;
   font-weight: 600;
@@ -323,7 +322,7 @@
 .display-bold-2xl {
   /* Display 2xl/bold */
   color: $color-gray-900;
-  font-family: Inter, sans-serif;
+  font-family: Inter;
   font-size: 72px;
   font-style: normal;
   font-weight: 700;
@@ -334,7 +333,7 @@
 .display-bold-xl {
   /* Display xl/bold */
   color: $color-gray-900;
-  font-family: Inter, sans-serif;
+  font-family: Inter;
   font-size: 60px;
   font-style: normal;
   font-weight: 700;
@@ -345,7 +344,7 @@
 .display-bold-lg {
   /* Display lg/bold */
   color: $color-gray-900;
-  font-family: Inter, sans-serif;
+  font-family: Inter;
   font-size: 48px;
   font-style: normal;
   font-weight: 700;
@@ -356,7 +355,7 @@
 .display-bold-md {
   /* Display md/bold */
   color: $color-gray-900;
-  font-family: Inter, sans-serif;
+  font-family: Inter;
   font-size: 36px;
   font-style: normal;
   font-weight: 700;
@@ -367,7 +366,7 @@
 .display-bold-sm {
   /* Display sm/bold */
   color: $color-gray-900;
-  font-family: Inter, sans-serif;
+  font-family: Inter;
   font-size: 30px;
   font-style: normal;
   font-weight: 700;
@@ -377,7 +376,7 @@
 .display-bold-xs {
   /* Display xs/bold */
   color: $color-gray-900;
-  font-family: Inter, sans-serif;
+  font-family: Inter;
   font-size: 24px;
   font-style: normal;
   font-weight: 700;
@@ -387,7 +386,7 @@
 .text-bold-xl {
   /* Text xl/bold */
   color: $color-gray-900;
-  font-family: Inter, sans-serif;
+  font-family: Inter;
   font-size: 20px;
   font-style: normal;
   font-weight: 700;
@@ -397,7 +396,7 @@
 .text-bold-lg {
   /* Text lg/bold */
   color: $color-gray-900;
-  font-family: Inter, sans-serif;
+  font-family: Inter;
   font-size: 18px;
   font-style: normal;
   font-weight: 700;
@@ -407,7 +406,7 @@
 .text-bold-md {
   /* Text md/bold */
   color: $color-gray-900;
-  font-family: Inter, sans-serif;
+  font-family: Inter;
   font-size: 16px;
   font-style: normal;
   font-weight: 700;
@@ -417,7 +416,7 @@
 .text-bold-sm {
   /* Text sm/bold */
   color: $color-gray-900;
-  font-family: Inter, sans-serif;
+  font-family: Inter;
   font-size: 14px;
   font-style: normal;
   font-weight: 700;
@@ -427,7 +426,7 @@
 .text-bold-xs {
   /* Text xs/bold */
   color: $color-gray-900;
-  font-family: Inter, sans-serif;
+  font-family: Inter;
   font-size: 12px;
   font-style: normal;
   font-weight: 700;
@@ -437,7 +436,7 @@
 //text
 .text-label-default{
   color: $color-gray-700;
-  font-family: Inter, sans-serif;
+  font-family: Inter;
   font-size: 14px;
   font-style: normal;
   font-weight: 500 !important;

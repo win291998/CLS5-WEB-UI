@@ -144,5 +144,6 @@ watch(isLoadingVideo, (val: any) => {
 .border-avatar {
   border: 4px solid $color-white;
   box-shadow: $box-shadow-lg;
+  border-radius: 8px;
 }
 </style>

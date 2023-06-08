@@ -2,6 +2,9 @@
 import CmTab from '@/components/common/CmTab.vue'
 import CpCondParticipation from '@/components/page/Admin/course/modify/CpCondParticipation.vue'
 import CpInforCourse from '@/components/page/Admin/course/modify/CpInforCourse.vue'
+import CpConditionsCompletion from '@/components/page/Admin/course/modify/CpConditionsCompletion.vue'
+import CpCostCourse from '@/components/page/Admin/course/modify/CpCostCourse.vue'
+import CpCourseSurveyEvaluation from '@/components/page/Admin/course/modify/CpCourseSurveyEvaluation.vue'
 import { courseInforManagerStore } from '@/stores/admin/course/infor'
 
 /** lib */
@@ -31,30 +34,24 @@ const listtab = ref([
     component: CpCondParticipation,
   },
 
-  // {
-  //   key: 'topic-survey',
-  //   title: 'topic-survey',
-  //   component: CpManagerTopic,
-  //   dataTab: {
-  //     typeId: 6,
-  //   },
-  // },
-  // {
-  //   key: 'topic-question',
-  //   title: 'ShareService_TopicQuestion',
-  //   component: CpManagerTopic,
-  //   dataTab: {
-  //     typeId: 4,
-  //   },
-  // },
-  // {
-  //   key: 'training-route',
-  //   title: 'topic-training-route',
-  //   component: CpManagerTopic,
-  //   dataTab: {
-  //     typeId: 1,
-  //   },
-  // },
+  {
+    key: 'completion',
+    title: 'conditions-completion',
+    component: CpConditionsCompletion,
+  },
+
+  {
+    key: 'cost',
+    title: 'cost-management',
+    component: CpCostCourse,
+  },
+
+  {
+    key: 'survey-course',
+    title: 'survey-course',
+    component: CpCourseSurveyEvaluation,
+  },
+
   // {
   //   key: 'topic-forum',
   //   title: 'topic-forum',

@@ -3,6 +3,7 @@ import jwt_decode from 'jwt-decode'
 import { validatorStore } from '@/stores/validatator'
 import { comboboxStore } from '@/stores/combobox'
 import { profileUserManagerStore } from '@/stores/admin/users/profile/profile'
+import constant from '@/constant/constant'
 
 const emit = defineEmits<Emit>()
 
@@ -327,6 +328,7 @@ window.hideAllPageLoading()
               v-model="valuesComponent.kpiLearn"
               name="kpiLearn"
               type="number"
+
               :rules="schema.kpiLearn"
             >
               <CmTextField
@@ -335,6 +337,8 @@ window.hideAllPageLoading()
                 :text="`${t('kpi-learning')}`"
                 :placeholder="$t('kpi-learning')"
                 type="number"
+                :min="constant.MIN_NUMBER"
+                :max="constant.MAX_NUMBER"
                 @change="handleFormValue"
               />
             </Field>
@@ -356,6 +360,8 @@ window.hideAllPageLoading()
                 :errors="errors"
                 :text="`${t('kpi-teaching')}`"
                 :placeholder="$t('kpi-teaching')"
+                :min="constant.MIN_NUMBER"
+                :max="constant.MAX_NUMBER"
                 type="number"
                 @change="handleFormValue"
               />

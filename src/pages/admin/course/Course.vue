@@ -281,9 +281,6 @@ window.hideAllPageLoading()
           <div v-if="col === 'fullname'">
             {{ StringUtil.formatFullName(context.firstName, context.lastName) }}
           </div>
-          <div v-if="col === 'fullname'">
-            {{ StringUtil.formatFullName(context.firstName, context.lastName) }}
-          </div>
           <div v-if="col === 'formStudy'">
             <CmChip
               class="ma-2"

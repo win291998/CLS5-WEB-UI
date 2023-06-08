@@ -24,6 +24,7 @@ export const comboboxStore = defineStore('combobox', () => {
   const authorIdCombobox = ref<any>([])
   const formOfStudyCombobox = ref<any>([])
   const categoryTitleCombobox = ref([])
+  const compoboxCostTypes = ref([])
   const country = ref<combobox[]>([])
   const provinces = ref<combobox[]>([])
   const districts = ref<combobox[]>([])
@@ -289,6 +290,11 @@ export const comboboxStore = defineStore('combobox', () => {
       }
     })
   }
+  const categoryCostCombobox = async () => {
+    await MethodsUtil.requestApiCustom(ComboboxService.GetCosttype, TYPE_REQUEST.GET).then((value: any) => {
+      compoboxCostTypes.value = value.data
+    })
+  }
 
   onMounted(() => {
     //
@@ -338,8 +344,10 @@ export const comboboxStore = defineStore('combobox', () => {
     isDisplayHome,
     compoboxStatusCourse,
     compoboxCourseApprove,
+    compoboxCostTypes,
     typeSchoolCombobox,
     authorIdCombobox,
+    categoryCostCombobox,
     getComboboxApprover,
     fetchStatusUsersCombobox,
     fetchTypeUsersCombobox,

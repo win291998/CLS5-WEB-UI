@@ -106,6 +106,8 @@ const UserService = {
   PostCreateTitle: 'title/create',
   PostUpdateTitle: 'title/update',
   PostGetTeacher: '/user/get-combobox-administrator-teacher',
+  PostProciencyUser: '/proficiency/get-required-proficiency', // Lấy thông tin năng lực
+  PostProciencyPaging: '/proficiency/get-paging', // Lấy thông tin năng lực
 
   /** Nhóm người dùng */
   ListGroup: '/usergroup/get-all-paging',

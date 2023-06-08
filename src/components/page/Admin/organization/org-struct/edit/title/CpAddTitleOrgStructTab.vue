@@ -1,13 +1,11 @@
 <script setup lang="ts">
-import ApiUser from '@/api/user/index'
-import MethodsUtil from '@/utils/MethodsUtil'
-import { TYPE_REQUEST } from '@/typescript/enums/enums'
 import { validatorStore } from '@/stores/validatator'
 import { orgStructManagerStore } from '@/stores/admin/org-struct/orgStruct'
 import { comboboxStore } from '@/stores/combobox'
 import StringUtil from '@/utils/StringUtil'
 import { ActionType } from '@/constant/data/actionType.json'
 import toast from '@/plugins/toast'
+import constant from '@/constant/constant'
 
 const emit = defineEmits<Emit>()
 
@@ -89,22 +87,22 @@ const isShowDialogNotiDelete = ref(false)
 /**
  * method
  */
-const backOrg = () => {
+function backOrg() {
   viewModeAddTitle.value = false
 }
 
 // search ở fillter header
-const handleSearch = async (value: any) => {
+async function handleSearch(value: any) {
   searchData.value = value
 }
 
 // Function to handle when click button Delete
-const handleDeleteItem = (context: any) => {
+function handleDeleteItem(context: any) {
   dataComponent.deleteIds = []
   dataComponent.deleteIds.push(context.id)
   isShowDialogNotiDelete.value = true
 }
-const handlePageClick = async (value: any) => {
+async function handlePageClick(value: any) {
   dataComponent.pageNumber = value
 }
 const getProficiency = computed(() => {
@@ -117,7 +115,7 @@ const getProficiency = computed(() => {
   return title.value.proficiencies.slice((dataComponent.pageNumber - 1) * dataComponent.pageSize, dataComponent.pageNumber * dataComponent.pageSize)
 })
 
-const handleSaveTitle = async () => {
+async function handleSaveTitle() {
   myFormAddTitleOrg.value.validate().then(async (success: any) => {
     if (success.valid) {
       await handleModifineTitleOrg().then(value => {
@@ -127,7 +125,7 @@ const handleSaveTitle = async () => {
   })
 }
 
-const handlerActionHeader = (type: any) => {
+function handlerActionHeader(type: any) {
   switch (type) {
     case 'handlerCustomButton':
       titleSelected.value = {}
@@ -142,17 +140,17 @@ const handlerActionHeader = (type: any) => {
       break
   }
 }
-const handleDeleteMultiple = async (value: any) => {
+async function handleDeleteMultiple(value: any) {
   dataComponent.deleteIds = dataComponent.selectedRowsIds
   isShowDialogNotiDelete.value = true
 }
-const selectedRows = (e: any) => {
+function selectedRows(e: any) {
   dataComponent.selectedRowsIds = e
 }
 const disabledDelete = computed(() => !(dataComponent.selectedRowsIds.length > 0))
 
 // delete action
-const deleteAction = async () => {
+async function deleteAction() {
   title.value.proficiencies = title.value.proficiencies.filter((item: any) => !dataComponent.deleteIds.includes(item.id))
   dataComponent.deleteIds = []
   dataComponent.selectedRowsIds = []
@@ -161,7 +159,7 @@ const deleteAction = async () => {
 }
 
 // hành động của dialog
-const confirmDialog = (event: any) => {
+function confirmDialog(event: any) {
   if (event)
     deleteAction()
 }
@@ -241,6 +239,8 @@ onUnmounted(() => {
                   :field="field"
                   :errors="errors"
                   type="number"
+                  :min="constant.MIN_NUMBER"
+                  :max="constant.MAX_NUMBER"
                   :text="LABEL.TITLE2"
                   :placeholder="LABEL.TITLE2"
                 />
@@ -321,4 +321,3 @@ onUnmounted(() => {
     @confirm="confirmDialog"
   />
 </template>
-

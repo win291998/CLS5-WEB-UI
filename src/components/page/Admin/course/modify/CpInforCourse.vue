@@ -5,6 +5,7 @@ import Globals from '@/constant/Globals'
 import CmTag from '@/components/common/CmTag.vue'
 import CmInputEditor from '@/components/common/CmInputEditor.vue'
 import { comboboxStore } from '@/stores/combobox'
+import constant from '@/constant/constant'
 
 const CmSelectTree = defineAsyncComponent(() => import('@/components/common/CmSelectTree.vue'))
 const CmImgUpload = defineAsyncComponent(() => import('@/components/common/CmImgUpload.vue'))
@@ -226,6 +227,8 @@ if (formOfStudyCombobox.value)
             <CmTextField
               v-model="courseData.credit"
               type="number"
+              :min="constant.MIN_NUMBER"
+              :max="constant.MAX_NUMBER"
               :text="LABEL.TITLE5"
               :placeholder="LABEL.TITLE5"
             />

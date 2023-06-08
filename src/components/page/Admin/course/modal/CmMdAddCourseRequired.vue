@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import toast from '@/plugins/toast'
 import CpSearch from '@/components/page/gereral/CpSearch.vue'
-
-import UserService from '@/api/user'
+import { comboboxStore } from '@/stores/combobox'
+import CourseService from '@/api/course/index'
 import { TYPE_REQUEST } from '@/typescript/enums/enums'
 import MethodsUtil from '@/utils/MethodsUtil'
 
 const props = withDefaults(defineProps<Props>(), {
-  isShowModalAddCapacity: false,
+  isShowModalAddCourse: false,
   excludeIds: [],
 })
 
@@ -18,21 +18,23 @@ const CmSelect = defineAsyncComponent(() => import('@/components/common/CmSelect
 const CmDialogs = defineAsyncComponent(() => import('@/components/common/CmDialogs.vue'))
 
 interface Props {
-  isShowModalAddCapacity: boolean
+  isShowModalAddCourse: boolean
   excludeIds?: any
 }
 interface Emit {
-  (e: 'update:isShowModalAddCapacity', value: any): void
+  (e: 'update:isShowModalAddCourse', value: any): void
   (e: 'saveChange', value: any): void
 }
 
 /** lib */
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
+const combobox = comboboxStore()
+const { listTopicCourseCombobox } = storeToRefs(combobox)
+const { getlistTopicCourseCombobox } = combobox
 
 /** state */
 const LABEL = Object.freeze({
-  TITLE: t('add-capacity'),
-  PLH_SELECT: t('select-level'),
+  TITLE: t('add-course'),
 })
 const data = reactive({
   deleteIds: [], // list id các row table muốn xóa
@@ -42,39 +44,44 @@ const queryParams = ref({
   keyword: '',
   pageNumber: 1,
   pageSize: 10,
-  excludeProficiencyLevelMapIdList: [] as any,
+  excludeListId: [] as any,
 })
 const headers = ref([
   { text: '', value: 'checkbox', width: 50 },
-  { text: t('proficiency'), value: 'proficiencyName' },
-  { text: t('level'), value: 'levels', type: 'custom', width: 250 },
+  { text: t('name-course'), value: 'name' },
+  { text: t('topic'), value: 'topicCourseName' },
 ])
 const items = ref()
 const totalRecord = ref(0)
 
 /** method */
 async function onCancel() {
-  emit('update:isShowModalAddCapacity', false)
+  emit('update:isShowModalAddCourse', false)
 }
 async function onConfirm() {
   if (data.selectedRowsIds.length === 0) {
     toast('WARNING', t('please-choose-at-least') + t('proficiency').toLowerCase())
     return
   }
-  const selectedIds = data.selectedRowsIds?.map(({ selectedLevel }) => selectedLevel)
-  emit('saveChange', selectedIds)
+  emit('saveChange', data.selectedRowsIds)
 
   nextTick(() => {
-    emit('update:isShowModalAddCapacity', false)
+    emit('update:isShowModalAddCourse', false)
   })
 }
-async function getListCapacity() {
-  queryParams.value.excludeProficiencyLevelMapIdList = props.excludeIds ? props.excludeIds : []
-  await MethodsUtil.requestApiCustom(UserService.PostProciencyPaging, TYPE_REQUEST.POST, queryParams.value).then((value: any) => {
+async function getListCourse() {
+  queryParams.value.excludeListId = props.excludeIds ? props.excludeIds : []
+  await MethodsUtil.requestApiCustom(CourseService.GetListCourseAdd, TYPE_REQUEST.GET, queryParams.value).then(async (value: any) => {
     if (value.data) {
       console.log(value.data)
+      if (!listTopicCourseCombobox.value?.length)
+        await getlistTopicCourseCombobox()
       value.data.pageLists.forEach((element: any) => {
-        element.selectedLevel = null
+        const topic: any = listTopicCourseCombobox.value?.find((x: any) => x.key === element.topicCourseId)
+        console.log(topic)
+
+        if (topic)
+          element.topicCourseName = topic.value
       })
       items.value = value.data.pageLists
       totalRecord.value = value.data.totalRecord
@@ -83,25 +90,21 @@ async function getListCapacity() {
 }
 async function handleSearch() {
   queryParams.value.pageNumber = 1
-  getListCapacity()
+  getListCourse()
 }
 
 // chuyển trang
 async function handlePageClick(page: any) {
   queryParams.value.pageNumber = page
-  getListCapacity()
+  getListCourse()
 }
 function selectedRows(e: any) {
   data.selectedRowsIds = e
 }
-function changeCellvalue(params: any, context: any) {
-  console.log(params, context)
-  items.value[context.originIndex].selectedLevel = context?.selectedLevel
-}
 
-watch(() => props.isShowModalAddCapacity, isShow => {
+watch(() => props.isShowModalAddCourse, isShow => {
   if (isShow) {
-    getListCapacity()
+    getListCourse()
   }
   else {
     queryParams.value.pageNumber = 1
@@ -115,7 +118,7 @@ watch(() => props.isShowModalAddCapacity, isShow => {
   <div>
     <CmDialogs
       :title="LABEL.TITLE"
-      :is-dialog-visible="isShowModalAddCapacity"
+      :is-dialog-visible="isShowModalAddCourse"
       :button-ok-name="t('save')"
       close-on-back
       persistent
@@ -140,21 +143,7 @@ watch(() => props.isShowModalAddCapacity, isShow => {
         :type-pagination="2"
         @handlePageClick="handlePageClick"
         @update:selected="selectedRows"
-      >
-        <template #rowItem="{ col, context }">
-          <div v-if="col === 'levels'">
-            <CmSelect
-              v-model="context.selectedLevel"
-              :items="context.levels"
-              custom-key="proficiencyLevelName"
-              item-value="proficiencyLevelMapId"
-              :append-to-body="true"
-              :placeholder="LABEL.PLH_SELECT"
-              @update:modelValue="changeCellvalue($event, context)"
-            />
-          </div>
-        </template>
-      </CmTable>
+      />
     </CmDialogs>
   </div>
 </template>
