@@ -3364,5 +3364,16 @@
   "course-edit": "Chỉnh sửa khóa học",
   "course-attend-dk": "Điều kiện tham gia",
   "capacity-required": "Năng lực yêu cầu",
-  "course-required": "Khóa học yêu cầu"
+  "course-required": "Khóa học yêu cầu",
+  "course-invalid": "Hãy chọn ít nhất một khóa học",
+  "capacity-invalid": "Hãy chọn ít nhất một năng lực",
+  "conditions-completion": "Điều kiện hoàn thành",
+  "setting-conditions": "Cài đặt điều kiện",
+  "number-achieved": "Số nội dung cần đạt",
+  "amount-required-invalid": "Số nội dung cần đạt không được lớn hơn tổng số nội dung",
+  "amount-content-meaning": "Số nội dung cần đạt phải lớn hơn 0",
+  "list-cost": "Danh sách chi phí",
+  "delete-cost": "Xóa chi phí",
+  "confirm-delete-cost": "Bạn có chắc chắn muốn xóa sự chi phí này không ?",
+  "survey-course": "Đánh giá sau đào tạo"
 }

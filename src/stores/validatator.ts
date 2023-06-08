@@ -21,6 +21,10 @@ export const validatorStore = defineStore('validator', () => {
       MAX_VALUE: 10000,
       MIN_VALUE: 0,
     },
+    DEFAULT_NUMBER_PRICE: {
+      MAX_VALUE: 1000000000000,
+      MIN_VALUE: 0,
+    },
     DEFAULT_NUMBER_100: {
       MAX_VALUE: 100,
       MIN_VALUE: 0,
@@ -98,8 +102,10 @@ export const validatorStore = defineStore('validator', () => {
     typeArray: 'Vui lòng lựa chọn.',
     typeOption: 'Vui lòng lựa chọn.',
     positive: 'Vui lòng nhập số dương.',
+    numberMin: 'Vui lòng nhập số lớn hơn 0.',
     email: 'Định dạng email không hợp lệ.',
     url: 'Định dạng url không hợp lệ.',
+    username: 'Tên đăng nhập không hợp lệ, cho phép tiếng việt không dấu và các ký tự đặc biệt -_.@ không liên tiếp',
     requiredOption: (field?: any) => `${field || ''} phải chứa ít nhất một lựa chọn`,
   })
 
@@ -123,7 +129,9 @@ export const validatorStore = defineStore('validator', () => {
   const schemaOption = reactive({
     defaultField: yup.string().max(CONFIG.DEFAULT_FIELD.MAX, ruleMessage.max(CONFIG.DEFAULT_FIELD.MAX)),
     defaultString: yup.string().required(ruleMessage.required()).max(CONFIG.DEFAULT_STRING.MAX, ruleMessage.max(CONFIG.DEFAULT_STRING.MAX)),
+    defaultStringArea: yup.string().required(ruleMessage.required()).max(CONFIG.DEFAULT_ARIA.MAX, ruleMessage.max(CONFIG.DEFAULT_ARIA.MAX)),
     defaultNumber: yup.number().typeError(ruleMessage.typeNumber).test('positive', ruleMessage.positive, (value: any) => value >= 0).nullable().required(ruleMessage.required()).max(CONFIG.DEFAULT_NUMBER.MAX_VALUE, ruleMessage.max(CONFIG.DEFAULT_NUMBER.MAX_VALUE)),
+    defaultNumberPrice: yup.number().typeError(ruleMessage.typeNumber).test('positive', ruleMessage.positive, (value: any) => value >= 0).nullable().required(ruleMessage.required()).max(CONFIG.DEFAULT_NUMBER_PRICE.MAX_VALUE, ruleMessage.max(CONFIG.DEFAULT_NUMBER_PRICE.MAX_VALUE)),
     defaultSelectSingle: yup.number().typeError(ruleMessage.typeOption).required(ruleMessage.required()),
     defaultSelectList: yup.array().of(yup.number()).min(1, ruleMessage.typeArray).required(ruleMessage.required()),
     defaultSelectObject: yup.object().required(ruleMessage.required()),
@@ -131,6 +139,8 @@ export const validatorStore = defineStore('validator', () => {
     defaultNumberYub: yup.number(),
     defaultNumber100Yub: yup.number().typeError(ruleMessage.typeNumber).test('positive', ruleMessage.positive, (value: any) => value >= 0).nullable().required(ruleMessage.required()).max(CONFIG.DEFAULT_NUMBER_100.MAX_VALUE, ruleMessage.maxValue(CONFIG.DEFAULT_NUMBER_100.MAX_VALUE)),
     defaultNumber100YubNoRequire: yup.number().typeError(ruleMessage.typeNumber).test('positive', ruleMessage.positive, (value: any) => value >= 0).nullable().max(CONFIG.DEFAULT_NUMBER_100.MAX_VALUE, ruleMessage.maxValue(CONFIG.DEFAULT_NUMBER_100.MAX_VALUE)),
+    defaultNumberNot0: yup.number().typeError(ruleMessage.typeNumber).test('positive', ruleMessage.numberMin, (value: any) => value > 0).nullable().required(ruleMessage.required()).max(CONFIG.DEFAULT_NUMBER.MAX_VALUE, ruleMessage.max(CONFIG.DEFAULT_NUMBER.MAX_VALUE)),
+
     requiredString: (field?: any) => yup.string().required(ruleMessage.required(field)).max(CONFIG.DEFAULT_STRING.MAX, ruleMessage.max(CONFIG.DEFAULT_STRING.MAX)),
     code: yup.string().max(CONFIG.CODE.MAX, ruleMessage.max(CONFIG.CODE.MAX)).nullable(),
     require: yup.string().required(ruleMessage.required()),
@@ -142,7 +152,8 @@ export const validatorStore = defineStore('validator', () => {
       .max(CONFIG.EMAIL.MAX, ruleMessage.max(CONFIG.EMAIL.MAX, CONFIG.EMAIL.FIELD)),
     userName: yup.string().required(ruleMessage.required())
       .max(CONFIG.USERNAME.MAX, ruleMessage.max(CONFIG.USERNAME.MAX, CONFIG.USERNAME.FIELD))
-      .min(CONFIG.USERNAME.MIN, ruleMessage.min(CONFIG.USERNAME.MIN, CONFIG.USERNAME.FIELD)),
+      .min(CONFIG.USERNAME.MIN, ruleMessage.min(CONFIG.USERNAME.MIN, CONFIG.USERNAME.FIELD))
+      .matches(RegExps.username, ruleMessage.username),
     password: getRulePassword(),
     userCode: yup.string().required(ruleMessage.required())
       .max(CONFIG.USER_CODE.MAX, ruleMessage.max(CONFIG.USER_CODE.MAX, CONFIG.USER_CODE.FIELD)),

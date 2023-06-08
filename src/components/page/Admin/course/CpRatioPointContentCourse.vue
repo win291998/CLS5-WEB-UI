@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { courseApproveManagerStore } from '@/stores/admin/course/approve'
 import { validatorStore } from '@/stores/validatator'
+import constant from '@/constant/constant'
 
 const CmTable = defineAsyncComponent(() => import('@/components/common/CmTable.vue'))
 const CmTextField = defineAsyncComponent(() => import('@/components/common/CmTextField.vue'))
@@ -60,6 +61,8 @@ const headersScore = reactive([
                   :field="field"
                   :errors="errors"
                   type="number"
+                  :min="constant.MIN_NUMBER"
+                  :max="constant.MAX_NUMBER"
                   @update:model-value="valueChange(Number($event), context)"
                 />
               </Field>

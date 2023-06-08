@@ -26,6 +26,7 @@ const ComboboxService = {
   GetComboboxCourseApprove: '/User/get-combobox-course-approver', // danh sách trại thái khóa học
   GetSchoolType: '/school/get-combobox-school-types',
   GetAuthCourse: '/course/combobox-author-active-course', // danh sách người tạo
+  GetCosttype: '/costtype/get-combobox', // danh sách loại chi phí
 }
 
 export default ComboboxService

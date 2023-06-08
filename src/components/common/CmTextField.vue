@@ -28,6 +28,8 @@ interface Props {
   placeholder?: any
   type?: string
   maxlength?: number
+  min?: number
+  max?: number
   disabled?: boolean
 }
 interface Emit {
@@ -80,6 +82,8 @@ const messageError = computed(() => {
         :error="errors?.length > 0 ?? false"
         :error-messages="messageError"
         :type="type"
+        :min="min"
+        :max="max"
         :maxlength="maxlength"
         hide-details="auto"
         class="text-regular-md"
@@ -102,12 +106,12 @@ const messageError = computed(() => {
   font-style: normal;
   font-weight: 400;
   line-height: 24px;
-  border: $border-input;
+   border: $border-input;
   border-radius: $border-radius-input !important;
 }
 .vTextField .v-field__outline__end,
 .vTextField .v-field__outline__start{
-  border: none !important;
+  // border: none !important;
 }
 .v-field--prepended{
   .v-field__input{

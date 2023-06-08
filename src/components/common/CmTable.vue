@@ -104,6 +104,8 @@ function checkActionShow(action: Array<any>) {
 }
 watch(() => props.items, (val: Item[]) => {
   // isLoading.value = true
+  console.log(val)
+
   props.items.forEach((element, index) => {
     element.originIndex = index
     element.isSelected = !!element.isSelected
@@ -243,7 +245,6 @@ if (props.isUpdateRowForce) {
       :table-min-height="minHeight"
       :item-key="keyid"
       :click-row-to-expand="isExpand"
-      :current-page="pageNumber"
       hide-footer
       :body-row-class-name="rowClassName"
       @click-row="showRow"
@@ -256,6 +257,7 @@ if (props.isUpdateRowForce) {
         >
           <VCheckbox
             v-model="selectedAll"
+            color="primary"
             :indeterminate="indeterminate"
             :label="header.text"
             ripple

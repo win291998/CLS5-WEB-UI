@@ -78,7 +78,7 @@ watch(() => props.data, val => {
   dataInput.value = val
 }, { immediate: true })
 
-const cancelModal = () => {
+function cancelModal() {
   dataInput.value = {
     id: null,
     parentId: null,
@@ -89,7 +89,7 @@ const cancelModal = () => {
   }
   emit('update:isShow', false)
 }
-const confirmModal = () => {
+function confirmModal() {
   formEditTopic.value.validate().then((status: any) => {
     if (status.valid)
       emit('confirm', dataInput.value)
@@ -180,4 +180,3 @@ const confirmModal = () => {
     </Form>
   </CmDialogs>
 </template>
-

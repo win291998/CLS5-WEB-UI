@@ -84,7 +84,8 @@ async function onConfirm() {
     toast('WARNING', t('please-choose-at-least') + t('user').toLowerCase())
     return
   }
-  emit('saveChange', data.selectedRowsIds)
+  const selectedIds = data.selectedRowsIds?.map(({ selectedLevel }) => selectedLevel)
+  emit('saveChange', selectedIds)
   nextTick(() => {
     emit('update:isShowModalAddTeacher', false)
   })

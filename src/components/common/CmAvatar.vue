@@ -109,5 +109,9 @@ function getAvatarName(data: any) {
 .border-avatar {
   border: 4px solid $color-white;
   box-shadow: $box-shadow-lg;
+  border-radius: 8px;
+}
+.v-avatar--rounded{
+  border-radius: 8px !important;
 }
 </style>
