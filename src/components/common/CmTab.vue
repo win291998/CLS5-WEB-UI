@@ -88,6 +88,7 @@ watch(() => route.params[props.label], val => {
         v-model="tabActive"
         class="cm-tabs"
         :hide-slider="type === 'button'"
+        show-arrows
         @update:modelValue="activeTab"
       >
         <VTab

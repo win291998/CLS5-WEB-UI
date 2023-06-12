@@ -45,7 +45,8 @@ watch(() => props.modelValue, (val: any) => {
 /** Method */
 function handleChangeText() {
   emit('change', props.type === 'number' ? Number(formModelValue.value) : formModelValue.value)
-  emit('update:modelValue', props.type === 'number' ? Number(formModelValue.value || 0) : formModelValue.value)
+
+  // emit('update:modelValue', props.type === 'number' ? Number(formModelValue.value || 0) : formModelValue.value)
 }
 
 function handleUpdateText() {

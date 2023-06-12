@@ -26,7 +26,7 @@ const props = withDefaults(defineProps<Props>(), ({
 const emit = defineEmits<Emit>()
 const { t } = window.i18n()
 const LABEL = Object.freeze({
-  TITLE_MODAL: 'Danh sách nhóm người dùng',
+  TITLE_MODAL: 'Danh sách người dùng',
   FILLTER1: t('orgStruct'),
   FILLTER2: 'Nhóm người dùng',
   FILLTER3: 'Danh mục chức danh',

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import CpSearch from '@/components/page/gereral/CpSearch.vue'
+
 const emit = defineEmits<Emit>()
 const { t } = window.i18n()
 
@@ -30,7 +32,7 @@ interface Props {
   isDisabledMove: boolean
   isDisabledDelete: boolean
   isFillter: boolean
-
+  isDisabledAdd?: boolean
 }
 interface Item {
   title: string
@@ -52,15 +54,8 @@ function showAdd() {
 }
 
 // Tìm kiếm
-const timer = ref<any>(null)
 function handleSearch(val: string) {
-  if (timer) {
-    clearTimeout(timer.value)
-    timer.value = null
-  }
-  timer.value = setTimeout(() => {
-    emit('update:keySearch', val)
-  }, 500)
+  emit('update:keySearch', val)
 }
 function exportExcel() {
   emit('clickExport')
@@ -93,6 +88,7 @@ function exportExcel() {
         <CmButton
           v-if="props.isShowAdd"
           :title="t(props.buttonAdd)"
+          :disabled="isDisabledAdd"
           class="ml-1"
           variant="flat"
           color="primary"
@@ -129,18 +125,15 @@ function exportExcel() {
       </VCol>
       <VCol class="d-flex justify-end pr-0">
         <VRow>
-          <VCol>
-            <CmTextField
-              label="Tìm kiếm"
-              class="header-action-field"
-              placeholder="Tìm kiếm"
-              prepend-inner-icon="tabler-search"
-              @update:model-value="handleSearch"
+          <VCol class="d-flex justify-end">
+            <CpSearch
+              @update:key-search="handleSearch"
             />
           </VCol>
-          <VCol>
+          <VCol
+            v-if="isFillter"
+          >
             <CmButton
-              v-if="isFillter"
               class="ml-3"
               :disabled="disabledFillter"
               variant="outlined"

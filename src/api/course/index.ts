@@ -13,6 +13,10 @@ const CourseService = {
   GetRequiredProficiencies: '/course/get-required-proficiencies', // lấy danh sách năng lực theo yêu cầu
   GetRequiredCourse: '/course/get-required-courses', // lấy danh sách khóa học theo yêu cầu
   GetRequiredFinishCourse: '/course/get-required-finish', // lấy điều kiện hoàn thành
+  GetSurveyEvaluation: '/CourseSurveyEvaluation/get-all', // lấy danh sách đánh giá
+  GetSemester: '/Semester/get-list', // lấy danh sách kỳ học
+  GetOrganizationalStructure: '/organizationalstructure/get-all', // lấy danh sách cctc
+  GetListOrganizationalStructure: '/courseuser/get-list-organizational-structure', // lấy danh sách cctc
 
   /** Post */
   PostAddCourseOrg: '/course/add-course-to-organizational-structures',
@@ -30,6 +34,14 @@ const CourseService = {
   PostDeleteCourseRequired: '/course/delete-required-course', // Xóa năng lực theo yêu cầu
   PostAddCourseRequired: '/course/add-required-course', // Thêm khóa học theo yêu cầu
   PostUpdateFinishRequired: '/course/update-required-finish', // Thêm điều kiện hoàn thành
+  PostDeleteSemester: '/Semester/delete', // xóa kỳ học
+  PostCreateSemester: '/Semester/create', // tạo kỳ học
+  PostDeleteSurveyEval: '/CourseSurveyEvaluation/delete', // Xóa kỳ khảo sát trong khóa học đánh giá sau đào tạo
+  PostCourseSurveyEvaluation: '/CourseSurveyEvaluation/create', // thêm khảo sát vào đánh giá kỳ thi
+  PostListInfoByCourse: '/CourseUser/get-info-by-course', // Danh sách người dùng thêm vào trong khóa học
+  PostAddUserCourse: '/courseuser/add-user', // Thêm người dùng thêm vào trong khóa học
+  PostListUserCourse: '/CourseUser/get-info-user-add-course', // Danh sách người dùng thêm vào trong khóa học
+  PostOrgCourse: '/courseuser/add-organizational-structure', // Danh sách người dùng từ cctc thêm vào trong khóa học
 
   /** Delete */
 

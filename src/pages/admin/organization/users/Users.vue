@@ -421,16 +421,9 @@ window.hideAllPageLoading()
       @click="handlerActionHeader"
     />
   </div>
-  <!--
-    <div
-    v-if="isShowFilter"
-    class="filter-action"
-    >
-  -->
   <CmCollapse :is-show="isShowFilter">
     <CpUserFilter @update="handleFilterCombobox" />
   </CmCollapse>
-  <!-- </div> -->
   <div>
     <CpHeaderAction
       is-delete

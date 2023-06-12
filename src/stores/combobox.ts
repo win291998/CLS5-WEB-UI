@@ -32,6 +32,7 @@ export const comboboxStore = defineStore('combobox', () => {
   const userLevels = ref<combobox[]>([])
   const compoboxStatusCourse = ref([])
   const compoboxCourseApprove = ref([])
+  const comboboxAuthor = ref([])
   const compoboxSortCourse = ref<combobox[]>([
     { key: '*position', value: t('CourseService_Sort_By_Position_AZ') },
     { key: '-position', value: t('CourseService_Sort_By_Position_ZA') },
@@ -55,6 +56,15 @@ export const comboboxStore = defineStore('combobox', () => {
     data: [],
     totalRecord: 0,
   })
+  const getComboboxAuthor = async () => {
+    await MethodsUtil.requestApiCustom(ComboboxService.GetAuthCourse, TYPE_REQUEST.GET).then(async (value: any) => {
+      const users = await MethodsUtil.getUserInfoByIds(value.data)
+      users.pageLists.forEach((element: any) => {
+        element.fullName = StringUtil.formatFullName(element.firstName, element.lastName)
+      })
+      comboboxAuthor.value = users.pageLists
+    })
+  }
   const getAuthorIdCombobox = async () => {
     await MethodsUtil.requestApiCustom(ComboboxService.GetAuthCourse, TYPE_REQUEST.GET).then(async (value: any) => {
       const users = await MethodsUtil.getUserInfoByIds(value.data)
@@ -359,10 +369,11 @@ export const comboboxStore = defineStore('combobox', () => {
     compoboxCostTypes,
     typeSchoolCombobox,
     authorIdCombobox,
-    categoryCostCombobox,
     eventTypeCombobox,
+    comboboxAuthor,
 
     // function
+    categoryCostCombobox,
     getComboboxApprover,
     fetchStatusUsersCombobox,
     fetchTypeUsersCombobox,
@@ -388,5 +399,6 @@ export const comboboxStore = defineStore('combobox', () => {
     getComboboxTypeSchool,
     getAuthorIdCombobox,
     getComboboxEventType,
+    getComboboxAuthor,
   }
 })

@@ -28,7 +28,7 @@ const props = withDefaults(defineProps<Props>(), ({
 }))
 const emit = defineEmits<Emit>()
 const SkTable = defineAsyncComponent(() => import('@/components/page/gereral/skeleton/SkTable.vue'))
-const isLoading = ref(true)
+const isLoading = ref<boolean>(true)
 const CmPagination = defineAsyncComponent(() => import('./CmPagination.vue'))
 const CmDropDown = defineAsyncComponent(() => import('@/components/common/CmDropDown.vue'))
 const CmSelect = defineAsyncComponent(() => import('@/components/common/CmSelect.vue'))
@@ -79,7 +79,6 @@ interface Emit {
   (e: 'update:pageNumber', page: number): void
   (e: 'update:pageSize', size: number): void
   (e: 'update:selected', data: Item): void
-
 }
 
 // $ref dataTable
@@ -103,9 +102,9 @@ const keyid = computed(() => {
 function checkActionShow(action: Array<any>) {
   return action?.filter((item: any) => item.isShow === true)?.length > 0
 }
+
 watch(() => props.items, (val: Item[]) => {
-  // isLoading.value = true
-  console.log(val)
+  isLoading.value = true
 
   props.items.forEach((element, index) => {
     element.originIndex = index
@@ -214,16 +213,12 @@ onUpdated(() => {
   }, 500)
 })
 onMounted(() => {
-  setTimeout(() => {
-    isLoading.value = false
-  }, 500)
+  isLoading.value = false
 })
 
 // watch
 if (props.isUpdateRowForce) {
   watch(() => props.selected, value => {
-    console.log(value)
-
     updateSelectedRows()
   }, { deep: true, immediate: true })
 }

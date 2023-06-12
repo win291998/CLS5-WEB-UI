@@ -321,7 +321,7 @@ function onChangeOrgChecked(val: any, node: any) {
     inset-inline-end: 0;
   }
   .checkbox-wrapper {
-    left: 17px;
+    left: 33px;
     opacity: 0;
     position: absolute;
     width: 25px;
