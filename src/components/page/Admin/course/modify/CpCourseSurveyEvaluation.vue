@@ -1,12 +1,16 @@
 <script setup lang="ts">
 import { courseManagerStore } from '@/stores/admin/course/course'
 import { comboboxStore } from '@/stores/combobox'
+import CmCollapse from '@/components/common/CmCollapse.vue'
+import MethodsUtil from '@/utils/MethodsUtil'
+import DateUtil from '@/utils/DateUtil'
 
 const CpActionHeaderPage = defineAsyncComponent(() => import('@/components/page/gereral/CpActionHeaderPage.vue'))
-const CmMdAddCost = defineAsyncComponent(() => import('@/components/page/Admin/course/modal/CmMdAddCost.vue'))
+const CmMdAddEval = defineAsyncComponent(() => import('@/components/page/Admin/course/modal/CmMdAddEval.vue'))
 const CpHeaderAction = defineAsyncComponent(() => import('@/components/page/gereral/CpHeaderAction.vue'))
 const CmTable = defineAsyncComponent(() => import('@/components/common/CmTable.vue'))
 const CpConfirmDialog = defineAsyncComponent(() => import('@/components/page/gereral/CpConfirmDialog.vue'))
+const CpSurveyEvaluationFilter = defineAsyncComponent(() => import('@/components/page/Admin/course/modify/CpSurveyEvaluationFilter.vue'))
 
 /** lib */
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
@@ -16,41 +20,45 @@ const route = useRoute()
  * Store
  */
 const combobox = comboboxStore()
-const { compoboxCostTypes } = storeToRefs(combobox)
-const { categoryCostCombobox } = combobox
+
+// const { compoboxEvalTypes } = storeToRefs(combobox)
+// const { categoryEvalCombobox } = combobox
 
 const storecourseManager = courseManagerStore()
-const { disabledDeleteCost, queryParamsCost, itemsCost, totalRecordCost, isShowDialogNotiDeleteCost, courseData, isShowModalAddCost } = storeToRefs(storecourseManager)
-const { deleteItemsCost, handleSearchCost, handlePageClickCost, selectedRowsCost, getCostRequired, confirmDialogDeleteCost } = storecourseManager
+const { disabledDeleteEval, excludeIdsEval, queryParamsEval, itemsEval, totalRecordEval, isShowDialogNotiDeleteEval, courseData, isShowModalAddEval } = storeToRefs(storecourseManager)
+const { addSurveyCourse, deleteItemsEval, handleSearchEvaluation, getEvaluetionAllRequired, handlePageClickEval, selectedRowsEval, getEvaluetionRequired, confirmDialogDeleteEval, handleFilterEvaluationCombobox } = storecourseManager
 
 /** state */
-const excludeIds = computed(() => {
-  const listExclude = itemsCost.value?.map((item: any) => item.courseId)
-  return [...listExclude, Number(route.params.id)]
-})
+
 const headers = reactive([
   { text: '', value: 'checkbox', width: 50 },
-  { text: t('cost-name'), value: 'costName' },
-  { text: t('cost-type'), value: 'costTypeName' },
-  { text: t('money'), value: 'unitPrice' },
-  { text: t('description'), value: 'description' },
+  { text: t('name-survey'), value: 'name' },
+  { text: t('creator'), value: 'fullname', type: 'custom' },
+  { text: t('date-start'), value: 'startDate', type: 'custom' },
+  { text: t('date-end'), value: 'endDate', type: 'custom' },
   { text: '', value: 'actions', width: 150 },
 ])
+const isShowFilter = ref(true)
 
 /** method */
 /* ==> thực hiện các action được chọn ở header page CP */
-function handlerActionHeader(type: any) {
+async function handlerActionHeader(type: any) {
   console.log(type)
-  if (type === 'handlerAddButton')
-    isShowModalAddCost.value = true
+
+  if (type === 'handlerAddButton') {
+    await getEvaluetionAllRequired()
+    isShowModalAddEval.value = true
+  }
 }
 
 // hàm trả về các loại action từ header filter
-function handleClickBtn(type: string) {
+async function handleClickBtn(type: string) {
   switch (type) {
+    case 'fillter':
+      isShowFilter.value = !isShowFilter.value
+      break
     case 'delete':
-      deleteItemsCost()
-
+      deleteItemsEval()
       break
 
     default:
@@ -58,11 +66,9 @@ function handleClickBtn(type: string) {
   }
 }
 onMounted(async () => {
-  if (!compoboxCostTypes.value?.length)
-    await categoryCostCombobox()
-  await getCostRequired()
-
-  console.log(courseData)
+  // if (!compoboxEvalTypes.value?.length)
+  //   await categoryEvalCombobox()
+  await getEvaluetionRequired()
 })
 </script>
 
@@ -70,47 +76,62 @@ onMounted(async () => {
   <div class="mt-6">
     <div>
       <CpActionHeaderPage
-        :title="t('list-cost')"
-        :title-custom-add="t('add-cost')"
+        :title="t('survey-course')"
+        :title-custom-add="t('add-survey-course')"
         is-custom-add-btn
         @click="handlerActionHeader"
       />
     </div>
+    <CmCollapse :is-show="isShowFilter">
+      <CpSurveyEvaluationFilter @update="handleFilterEvaluationCombobox" />
+    </CmCollapse>
     <div>
       <CpHeaderAction
         is-delete
-        :is-fillter="false"
-        :disabled-delete="disabledDeleteCost"
+        is-fillter
+        :disabled-delete="disabledDeleteEval"
         @click="handleClickBtn"
-        @search="handleSearchCost"
+        @search="handleSearchEvaluation"
       />
     </div>
     <div>
       <CmTable
-        v-model:pageSize="queryParamsCost.pageSize"
-        v-model:page-number="queryParamsCost.pageNumber"
+        v-model:pageSize="queryParamsEval.pageSize"
+        v-model:page-number="queryParamsEval.pageNumber"
         :headers="headers"
-        :items="itemsCost"
-        :total-record="totalRecordCost"
-        @handlePageClick="handlePageClickCost"
-        @update:selected="selectedRowsCost"
-      />
+        :items="itemsEval"
+        :total-record="totalRecordEval"
+        @handlePageClick="handlePageClickEval"
+        @update:selected="selectedRowsEval"
+      >
+        <template #rowItem="{ col, context }">
+          <div v-if="col === 'fullname'">
+            {{ MethodsUtil.formatFullName(context.firstName, context.lastName) }}
+          </div>
+          <div v-if="col === 'startDate'">
+            {{ DateUtil.formatDateToDDMM(context[col]) }}
+          </div>
+          <div v-if="col === 'endDate'">
+            {{ DateUtil.formatDateToDDMM(context[col]) }}
+          </div>
+        </template>
+      </CmTable>
     </div>
     <div>
-      <CmMdAddCost
-        v-model:isShowModalAddCost="isShowModalAddCost"
-        :exclude-ids="excludeIds"
+      <CmMdAddEval
+        v-model:isShowModalAddEval="isShowModalAddEval"
+        :exclude-ids="excludeIdsEval"
         :course-id="courseData.id"
-        @saveChange="getCostRequired"
+        @saveChange="($event) => addSurveyCourse($event)"
       />
     </div>
     <CpConfirmDialog
-      v-model:is-dialog-visible="isShowDialogNotiDeleteCost"
+      v-model:is-dialog-visible="isShowDialogNotiDeleteEval"
       :type="2"
       variant="outlined"
-      :confirmation-msg="t('delete-cost')"
-      :confirmation-msg-sub-title="t('confirm-delete-cost')"
-      @confirm="confirmDialogDeleteCost"
+      :confirmation-msg="t('delete-suvery-perior')"
+      :confirmation-msg-sub-title="t('confirm-delete-suvery-perior')"
+      @confirm="confirmDialogDeleteEval"
     />
   </div>
 </template>

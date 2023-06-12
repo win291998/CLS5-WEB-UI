@@ -73,7 +73,7 @@ watch([() => props.currentPage], ([newValue]) => {
     >
       <div
         v-if="showPageSelect === true"
-        class="d-flex align-center mb-2 mt-1 pagination-select"
+        class="d-flex align-center mr-4 pagination-select"
       >
         <span class="text-nowrap text-regular-sm ">
           {{ t('show') }}
@@ -92,7 +92,7 @@ watch([() => props.currentPage], ([newValue]) => {
         />
         <span class="text-nowrap text-regular-sm ">{{ `${t('of')} ${totalItems} ${t('item')}` }}</span>
       </div>
-      <div class="page-number  mb-2">
+      <div class="page-number d-flex align-center">
         <VPagination
           v-model="selectedPage"
           :length="totalItemsLength"
@@ -170,6 +170,7 @@ watch([() => props.currentPage], ([newValue]) => {
   .pagination-select {
     .select-size {
       inline-size: #{$table-rows-per-page-selector-width};
+
     }
   }
 
@@ -189,4 +190,11 @@ watch([() => props.currentPage], ([newValue]) => {
     }
   }
 }
+</style>
+
+<style lang="scss">
+ .pagination-container .v-select__selection-text{
+    display: flex;
+    align-items: center;
+  }
 </style>

@@ -4,26 +4,31 @@ import CmDialogs from '@/components/common/CmDialogs.vue'
 import CpCustomInfo from '@/components/page/gereral/CpCustomInfo.vue'
 import type { Any } from '@/typescript/interface'
 import type { Params } from '@/typescript/interface/params'
-import UserService from '@/api/user'
 import MethodsUtil from '@/utils/MethodsUtil'
-import { TYPE_REQUEST } from '@/typescript/enums/enums'
 import { useStoreAddUser } from '@/stores/admin/group-user/modalEditGroupUser'
+import StringJwt from '@/utils/Jwt'
 
 const props = withDefaults(defineProps<Props>(), ({
-  label: 'listUserId',
+  customKey: 'listUserId',
+  title: 'addUser',
+  api: 'UserService.GetInfoUserAddEvent',
 }))
 
 const emit = defineEmits<Emit>()
+
+const { t } = window.i18n()
+
 const CmTable = defineAsyncComponent(() => import('@/components/common/CmTable.vue'))
 
 const storeUser = useStoreAddUser()
 const { dataHeader } = storeToRefs(storeUser)
-const { t } = window.i18n()
 interface Props {
   isShow: boolean
   title: string
   returnObject: boolean
-  label: string
+  customKey: string
+  api: string
+  method: string
 }
 interface Emit {
   (e: 'update:isShow', data: boolean): void
@@ -45,8 +50,8 @@ const route = useRoute()
 const queryParams = reactive<QueryParams>({
   keyword: '',
   roleId: null,
-  titles: null,
-  userRole: null,
+  titles: '',
+  userRole: StringJwt.getRole(),
   excludeIds: [],
   categoryTitleId: null,
   groupId: null,
@@ -58,7 +63,7 @@ const queryParams = reactive<QueryParams>({
 const listUser = ref<Any[]>([])
 const totalRecord = ref<number>(0)
 async function fetchDataModal() {
-  const { data } = await MethodsUtil.requestApiCustom(UserService.GetInfoUserAddEvent, TYPE_REQUEST.POST, queryParams)
+  const { data } = await MethodsUtil.requestApiCustom(props.api, props.method, queryParams)
   listUser.value = data.pageLists
   totalRecord.value = data.totalRecord
 }
@@ -72,17 +77,17 @@ function hidden() {
 const listItem = ref<any>([])
 const headers = [
   { text: '', value: 'checkbox' },
-  { text: t('common.user-name'), value: 'name', type: 'custom' },
+  { text: t('user-name'), value: 'name', type: 'custom' },
   { text: t('email'), value: 'email' },
 ]
 
 async function confirm() {
   if (props.returnObject) {
-    emit('confirm', { [props.label]: listItem.value })
+    emit('confirm', { [props.customKey]: listItem.value })
   }
   else {
     const listId = listItem.value.map((item: Any) => item.id)
-    emit('confirm', { [props.label]: listId })
+    emit('confirm', { [props.customKey]: listId })
   }
 }
 </script>
@@ -90,7 +95,7 @@ async function confirm() {
 <template>
   <CmDialogs
     :is-dialog-visible="props.isShow"
-    :title="title"
+    :title="t(title)"
     size="xl"
     :disabled-ok="!listItem.length"
     @cancel="hidden"

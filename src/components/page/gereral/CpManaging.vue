@@ -16,12 +16,23 @@ const props = withDefaults(defineProps<Props>(), {
   actionAdd: null,
   actionsTable: () => ([]),
   componentEdit: null,
+  componentPropsEdit: null,
   apiDetail: null,
   titlePage: '',
   routeReport: '',
   customId: 'id',
   isShowExportExcel: true,
+  isExpand: false,
 })
+interface Emit {
+  (e: 'updateFetchData', data: any): void
+}
+const { emitEvent } = props.emit()
+const CpCustomInfo = defineAsyncComponent(() => import('@/components/page/gereral/CpCustomInfo.vue'))
+const CmAccodion = defineAsyncComponent(() => import('@/components/common/CmAccodion.vue'))
+const CmChip = defineAsyncComponent(() => import('@/components/common/CmChip.vue'))
+const CpTableSub = defineAsyncComponent(() => import('@/components/page/gereral/CpTableSub.vue'))
+const CpTableSubIconList = defineAsyncComponent(() => import('@/components/page/gereral/CpTableSubIconList.vue'))
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 
 const router = useRouter()
@@ -39,6 +50,7 @@ interface Props {
   apiAdd: Api
   typeRequest: string
   actionAdd?: void | null
+  isDisabledAdd: boolean
   actionsTable: Item[]
   componentEdit: null
   apiGetDetail: Api
@@ -50,7 +62,11 @@ interface Props {
   routerEdit?: string | null
   params?: Any
   customId: string
+  keySearch?: string
   isShowExportExcel: boolean
+  isExpand?: boolean
+  componentPropsEdit?: any
+  emit?: any
 }
 
 interface QueryParams extends Params {
@@ -62,6 +78,30 @@ const queryParams = ref<QueryParams>({
   pageNumber: 1,
   pageSize: 10,
 })
+const orgModels = {
+  value: 1,
+  label: t('orgStruct'),
+  icon: 'tabler-briefcase',
+  colorClass: 'color-error',
+  content: [],
+}
+
+const groupModels = {
+  value: 1,
+  label: 'Nhóm người dùng',
+  icon: 'lucide:users',
+  colorClass: 'color-warning',
+  content: [],
+}
+
+const titleModels = {
+  value: 1,
+  label: 'Chức danh',
+  icon: 'prime-check-circle',
+  colorClass: 'color-success',
+  content: [],
+}
+
 watch(() => props.params, (val: Any) => {
   queryParams.value = {
     ...queryParams.value,
@@ -121,22 +161,47 @@ async function actionItem(type: any) {
 const items = ref<Item[]>([])
 const totalRecord = ref<number>(0)
 async function getDataTable() {
-  const { data } = await MethodsUtil.requestApiCustom(props.apiList.api, props.apiList.method, queryParams.value)
-  if (data) {
-    data.pageLists.forEach((element: Item) => {
+  const params = {
+    ...queryParams.value,
+    ...props.apiList.payload,
+  }
+  const { data } = await MethodsUtil.requestApiCustom(props.apiList.api, props.apiList.method, params)
+
+  const result = data.pageLists ?? data
+  if (result) {
+    result.forEach((element: Item) => {
+      if (element.orgModels) {
+        element.orgModels = {
+          ...orgModels,
+          content: element.orgModels,
+        }
+        element.titleModels = {
+          ...titleModels,
+          content: element.orgModels,
+        }
+      }
+      if (element.groupModels) {
+        element.groupModels = {
+          ...groupModels,
+          content: element.orgModels,
+        }
+      }
+
       element.actions = props.actionsTable
+
       element.actions = element.actions.map((el: any) => {
         return MethodsUtil.checkActionType(el, actionItem)
       })
     })
-    items.value = data.pageLists
+    emitEvent('updateFetchData', result)
+    items.value = result
     totalRecord.value = data.totalRecord
   }
 }
 getDataTable()
 
 function handlerSearch(val: string) {
-  queryParams.value.keyword = val
+  queryParams.value[props.keySearch || 'keyword'] = val
   queryParams.value.pageNumber = 1
   queryParams.value.pageSize = 10
   getDataTable()
@@ -151,9 +216,10 @@ function handlePageClick(pageNumber: number, pageSize: number) {
 function handlerAdd(data: any) {
   const payload = {
     ...data,
-    ...props.apiAdd.params,
+    ...props.apiAdd?.params,
   }
-
+  if (!props.apiAdd.api)
+    return
   MethodsUtil.requestApiCustom(props.apiAdd.api, props.apiAdd.method, payload).then(() => {
     isShowModalEdit.value = false
     getDataTable()
@@ -211,6 +277,7 @@ function exportExcel() {
     :is-show-add-group="false"
     :is-disabled-delete="!listId?.length"
     :is-show-export-excel="isShowExportExcel"
+    :is-disabled-add="isDisabledAdd"
     @click-add="showModalEdit"
     @click-delete="() => { isShowModalDelete = true }"
     @update:key-search="handlerSearch"
@@ -222,15 +289,86 @@ function exportExcel() {
     :items="items"
     :total-record="totalRecord"
     :custom-id="customId"
+    :is-expand="isExpand"
     @handlePageClick="handlePageClick"
   >
     <template #rowItem="{ col, context, dataCol }">
       <div v-if="dataCol?.isFullName">
-        {{ MethodsUtil.formatFullName(context.firstName, context.lastName) }}
+        <CpCustomInfo
+          :context="context"
+        />
+      </div>
+      <div
+        v-if="col === 'organization'"
+      >
+        <CmAccodion
+          v-if="context.orgModels?.content?.length"
+          :data="[context.orgModels]"
+          custom-key="name"
+          is-open
+        />
+        <CmAccodion
+          v-if="context.groupModels?.content?.length"
+          :data="[context.groupModels]"
+          custom-key="name"
+          is-open
+        />
+
+        <CmAccodion
+          v-if="context.titleModels?.content?.length"
+          :data="[context.titleModels]"
+          custom-key="titleName"
+          is-open
+        />
       </div>
       <div v-if="dataCol?.isDate">
         {{ DateUtil.formatDateToDDMM(context[col]) }}
       </div>
+      <div v-if="dataCol?.isDataId">
+        <span>{{ t(MethodsUtil.checkStatus(context[col], dataCol.statusType)?.name) }}</span>
+      </div>
+      <div v-if="dataCol?.isStatus">
+        <CmChip
+          class="ma-2"
+          :color="MethodsUtil.checkStatus(context.statusId, dataCol.statusType)?.color"
+        >
+          <VIcon
+            start
+            icon="carbon:dot-mark"
+            size="12"
+          />
+          <span>{{ t(MethodsUtil.checkStatus(context.statusId, dataCol.statusType)?.name) }}</span>
+        </CmChip>
+      </div>
+    </template>
+    <template
+      v-if="isExpand"
+      #tableSub
+    >
+      <VRow>
+        <slot name="tableSub" />
+        <VCol
+          col="12"
+          sm="12"
+          md="6"
+        >
+          <CpTableSub />
+        </VCol>
+        <VCol
+          col="12"
+          sm="6"
+          md="3"
+        >
+          <CpTableSubIconList />
+        </VCol>
+        <VCol
+          col="12"
+          sm="6"
+          md="3"
+        >
+          <CpTableSubIconList />
+        </VCol>
+      </VRow>
     </template>
   </CmTable>
 
@@ -239,6 +377,11 @@ function exportExcel() {
     v-if="props.componentEdit"
     v-model:is-show="isShowModalEdit"
     :data-detail="dataDetail"
+    :custom-key="props.apiAdd?.customKey"
+    :api="props.apiAdd?.apiModal"
+    :method="props.apiAdd?.methodModal"
+    :exclude-ids="props.apiEdit?.excludeIds || []"
+    :params="props.apiEdit?.params"
     @confirm="confirmModal"
   />
 

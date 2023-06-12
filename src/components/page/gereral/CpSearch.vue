@@ -22,13 +22,11 @@ const handleSearch = window._.debounce((val: any) => {
 </script>
 
 <template>
-  <div>
-    <CmTextField
-      style="widht: 400px"
-      class="header-action-field"
-      placeholder="Tìm kiếm"
-      prepend-inner-icon="tabler-search"
-      @update:model-value="handleSearch"
-    />
-  </div>
+  <CmTextField
+    style="width: 100%"
+    class="header-action-field"
+    placeholder="Tìm kiếm"
+    prepend-inner-icon="tabler-search"
+    @update:model-value="handleSearch"
+  />
 </template>

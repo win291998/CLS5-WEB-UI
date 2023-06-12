@@ -3376,6 +3376,16 @@
   "delete-cost": "Xóa chi phí",
   "confirm-delete-cost": "Bạn có chắc chắn muốn xóa sự chi phí này không ?",
   "survey-course": "Đánh giá sau đào tạo",
+  "add-survey-course": "Thêm kỳ khảo sát",
   "see-all": "Xem tất cả",
-  "from-date-to-date":"Từ ngày đến ngày"
+  "from-date-to-date": "Từ ngày đến ngày",
+  "date-start": "Ngày bắt đầu",
+  "date-end": "Ngày kết thúc",
+  "semester": "Kỳ học",
+  "add-semester": "Thêm kỳ học",
+  "middle-perior": "Giữa kỳ",
+  "end-perior": "Cuối kỳ",
+  "suvery-perior": "Kỳ khảo sát?",
+  "delete-suvery-perior": "Xóa kỳ khảo sát",
+  "confirm-delete-suvery-perior": "Bạn có chắc chắn muốn xóa kỳ khảo sát?"
 }
