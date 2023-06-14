@@ -12,6 +12,7 @@ const CpHeaderAction = defineAsyncComponent(() => import('@/components/page/gere
 const CmTable = defineAsyncComponent(() => import('@/components/common/CmTable.vue'))
 const CpConfirmDialog = defineAsyncComponent(() => import('@/components/page/gereral/CpConfirmDialog.vue'))
 const CpModalApprove = defineAsyncComponent(() => import('@/components/page/Admin/organization/users/approve/modal/CpModalApprove.vue'))
+const CpCustomInfo = defineAsyncComponent(() => import('@/components/page/gereral/CpCustomInfo.vue'))
 
 /**
  * lib
@@ -257,8 +258,9 @@ async function fectchListUsers() {
             id: 9,
             name: 'ActionAgree',
           },
+
           {
-            id: 17,
+            id: 23,
             name: 'ActionDeclined',
           },
         ]
@@ -310,6 +312,11 @@ window.hideAllPageLoading()
       @update:selected="selectedRows"
     >
       <template #rowItem="{ col, context }">
+        <div v-if="col === 'fullName'">
+          <CpCustomInfo
+            :context="context"
+          />
+        </div>
         <div v-if="col === 'statusId'">
           <VChip
             class="ma-2"

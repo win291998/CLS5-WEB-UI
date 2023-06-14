@@ -3,7 +3,7 @@ import { courseManagerStore } from '@/stores/admin/course/course'
 import { comboboxStore } from '@/stores/combobox'
 
 const CpActionHeaderPage = defineAsyncComponent(() => import('@/components/page/gereral/CpActionHeaderPage.vue'))
-const CmMdAddCost = defineAsyncComponent(() => import('@/components/page/Admin/course/modal/CmMdAddCost.vue'))
+const CmMdAddCost = defineAsyncComponent(() => import('@/components/page/Admin/course/modal/CpMdAddCost.vue'))
 const CpHeaderAction = defineAsyncComponent(() => import('@/components/page/gereral/CpHeaderAction.vue'))
 const CmTable = defineAsyncComponent(() => import('@/components/common/CmTable.vue'))
 const CpConfirmDialog = defineAsyncComponent(() => import('@/components/page/gereral/CpConfirmDialog.vue'))

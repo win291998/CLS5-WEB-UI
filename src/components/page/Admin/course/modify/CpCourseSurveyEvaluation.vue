@@ -6,7 +6,7 @@ import MethodsUtil from '@/utils/MethodsUtil'
 import DateUtil from '@/utils/DateUtil'
 
 const CpActionHeaderPage = defineAsyncComponent(() => import('@/components/page/gereral/CpActionHeaderPage.vue'))
-const CmMdAddEval = defineAsyncComponent(() => import('@/components/page/Admin/course/modal/CmMdAddEval.vue'))
+const CmMdAddEval = defineAsyncComponent(() => import('@/components/page/Admin/course/modal/CpMdAddEval.vue'))
 const CpHeaderAction = defineAsyncComponent(() => import('@/components/page/gereral/CpHeaderAction.vue'))
 const CmTable = defineAsyncComponent(() => import('@/components/common/CmTable.vue'))
 const CpConfirmDialog = defineAsyncComponent(() => import('@/components/page/gereral/CpConfirmDialog.vue'))

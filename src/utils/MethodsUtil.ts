@@ -91,8 +91,8 @@ export default class MethodsUtil {
   static requestApiCustom = (url = '', method = 'GET', payload?: any) => {
     if (url === undefined)
       return
-    const data = (method === 'GET' || method === 'DELETE') ? null : (payload || null)
-    const params = (method === 'GET' || method === 'DELETE') ? payload : null
+    const data = (method === 'GET') ? null : (payload || null)
+    const params = (method === 'GET') ? payload : null
 
     return window.axios({
       url,

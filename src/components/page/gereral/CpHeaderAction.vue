@@ -111,6 +111,7 @@ const handleSearch = window._.debounce((value: any) => {
         >
           <VIcon icon="mdi-checkbox-marked-circle-outline" />
         </CmButton>
+        <slot name="actionLeft" />
       </div>
     </VCol>
     <VSpacer />

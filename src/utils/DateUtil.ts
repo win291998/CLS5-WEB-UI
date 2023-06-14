@@ -15,7 +15,7 @@ export default class DateUtil {
 
     // const date = new Date(Date.parse(serial))
     // const isoDateStr = date.toISOString()
-
+    // eslint-disable-next-line no-restricted-globals
     if (isNaN(serial)) {
       dateInfo = new Date(serial)
     }
@@ -26,6 +26,7 @@ export default class DateUtil {
       dateInfo = new Date(utcValue * 1000)
     }
     if (Object.prototype.toString.call(dateInfo) === '[object Date]') {
+      // eslint-disable-next-line no-restricted-globals
       if (isNaN(dateInfo.getTime()))
         return serial
 
@@ -42,21 +43,24 @@ export default class DateUtil {
     return moment(String(value)).format('DD/MM/YYYY')
   }
 
-  static formatSecond = (value: any) => {
-    value = Math.round(value)
-    if (value < 60)
-      return `${value}s`
-    if (value >= 60 && value < 3600) {
-      const minute = Math.floor(value / 60)
-      const second = value % 60
-      return value === 0 ? `${minute}m` : `${minute}m${second}s`
+  static formatSecond = (seconds: any) => {
+    seconds = Math.round(seconds)
+    if (seconds === null || seconds === undefined)
+      return '-'
+    if (seconds >= 3600) {
+      const hour = Math.floor(seconds / 3600)
+      const minute = Math.floor((seconds % 3600) / 60)
+      const second = seconds - (hour * 3600 + minute * 60)
+      return second === 0 ? `${hour}h${minute}m` : `${hour}h${minute}m${second}s`
     }
-    if (value >= 3600) {
-      const minute = Math.floor(value / 60)
-      const hour = Math.floor(minute / 60)
-      const remainMinute = minute - (hour * 60)
-      return remainMinute === 0 ? `${hour}h` : `${hour}h${remainMinute}m`
+    if (seconds >= 60 && seconds < 3600) {
+      const minute = Math.floor(seconds / 60)
+      const second = seconds - (minute * 60)
+      return second === 0 ? `${minute}m` : `${minute}m${second}s`
     }
-    return ''
+    if (seconds < 60 && seconds >= 0)
+      return `${seconds}s`
+
+    return 0
   }
 }

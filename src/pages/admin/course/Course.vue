@@ -266,6 +266,7 @@ window.hideAllPageLoading()
         :headers="headers"
         :items="items"
         :total-record="totalRecord"
+        custom-id="courseContentId"
         :page-number="queryParams.pageNumber"
         @handlePageClick="handlePageClick"
         @update:selected="selectedRows"

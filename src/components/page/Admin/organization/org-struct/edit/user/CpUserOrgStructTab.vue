@@ -158,6 +158,8 @@ async function getPagingByUser() {
 }
 
 watch(() => organization.value.id, val => {
+  console.log(val)
+
   if (organization.value.id && organization.value.id !== null) {
     queryParams.orStructureId = organization.value.id
     getPagingByUser()

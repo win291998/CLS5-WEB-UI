@@ -12,6 +12,7 @@ import { TYPE_REQUEST } from '@/typescript/enums/enums'
 import CpMdAddSemester from '@/components/page/Admin/course/modal/CpMdAddSemester.vue'
 import { StatusTypeCourse } from '@/constant/data/status.json'
 import CpAsginUser from '@/components/page/Admin/course/modify/asign-user/CpAsginUser.vue'
+import CpContentCourse from '@/components/page/Admin/course/modify/content/CpContentCourse.vue'
 
 /** lib */
 const route = useRoute()
@@ -41,6 +42,11 @@ const listtab = ref([
     key: 'infor',
     title: 'infor_course',
     component: CpInforCourse,
+  },
+  {
+    key: 'content',
+    title: 'content-course',
+    component: CpContentCourse,
   },
   {
     key: 'user',

@@ -106,7 +106,7 @@ function checkActionShow(action: Array<any>) {
 watch(() => props.items, (val: Item[]) => {
   isLoading.value = true
 
-  props.items.forEach((element, index) => {
+  props.items?.forEach((element, index) => {
     element.originIndex = index
     element.isSelected = !!element.isSelected
     selectedRows.value = []
@@ -573,4 +573,15 @@ if (props.isUpdateRowForce) {
 .cm-dialogs  .vue3-easy-data-table__main {
     max-height: 400px !important
  }
+ .vue3-easy-data-table__body {
+  tr td:last-child {
+    background: rgb(var(--v-theme-surface));
+    position: sticky !important;
+    right: 0 ;
+  }
+  tr th:last-child {
+    position: sticky;
+    right: 0;
+  }
+}
 </style>

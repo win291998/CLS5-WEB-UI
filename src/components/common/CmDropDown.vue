@@ -136,6 +136,7 @@ const textButton = computed(() => {
           :key="i"
           class="border-bottom-item cursor-pointer"
           :value="item"
+          :disabled="item?.disabled"
           @click="handleClickItem($event)"
         >
           <template
@@ -149,6 +150,7 @@ const textButton = computed(() => {
             />
           </template>
           <VListItemTitle
+
             @click="item?.action ? propsValue.type === 1 ? item?.action(MethodsUtil.checlActionKey(item, data), index, dataResend) : item?.action() : emit('click', item, dataResend)"
           >
             <VIcon
@@ -174,6 +176,7 @@ const textButton = computed(() => {
             > {{ item?.appendItem[customKey] }}</span>
           </template>
         </VListItem>
+        <slot />
       </VList>
     </VMenu>
   </div>

@@ -35,7 +35,7 @@ async function onCancel() {
           <div class="icon-noti">
             <VIcon
               icon="tabler:copy"
-              color="error"
+              color="infor"
               class="noti-zindex"
               :size="24"
             />

@@ -1,8 +1,10 @@
 <script lang="ts" setup>
+import CpStudentRegister from './CpStudentRegister.vue'
 import CpManaging from '@/components/page/gereral/CpManaging.vue'
 import CmTab from '@/components/common/CmTab.vue'
 import type { Tab } from '@/typescript/interface'
 import CpMdEditUser from '@/components/page/gereral/CpMdEditUser.vue'
+import CpMdEditGroupUser from '@/components/page/gereral/CpMdEditGroupUser.vue'
 import CpOrganization from '@/components/page/gereral/CpOrganization.vue'
 import UserService from '@/api/user'
 import CourseService from '@/api/course'
@@ -15,7 +17,6 @@ import StringJwt from '@/utils/Jwt'
  */
 const storeAsignUserManager = asignUserManagerStore()
 const { queryParams } = storeToRefs(storeAsignUserManager)
-const { } = storeAsignUserManager
 
 const { t } = window.i18n()
 const route = useRoute()
@@ -63,7 +64,7 @@ const listTab: Tab[] = [
       apiDelete: {
         api: UserService.PostDeleteUserFromEvent,
         method: TYPE_REQUEST.POST,
-        label: 'listEventCalendarUserId',
+        label: 'listUser',
         params: {},
       },
     },
@@ -73,44 +74,43 @@ const listTab: Tab[] = [
     title: 'group-management',
     component: CpManaging,
     dataTab: {
-      titlePage: t('user-list'),
+      titlePage: t('list-group-user'),
       customId: 'id', // id table select
-      keySearch: 'searchData',
       isShowExportExcel: false,
       header: [
         { text: '', value: 'checkbox' },
-        { text: t('user-group-name'), value: 'fullName', width: 300, isFullName: true },
-        { text: t('Email'), value: 'email' },
-        { text: t('Register_Date'), value: 'registeredDate', isDate: true, type: 'custom' },
-        { text: t('organization'), value: 'organization', type: 'menu' },
+        { text: t('user-group-name'), value: 'name' },
+        { text: t('description'), value: 'description' },
         { text: '', value: 'actions', width: 50 },
       ],
-      params: queryParams,
       actionsTable: [
         {
           id: 2,
           name: 'QuestionService.ActionDelete',
         },
       ],
-      componentEdit: CpMdEditUser,
+      componentEdit: CpMdEditGroupUser,
       apiList: {
-        api: CourseService.PostListInfoByCourse,
-        method: TYPE_REQUEST.POST,
+        api: UserService.GetUserGroup,
+        method: TYPE_REQUEST.GET,
+        payload: {
+          courseId: Number(route.params.id),
+        },
       },
       apiAdd: {
         api: CourseService.PostAddUserCourse,
         method: TYPE_REQUEST.POST,
-        apiModal: CourseService.PostListUserCourse,
-        methodModal: TYPE_REQUEST.POST,
+        apiModal: UserService.GetPagingUserGroup,
+        methodModal: TYPE_REQUEST.GET,
         params: {
-          courseId: route.params.id,
+          courseId: Number(route.params.id),
         },
         customKey: 'userModel',
       },
       apiDelete: {
-        api: UserService.PostDeleteUserFromEvent,
+        api: CourseService.PostDeleteUserGroup,
         method: TYPE_REQUEST.POST,
-        label: 'listEventCalendarUserId',
+        label: 'listGroup',
         params: {},
       },
     },
@@ -131,7 +131,7 @@ const listTab: Tab[] = [
         api: CourseService.PostOrgCourse,
         method: TYPE_REQUEST.POST,
         params: {
-          courseId: route.params.id,
+          courseId: Number(route.params.id),
           listModelNew: [],
           listModelOld: [],
         },
@@ -147,8 +147,19 @@ const listTab: Tab[] = [
 
     },
   },
+  {
+    key: 'student-register',
+    title: 'student-register',
+    component: CpStudentRegister,
+  },
+
+  // {
+  //   key: 'guest-register',
+  //   title: 'guest-register',
+  //   component: CpGuestRegister,
+  // },
 ]
-onMounted(() => {
+onMounted(async () => {
   queryParams.value.id = Number(route.params.id)
 })
 </script>
