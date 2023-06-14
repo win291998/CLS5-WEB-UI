@@ -75,7 +75,7 @@ export const orgStructManagerStore = defineStore('orgStructManager', () => {
     proficiencies: [], // danh sách cấp độ năng lực được chọn
   })
   const queryUser = ref({
-    orStructureId: null,
+    orStructureId: null as any,
     pageSize: 10,
     pageNumber: 1,
     search: '',
@@ -243,6 +243,7 @@ export const orgStructManagerStore = defineStore('orgStructManager', () => {
 
   // Lấy dữ liệu user trong org
   const fetchDataUserOrg = async () => {
+    queryUser.value.orStructureId = organization.value.id
     await MethodsUtil.requestApiCustom(ApiUser.getPagingUserOrgByList, TYPE_REQUEST.GET, queryUser.value).then((value: any) => {
       dataTabUserOrg.value.list = value.data?.pageLists || []
       dataTabUserOrg.value.totalRecord = value.data?.totalRecord

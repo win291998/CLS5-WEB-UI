@@ -24,7 +24,7 @@ const theme: VuetifyOptions['theme'] = {
         'background': '#F8F7FA',
         'on-background': '#4B465C',
         'on-surface': '#4B465C',
-
+        'surface': '#FFFFFF',
         'perfect-scrollbar-thumb': '#DBDADE',
         'white': '#ffffff',
 

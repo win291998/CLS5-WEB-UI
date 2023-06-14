@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { JSXComponent } from 'vue'
+import constant from '@/constant/constant'
 
 type IconValue = string | JSXComponent
 
@@ -8,7 +9,7 @@ const props = withDefaults(defineProps<Props>(), ({
   label: '',
   bgColor: 'white',
   type: 'text',
-  maxlength: 50,
+  maxlength: constant.MAX_LENGTH_TEXT_FIELD,
   disabled: false,
 }))
 

@@ -171,19 +171,20 @@ async function getDataTable() {
   if (result) {
     result.forEach((element: Item) => {
       if (element.orgModels) {
+        const titleData = window._.clone(element.orgModels)
         element.orgModels = {
           ...orgModels,
           content: element.orgModels,
         }
         element.titleModels = {
           ...titleModels,
-          content: element.orgModels,
+          content: titleData,
         }
       }
       if (element.groupModels) {
         element.groupModels = {
           ...groupModels,
-          content: element.orgModels,
+          content: element.groupModels,
         }
       }
 

@@ -130,5 +130,37 @@
             "color": "error",
             "note": "Học offline"
         }
+    ],
+    "StatusUserAprove": [
+        {
+            "id": 5,
+            "name": "pending-approved",
+            "color": "primary",
+            "note": "Chờ duyệt"
+        },
+        {
+            "id": 3,
+            "name": "approved",
+            "color": "success",
+            "note": "Đã duyệt"
+        },
+        {
+            "id": 6,
+            "name": "rejected",
+            "color": "error",
+            "note": "Từ chối"
+        },
+        {
+            "id": 1,
+            "name": "CourseService.Online",
+            "color": "success",
+            "note": "Học online"
+        },
+        {
+            "id": 2,
+            "name": "CourseService.Offline",
+            "color": "error",
+            "note": "Học offline"
+        }
     ]
 }

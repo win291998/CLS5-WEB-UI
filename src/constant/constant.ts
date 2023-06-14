@@ -14,5 +14,6 @@ const constant = Object.freeze({
   ],
   MIN_NUMBER: 0,
   MAX_NUMBER: 10000,
+  MAX_LENGTH_TEXT_FIELD: 256,
 })
 export default constant

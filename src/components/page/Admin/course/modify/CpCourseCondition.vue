@@ -2,7 +2,7 @@
 import { conditionManagerStore } from '@/stores/admin/course/condition'
 
 const CpActionHeaderPage = defineAsyncComponent(() => import('@/components/page/gereral/CpActionHeaderPage.vue'))
-const CmMdAddCourseRequired = defineAsyncComponent(() => import('@/components/page/Admin/course/modal/CmMdAddCourseRequired.vue'))
+const CmMdAddCourseRequired = defineAsyncComponent(() => import('@/components/page/Admin/course/modal/CpMdAddCourseRequired.vue'))
 const CpHeaderAction = defineAsyncComponent(() => import('@/components/page/gereral/CpHeaderAction.vue'))
 const CmTable = defineAsyncComponent(() => import('@/components/common/CmTable.vue'))
 const CpConfirmDialog = defineAsyncComponent(() => import('@/components/page/gereral/CpConfirmDialog.vue'))

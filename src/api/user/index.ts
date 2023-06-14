@@ -52,6 +52,8 @@ const UserService = {
   GetEventGroupUser: '/event/get-paging-event-groups',
   GetEventOrganizationalStructure: '/event/get-all-organizational-structure-id-by-event-id',
   GetInfoUserAddEvent: '/event/get-info-user-add-event',
+  GetPagingUserGroup: '/usergroup/get-paging-user-group-by-list', // GetPagingUserGroup
+  GetUserGroup: '/courseuser/get-list-user-group', // GetPagingUserGroup
 
   /** POST */
   PostApproveCustomer: 'Customer/approve',
@@ -111,7 +113,6 @@ const UserService = {
   fetchWards: '/Address/get-wards', // get districts
   GetPagingByUser: '/usergroup/get-paging-by-user', // GetPagingByUser
   DeleteGroupWithUser: '/usergroup/delete-group-with-user', // GetPagingByUser
-  GetPagingUserGroup: '/usergroup/get-paging-user-group-by-list', // GetPagingUserGroup
   /** POST */
   PostAddGroupUser: 'usergroup/add-group-with-user',
   PostCreateTitle: 'title/create',
