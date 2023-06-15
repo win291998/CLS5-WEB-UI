@@ -6,6 +6,7 @@ import MethodsUtil from '@/utils/MethodsUtil'
 import ArraysUtil from '@/utils/ArrayUtil'
 import StringUtil from '@/utils/StringUtil'
 import toast from '@/plugins/toast'
+import { courseApproveManagerStore } from '@/stores/admin/course/approve'
 
 export const contentManagerStore = defineStore('contentManager', () => {
   /** lib ****************************************************************/
@@ -16,6 +17,10 @@ export const contentManagerStore = defineStore('contentManager', () => {
   /**
  * Store
  */
+  const storeCourseApproveManager = courseApproveManagerStore()
+
+  const { idModalSendRatioPoint } = storeToRefs(storeCourseApproveManager)
+  const { handleUpdatePointCourse } = storeCourseApproveManager
 
   /** state */
   const data = reactive({
@@ -25,9 +30,11 @@ export const contentManagerStore = defineStore('contentManager', () => {
   const items = ref<any>([])
   const cloneData = ref<any>([])
   const customId = ref('id')
+  const viewMode = ref('view')
   const feedbackContent = ref('')
   const isShowModelFeedback = ref(false)
   const isShowDialogNotiDelete = ref(false)
+  const isShowModalUpdateThematic = ref(false)
   const disabledDelete = computed(() => !data.selectedRowsIds.length)
   const disabledEdit = computed(() => !data.selectedRowsIds.length)
   const paramsContent = ref({
@@ -37,7 +44,7 @@ export const contentManagerStore = defineStore('contentManager', () => {
   })
 
   /** method */
-  function actionItemUserReg(type: any) {
+  async function actionItemUserReg(type: any) {
     console.log(type)
 
     switch (type[0]?.name) {
@@ -65,6 +72,14 @@ export const contentManagerStore = defineStore('contentManager', () => {
       case 'MoveDown':
         moveDown(type[1])
         break
+      case 'ActionSendAgree':
+        sendApprove(type[1]?.courseContentId)
+        break
+      case 'ActionAgree':
+        await approveContent([{ id: type[1]?.courseContentId }]).then(() => {
+          getListContentCourse()
+        })
+        break
       default:
         break
     }
@@ -74,6 +89,18 @@ export const contentManagerStore = defineStore('contentManager', () => {
   }
 
   //* *****action thực thi */
+  async function approveContent(ids: any) {
+    const params = {
+      listModel: ids,
+    }
+    return await MethodsUtil.requestApiCustom(CourseService.PostApproveContentCourse, TYPE_REQUEST.POST, params).then((value: any) => {
+      toast('SUCCESS', t(value.message))
+      return true
+    }).catch((error: any) => {
+      toast('ERROR', t(error.response.data.message))
+      return false
+    })
+  }
   function updateStatusListCourse(listData: any, val: any) {
     let newListContent = listData?.map((item: any) => {
       if (StringUtil.removeAccents(item?.name.toLowerCase()).includes(StringUtil.removeAccents(val?.toLowerCase())))
@@ -94,6 +121,14 @@ export const contentManagerStore = defineStore('contentManager', () => {
 
     return newListContent
   }
+  function showUpdateThematicModal() {
+    const thematic = data.selectedRowsIds.find((x: any) => x.contentArchiveTypeId === 13)
+    if (thematic) {
+      toast('WARNING', t('not-select-thematic'))
+      return
+    }
+    isShowModalUpdateThematic.value = true
+  }
   async function handleSearch(val: any) {
     // paramsContent.value.search = value
     // await getListContentCourse()
@@ -101,14 +136,16 @@ export const contentManagerStore = defineStore('contentManager', () => {
     let dataRow = ArraysUtil.unFlatMapTree(updateStatusListCourse(cloneData.value, val))
     dataRow = ArraysUtil.formatTreeTable(dataRow, customId.value)
     dataRow.forEach((element: any) => {
-      // element.actions = element.actions?.map((el: any) => {
-      //   return MethodsUtil.checkActionType(el, actionItemUserReg)
-      // })
+      element.actions = element.actions?.map((el: any) => {
+        return MethodsUtil.checkActionType(el, actionItemUserReg)
+      })
       element.actions = [
+        ...element.actions,
         MethodsUtil.checkActionType({ id: 2 }, actionItemUserReg),
         MethodsUtil.checkActionType({ id: 5 }, actionItemUserReg),
         MethodsUtil.checkActionType({ id: 6 }, actionItemUserReg),
         MethodsUtil.checkActionType({ id: 7 }, actionItemUserReg),
+        MethodsUtil.checkActionType({ id: 9 }, actionItemUserReg),
         MethodsUtil.checkActionType({ id: 19 }, actionItemUserReg),
 
         // MethodsUtil.checkActionType({ id: 20 }, actionItemUserReg),
@@ -124,6 +161,9 @@ export const contentManagerStore = defineStore('contentManager', () => {
       case 'handlerCustomButton':
 
         router.push({ name: 'course-approve' })
+        break
+      case 'setting-point':
+        idModalSendRatioPoint.value = true
         break
 
       default:
@@ -161,6 +201,21 @@ export const contentManagerStore = defineStore('contentManager', () => {
       deleteAction()
   }
 
+  // gửi duyệt
+  async function sendApprove(id: number) {
+    const params = {
+      listModel: [id],
+      courseId: Number(route?.params?.id),
+    }
+    await MethodsUtil.requestApiCustom(CourseService.PostSendApproveContent, TYPE_REQUEST.POST, params).then((value: any) => {
+      toast('SUCCESS', t(value.message))
+      getListContentCourse()
+    })
+      .catch((error: any) => {
+        toast('ERROR', t(error.response.data.message))
+      })
+  }
+
   // xem thông tin phản hồi
   async function viewFeedback(id: number) {
     const params = {
@@ -188,16 +243,26 @@ export const contentManagerStore = defineStore('contentManager', () => {
   }
 
   // tìm đối tượng cha
-  function findParent(listItem: any, item: any): any {
-    const idCompare = item?.themeticId || item?.courseContentId
-    const parent = listItem?.find((x: any) => x?.courseContentId === idCompare)
-    if (parent)
-      return parent
-    for (let i = 0; i < listItem.length; i++) {
-      if (listItem[i].children?.length)
-        return findParent(listItem[i].children, item)
+
+  function findNodeByValue(tree: any, value: any) {
+    for (let i = 0; i < tree?.length; i++) {
+      const node = tree[i]
+
+      if (node.id === value)
+        return node // Nếu giá trị trùng khớp, trả về nút
+
+      if (node?.children?.length > 0) {
+        const foundNode: any = findNodeByValue(node.children, value)
+        if (foundNode)
+          return foundNode // Nếu tìm thấy nút, trả về nút
+      }
     }
-    return null
+
+    return null // Nếu không tìm thấy, trả về null
+  }
+  function findParent(listItem: any, item: any): any {
+    const parent = item?.parent?.id ? findNodeByValue(listItem, item?.parent?.id) : item
+    return parent ?? null
   }
   function formatDataTableTree(dataFormat: any) {
     let dataRow = ArraysUtil.unFlatMapTree(dataFormat)
@@ -208,6 +273,7 @@ export const contentManagerStore = defineStore('contentManager', () => {
       // })
       element.actions = [
         MethodsUtil.checkActionType({ id: 2 }, actionItemUserReg),
+        MethodsUtil.checkActionType({ id: 3 }, actionItemUserReg),
         MethodsUtil.checkActionType({ id: 5 }, actionItemUserReg),
         MethodsUtil.checkActionType({ id: 6 }, actionItemUserReg),
         MethodsUtil.checkActionType({ id: 7 }, actionItemUserReg),
@@ -226,7 +292,7 @@ export const contentManagerStore = defineStore('contentManager', () => {
       const parent: any = findParent(cloneData.value, item)
       let index = 0
       if (parent?.id === item?.id) {
-        index = cloneData.value.indexOf(parent)
+        index = window._.findIndex(cloneData.value, (element: any) => window._.isEqual(element.id, parent.id))
         console.log(index)
         if (isMoveUp === true)
           return index > 0
@@ -267,7 +333,7 @@ export const contentManagerStore = defineStore('contentManager', () => {
     const parent = findParent(dataNew, item)
     let index = 0
     if (parent?.id === item?.id) {
-      index = dataNew.indexOf(parent)
+      index = window._.findIndex(dataNew, (element: any) => window._.isEqual(element.id, parent.id))
       dataNew.splice(index, 1)
       dataNew.splice(index - 1, 0, parent)
     }
@@ -288,7 +354,7 @@ export const contentManagerStore = defineStore('contentManager', () => {
     const parent = findParent(dataNew, item)
     let index = 0
     if (parent.id === item.id) {
-      index = dataNew.indexOf(parent)
+      index = window._.findIndex(dataNew, (element: any) => window._.isEqual(element.id, parent.id))
       dataNew.splice(index, 1)
       dataNew.splice(index + 1, 0, parent)
     }
@@ -327,20 +393,26 @@ export const contentManagerStore = defineStore('contentManager', () => {
         let dataRow = ArraysUtil.unFlatMapTree(value.data)
         dataRow = ArraysUtil.formatTreeTable(dataRow, customId.value)
         dataRow.forEach((element: any) => {
+          console.log(element.actions)
+
           // element.actions = element.actions?.map((el: any) => {
           //   return MethodsUtil.checkActionType(el, actionItemUserReg)
           // })
           element.actions = [
             MethodsUtil.checkActionType({ id: 2 }, actionItemUserReg),
+            MethodsUtil.checkActionType({ id: 3 }, actionItemUserReg),
             MethodsUtil.checkActionType({ id: 5 }, actionItemUserReg),
             MethodsUtil.checkActionType({ id: 6 }, actionItemUserReg),
             MethodsUtil.checkActionType({ id: 7 }, actionItemUserReg),
+            MethodsUtil.checkActionType({ id: 9 }, actionItemUserReg),
             MethodsUtil.checkActionType({ id: 19 }, actionItemUserReg),
 
             // MethodsUtil.checkActionType({ id: 20 }, actionItemUserReg),
             // MethodsUtil.checkActionType({ id: 21 }, actionItemUserReg),
           ]
         })
+        console.log(dataRow)
+
         items.value = dataRow
       })
   }
@@ -354,11 +426,14 @@ export const contentManagerStore = defineStore('contentManager', () => {
 
   return {
     items,
+    data,
     disabledDelete,
     disabledEdit,
     isShowModelFeedback,
     feedbackContent,
     isShowDialogNotiDelete,
+    isShowModalUpdateThematic,
+    viewMode,
     getListContentCourse,
     confirmDialogDelete,
     handlerActionHeader,
@@ -368,5 +443,7 @@ export const contentManagerStore = defineStore('contentManager', () => {
     moveUp,
     actionItemUserReg,
     checkMove,
+    approveContent,
+    showUpdateThematicModal,
   }
 })

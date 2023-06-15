@@ -3401,5 +3401,7 @@
   "MoveUp": "Di chuyển lên trên",
   "MoveDown": " Di chuyển xuống dưới",
   "add-content-to-repo-success": "Thêm vào ngân hàng nội dung thành công",
-  "QrCode": "Mã QR"
+  "QrCode": "Mã QR",
+  "auto-seting": "Thiết lập tự động",
+  "setting-ratio": "Thiết lập tỉ lệ"
 }

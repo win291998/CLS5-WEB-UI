@@ -137,7 +137,7 @@ const textButton = computed(() => {
           class="border-bottom-item cursor-pointer"
           :value="item"
           :disabled="item?.disabled"
-          @click="handleClickItem($event)"
+          @click="($event) => handleClickItem($event)"
         >
           <template
             v-if="propsValue.multiple"

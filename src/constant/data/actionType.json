@@ -115,7 +115,7 @@
     {
       "id": 17,
       "name": "QrCode",
-      "icon": "bi:arrow-return-left",
+      "icon": "tabler:qrcode",
       "color": "color-orange",
       "note": "Mã QR"
     },

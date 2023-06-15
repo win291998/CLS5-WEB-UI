@@ -25,11 +25,17 @@ export const courseApproveManagerStore = defineStore('courseApproveManager', () 
   const rowsScore = ref<any>()
   const listApprove = ref<any>([])
   const checkValidToApprover = ref<any>('')
+  const pointSetting = ref<any>(null)
   const idModalSendApproveCourse = ref(false)
   const idModalSendRatioPoint = ref(false)
   const myFormScore = ref()
   const idSelected = ref()
   const approverRoleId = ref<any>()
+  const data = reactive({
+    deleteIds: [], // list id các row table muốn xóa
+    selectedRowsIds: [], // list id các row table được chọn
+  })
+  const disabledPoint = computed(() => !data.selectedRowsIds.length)
 
   /** method */
   /* ==> thực hiện các action được chọn ở header page CP */
@@ -43,22 +49,42 @@ export const courseApproveManagerStore = defineStore('courseApproveManager', () 
     await MethodsUtil.requestApiCustom(CourseService.GetCheckApprove, TYPE_REQUEST.GET, params).then((value: any) => {
       checkValidToApprover.value = value?.data
       if (checkValidToApprover.value === 'CSE_CourseContentNotFound') {
-        toast('ERROR', t('checkValidToApprover'))
+        toast('ERROR', t(checkValidToApprover.value))
         return
       }
       idModalSendApproveCourse.value = true
     })
   }
+  function selectedRowsPoint(e: any) {
+    data.selectedRowsIds = e
+  }
 
   /* ==> thiết lập điểm */
-  async function scoreSetting() {
+  async function scoreSetting(courseId?: any) {
     const params = {
-      id: scoreSettingCourse.value.courseId,
+      id: courseId ?? scoreSettingCourse.value.courseId,
     }
     await MethodsUtil.requestApiCustom(CourseService.GetCourseSetting, TYPE_REQUEST.GET, params).then((value: any) => {
       if (value?.data)
         rowsScore.value = value?.data
     })
+  }
+  function autoUpdatePoint() {
+    rowsScore.value.forEach((item: any) => {
+      item.point = Math.round((100 / rowsScore.value.length) * 10000) / 10000
+    })
+    toast('SUCCESS', t('USR_UpdateSuccess'))
+    pointSetting.value = null
+  }
+  function updatePointSetting() {
+    if (Number(pointSetting.value) > 0 && Number(pointSetting.value) <= 100) {
+      rowsScore.value.forEach((item: any) => {
+        if (item.isSelected)
+          item.point = Number(pointSetting.value)
+      })
+      toast('SUCCESS', t('USR_UpdateSuccess'))
+      pointSetting.value = null
+    }
   }
 
   /* ==> lưu điểm */
@@ -82,6 +108,7 @@ export const courseApproveManagerStore = defineStore('courseApproveManager', () 
         dataSend = false
       }
       toast('SUCCESS', t(value.message))
+      idModalSendRatioPoint.value = false
       dataSend = true
     })
       .catch((error: any) => {
@@ -122,8 +149,20 @@ export const courseApproveManagerStore = defineStore('courseApproveManager', () 
       await handlerAddPoint()
     })
   }
-  function valueChange(value: any, data: any) {
-    rowsScore.value[data?.originIndex].point = Number(value)
+  function valueChange(value: any, dataChange: any) {
+    rowsScore.value[dataChange?.originIndex].point = Number(value)
+  }
+  async function approveContent(ids: any) {
+    const params = {
+      listModel: ids,
+    }
+    return await MethodsUtil.requestApiCustom(CourseService.PostApproveContentCourse, TYPE_REQUEST.POST, params).then((value: any) => {
+      toast('SUCCESS', t(value.message))
+      return true
+    }).catch((error: any) => {
+      toast('ERROR', t(error.response.data.message))
+      return false
+    })
   }
 
   onMounted(() => {
@@ -143,11 +182,17 @@ export const courseApproveManagerStore = defineStore('courseApproveManager', () 
     idSelected,
     approverRoleId,
     idModalSendRatioPoint,
+    disabledPoint,
+    pointSetting,
     sendApproveCourse,
     scoreSetting,
     valueChange,
     handlerAddPoint,
     addApproverSuper,
     handleUpdatePointCourse,
+    autoUpdatePoint,
+    updatePointSetting,
+    selectedRowsPoint,
+    approveContent,
   }
 })

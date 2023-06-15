@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { contentManagerStore } from '@/stores/admin/course/content'
+import { courseApproveManagerStore } from '@/stores/admin/course/approve'
 import MethodsUtil from '@/utils/MethodsUtil'
 import { StatusTypeCourse } from '@/constant/data/status.json'
 import DateUtil from '@/utils/DateUtil'
@@ -12,15 +13,20 @@ const CpConfirmDialog = defineAsyncComponent(() => import('@/components/page/ger
 const CpHeaderAction = defineAsyncComponent(() => import('@/components/page/gereral/CpHeaderAction.vue'))
 const CmButton = defineAsyncComponent(() => import('@/components/common/CmButton.vue'))
 const CmDropDown = defineAsyncComponent(() => import('@/components/common/CmDropDown.vue'))
+const CpMdRatioPointContent = defineAsyncComponent(() => import('@/components/page/Admin/course/modal/CpMdRatioPointContent.vue'))
+const CpContentApprove = defineAsyncComponent(() => import('@/components/page/Admin/course/modify/content/CpContentApprove.vue'))
+const CpActionFooterEdit = defineAsyncComponent(() => import('@/components/page/gereral/CpActionFooterEdit.vue'))
+const CpMdUpdateThematicContent = defineAsyncComponent(() => import('@/components/page/Admin/course/modal/CpMdUpdateThematicContent.vue'))
 
 /** store */
 /**
  * Store
  */
 const storeContentManager = contentManagerStore()
-const { items, isShowModelFeedback, feedbackContent, isShowDialogNotiDelete, disabledDelete, disabledEdit } = storeToRefs(storeContentManager)
-const { getListContentCourse, confirmDialogDelete, handlerActionHeader, handleSearch, selectedRows, deleteItems, actionItemUserReg, checkMove } = storeContentManager
-
+const { items, isShowModelFeedback, feedbackContent, isShowDialogNotiDelete, disabledDelete, disabledEdit, data, viewMode, isShowModalUpdateThematic } = storeToRefs(storeContentManager)
+const { getListContentCourse, confirmDialogDelete, handlerActionHeader, showUpdateThematicModal, handleSearch, selectedRows, deleteItems, actionItemUserReg, checkMove, approveContent } = storeContentManager
+const storeCourseApproveManager = courseApproveManagerStore()
+const { idModalSendRatioPoint } = storeToRefs(storeCourseApproveManager)
 const groupOptions = {
   allowEmptySelect: false,
   collapsable: false,
@@ -29,6 +35,8 @@ const groupOptions = {
 
 /** lib */
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
+const router = useRouter()
+
 const headers = reactive([
   { text: '', value: 'checkbox' },
   { text: t('content'), value: 'name', key: true },
@@ -56,17 +64,43 @@ const actionUpdate = [
   },
 
 ]
+const actionApprove = [
+  {
+    title: t('chosen-content'),
+    icon: 'prime-check-circle',
+    action: approveMultiContent,
+  },
+  {
+    title: t('sent-content'),
+    icon: 'tabler:send',
+    action: () => {
+      viewMode.value = 'approve'
+    },
+  },
+
+]
 function handleClickRow(e: any) {
   // console.log(e)
 }
 
-function splitRow() {
-  // console.log(headers)
-  headers.splice(1, 1)
+async function approveMultiContent() {
+  console.log(data.value.selectedRowsIds)
+
+  const listId = data.value.selectedRowsIds.map((item: any) => ({
+    id: item,
+  }))
+  await approveContent(listId).then(() => {
+    getListContentCourse()
+  })
+}
+function onCancel() {
+  router.replace({ name: 'admin-course' })
 }
 
 // hàm trả về các loại action từ header filter
 function handleClickBtn(type: string) {
+  console.log(type)
+
   switch (type) {
     // case 'fillter':
     //   isShowFilter.value = !isShowFilter.value
@@ -75,9 +109,9 @@ function handleClickBtn(type: string) {
       deleteItems()
       break
 
-      // case 'edit':
-      //   approveCourses()
-      //   break
+    case 'edit':
+      showUpdateThematicModal()
+      break
 
     default:
       break
@@ -86,10 +120,16 @@ function handleClickBtn(type: string) {
 onMounted(async () => {
   await getListContentCourse()
 })
+onUnmounted(() => {
+  viewMode.value = 'view'
+})
 </script>
 
 <template>
-  <div class="mt-6">
+  <div
+    v-if="viewMode === 'view'"
+    class="mt-6"
+  >
     <div>
       <CpActionHeaderPage
         :title="t('content-list')"
@@ -112,10 +152,13 @@ onMounted(async () => {
             md="3"
             class="d-flex justify-end  mr-2"
           >
-            <CmButton
+            <CmDropDown
               :title="t('approve-content')"
+              variant="tonal"
               color="success"
-              @click="handlerActionHeader('setting-point')"
+              :list-item="actionApprove"
+              :type="2"
+              icon="tabler:chevron-down"
             />
           </div>
           <div
@@ -155,70 +198,79 @@ onMounted(async () => {
         </template>
       </CpHeaderAction>
     </div>
-    <CmTableGroup
-      :group-options="groupOptions"
-      :headers="headers"
-      :items="items"
-      custom-id="courseContentId"
-      disiable-pagination
-      @handleClickRow="handleClickRow"
-      @update:selected="selectedRows"
-    >
-      <template #rowItem="{ col, context }">
-        <div v-if="col === 'contentArchiveTypeName'">
-          {{ t(context[col]) }}
-        </div>
-        <div v-if="col === 'time'">
-          {{ DateUtil.formatSecond(context.time) }}
-        </div>
-        <div v-if="col === 'registerDate'">
-          <span>{{ DateUtil.formatDateToDDMM(context.registerDate) }}</span>
-        </div>
-        <div v-if="col === 'statusId'">
-          <CmChip
-            class="ma-2"
-            :color="MethodsUtil.checkStatus(context[col], StatusTypeCourse)?.color"
+    <div class="mb-6">
+      <CmTableGroup
+        :group-options="groupOptions"
+        :headers="headers"
+        :items="items"
+        custom-id="courseContentId"
+        disiable-pagination
+        @handleClickRow="handleClickRow"
+        @update:selected="selectedRows"
+      >
+        <template #rowItem="{ col, context }">
+          <div v-if="col === 'contentArchiveTypeName'">
+            {{ t(context[col]) }}
+          </div>
+          <div v-if="col === 'time'">
+            {{ DateUtil.formatSecond(context.time) }}
+          </div>
+          <div v-if="col === 'registerDate'">
+            <span>{{ DateUtil.formatDateToDDMM(context.registerDate) }}</span>
+          </div>
+          <div v-if="col === 'statusId'">
+            <CmChip
+              class="ma-2"
+              :color="MethodsUtil.checkStatus(context[col], StatusTypeCourse)?.color"
+            >
+              <VIcon
+                start
+                icon="carbon:dot-mark"
+                size="12"
+              />
+              <span>{{ t(MethodsUtil.checkStatus(context[col], StatusTypeCourse)?.name) }}</span>
+            </CmChip>
+          </div>
+        </template>
+        <template #actionDrop="{ context }">
+          <VListItem
+            :disabled="!checkMove(context, true)"
+            @click="actionItemUserReg([{ name: 'MoveUp' }, context])"
           >
-            <VIcon
-              start
-              icon="carbon:dot-mark"
-              size="12"
-            />
-            <span>{{ t(MethodsUtil.checkStatus(context[col], StatusTypeCourse)?.name) }}</span>
-          </CmChip>
-        </div>
-      </template>
-      <template #actionDrop="{ context }">
-        <VListItem
-          :disabled="!checkMove(context, true)"
-          @click="actionItemUserReg([{ name: 'MoveUp' }, context])"
-        >
-          <VListItemTitle>
-            <VIcon
-              icon="tabler:corner-left-up"
-              :size="18"
-              class="mr-2"
-              color="purple"
-            />
-            <span>{{ t('MoveUp') }}</span>
-          </VListItemTitle>
-        </VListItem>
-        <VListItem
-          :disabled="!checkMove(context, false)"
-          @click="actionItemUserReg([{ name: 'MoveDown' }, context])"
-        >
-          <VListItemTitle>
-            <VIcon
-              icon="tabler:corner-right-down"
-              :size="18"
-              class="mr-2"
-              color="purple"
-            />
-            <span>{{ t('MoveDown') }}</span>
-          </VListItemTitle>
-        </VListItem>
-      </template>
-    </CmTableGroup>
+            <VListItemTitle>
+              <VIcon
+                icon="tabler:corner-left-up"
+                :size="18"
+                class="mr-2"
+                color="purple"
+              />
+              <span>{{ t('MoveUp') }}</span>
+            </VListItemTitle>
+          </VListItem>
+          <VListItem
+            :disabled="!checkMove(context, false)"
+            @click="actionItemUserReg([{ name: 'MoveDown' }, context])"
+          >
+            <VListItemTitle>
+              <VIcon
+                icon="tabler:corner-right-down"
+                :size="18"
+                class="mr-2"
+                color="purple"
+              />
+              <span>{{ t('MoveDown') }}</span>
+            </VListItemTitle>
+          </VListItem>
+        </template>
+      </CmTableGroup>
+    </div>
+    <div>
+      <CpActionFooterEdit
+        is-cancel
+        :title-cancel="t('come-back')"
+        @onCancel="onCancel"
+      />
+    </div>
     <CpMdFeedBack
       v-model:is-show-modal-feed-back="isShowModelFeedback"
       :data-feed-back="feedbackContent"
@@ -232,5 +284,17 @@ onMounted(async () => {
       :confirmation-msg="t('Delete-course')"
       @confirm="confirmDialogDelete"
     />
+    <CpMdRatioPointContent
+      v-model:is-dialog-visible="idModalSendRatioPoint"
+    />
+    <CpMdUpdateThematicContent
+      v-model:isShowModalUpdateThematic="isShowModalUpdateThematic"
+    />
+  </div>
+  <div
+    v-else-if="viewMode === 'approve'"
+    class="mt-6"
+  >
+    <CpContentApprove />
   </div>
 </template>
