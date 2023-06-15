@@ -74,6 +74,12 @@ export const comboboxStore = defineStore('combobox', () => {
       authorIdCombobox.value = users.pageLists
     })
   }
+  const getComboboxTypeContent = async () => {
+    return await MethodsUtil.requestApiCustom(ComboboxService.GetComboboxContentType, TYPE_REQUEST.GET).then(async (value: any) => {
+      console.log(value)
+      return value
+    })
+  }
 
   // Lấy danh sách loại trường
   const typeSchoolCombobox = ref<Any>([])
@@ -400,5 +406,6 @@ export const comboboxStore = defineStore('combobox', () => {
     getAuthorIdCombobox,
     getComboboxEventType,
     getComboboxAuthor,
+    getComboboxTypeContent,
   }
 })

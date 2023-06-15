@@ -5,13 +5,15 @@ import constant from '@/constant/constant'
 
 const CmTable = defineAsyncComponent(() => import('@/components/common/CmTable.vue'))
 const CmTextField = defineAsyncComponent(() => import('@/components/common/CmTextField.vue'))
+const CmButton = defineAsyncComponent(() => import('@/components/common/CmButton.vue'))
+const CpActionHeaderPage = defineAsyncComponent(() => import('@/components/page/gereral/CpActionHeaderPage.vue'))
 
 /** lib */
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 /** store */
 const storeCourseApproveManager = courseApproveManagerStore()
-const { rowsScore, myFormScore } = storeToRefs(storeCourseApproveManager)
-const { valueChange } = storeCourseApproveManager
+const { rowsScore, myFormScore, disabledPoint, pointSetting } = storeToRefs(storeCourseApproveManager)
+const { valueChange, autoUpdatePoint, updatePointSetting, selectedRowsPoint } = storeCourseApproveManager
 const storeValidate = validatorStore()
 const { schemaOption, Field, Form, FieldArray, useForm, yup } = storeValidate
 const { submitForm } = useForm()
@@ -21,6 +23,7 @@ const schema = yup.object({
       point: schemaOption.defaultNumberRatio,
     }),
   ),
+  pointSetting: schemaOption.defaultNumber100Not0YubNoRequire,
 })
 
 /** data */
@@ -39,6 +42,46 @@ const headersScore = reactive([
       :validation-schema="schema"
       @submit.prevent="submitForm"
     >
+      <div>
+        <CpActionHeaderPage
+          :title-custom-add="t('auto-seting')"
+          :title="t('content-list')"
+          is-custom-add-btn
+          @click="autoUpdatePoint"
+        />
+      </div>
+      <div class="mb-6 d-flex justify-start">
+        <CmButton
+          :title="t('setting-ratio')"
+          color="primary"
+          variant="tonal"
+          class="mr-3"
+          :disabled="disabledPoint"
+          @click="updatePointSetting"
+        />
+        <Field
+          v-slot="{ field, errors }"
+          v-model="pointSetting"
+          name="pointSetting"
+        >
+          <div>
+            <CmTextField
+              :field="field"
+              :disabled="disabledPoint"
+              class="input-point-setting"
+              type="number"
+              :min="1"
+              :max="100"
+            />
+            <div
+              v-if="errors?.length > 0"
+              class="styleError text-error"
+            >
+              {{ errors[0] }}
+            </div>
+          </div>
+        </Field>
+      </div>
       <FieldArray
         name="content"
       >
@@ -48,6 +91,7 @@ const headersScore = reactive([
           disiable-pagination
           return-object
           custom-id="courseContentId"
+          @update:selected="selectedRowsPoint"
         >
           <template #rowItem="{ col, context }">
             <div v-if="col === 'point'">
@@ -73,3 +117,9 @@ const headersScore = reactive([
     </Form>
   </div>
 </template>
+
+<style lang="scss">
+.input-point-setting{
+  width: 192px;
+}
+</style>

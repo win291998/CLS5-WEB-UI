@@ -30,6 +30,7 @@ const ComboboxService = {
   GetComboboxEventType: '/event/get-event-type-combobox', //
   GetComboboxStatusExam: '/exam/combobox-status',
   GetComboboxAuthor: '/exam/combobox-author',
+  GetComboboxContentType: '/contentarchivetype/get-combobox',
 }
 
 export default ComboboxService

@@ -105,7 +105,7 @@ defineExpose({
     :color="color"
     :rounded="rounded"
     class="text-style-btn"
-    :class="[color, outlined, className]"
+    :class="[color, outlined, className, color === 'white' ? 'border-button' : '']"
     @click="handleClick"
   >
     <!-- :class="[`${prefixColor}-${color}`, bgColor, className]" -->
@@ -181,5 +181,8 @@ defineExpose({
 
 .v-btn--variant-outlined {
   background-color: transparent !important;
+}
+.border-button{
+  border: 1px solid rgb(var(--v-gray-300));
 }
 </style>

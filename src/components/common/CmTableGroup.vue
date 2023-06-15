@@ -111,7 +111,7 @@ function checkedAll(value: any) {
     if (!(element.isDisabled && element.isDisabled === true))
       element.isSelected = !value
   })
-
+  emit('update:selected', selectedRows)
   emit('checkedAll', !value, selectedRows)
 }
 
@@ -345,7 +345,7 @@ watch(() => props.items, (val: Item[]) => {
         </div>
         <div
           v-else
-          :class="[itemsHeader.key ? classLevelTreeTable(context) : '']"
+          :style="{ paddingLeft: `${(context.level) * 50}px` }"
         >
           <div class="d-flex">
             <div class="mr-4">

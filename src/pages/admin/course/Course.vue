@@ -21,6 +21,7 @@ const CpHeaderAction = defineAsyncComponent(() => import('@/components/page/gere
 const CpConfirmDialog = defineAsyncComponent(() => import('@/components/page/gereral/CpConfirmDialog.vue'))
 const CpMdApproveCourse = defineAsyncComponent(() => import('@/components/page/Admin/course/modal/CpMdApproveCourse.vue'))
 const CpMdRatioPointContent = defineAsyncComponent(() => import('@/components/page/Admin/course/modal/CpMdRatioPointContent.vue'))
+const CpMdCoppyCourse = defineAsyncComponent(() => import('@/components/page/Admin/course/modal/CpMdCoppyCourse.vue'))
 const CpMdFeedBack = defineAsyncComponent(() => import('@/components/page/Admin/course/modal/CpMdFeedBack.vue'))
 
 /** lib */
@@ -34,13 +35,13 @@ const {
   isShowFilter, queryParams, items, totalRecord,
   settingDefaults, constant, compoboxSortCourse,
   users, topicCombobox, disabledDelete,
-  disabledApprove, isShowDialogNotiDelete,
+  disabledApprove, isShowDialogNotiDelete, isShowModalCoppyCourse,
 } = storeToRefs(storeCourseListManager)
 const {
   handlerActionHeader, handleFilterCombobox,
   handlePageClick, selectedRows, pushQuery, handleSearch,
   deleteItem, deleteItems, confirmDialogDelete,
-  updateDialogVisible, approveCourses, approve,
+  updateDialogVisible, approveCourses, approve, handleCoppyCourse,
 } = storeCourseListManager
 
 const storeCourseApproveManager = courseApproveManagerStore()
@@ -137,6 +138,9 @@ function actionItem(type: any) {
       break
     case 'ActionEdit':
       router.push({ name: 'course-edit', params: { tab: 'infor', id: type[1].id } })
+      break
+    case 'CopyCourse':
+      isShowModalCoppyCourse.value = true
       break
     default:
       break
@@ -304,6 +308,10 @@ window.hideAllPageLoading()
     <CpMdApproveCourse
       v-model:is-dialog-visible="idModalSendApproveCourse"
       @confirm="handleApproveCourse"
+    />
+    <CpMdCoppyCourse
+      v-model:is-show-modal="isShowModalCoppyCourse"
+      @confirm="handleCoppyCourse"
     />
     <CpMdRatioPointContent
       v-model:is-dialog-visible="idModalSendRatioPoint"

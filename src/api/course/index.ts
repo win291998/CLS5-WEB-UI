@@ -29,7 +29,9 @@ const CourseService = {
   PostDeleteCourse: '/course/delete',
   PostApproveCourse: '/course/save-agree-course', // duyệt khóa học
   PostSendApproveCourse: '/course/send-agree-course', // Gửi duyệt khóa học
+  PostApproveContentCourse: '/coursecontent/agree-course-content', // duyệt nội dung khóa học
   PostSendRejectCourse: '/course/reject-course', // Từ chối khóa học
+  PostSendRejectContentCourse: '/coursecontent/reject-course-content', // trả lại nội dung khóa học
   PostAddInforCourse: '/course/add-course-information', // Thêm khóa học
   PostUpdateInforCourse: '/course/update-course-information', // Cập nhật khóa học
   PostUpdateSettingCourse: '/course/update-setting', // Thêm khóa học
@@ -54,6 +56,8 @@ const CourseService = {
   PostDeleteContent: '/coursecontent/delete', // xóa nội dung
   PostPositionContent: '/coursecontent/save-position-course-content', // cập nhật vị trí nội dung
   PostDeleteUserGroup: '/course/delete-user-from-groupser', // cập nhật vị trí nội dung
+  PostListApproveContent: '/coursecontent/get-paging-agree-course-content', // Danh sách nội dung gửi duỵet
+  PostSendApproveContent: '/coursecontent/send-agree-course-content', // Danh sách nội dung gửi duỵet
 
   /** Delete */
   DeleteUserReg: 'courseuser/delete-register',

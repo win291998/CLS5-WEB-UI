@@ -67,11 +67,10 @@ function handlerPreButton(event: any) {
 
 <template>
   <div class="d-flex justify-end">
-    <div class="mr-3">
+    <div>
       <CmButton
-        variant="outlined"
         bg-color="bg-white"
-        color="dark"
+        color="white"
         text-color="color-dark"
         @click="onCancel"
       >
@@ -80,18 +79,18 @@ function handlerPreButton(event: any) {
     </div>
     <div
       v-if="props.isSave"
-      class="mr-3"
+      class="ml-3"
     >
       <CmButton
         color="primary"
         @click="emit('onSave')"
       >
-        {{ t(titleSave) }}
+        {{ t(titleSave || '') }}
       </CmButton>
     </div>
     <div
       v-if="props.isSaveAndUpdate"
-      class="mr-3"
+      class="ml-3"
     >
       <CmButton
         color="primary"
@@ -100,9 +99,11 @@ function handlerPreButton(event: any) {
         {{ t(titleSaveAndUpdate || '') }}
       </CmButton>
     </div>
-    <div>
+    <div
+      v-if="props.isSaveGroup"
+      class="ml-3"
+    >
       <CmButtonGroup
-        v-if="props.isSaveGroup"
         is-load
         :list-item="action"
         :title="titleSaveGroup"
