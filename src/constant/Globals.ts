@@ -21,6 +21,7 @@ const Globals = Object.freeze({
   audioTypes: ['.mp3', '.wav', '.wma', '.3gp', '.aa', '.acc', '.aax', '.act', '.aiff', '.alac', '.amr', '.ape', '.au', '.awb', '.dss', '.dvf', '.flac', '.gms', '.m4a', '.m4b', '.mpc', '.webm'],
   imageTypes: ['.tif', '.tiff', '.bmp', '.jpg', '.jpeg', '.gif', '.png', '.eps', '.raw', '.cr2', '.nef', '.orf', '.sr2'],
   otherFileExtention: '.rar, .zip, .txt, .doc, .docx, .pptx, .pptm, .ppt, .pdf, .xls, .xlsm, .xlsx, application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  typeDialog: 'center',
 
   /** Avatar */
   avatar: {

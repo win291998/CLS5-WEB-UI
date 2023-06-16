@@ -105,7 +105,10 @@ const sizeModal = computed(() => {
       @update:model-value="onCancel"
       @before-enter="onDialogShown"
     >
-      <CmCard backgroud="bg-white">
+      <CmCard
+        :class="{ 'modal-custom-divspace': isDivSpace }"
+        backgroud="bg-white"
+      >
         <template #title>
           <VCardTitle>
             {{ title }}
@@ -165,7 +168,7 @@ const sizeModal = computed(() => {
   padding-inline: 24px;
 }
 
-.v-card-item {
+.modal-custom-divspace .v-card-item {
   border-block-end: 1px solid $color-line-default;
 }
 .cm-dialogs.appendToBody {

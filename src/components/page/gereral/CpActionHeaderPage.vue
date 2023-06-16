@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const props = withDefaults(defineProps<Props>(), ({
   title: '',
+  titleCustomAddGroup: 'Add-new',
   actionUpdate: () => ([]),
   actionAdd: () => ([]),
   actionExport: () => ([]),
@@ -20,6 +21,7 @@ interface Props {
   title: string
   titleCustom?: string
   titleCustomAdd?: string
+  titleCustomAddGroup?: string
   bgCustom?: string
   isUpdateBtn?: boolean
   isExportBtn?: boolean
@@ -130,10 +132,10 @@ function handlerCustomButton() {
         <CmButtonGroup
           is-load
           :list-item="actionAdd"
-          :title="t('Add-new')"
+          :title="t(titleCustomAddGroup)"
           @click-prepend="handlerPreButton"
         >
-          {{ t('Add-new') }}
+          {{ t(titleCustomAddGroup) }}
         </CmButtonGroup>
       </div>
     </div>

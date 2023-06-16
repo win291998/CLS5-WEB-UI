@@ -75,7 +75,7 @@ const headersScore = reactive([
             />
             <div
               v-if="errors?.length > 0"
-              class="styleError text-error"
+              class="styleError text-errors"
             >
               {{ errors[0] }}
             </div>

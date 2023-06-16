@@ -91,7 +91,6 @@ async function onCancel() {
 async function onConfirm() {
   if (costData.value.unitPrice !== null && costData.value.unitPrice.length > 0) {
     const amount = Number.parseFloat(costData.value.unitPrice)
-    console.log(Number.isNaN(amount))
     if (Number.isNaN(amount)) {
       toast('ERROR', t('number-invalids'))
       return
@@ -111,7 +110,6 @@ async function onConfirm() {
           toast('ERROR', t(error.response.data.message))
         })
     }
-    console.log(success)
   })
 }
 

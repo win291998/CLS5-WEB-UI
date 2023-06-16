@@ -103,8 +103,6 @@ function editSchool() {
 }
 async function getDataDetail() {
   const { data } = await MethodsUtil.requestApiCustom(UserService.GetDetailSchool, TYPE_REQUEST.GET, { id: route.params.id })
-  console.log(data)
-
   dataInput.value = data
 }
 if (route.params.id)

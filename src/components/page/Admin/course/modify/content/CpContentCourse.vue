@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const CmTab = defineAsyncComponent(() => import('@/components/common/CmTab.vue'))
 const CpListContent = defineAsyncComponent(() => import('@/components/page/Admin/course/modify/content/CpListContent.vue'))
-const CpReferenceContent = defineAsyncComponent(() => import('@/components/page/Admin/course/modify/content/CpReferenceContent.vue'))
+const CpReferenceContent = defineAsyncComponent(() => import('@/components/page/Admin/course/modify/content/reference/CpReferenceContent.vue'))
 
 /**
  *

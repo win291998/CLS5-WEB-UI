@@ -22,6 +22,7 @@ export const contentManagerStore = defineStore('contentManager', () => {
   const { idModalSendRatioPoint } = storeToRefs(storeCourseApproveManager)
   const { handleUpdatePointCourse } = storeCourseApproveManager
 
+  /** ********************************Content******************************************** */
   /** state */
   const data = reactive({
     deleteIds: [], // list id các row table muốn xóa
@@ -45,11 +46,9 @@ export const contentManagerStore = defineStore('contentManager', () => {
 
   /** method */
   async function actionItemUserReg(type: any) {
-    console.log(type)
-
     switch (type[0]?.name) {
       case 'ActionEdit':
-        console.log('ActionEdit')
+        // console.log('ActionEdit')
         break
       case 'ActionDelete':
         deleteItem(type[1].courseContentId)
@@ -130,8 +129,6 @@ export const contentManagerStore = defineStore('contentManager', () => {
     isShowModalUpdateThematic.value = true
   }
   async function handleSearch(val: any) {
-    // paramsContent.value.search = value
-    // await getListContentCourse()
     paramsContent.value.search = val
     let dataRow = ArraysUtil.unFlatMapTree(updateStatusListCourse(cloneData.value, val))
     dataRow = ArraysUtil.formatTreeTable(dataRow, customId.value)
@@ -155,8 +152,6 @@ export const contentManagerStore = defineStore('contentManager', () => {
     items.value = dataRow
   }
   function handlerActionHeader(type: any) {
-    console.log(type)
-
     switch (type) {
       case 'handlerCustomButton':
 
@@ -222,8 +217,6 @@ export const contentManagerStore = defineStore('contentManager', () => {
       id,
     }
     await MethodsUtil.requestApiCustom(CourseService.GetFeadback, TYPE_REQUEST.GET, params).then((value: any) => {
-      console.log(value)
-
       feedbackContent.value = value.data
       isShowModelFeedback.value = true
     })
@@ -293,7 +286,6 @@ export const contentManagerStore = defineStore('contentManager', () => {
       let index = 0
       if (parent?.id === item?.id) {
         index = window._.findIndex(cloneData.value, (element: any) => window._.isEqual(element.id, parent.id))
-        console.log(index)
         if (isMoveUp === true)
           return index > 0
         return index < cloneData.value.length - 1
@@ -393,8 +385,6 @@ export const contentManagerStore = defineStore('contentManager', () => {
         let dataRow = ArraysUtil.unFlatMapTree(value.data)
         dataRow = ArraysUtil.formatTreeTable(dataRow, customId.value)
         dataRow.forEach((element: any) => {
-          console.log(element.actions)
-
           // element.actions = element.actions?.map((el: any) => {
           //   return MethodsUtil.checkActionType(el, actionItemUserReg)
           // })
@@ -411,12 +401,118 @@ export const contentManagerStore = defineStore('contentManager', () => {
             // MethodsUtil.checkActionType({ id: 21 }, actionItemUserReg),
           ]
         })
-        console.log(dataRow)
 
         items.value = dataRow
       })
   }
 
+  /** ********************************end Content******************************************** */
+  /** ********************************Reference******************************************** */
+  // state
+  const viewModeRefer = ref('view')
+  const itemsRefer = ref()
+  const customIdRefer = ref('id')
+  const isShowDialogNotiDeleteRefer = ref(false)
+  const isShowModalAddRefStock = ref(false)
+  const cloneDataRefer = ref<any>([])
+  const contentRefer = ref<any>({
+    courseId: route.params.id,
+    archiveTypeId: 0,
+    description: '',
+    name: null,
+    url: null,
+    dateTimeStart: null,
+    dateTimeEnd: null,
+    isRewind: false,
+    isPdf: false,
+  })
+  const paramsRefer = ref({
+    id: Number(route?.params?.id) || null,
+    search: null as any,
+    role: StringJwt.getRole(),
+  })
+  const dataRefer = reactive({
+    deleteIds: [], // list id các row table muốn xóa
+    selectedRowsIds: [], // list id các row table được chọn
+  })
+  const disabledDeleteRefer = computed(() => !dataRefer.selectedRowsIds.length)
+
+  // Xóa từng item
+  function deleteItemRefer(id: number) {
+    dataRefer.deleteIds = [id as never]
+    isShowDialogNotiDeleteRefer.value = true
+  }
+  function deleteItemsRefer() {
+    dataRefer.deleteIds = dataRefer.selectedRowsIds
+    isShowDialogNotiDeleteRefer.value = true
+  }
+  async function deleteActionRefer() {
+    const params = {
+      courseId: Number(route?.params?.id),
+      model: dataRefer.deleteIds,
+    }
+    await MethodsUtil.requestApiCustom(CourseService.PostDeleteRefer, TYPE_REQUEST.POST, params)
+      .then(async (value: any) => {
+        toast('SUCCESS', t(value?.message))
+        await getListReferContentCourse(Number(route?.params?.id))
+        dataRefer.deleteIds = []
+        dataRefer.selectedRowsIds = []
+      })
+      .catch(() => {
+        toast('ERROR', t('USR_DeleteFail'))
+      })
+  }
+  function confirmDialogDeleteRefer(event: any) {
+    if (event)
+      deleteActionRefer()
+  }
+  function selectedRowsRefer(e: any) {
+    dataRefer.selectedRowsIds = e
+  }
+  async function actionItemRefer(type: any) {
+    switch (type[0]?.name) {
+      case 'ActionDelete':
+        deleteItemRefer(type[1].courseContentId)
+        break
+
+      default:
+        break
+    }
+  }
+
+  async function handleSearchRefer(val: any) {
+    paramsRefer.value.search = val
+    let dataRow = ArraysUtil.unFlatMapTree(updateStatusListCourse(cloneDataRefer.value, val))
+    dataRow = ArraysUtil.formatTreeTable(dataRow, customIdRefer.value)
+    dataRow.forEach((element: any) => {
+      element.actions = [
+        MethodsUtil.checkActionType({ id: 2 }, actionItemRefer),
+      ]
+    })
+    itemsRefer.value = dataRow
+  }
+  async function getListReferContentCourse(id: number) {
+    const params = {
+      id,
+    }
+    await MethodsUtil.requestApiCustom(CourseService.GetListReferContent, TYPE_REQUEST.GET, params)
+      .then((value: any) => {
+        cloneDataRefer.value = window._.cloneDeep(value.data)
+        let dataRow = ArraysUtil.unFlatMapTree(value.data)
+        dataRow = ArraysUtil.formatTreeTable(dataRow, customIdRefer.value)
+        dataRow.forEach((element: any) => {
+          element.actions = [
+            MethodsUtil.checkActionType({ id: 2 }, actionItemRefer),
+          ]
+        })
+        itemsRefer.value = dataRow
+      })
+  }
+  async function handleAddRefContentStock(dataRef: any) {
+    console.log(dataRef)
+  }
+
+  /** ********************************Reference******************************************** */
   onMounted(() => {
     //
   })
@@ -425,6 +521,7 @@ export const contentManagerStore = defineStore('contentManager', () => {
   })
 
   return {
+    /** Nội dung */
     items,
     data,
     disabledDelete,
@@ -445,5 +542,19 @@ export const contentManagerStore = defineStore('contentManager', () => {
     checkMove,
     approveContent,
     showUpdateThematicModal,
+
+    /** Nội dung tham khảo */
+    itemsRefer,
+    viewModeRefer,
+    contentRefer,
+    isShowDialogNotiDeleteRefer,
+    disabledDeleteRefer,
+    isShowModalAddRefStock,
+    confirmDialogDeleteRefer,
+    getListReferContentCourse,
+    selectedRowsRefer,
+    deleteItemsRefer,
+    handleSearchRefer,
+    handleAddRefContentStock,
   }
 })

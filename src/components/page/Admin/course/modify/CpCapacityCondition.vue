@@ -31,7 +31,6 @@ const { deleteItemsCapacity, handleSearchCapacity, handlePageClickCapacity, sele
 /** method */
 /* ==> thực hiện các action được chọn ở header page CP */
 function handlerActionHeader(type: any) {
-  console.log(type)
   if (type === 'handlerAddButton')
     isShowModalAddCapacity.value = true
 }

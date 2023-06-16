@@ -46,6 +46,8 @@ interface Props {
   rowClassName?: string
   pageSize?: number
   customId?: string
+  keyCheckParentRow: string
+  valueCheckParentRow: any
   pageNumber?: number
   isExpand?: boolean
   totalRecord?: number
@@ -79,7 +81,9 @@ const serverfile = window.SERVER_FILE || ''
 
 //* ***********computed */
 const rowCanCheck = computed(() => {
-  return props.items.filter(item => !item?.children?.length && item.contentArchiveTypeId !== 13) || []
+  return props.items.filter(item => !item?.children?.length && item[props.keyCheckParentRow] !== props.valueCheckParentRow) || []
+
+  // return props.items.filter(item => !item?.children?.length && item.contentArchiveTypeId !== 13) || []
 })
 
 // trạng thái checkbox selectAll
@@ -127,7 +131,6 @@ function checkedItem(index: number, value: boolean | undefined) {
   props.items[index].isSelected = !value
   const itemSelected = props.items.filter((x: Item) => x.isSelected === true)
   selectedRows.value = itemSelected.map((item: Item) => item[props.customId])
-  console.log(selectedRows.value)
 
   if (props.returnObject)
     emit('update:selected', itemSelected)
@@ -280,7 +283,7 @@ watch(() => props.items, (val: Item[]) => {
           class="player-wrapper"
         >
           <VCheckbox
-            v-if="!context?.children?.length"
+            v-if="!context?.children?.length && (context[keyCheckParentRow] !== valueCheckParentRow)"
             v-model="selectedRows"
             multiple
             :value="context[props.customId]"
@@ -358,7 +361,7 @@ watch(() => props.items, (val: Item[]) => {
               />
             </div>
             <div class="cm-table-group-text-line">
-              {{ context[itemsHeader.value] }}
+              {{ t(context[itemsHeader.value]) }}
             </div>
           </div>
         </div>

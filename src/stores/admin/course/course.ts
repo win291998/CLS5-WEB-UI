@@ -21,7 +21,7 @@ export const courseManagerStore = defineStore('courseManager', () => {
   const route = useRoute()
   const idCourse = ref<any>(null)
 
-  /** ********Cost********* */
+  /** *************************************Cost********************************************* */
 
   /** course */
   const queryParamsCost = ref<any>({
@@ -68,7 +68,6 @@ export const courseManagerStore = defineStore('courseManager', () => {
     const params = {
       listId: dataCost.deleteIds,
     }
-    console.log(params)
     await MethodsUtil.requestApiCustom(ShareService.PostDeleteCost, TYPE_REQUEST.POST, params).then((value: any) => {
       getCostRequired()
       dataCost.selectedRowsIds = []
@@ -92,8 +91,6 @@ export const courseManagerStore = defineStore('courseManager', () => {
     getCostRequired()
   }
   function actionItemCost(type: any) {
-    console.log(type)
-
     switch (type[0]?.name) {
       case 'ActionEdit':
         getCostCourseById(type[1].id)
@@ -108,7 +105,6 @@ export const courseManagerStore = defineStore('courseManager', () => {
   async function getCostRequired() {
     queryParamsCost.value.courseId = route.params.id
     await MethodsUtil.requestApiCustom(ShareService.GetListCost, TYPE_REQUEST.GET, queryParamsCost.value).then(async (value: any) => {
-      console.log(value)
       value.data.pageLists.forEach((element: any) => {
         const type: any = compoboxCostTypes.value?.find((item: any) => item.key === element.costTypeId)
         if (type)
@@ -129,13 +125,13 @@ export const courseManagerStore = defineStore('courseManager', () => {
       id,
     }
     await MethodsUtil.requestApiCustom(ShareService.GetDetailCost, TYPE_REQUEST.GET, params).then(async (value: any) => {
-      console.log(value)
       costData.value = value.data
       isShowModalAddCost.value = true
     })
   }
 
-  // đánh giá sau đào tạo
+  /** *************************************Cost********************************************* */
+  /** *************************************đánh giá sau đào tạo***************************** */
   /** state */
   const isViewReport = ref(route.name === 'report-course-detail-type')
   const isShowDialogNotiDeleteEval = ref(false)
@@ -172,8 +168,6 @@ export const courseManagerStore = defineStore('courseManager', () => {
     dataEval.selectedRowsIds = e
   }
   function actionItemEval(type: any) {
-    console.log(type)
-
     switch (type[0]?.name) {
       case 'ActionDelete':
         deleteItemEval(type[1].id)
@@ -206,8 +200,6 @@ export const courseManagerStore = defineStore('courseManager', () => {
   async function getEvaluetionRequired() {
     queryParamsEval.value.courseId = route.params.id
     await MethodsUtil.requestApiCustom(CourseService.GetSurveyEvaluation, TYPE_REQUEST.GET, queryParamsEval.value).then(async (value: any) => {
-      console.log(value)
-
       const userIds = MethodsUtil.getPropertyByArray(value?.data?.pageLists, 'createdBy')
       const users = await MethodsUtil.getUserInfoByIds(userIds)
       value.data.pageLists.forEach((element: any) => {
@@ -234,7 +226,6 @@ export const courseManagerStore = defineStore('courseManager', () => {
       isTeacher: false,
       surveyIds: ids,
     }
-    console.log(params)
 
     await MethodsUtil.requestApiCustom(CourseService.PostCourseSurveyEvaluation, TYPE_REQUEST.POST, params).then((value: any) => {
       getEvaluetionRequired()
@@ -257,14 +248,12 @@ export const courseManagerStore = defineStore('courseManager', () => {
     }
     await MethodsUtil.requestApiCustom(CourseService.GetSurveyEvaluation, TYPE_REQUEST.GET, params).then(async (value: any) => {
       excludeIdsEval.value = value.data.pageLists.map((item: any) => item.surveyId)
-      console.log(excludeIdsEval.value)
     })
   }
   async function deleteActionEval() {
     const params = {
       listId: dataEval.deleteIds,
     }
-    console.log(params)
     await MethodsUtil.requestApiCustom(CourseService.PostDeleteSurveyEval, TYPE_REQUEST.POST, params).then((value: any) => {
       getEvaluetionRequired()
       dataEval.selectedRowsIds = []
@@ -272,6 +261,53 @@ export const courseManagerStore = defineStore('courseManager', () => {
       toast('SUCCESS', t(value.message))
     })
   }
+
+  /** *************************************đánh giá sau đào tạo***************************** */
+  /** *************************************Sao chép khóa học******************************** */
+  /** state */
+  interface Coppy {
+    content: boolean
+    cost: boolean
+    id: number | null
+    learner: boolean
+    name: string
+    requiredFinish: boolean
+    requiredRegister: boolean
+    setting: boolean
+    teacher: boolean
+  }
+  const coppyData = ref<Coppy>({
+    content: false,
+    cost: false,
+    id: null,
+    learner: false,
+    name: '',
+    requiredFinish: false,
+    requiredRegister: false,
+    setting: false,
+    teacher: false,
+  })
+  const isShowModalCoppyCourse = ref(false)
+
+  // sao chép khóa học
+  function handleCoppyCourse() {
+    isShowModalCoppyCourse.value = false
+  }
+  function resetStatecoppyData() {
+    coppyData.value = {
+      content: false,
+      cost: false,
+      id: null,
+      learner: false,
+      name: '',
+      requiredFinish: false,
+      requiredRegister: false,
+      setting: false,
+      teacher: false,
+    }
+  }
+
+  /** *************************************Sao chép khóa học******************************** */
   onMounted(() => {
     //
   })
@@ -316,5 +352,11 @@ export const courseManagerStore = defineStore('courseManager', () => {
     handlePageClickEval,
     getEvaluetionAllRequired,
     addSurveyCourse,
+
+    // coppy course
+    coppyData,
+    isShowModalCoppyCourse,
+    resetStatecoppyData,
+    handleCoppyCourse,
   }
 })

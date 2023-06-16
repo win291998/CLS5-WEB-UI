@@ -93,10 +93,7 @@ export const courseInforManagerStore = defineStore('courseInforManager', () => {
     const params = {
       ids: data.deleteIds,
     }
-    console.log(params)
     for (let i = 0; i < courseData.value?.authorList?.length; i += 1) {
-      console.log(isOwner.value)
-
       if (isOwner.value && data.deleteIds?.includes(isOwner.value))
         isOwner.value = null
 
@@ -119,8 +116,6 @@ export const courseInforManagerStore = defineStore('courseInforManager', () => {
   // lấy danh sách author
   const getAuthor = computed(() => {
     if (queryParams.value.search !== null) {
-      console.log(queryParams.value.pageNumber * queryParams.value.pageSize, queryParams.value.pageNumber * queryParams.value.pageSize + queryParams.value.pageSize)
-
       return courseData.value.authorList?.filter((item: any) =>
         StringUtil.removeAccents(StringUtil.formatFullName(item.firstName, item.lastName)?.toLowerCase())
           .includes(StringUtil.removeAccents(queryParams.value.search?.toLowerCase())))
@@ -146,11 +141,8 @@ export const courseInforManagerStore = defineStore('courseInforManager', () => {
 
   // hàm trả về các loại action khi click
   function actionItem(type: any) {
-    console.log(type)
-
     switch (type[0]?.name) {
       case 'ActionDelete':
-        console.log(type)
         deleteItem(type[1].id)
         break
       default:
@@ -164,8 +156,6 @@ export const courseInforManagerStore = defineStore('courseInforManager', () => {
     }
     await MethodsUtil.requestApiCustom(UserService.fetchDetailUpdate, TYPE_REQUEST.GET, params).then((value: any) => {
       if (value.data) {
-        console.log(value.data)
-
         isOwner.value = value.data.id
         courseData.value.authorList.push({
           userId: value.data.id,
@@ -188,7 +178,6 @@ export const courseInforManagerStore = defineStore('courseInforManager', () => {
       id: courseData.value.id,
     }
     await MethodsUtil.requestApiCustom(CourseService.GetAuthorCourseById, TYPE_REQUEST.GET, params).then(async (value: any) => {
-      console.log(value)
       if (value.data) {
         const ids = MethodsUtil.getPropertyByArray(value.data, 'userId')
         const users = await MethodsUtil.getUserInfoByIds(ids)
@@ -240,8 +229,6 @@ export const courseInforManagerStore = defineStore('courseInforManager', () => {
       response = await MethodsUtil.requestApiCustom(CourseService.PostUpdateInforCourse, TYPE_REQUEST.POST, courseData.value)
     }
     else {
-      console.log(123)
-
       response = await MethodsUtil.requestApiCustom(CourseService.PostAddInforCourse, TYPE_REQUEST.POST, courseData.value).then((value: any) => value)
       const ratingScaleDefault = settingDefaults.value.find(item => item.typeId === 11)
       if (ratingScaleDefault?.value && response?.data) {
@@ -259,18 +246,19 @@ export const courseInforManagerStore = defineStore('courseInforManager', () => {
         // cập nhật thang đánh giá mặc định
         await MethodsUtil.requestApiCustom(CourseService.PostUpdateSettingCourse, TYPE_REQUEST.POST, setting).then((value: any) => value)
       }
-      isSaving.value = false
-      if (response.code === 200) {
-        if (isUpdate === true)
-          router.push({ name: 'course-edit-type', params: { id: response.data, type: 'content' } })
+    }
 
-        else
-          router.push({ name: 'course-list' })
-        toast('SUCCESS', t(response.message))
-      }
-      else {
-        toast('ERROR', t(getErrorsMessage(response.errors)))
-      }
+    isSaving.value = false
+    if (response.code === 200) {
+      if (isUpdate === true)
+        router.push({ name: 'course-edit-type', params: { id: response.data, type: 'content' } })
+
+      else
+        router.push({ name: 'course-list' })
+      toast('SUCCESS', t(response.message))
+    }
+    else {
+      toast('ERROR', t(getErrorsMessage(response.errors)))
     }
   }
   function handleSaveUpdate(params: any) {

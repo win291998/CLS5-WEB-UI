@@ -34,7 +34,6 @@ const excludeIds = computed(() => {
 /** method */
 /* ==> thực hiện các action được chọn ở header page CP */
 function handlerActionHeader(type: any) {
-  console.log(type)
   if (type === 'handlerAddButton')
     isShowModalAddTeacher.value = true
 }
@@ -52,14 +51,11 @@ function handleClickBtn(type: string) {
   }
 }
 function selectedOwner(context: any) {
-  console.log(context)
-
   courseData.value.authorList.forEach((item: any) => {
     item.isOwner = item.id === context.id
   })
 }
 watch(() => courseData.value?.id, (Val: any) => {
-  console.log(courseData.value)
   if (courseData.value?.id && courseData.value?.id !== null)
     fetchAuthor()
   else

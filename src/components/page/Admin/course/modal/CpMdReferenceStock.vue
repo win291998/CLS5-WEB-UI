@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import MethodsUtil from '@/utils/MethodsUtil'
-import UserService from '@/api/user/index'
 import { TYPE_REQUEST } from '@/typescript/enums/enums'
 import CpSearch from '@/components/page/gereral/CpSearch.vue'
 import toast from '@/plugins/toast'
+import DateUtil from '@/utils/DateUtil'
+import CourseService from '@/api/course/index'
 
 const props = withDefaults(defineProps<Props>(), {
-  isShowModalAddTeacher: false,
+  isShowModal: false,
   excludeIds: [],
 })
 
@@ -17,31 +18,37 @@ const CmTable = defineAsyncComponent(() => import('@/components/common/CmTable.v
 const CpCustomInfo = defineAsyncComponent(() => import('@/components/page/gereral/CpCustomInfo.vue'))
 
 interface Props {
-  isShowModalAddTeacher: boolean
+  isShowModal: boolean
   excludeIds?: any
 }
 interface Emit {
-  (e: 'update:isShowModalAddTeacher', value: any): void
+  (e: 'update:isShowModal', value: any): void
   (e: 'saveChange', value: any): void
 }
 
 /** lib */
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
+const route = useRoute()
 
 /** state */
 const LABEL = Object.freeze({
-  TITLE: t('add-teacher'),
+  TITLE: t('add-reference'),
 })
 const headers = ref([
   { text: '', value: 'checkbox', width: 50 },
-  { text: t('name-lecturers'), value: 'fullName', type: 'custom' },
+  { text: t('name-content'), value: 'name' },
+  { text: t('topic'), value: 'thematicName' },
+  { text: t('author-name'), value: 'authorName', type: 'custom' },
+  { text: t('date-create'), value: 'registerDate', type: 'custom' },
 ])
 const items = ref()
 const totalRecord = ref(0)
 const queryParams = ref({
-  keyword: '',
+  courseId: Number(route.params.id),
+  searchByCourse: '',
   pageNumber: 1,
   pageSize: 10,
+  searchByThemic: 0,
   excludeIds: [] as any,
 })
 const data = reactive({
@@ -51,11 +58,11 @@ const data = reactive({
 
 /** method */
 async function onCancel() {
-  emit('update:isShowModalAddTeacher', false)
+  emit('update:isShowModal', false)
 }
-async function getListTeacher() {
+async function getListContentRefer() {
   queryParams.value.excludeIds = props.excludeIds ? props.excludeIds : []
-  await MethodsUtil.requestApiCustom(UserService.PostGetTeacher, TYPE_REQUEST.POST, queryParams.value).then((value: any) => {
+  await MethodsUtil.requestApiCustom(CourseService.PostListReferStock, TYPE_REQUEST.POST, queryParams.value).then((value: any) => {
     if (value.data) {
       items.value = value.data.pageLists
       totalRecord.value = value.data.totalRecord
@@ -69,33 +76,32 @@ function selectedRows(e: any) {
 // chuyển trang
 async function handlePageClick(page: any) {
   queryParams.value.pageNumber = page
-  getListTeacher()
+  getListContentRefer()
 }
 
 // search ở fillter header
 async function handleSearch() {
   queryParams.value.pageNumber = 1
-  getListTeacher()
+  getListContentRefer()
 }
 async function onConfirm() {
   if (data.selectedRowsIds.length === 0) {
-    toast('WARNING', t('please-choose-at-least') + t('user').toLowerCase())
+    toast('WARNING', t('please-choose-at-least') + t('content').toLowerCase())
     return
   }
-  const selectedIds = data.selectedRowsIds?.map(({ selectedLevel }) => selectedLevel)
-  emit('saveChange', selectedIds)
+  emit('saveChange', data.selectedRowsIds)
   nextTick(() => {
-    emit('update:isShowModalAddTeacher', false)
+    emit('update:isShowModal', false)
   })
 }
-watch(() => props.isShowModalAddTeacher, isShow => {
+watch(() => props.isShowModal, isShow => {
   if (isShow) {
-    getListTeacher()
+    getListContentRefer()
   }
   else {
     queryParams.value.pageNumber = 1
     queryParams.value.pageSize = 10
-    queryParams.value.keyword = ''
+    queryParams.value.searchByCourse = ''
   }
 })
 </script>
@@ -104,7 +110,7 @@ watch(() => props.isShowModalAddTeacher, isShow => {
   <div>
     <CmDialogs
       :title="LABEL.TITLE"
-      :is-dialog-visible="isShowModalAddTeacher"
+      :is-dialog-visible="isShowModal"
       :button-ok-name="t('save')"
       close-on-back
       @cancel="onCancel"
@@ -113,7 +119,7 @@ watch(() => props.isShowModalAddTeacher, isShow => {
       <div class="d-flex justify-end mb-6">
         <div class="w-50">
           <CpSearch
-            v-model:key-search="queryParams.keyword"
+            v-model:key-search="queryParams.searchByCourse"
             @update:key-search="handleSearch"
           />
         </div>
@@ -124,16 +130,16 @@ watch(() => props.isShowModalAddTeacher, isShow => {
         :items="items"
         :total-record="totalRecord"
         :page-number="queryParams.pageNumber"
-        return-object
         :type-pagination="2"
         @handlePageClick="handlePageClick"
         @update:selected="selectedRows"
       >
         <template #rowItem="{ col, context }">
-          <div v-if="col === 'fullName'">
-            <CpCustomInfo
-              :context="context"
-            />
+          <div v-if="col === 'authorName'">
+            {{ MethodsUtil.formatFullName(context.firstName, context.lastName) }}
+          </div>
+          <div v-if="col === 'registerDate'">
+            <span>{{ DateUtil.formatDateToDDMM(context.registerDate) }}</span>
           </div>
         </template>
       </CmTable>

@@ -84,8 +84,6 @@ function handleClickRow(e: any) {
 }
 
 async function approveMultiContent() {
-  console.log(data.value.selectedRowsIds)
-
   const listId = data.value.selectedRowsIds.map((item: any) => ({
     id: item,
   }))
@@ -99,8 +97,6 @@ function onCancel() {
 
 // hàm trả về các loại action từ header filter
 function handleClickBtn(type: string) {
-  console.log(type)
-
   switch (type) {
     // case 'fillter':
     //   isShowFilter.value = !isShowFilter.value
@@ -200,6 +196,8 @@ onUnmounted(() => {
     </div>
     <div class="mb-6">
       <CmTableGroup
+        key-check-parent-row="contentArchiveTypeId"
+        :value-check-parent-row="13"
         :group-options="groupOptions"
         :headers="headers"
         :items="items"
@@ -209,6 +207,9 @@ onUnmounted(() => {
         @update:selected="selectedRows"
       >
         <template #rowItem="{ col, context }">
+          <div v-if="col === 'fullname'">
+            {{ MethodsUtil.formatFullName(context.firstName, context.lastName) }}
+          </div>
           <div v-if="col === 'contentArchiveTypeName'">
             {{ t(context[col]) }}
           </div>

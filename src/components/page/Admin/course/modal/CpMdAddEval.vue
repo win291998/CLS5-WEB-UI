@@ -90,8 +90,6 @@ function selectedRows(e: any) {
 }
 
 watch(() => props.isShowModalAddEval, isShow => {
-  console.log(isShow)
-
   if (isShow) {
     getListSurveyPerior()
   }

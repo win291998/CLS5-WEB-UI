@@ -55,7 +55,6 @@ const dataTab = ref<any>(null)
 function getTabActive() {
   if (route.params[props.label] && !dataTab.value) {
     dataTab.value = props.listTab.find(e => e.key === route.params[props.label]) as object
-    console.log(dataTab.value)
     tabActive.value = dataTab.value?.key
   }
 }

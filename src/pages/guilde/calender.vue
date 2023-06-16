@@ -65,7 +65,6 @@ const calendarOptions = reactive<CalendarOptions>({
 })
 const eventType = ['LAN_EventCourse', 'LAN_EventExam', 'LAN_EventTrainingRoute', 'LAN_EventOther']
 async function fetchEvents(fetchInfo: Any, successCallback: any, failureCallback: void) {
-  console.log(fetchInfo)
   const params = {
     startTime: fetchInfo.startStr.slice(0, 19),
     endTime: fetchInfo.endStr.slice(0, 19),
@@ -91,7 +90,6 @@ function handleEventResize() {
   //
 }
 function handleEventHover(event: any) {
-  console.log(event)
 
   // $(event.el).tooltip({
   //   title: event.event.title,
@@ -104,7 +102,6 @@ function handleEventHover(event: any) {
 async function handleEventDrop({ event: droppedEvent }: {
   event: any
 }) {
-  console.log(droppedEvent)
 
   // const event = {
   //   id: droppedEvent.extendedProps.id,

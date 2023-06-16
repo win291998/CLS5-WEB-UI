@@ -33,6 +33,7 @@ interface Item {
   title: string
   icon?: string
   colorClass?: string
+  color?: string
   action?: any
   key?: any
 }
@@ -112,6 +113,7 @@ function clickItem(item: object) {
               <VIcon
                 v-if="item?.icon"
                 :icon="item?.icon"
+                :color="item?.color"
                 size="18"
                 :class="[item.colorClass]"
               />

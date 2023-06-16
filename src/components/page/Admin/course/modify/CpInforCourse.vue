@@ -57,15 +57,12 @@ function onCancel() {
 }
 async function handleSave(isUpdate: boolean) {
   myFormAddCourse.value.validate().then(async (success: any) => {
-    console.log(success)
     if (success.valid)
       await addInforCourse(isUpdate)
   })
 }
 function handleSaveUpdate(isUpdate: boolean) {
   myFormAddCourse.value.validate().then(async (success: any) => {
-    console.log(success)
-    console.log(success)
   })
 }
 if (topicCombobox.value)
@@ -267,8 +264,8 @@ if (formOfStudyCombobox.value)
         :title-save="t('save')"
         :title-save-and-update="t('save-and-update')"
         @onCancel="onCancel"
-        @onSave="handleSave(true)"
-        @onSaveUpdate="handleSaveUpdate(false)"
+        @onSave="handleSave(false)"
+        @onSaveUpdate="handleSaveUpdate(true)"
       />
     </div>
   </div>

@@ -22,7 +22,6 @@ const inputEditor = ref()
  */
 // thay đổi dữ liệu data update
 const handleChangeValue = window._.debounce((val: any) => {
-  console.log(inputEditor.value.innerHTML)
   emit('update:modelValue', inputEditor.value.innerHTML)
 }, propsValue?.isDebounce ? 500 : 0)
 

@@ -60,7 +60,6 @@ export const asignUserManagerStore = defineStore('asignUserManager', () => {
   async function getUserRegCourse() {
     await MethodsUtil.requestApiCustom(CourseService.GetListUserRegCourse, TYPE_REQUEST.GET, queryParamsUserReg.value)
       .then((value: any) => {
-        console.log(value)
         itemsUserReg.value = value.data.pageLists
         value.data.pageLists.forEach((element: any) => {
           element.actions = [
@@ -99,8 +98,6 @@ export const asignUserManagerStore = defineStore('asignUserManager', () => {
       listUser: [] as any,
     }
     dataUserReg.selectedRowsIds.forEach((item: any) => {
-      console.log(item)
-
       params.listUser.push(item)
     })
 
@@ -121,8 +118,6 @@ export const asignUserManagerStore = defineStore('asignUserManager', () => {
 
   // hàm trả về các loại action khi click
   function actionItemUserReg(type: any) {
-    console.log(type)
-
     switch (type[0]?.name) {
       case 'ActionDelete':
         deleteItemUserReg(type[1].id)
@@ -134,8 +129,6 @@ export const asignUserManagerStore = defineStore('asignUserManager', () => {
 
   // xác nhận xóa học viên
   function confirmDialogDeleteUserReg(event: any) {
-    console.log(event)
-
     if (event)
       deleteActionUserReg()
   }
@@ -146,7 +139,6 @@ export const asignUserManagerStore = defineStore('asignUserManager', () => {
       courseId: queryParamsUserReg.value.courseId,
       listUser: dataUserReg.deleteIds,
     }
-    console.log(params)
     await MethodsUtil.requestApiCustom(CourseService.DeleteUserReg, TYPE_REQUEST.DELETE, params).then((value: any) => {
       getUserRegCourse()
       dataUserReg.selectedRowsIds = []
