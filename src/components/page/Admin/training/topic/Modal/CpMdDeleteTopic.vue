@@ -6,7 +6,6 @@ import ArrayUtil from '@/utils/ArrayUtil'
 
 const props = withDefaults(defineProps<Props>(), {
   isShow: false,
-  title: '',
   dataTree: [],
   customKey: 'id',
   placeholderSelectTopic: '',
@@ -29,7 +28,7 @@ interface Emit {
   (e: 'update:isShow', data: boolean): void
   (e: 'confirm', data: unknown): void
 }
-
+const { t } = window.i18n()
 const dataTopic = ref<any[]>([])
 watch(() => props.dataTree, val => {
   const data = _.cloneDeep(val)
@@ -53,7 +52,7 @@ function confirmModal() {
 <template>
   <CmDialogs
     :is-dialog-visible="isShow"
-    :title="title"
+    :title="t('Delete-topic')"
     @cancel="cancelModal"
     @confirm="confirmModal"
   >
@@ -63,6 +62,7 @@ function confirmModal() {
       :options="dataTopic"
       :normalizer-custom-type="[props.customKey, 'name', 'children']"
       :placeholder="placeholderSelectTopic"
+      :append-to-body="true"
     />
   </CmDialogs>
 </template>

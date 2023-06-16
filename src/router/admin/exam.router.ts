@@ -10,6 +10,40 @@ export default [
         name: 'exam-list',
         component: () => import('@/pages/admin/exam/Exam.vue'),
       },
+      {
+        path: 'add/:tab',
+        name: 'exam-add',
+        meta: {
+          breadcrumb: [
+            {
+              title: 'exam-list',
+              to: { name: 'list-exam' },
+            },
+            {
+              title: 'Add-new',
+              active: true,
+            },
+          ],
+        },
+        component: () => import('@/pages/admin/exam/edit/EditExam.vue'),
+      },
+      {
+        path: 'edit/:id',
+        name: 'exam-edit',
+        meta: {
+          breadcrumb: [
+            {
+              title: 'exam-list',
+              to: { name: 'list-exam' },
+            },
+            {
+              title: 'QuestionService.ActionEdit',
+              active: true,
+            },
+          ],
+        },
+        component: () => import('@/pages/admin/exam/edit/EditExam.vue'),
+      },
     ],
   },
 ]

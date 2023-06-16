@@ -46,7 +46,7 @@ defineOptions({
 const attrs = useAttrs()
 
 const [rootAttrs, compAttrs] = filterInputAttrs(attrs)
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 // const [{ modelValue: _, ...inputProps }] = filterInputProps(props)
 const [fieldProps] = filterFieldProps(props)
 
@@ -62,7 +62,7 @@ if (compAttrs.config && compAttrs.config.inline) {
 }
 
 // v-field clear prop
-const onClear = (el: MouseEvent) => {
+function onClear(el: MouseEvent) {
   el.stopPropagation()
 
   nextTick(() => {
@@ -78,7 +78,7 @@ const vuetifyTheme = useTheme()
 const vuetifyThemesName = Object.keys(vuetifyTheme.themes.value)
 
 // Themes class added to flat-picker component for light and dark support
-const updateThemeClassInCalendar = (activeTheme: string) => {
+function updateThemeClassInCalendar(activeTheme: string) {
   // ℹ️ Flatpickr don't render it's instance in mobile and device simulator
   if (!refFlatPicker.value.fp.calendarContainer)
     return
@@ -95,7 +95,7 @@ onMounted(() => {
   updateThemeClassInCalendar(vuetifyTheme.name.value)
 })
 const valuePrivate = ref(computed(() => props.modelValue).value)
-const emitModelValue = (val: any) => {
+function emitModelValue(val: any) {
   emit('update:modelValue', val)
 }
 watch(valuePrivate, val => {

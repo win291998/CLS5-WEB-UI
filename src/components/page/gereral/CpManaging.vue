@@ -232,7 +232,7 @@ function handlerAdd(data: any) {
 function handlerEdit(data: any) {
   const payload = {
     ...data,
-    ...props.apiAdd.params,
+    ...props.apiEdit.params,
   }
   MethodsUtil.requestApiCustom(props.apiEdit.api, props.apiEdit.method, payload).then(() => {
     isShowModalEdit.value = false
