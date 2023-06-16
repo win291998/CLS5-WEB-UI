@@ -9,6 +9,8 @@ import { TYPE_REQUEST } from '@/typescript/enums/enums'
 import StringUtil from '@/utils/StringUtil'
 import DateUtil from '@/utils/DateUtil'
 import CpCustomInforCourse from '@/components/page/gereral/CpCustomInforCourse.vue'
+import { _ } from '@/utils/LodashUtil'
+import ObjectUtil from '@/utils/ObjectUtil'
 
 const { t } = window.i18n()
 
@@ -24,6 +26,7 @@ const items = ref<Any[]>([])
 const totalRecord = ref<number>(0)
 interface QueryParams extends Params {
   pageNumber: number
+  statusId: number | null
   pageSize: number
   fromDate: string
   toDate: string
@@ -32,7 +35,7 @@ interface QueryParams extends Params {
   role: number
   authorId: number | null
 }
-const queryParams = ref<QueryParams>({
+const queryParams = reactive<QueryParams>({
   pageNumber: 1,
   pageSize: 10,
   fromDate: '',
@@ -41,21 +44,35 @@ const queryParams = ref<QueryParams>({
   sort: ['-startDate'],
   searchData: '',
   role: 1,
-
+  statusId: null,
 })
-const authorIds = ref<number[]>([])
+const route = useRoute()
 async function getListExam() {
-  const { data } = await MethodsUtil.requestApiCustom(QuestionService.GetListExam, TYPE_REQUEST.GET, queryParams.value)
+  const { data } = await MethodsUtil.requestApiCustom(QuestionService.GetListExam, TYPE_REQUEST.GET, queryParams)
   data.pageLists.forEach((element: Any) => {
-    authorIds.value.push(element.authorId)
-    element.actions = element.actions.map((el: any) => {
+    element.actions = element.actions.map((el: Any) => {
       return MethodsUtil.checkActionType(el, actionItem)
     })
   })
   items.value = data.pageLists
   totalRecord.value = data.totalRecord
 }
-getListExam()
+onMounted(async () => {
+  if (!_.isEmpty(route.query)) {
+    queryParams.pageNumber = route.query.pageNumber ? Number(route.query.pageNumber) : queryParams.pageNumber
+    queryParams.statusId = route.query.statusId ? Number(route.query.statusId) : queryParams.statusId
+    queryParams.pageSize = route.query.pageSize ? Number(route.query.pageSize) : queryParams.pageSize
+    queryParams.fromDate = route.query.fromDate ? route.query.fromDate as string : ''
+    queryParams.toDate = route.query.toDate ? route.query.toDate as string : queryParams.toDate
+    queryParams.sort = route.query.sort ? route.query.sort as string[] : []
+    queryParams.searchData = route.query.searchData ? route.query.searchData as string : queryParams.searchData
+    queryParams.role = route.query.role ? Number(route.query.role) : 1
+    queryParams.authorId = route.query.authorId ? Number(route.query.authorId) : null
+  }
+  else {
+    await getListExam()
+  }
+})
 
 function actionItem(type: any) {
   switch (type[0]?.name) {
@@ -67,6 +84,21 @@ function actionItem(type: any) {
       break
   }
 }
+const router = useRouter()
+watch(queryParams, (val: Any) => {
+  const params = ObjectUtil.omitByDeep(val)
+  router.push({ query: params })
+  getListExam()
+})
+
+// xóa kỳ thi
+const selected = ref<number[]>([])
+function showModalDelete() {
+  //
+}
+function addExam() {
+  router.push({ name: 'exam-add', params: { tab: 'info' } })
+}
 </script>
 
 <template>
@@ -75,11 +107,17 @@ function actionItem(type: any) {
     v-model:fromDate="queryParams.fromDate"
     v-model:authorId="queryParams.authorId"
     v-model:searchData="queryParams.searchData"
+    v-model:statusId="queryParams.statusId"
     v-model:pageNumber="queryParams.pageNumber"
     v-model:pageSize="queryParams.pageSize"
-    :author-ids="authorIds"
+    :disabled-delete="!selected.length"
+    @click-delete="showModalDelete"
+    @click-add="addExam"
   />
   <CmTable
+    v-model:pageNumber="queryParams.pageNumber"
+    v-model:pageSize="queryParams.pageSize"
+    v-model:selected="selected"
     :headers="headers"
     :items="items"
     :total-record="totalRecord"
