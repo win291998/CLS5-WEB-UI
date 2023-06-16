@@ -155,6 +155,7 @@ watch(() => route.params[props.label], val => {
   .item-tab {
     border-radius: 6px !important;
     text-transform: capitalize !important;
+    box-shadow: unset !important;
   }
 }
 

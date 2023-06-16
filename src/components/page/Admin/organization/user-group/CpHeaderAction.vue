@@ -11,14 +11,17 @@ const props = withDefaults(defineProps<Props>(), ({
   isShowAdd: true,
   isDisabledMove: false,
   isDisabledDelete: false,
+  disabledFilter: false,
   isShowExportExcel: true,
   isFillter: false,
   buttonAdd: 'Add-new',
   buttonPrepend: 'export-excel',
+  isShowFilter: true,
 }))
 const CmButton = defineAsyncComponent(() => import('@/components/common/CmButton.vue'))
 const CmButtonGroup = defineAsyncComponent(() => import('@/components/common/CmButtonGroup.vue'))
 const CmTextField = defineAsyncComponent(() => import('@/components/common/CmTextField.vue'))
+
 interface Props {
   listItemButtonGroup?: Item[]
   isShowAddGroup?: boolean
@@ -33,6 +36,8 @@ interface Props {
   isDisabledDelete: boolean
   isFillter: boolean
   isDisabledAdd?: boolean
+  isShowFilter: boolean
+  disabledFilter: boolean
 }
 interface Item {
   title: string
@@ -47,6 +52,7 @@ interface Emit {
   (e: 'clickDelete'): void
   (e: 'clickMoveMultiple'): void
   (e: 'clickExport'): void
+  (e: 'update:isShowFilter', data: boolean): void
 }
 
 function showAdd() {
@@ -59,6 +65,10 @@ function handleSearch(val: string) {
 }
 function exportExcel() {
   emit('clickExport')
+}
+
+function handleFilter() {
+  emit('update:isShowFilter', !props.isShowFilter)
 }
 </script>
 
@@ -124,27 +134,24 @@ function exportExcel() {
         <slot name="buttonBottom" />
       </VCol>
       <VCol class="d-flex justify-end pr-0">
-        <VRow>
-          <VCol class="d-flex justify-end">
-            <CpSearch
-              @update:key-search="handleSearch"
-            />
-          </VCol>
-          <VCol
-            v-if="isFillter"
-          >
-            <CmButton
-              class="ml-3"
-              :disabled="disabledFillter"
-              variant="outlined"
-              color="secondary"
-              :size-icon="20"
-              icon="ic:round-filter-list"
-              :title="isShowFilter ? t('hide-filter') : t('show-filter')"
-              @click="handleClickBtn('fillter')"
-            />
-          </VCol>
-        </VRow>
+        <CpSearch
+          label="Tìm kiếm"
+          class="header-action-field"
+          placeholder="Tìm kiếm"
+          prepend-inner-icon="tabler-search"
+          @update:model-value="handleSearch"
+        />
+        <CmButton
+          v-if="isFillter"
+          class="ml-3"
+          :disabled="disabledFilter"
+          variant="outlined"
+          color="secondary"
+          :size-icon="20"
+          icon="ic:round-filter-list"
+          :title="isShowFilter ? t('hide-filter') : t('show-filter')"
+          @click="handleFilter"
+        />
       </VCol>
     </VRow>
   </div>

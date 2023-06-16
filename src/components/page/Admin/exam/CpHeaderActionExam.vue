@@ -12,6 +12,7 @@ import { TYPE_REQUEST } from '@/typescript/enums/enums'
 interface Props {
   pageNumber: number
   pageSize: number
+  statusId: number | null
   fromDate: string
   toDate: string
   authorId: number | null
@@ -26,6 +27,7 @@ const props = withDefaults(defineProps<Props>(), {
   authorId: null,
   toDate: '',
   searchData: '',
+  statusId: null,
   disabledDelete: true,
   authorIds: () => ([]),
 })
@@ -42,6 +44,7 @@ interface Emit {
   (e: 'update:authorId', data: unknown): void
   (e: 'update:searchData', data: unknown): void
   (e: 'update:pageNumber', data: unknown): void
+  (e: 'update:statusId', data: unknown): void
   (e: 'update:pageSize', data: unknown): void
 }
 function handleButton(val: string) {
@@ -76,7 +79,16 @@ async function getUserCreate() {
 }
 getUserCreate()
 function handleUpdateStatus(val: number) {
-  emit('update:authorId', val)
+  emit('update:statusId', val)
+  updatePage()
+}
+function updatePage() {
+  emit('update:pageNumber', 1)
+  emit('update:pageSize', 10)
+}
+function handleSearch(val: string) {
+  emit('update:searchData', val)
+  updatePage()
 }
 </script>
 
@@ -117,6 +129,7 @@ function handleUpdateStatus(val: number) {
         lg="4"
       >
         <CmSelect
+          :model-value="statusId"
           :items="statusExam"
           :text="t('exam-status')"
           custom-key="text"
@@ -136,7 +149,9 @@ function handleUpdateStatus(val: number) {
     <CpHeaderAction
       is-delete
       :disabled-delete="props.disabledDelete"
+      :keyword="searchData"
       @click="handleButton"
+      @update:keyword="handleSearch"
     />
   </div>
 </template>

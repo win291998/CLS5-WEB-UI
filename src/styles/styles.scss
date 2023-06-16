@@ -494,3 +494,8 @@ span {
   z-index: 99;
   box-shadow: 0 1px 2px #1018280d, 0 0 0 4px rgb(var(--v-error-100)) !important;
 }
+
+
+[class*="v-col"] {
+  padding: 8px 12px !important;
+}
