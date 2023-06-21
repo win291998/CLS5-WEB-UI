@@ -20,6 +20,7 @@ import { configStore } from '@/stores/index'
 // Import the CSS or use your own!
 import '@/styles/styles.scss'
 import '@core/scss/template/index.scss'
+import '@vuepic/vue-datepicker/dist/main.css'
 
 // import { createPinia } from 'pinia'
 
