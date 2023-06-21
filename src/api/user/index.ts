@@ -54,6 +54,7 @@ const UserService = {
   GetInfoUserAddEvent: '/event/get-info-user-add-event',
   GetPagingUserGroup: '/usergroup/get-paging-user-group-by-list', // GetPagingUserGroup
   GetUserGroup: '/courseuser/get-list-user-group', // GetPagingUserGroup
+  PostGetAuthorContent: '/courseuser/', // GetPagingUserGroup
 
   /** POST */
   PostApproveCustomer: 'Customer/approve',

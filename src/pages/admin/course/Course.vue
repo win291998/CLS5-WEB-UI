@@ -69,7 +69,11 @@ const queryParamsInit = {
   ownerId: null,
 }
 watch(() => route.query, (val: any) => {
+  console.log(val)
+
   if (Object.keys(val).length > 0) {
+    console.log(val)
+
     queryParams.value.pageNumber = val.pageNumber ? Number(val.pageNumber) : 1
     queryParams.value.pageSize = val.pageSize ? Number(val.pageSize) : 10
     queryParams.value.search = val.search ? val.search : null

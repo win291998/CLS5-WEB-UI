@@ -5,6 +5,7 @@ interface Props {
   modelValue: any
   size?: number
   label?: any
+  type?: number
   disabled?: boolean
 }
 interface Emit {
@@ -27,7 +28,10 @@ watch(() => props.value, val => {
 </script>
 
 <template>
-  <div class="radio-item">
+  <div
+    class="radio-item"
+    :class="{ 'radio-item2': type === 1 }"
+  >
     <input
       :id="`radio-${value}`"
       v-model="selectedOption"
@@ -49,8 +53,6 @@ watch(() => props.value, val => {
   .radio-item {
   display: inline-block;
   position: relative;
-  padding: 0 6px;
-  margin: 10px 0 0;
 }
 
 .radio-item input[type='radio'] {
@@ -67,7 +69,6 @@ watch(() => props.value, val => {
   display: inline-block;
   position: relative;
   top: 5px;
-  margin: 0 5px 0 0;
   width: 20px;
   height: 20px;
   border-radius: 11px;
@@ -93,7 +94,20 @@ watch(() => props.value, val => {
   height: 12px;
   position: absolute;
   top: 9px;
-  left: 10px;
+  left: 4px;
+  transform: translate(0%, 0%);
+  content: " ";
+  display: block;
+  background: rgb(var(--v-primary-600));
+}
+.radio-item.radio-item2 input[type=radio]:checked + label:after {
+  border-radius: 11px;
+  width: 8px;
+  height: 8px;
+  position: absolute;
+  top: 11px;
+  left: 6px;
+  transform: translate(0%, 0%);
   content: " ";
   display: block;
   background: rgb(var(--v-primary-600));

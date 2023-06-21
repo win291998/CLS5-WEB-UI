@@ -5,6 +5,7 @@ const ServerFileService = {
 
   /** post */
   UploadFile: '/api/File/upload',
+  UploadFileImgBase64: '/api/File/captureImage',
 }
 
 export default ServerFileService

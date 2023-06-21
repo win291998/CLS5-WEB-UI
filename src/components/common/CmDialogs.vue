@@ -119,6 +119,12 @@ const sizeModal = computed(() => {
             {{ subTitle }}
             <slot name="sub-title" />
           </VCardSubtitle>
+          <VIcon
+            class="btn-close-x"
+            @click="onCancel"
+          >
+            mdi-close
+          </VIcon>
         </template>
         <template
           #text
@@ -181,5 +187,10 @@ const sizeModal = computed(() => {
     }
 
   }
+}
+.btn-close-x{
+  position: absolute;
+  top: 14px;
+  right: 24px;
 }
 </style>

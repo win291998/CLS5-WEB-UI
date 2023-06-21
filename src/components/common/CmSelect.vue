@@ -1,9 +1,37 @@
 <script setup lang="ts">
 import ISelect from 'vue-select'
 import Fuse from 'fuse.js'
+import { createPopper } from '@popperjs/core'
 import Globals from '@/constant/Globals'
 import StringUtil from '@/utils/StringUtil'
 
+/** ** Khởi tạo prop emit */
+const props = withDefaults(defineProps<Props>(), ({
+  items: () => ([]),
+  maxItem: Globals.MAX_ITEM_SELECT_MULT,
+  multiple: false,
+  returnObject: false,
+  appendToBody: false,
+  customKey: 'key',
+  itemValue: 'value',
+  label: undefined,
+  bgColor: 'white',
+  text: undefined,
+  placeholder: 'Chọn',
+  totalRecord: 0,
+  isInfinityScroll: false,
+  excludeId: [],
+}))
+const emit = defineEmits<Emit>()
+declare const top: 'top'
+declare const bottom: 'bottom'
+declare const right: 'right'
+declare const left: 'left'
+declare const auto: 'auto'
+declare type BasePlacement = typeof top | typeof bottom | typeof right | typeof left
+declare type AutoPlacement = 'auto' | 'auto-start' | 'auto-end'
+declare type VariationPlacement = 'top-start' | 'top-end' | 'bottom-start' | 'bottom-end' | 'right-start' | 'right-end' | 'left-start' | 'left-end'
+declare type Placement = AutoPlacement | BasePlacement | VariationPlacement
 interface Props {/** ** Interface */
   modelValue?: any
   items: any
@@ -33,25 +61,6 @@ interface Emit {
   (e: 'isIntersecting', value: any): void
 }
 
-/** ** Khởi tạo prop emit */
-const props = withDefaults(defineProps<Props>(), ({
-  items: () => ([]),
-  maxItem: Globals.MAX_ITEM_SELECT_MULT,
-  multiple: false,
-  returnObject: false,
-  appendToBody: false,
-  customKey: 'key',
-  itemValue: 'value',
-  label: undefined,
-  bgColor: 'white',
-  text: undefined,
-  placeholder: 'Chọn',
-  totalRecord: 0,
-  isInfinityScroll: false,
-  excludeId: [],
-}))
-
-const emit = defineEmits<Emit>()
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 const stackValue = ref()
 const valueCurrent = ref(null)
@@ -164,6 +173,36 @@ onUpdated(() => {
 watch(() => props.modelValue, newValue => {
   valueCurrent.value = newValue
 }, { immediate: true })
+
+// xử lý vị trí menu list không bị nhảy loạn khi scroll
+const placement = ref<Placement>('bottom')
+function withPopper(dropdownList: any, component: any, { width }: any) {
+  console.log(dropdownList, component, { width })
+  dropdownList.style.width = width
+  const popper = createPopper(component.$refs.toggle, dropdownList, {
+    placement: 'bottom',
+    modifiers: [
+      {
+        name: 'offset',
+        options: {
+          offset: [0, -1],
+        },
+      },
+      {
+        name: 'toggleClass',
+        enabled: true,
+        phase: 'write',
+        fn({ state }) {
+          component.$el.classList.toggle(
+            'drop-up',
+            state.placement === 'bottom',
+          )
+        },
+      },
+    ],
+  })
+  return () => popper.destroy()
+}
 </script>
 
 <template>
@@ -188,6 +227,7 @@ watch(() => props.modelValue, newValue => {
         :disabled="disabled"
         :input-id="(option: any) => option.id"
         :append-to-body="appendToBody "
+        :calculate-position="withPopper"
         @open="open"
         @close="close"
         @search:blur="emit('search:blur')"

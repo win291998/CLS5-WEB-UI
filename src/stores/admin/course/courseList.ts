@@ -127,6 +127,8 @@ export const courseListManagerStore = defineStore('courseListManager', () => {
   async function handleSearch(value: any) {
     queryParams.value.pageNumber = 1
     queryParams.value.search = value
+    console.log(value)
+
     await pushQuery()
   }
   function selectedRows(e: any) {

@@ -9,13 +9,20 @@ import { load } from '@/stores/loadComponent.js'
 const props = withDefaults(defineProps<Props>(), ({
   accept: '',
   isBtnDownload: true,
+  isSecure: false,
+  isBackground: false,
+  isRequestFileInstall: false,
 }))
 const emit = defineEmits<Emit>()
 const CmButton = defineAsyncComponent(() => import('@/components/common/CmButton.vue'))
 const CpMdProcessing = defineAsyncComponent(() => import('@/components/page/gereral/modal/CpMdProcessing.vue'))
+const CpMdRequestInstall = defineAsyncComponent(() => import('@/components/page/gereral/modal/CpMdRequestInstall.vue'))
 interface Emit {
+  (e: 'onChangeFile', value: any): void
+  (e: 'update:acceptDownload', value: any): void
   (e: 'change', value: any): void
   (e: 'haveFile', value: any): void
+  (e: 'update:fileUpload', value: any): void
 }
 const store = load()
 const { unLoadComponent } = store
@@ -23,10 +30,14 @@ interface Props {
   accept?: string
   errors?: any
   isBtnDownload?: boolean
+  isSecure?: boolean
+  isBackground?: boolean
+  isRequestFileInstall?: boolean
 }
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 const inputFile = ref<HTMLInputElement | null>(null)
 const isShowModalProcessing = ref(false)
+const isShowModalOptionInst = ref(false)
 const intervalProgress = ref()
 const intervalTime = ref(100)
 const haveFile = ref(false)
@@ -34,8 +45,9 @@ const SERVERFILE = process.env.VUE_APP_BASE_SERVER_FILE
 const userData = JSON.parse(localStorage.getItem('userData') || '')
 const params = ref({
   files: null as any,
-  isSecure: false as any,
+  isSecure: props.isSecure || false as any,
   UserId: null as any,
+  isBackground: props.isBackground as any,
 })
 const filesData = ref(
   {
@@ -52,8 +64,29 @@ const filesData = ref(
   },
 )
 
-function hanleClickInput() {
+function hanleClickInput(idx: any) {
+  if (props.isRequestFileInstall) {
+    isShowModalOptionInst.value = true
+    setTimeout(() => {
+      unLoadComponent(idx)
+    }, 2000)
+  }
+  else { openChooseFile(idx) }
+}
+function confirmContinue() {
+  openChooseFile()
+  isShowModalOptionInst.value = false
+}
+function updateOptionUpload(data: any) {
+  emit('update:acceptDownload', data)
+}
+function openChooseFile(idx?: any) {
   inputFile.value?.click()
+  if (idx) {
+    setTimeout(() => {
+      unLoadComponent(idx)
+    }, 2000)
+  }
 }
 function checkTimeDelay(size: number) {
   if (size > 10 ** 8)
@@ -78,6 +111,8 @@ async function onFileSelected(event: any) {
   filesData.value.name = file.name
   filesData.value.size = file.size
   filesData.value.icon = MethodsUtil.checkTypeFile(file.type)?.icon
+  emit('update:fileUpload', filesData.value)
+  emit('onChangeFile', file)
   await checkTimeDelay(file.size)
   await upFileServer(file)
   event.target.value = null
@@ -97,6 +132,7 @@ async function upFileServer(file: any) {
       return
     }
     filesData.value.processing += 1
+    emit('update:fileUpload', filesData.value)
   }, intervalTime.value)
   if (userData)
     params.value.UserId = userData.id
@@ -105,6 +141,7 @@ async function upFileServer(file: any) {
   formData.append('IsSecure', params.value.isSecure)
   formData.append('files', params.value.files)
   formData.append('UserId', params.value.UserId)
+  formData.append('IsBackground', params.value.isBackground)
   const token = AuthUtil.getToken()
 
   const uploadRequest = axios.post(`${SERVERFILE}${ServerFileService.UploadFile}`, formData, {
@@ -123,6 +160,7 @@ async function upFileServer(file: any) {
           ...value.data,
         }
         filesData.value.processing = 100
+        emit('update:fileUpload', filesData.value)
         emit('change', filesData.value)
         clearInterval(intervalProgress.value)
         isShowModalProcessing.value = false
@@ -159,53 +197,64 @@ async function dowloadFile(idx: any) {
     }, 1000)
   })
 }
+watch(() => props.isSecure, (val: any) => {
+  params.value.isSecure = val
+})
 </script>
 
 <template>
-  <div class="d-flex cm-input-file">
-    <VFileInput
-      ref="inputFile"
-      :error="errors?.length > 0 ?? false"
-      :error-messages="messageError"
-      class="mr-3"
-      prepend-icon=""
-      :placeholder="t('upload')"
-      outlined
-      dense
-      :accept="accept"
-      @change="onFileSelected"
-    />
-    <CmButton
-      class="mr-2"
-      color="primary"
-      @click="hanleClickInput"
-    >
-      {{ t('upload') }}
-    </CmButton>
-    <CmButton
-      v-if="haveFile && isBtnDownload"
-      is-load
-      variant="tonal"
-      color="primary"
-      @click="dowloadFile"
-    >
-      {{ t('download') }}
-    </CmButton>
-    <CpMdProcessing
-      v-model:is-show-modal="isShowModalProcessing"
-      :files="[filesData]"
-      @cancel="cancelProcessing"
+  <div>
+    <div class="d-flex cm-input-file">
+      <VFileInput
+        ref="inputFile"
+        :error="errors?.length > 0 ?? false"
+        :error-messages="messageError"
+        class="mr-3"
+        prepend-icon=""
+        :placeholder="t('upload')"
+        outlined
+        dense
+        :accept="accept"
+        @change="onFileSelected"
+      />
+      <CmButton
+        class="mr-2"
+        color="primary"
+        is-load
+        @click="hanleClickInput"
+      >
+        {{ t('upload') }}
+      </CmButton>
+      <CmButton
+        v-if="haveFile && isBtnDownload"
+        is-load
+        variant="tonal"
+        color="primary"
+        @click="dowloadFile"
+      >
+        {{ t('download') }}
+      </CmButton>
+      <CpMdProcessing
+        v-model:is-show-modal="isShowModalProcessing"
+        :files="[filesData]"
+        @cancel="cancelProcessing"
+      />
+    </div>
+    <CpMdRequestInstall
+      v-model:isDialogVisible="isShowModalOptionInst"
+      @updateOptionUpload="updateOptionUpload"
+      @confirm="confirmContinue"
     />
   </div>
 </template>
 
 <style lang="scss">
 @use "@/styles/style-global.scss" as *;
-.v-field--variant-outlined .v-field__outline__start {
+.cm-input-file .v-field--variant-outlined .v-field__outline__start {
     border-radius: 8px 0 0 8px !important;
 }
 
-.v-field--variant-outlined .v-field__outline__end {
+.cm-input-file .v-field--variant-outlined .v-field__outline__end {
     border-radius: 0 8px 8px 0  !important;
 }
 .v-file-input .v-input__details{

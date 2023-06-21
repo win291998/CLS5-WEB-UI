@@ -134,7 +134,8 @@ const textButton = computed(() => {
         <VListItem
           v-for="(item, i) in propsValue.listItem"
           :key="i"
-          class="border-bottom-item cursor-pointer"
+          class="cursor-pointer"
+          :class="{ 'border-bottom-item': item.underline }"
           :value="item"
           :disabled="item?.disabled"
           @click="($event) => handleClickItem($event)"
@@ -186,14 +187,15 @@ const textButton = computed(() => {
 @use "/src/styles/style-global" as *;
 
 .cm-drop-down {
-  .border-bottom-item {
-    border-radius: 0 !important;
-    border-block-end: 1px solid $color-gray-100;
-    margin-inline: 0 !important;
-  }
+
   .text-button-dropdown{
     font-style: inherit;
     text-transform: initial !important;
   }
 }
+.border-bottom-item {
+    border-radius: 0 !important;
+    border-block-end: 1px solid $color-gray-100;
+    margin-inline: 0 !important;
+  }
 </style>

@@ -12,14 +12,13 @@ const CmButton = defineAsyncComponent(() => import('@/components/common/CmButton
 const CmDropDown = defineAsyncComponent(() => import('@/components/common/CmDropDown.vue'))
 const CpReferenceFile = defineAsyncComponent(() => import('@/components/page/Admin/course/modify/content/reference/CpReferenceFile.vue'))
 const CpActionFooterEdit = defineAsyncComponent(() => import('@/components/page/gereral/CpActionFooterEdit.vue'))
-const CpMdUpdateThematicContent = defineAsyncComponent(() => import('@/components/page/Admin/course/modal/CpMdUpdateThematicContent.vue'))
 
 /** store */
 /**
  * Store
  */
 const storeContentManager = contentManagerStore()
-const { viewModeRefer, contentRefer, itemsRefer, isShowDialogNotiDeleteRefer, disabledDeleteRefer, isShowModalUpdateThematic, isShowModalAddRefStock } = storeToRefs(storeContentManager)
+const { viewModeRefer, contentRefer, itemsRefer, isShowDialogNotiDeleteRefer, disabledDeleteRefer, isShowModalAddRefStock } = storeToRefs(storeContentManager)
 const { getListReferContentCourse, confirmDialogDeleteRefer, handleSearchRefer, selectedRowsRefer, deleteItemsRefer, handleAddRefContentStock } = storeContentManager
 const groupOptions = {
   allowEmptySelect: false,
@@ -165,9 +164,6 @@ onUnmounted(() => {
       @confirm="confirmDialogDeleteRefer"
     />
 
-    <CpMdUpdateThematicContent
-      v-model:isShowModalUpdateThematic="isShowModalUpdateThematic"
-    />
     <CpMdReferenceStock
       v-model:is-show-modal="isShowModalAddRefStock"
       @saveChange="handleAddRefContentStock"

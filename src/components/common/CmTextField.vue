@@ -72,7 +72,10 @@ const messageError = computed(() => {
         class="text-medium-sm color-dark"
       >{{ props.text }}</label>
     </div>
-    <div class="vTextField">
+    <div
+      class="vTextField cm-input-field"
+      :class="{ 'cm-input-field-error': errors?.length > 0 ?? false }"
+    >
       <VTextField
         v-model="formModelValue"
         v-bind="field"
@@ -108,8 +111,15 @@ const messageError = computed(() => {
   font-style: normal;
   font-weight: 400;
   line-height: 24px;
-   border: $border-input;
+  border: $border-input;
   border-radius: $border-radius-input !important;
+}
+.cm-input-field .v-field--variant-outlined .v-field__outline__start {
+    border-radius: 8px 0 0 8px !important;
+}
+
+.cm-input-field .v-field--variant-outlined .v-field__outline__end {
+    border-radius: 0 8px 8px 0  !important;
 }
 .vTextField .v-field__outline__end,
 .vTextField .v-field__outline__start{
@@ -127,4 +137,16 @@ const messageError = computed(() => {
     border: none !important;
   }
 }
+.cm-input-field-error .v-field__input{
+  border: 1px solid red;
+}
+.cm-input-field .v-field__outline{
+  z-index: -1 !important;
+}
+.cm-input-field .v-field--variant-outlined .v-field__outline__start {
+    border: none
+  }
+.cm-input-field .v-field--variant-outlined .v-field__outline__end {
+    border: none
+  }
 </style>
