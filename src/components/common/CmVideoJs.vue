@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import videojs from 'video.js'
 import 'video.js/dist/video-js.css'
+import '@videojs/http-streaming'
 
 interface Props {
   options?: any
@@ -14,39 +15,29 @@ const props = withDefaults(defineProps<Props>(), ({
 const SERVERFILE = process.env.VUE_APP_BASE_SERVER_FILE
 const videoPlayer = ref()
 const player = ref<any>(null)
-const urlFile = ref<any>(props.serverCode ? `${SERVERFILE}/${props.serverCode}/preview?folderVideo=${props.src}` : `${SERVERFILE}/sfv4/preview?folderVideo=${props.src}`)
+const urlFile = computed(() => (props.serverCode ? `${SERVERFILE}/${props.serverCode}/preview?folderVideo=${props.src}` : `${SERVERFILE}/sfv4/preview?folderVideo=${props.src}`))
 
 onMounted(() => {
   // player.value = videojs(videoPlayer.value)
+
   const videoElement = videoPlayer.value
   const options = {
-    // Cấu hình Video.js tại đây
-    headers: {
-      Authorization: `Bearer ${window.localStorage.getItem('accessToken')}`,
+    html5: {
+      vhs: {
+        overrideNative: true, // Bật sử dụng @videojs/http-streaming
+      },
     },
   }
   player.value = videojs(videoElement, options, () => {
     if (props.isSecure) {
-      console.log(options)
-      const hls = player.value.tech(true)
-      console.log(player.value)
-      console.log(player.value.tech(true))
-      console.log(hls)
-
-      if (hls) {
-        hls.xhr.beforeRequest = (optionsItem: any) => {
-          console.log(optionsItem)
-
-          const fileName = optionsItem.uri.replace(/^.*[\\\/]/, '')
-          optionsItem.headers = optionsItem.headers || {}
-          optionsItem.headers.Role = fileName
-          optionsItem.headers.Accepts = props.src
-          optionsItem.headers.Authorization = `Bearer ${window.localStorage.getItem('accessToken')}`
-
-          console.log(window.localStorage.getItem('accessToken'))
-
-          return options
-        }
+      console.log(player.value.tech())
+      player.value.tech().vhs.xhr.beforeRequest = (optionsItem: any) => {
+        const fileName = optionsItem.uri.replace(/^.*[\\\/]/, '')
+        optionsItem.headers = optionsItem.headers || {}
+        optionsItem.headers.Role = fileName
+        optionsItem.headers.Accepts = props.src
+        optionsItem.headers.Authorization = `Bearer ${window.localStorage.getItem('accessToken')}`
+        return optionsItem
       }
     }
     else {
@@ -76,8 +67,9 @@ onMounted(() => {
 
 <style lang="css" scoped>
 .video-js {
-  max-height: 600px;
-  max-width: 100%;
+  position: relative;
   width: 100%;
+  height: 0;
+  padding-bottom: 56.25%; /* 16:9 aspect ratio */
 }
 </style>

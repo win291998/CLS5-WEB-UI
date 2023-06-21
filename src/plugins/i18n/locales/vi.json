@@ -3435,5 +3435,7 @@
   "permistion-fringed": "Cho phép tua video",
   "setting-dowload-video": "Cài đặt lựa chọn tải file nội dung khóa học",
   "choose-file-video": "Chọn file video",
+  "time-min-0": "Thời lượng phải lớn hơn 0",
+  "content-time-less-than-success-time": "Thời lượng nội dung phải lớn hơn thời gian hoàn thành",
   "coppy-course": "Sao chép khóa học"
 }

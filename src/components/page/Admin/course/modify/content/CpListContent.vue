@@ -177,6 +177,7 @@ onUnmounted(() => {
               :list-item="actionApprove"
               :type="2"
               icon="tabler:chevron-down"
+              @click.stop
             />
           </div>
           <div
@@ -191,6 +192,7 @@ onUnmounted(() => {
               :list-item="actionUpdate"
               :type="2"
               icon="tabler:chevron-down"
+              @click.stop
             />
           </div>
         </template>

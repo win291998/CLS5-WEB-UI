@@ -10,6 +10,7 @@ import UserService from '@/api/user/index'
 import toast from '@/plugins/toast'
 import Globals from '@/constant/Globals'
 import ServerFileService from '@/api/server-file/index'
+import { load } from '@/stores/loadComponent.js'
 
 const CpInputFile = defineAsyncComponent(() => import('@/components/page/gereral/CpInputFile.vue'))
 const SkUser = defineAsyncComponent(() => import('@/components/page/gereral/skeleton/SkUser.vue'))
@@ -20,6 +21,8 @@ const CmRadio = defineAsyncComponent(() => import('@/components/common/CmRadio.v
 const CmButton = defineAsyncComponent(() => import('@/components/common/CmButton.vue'))
 const CmItemFileUpload = defineAsyncComponent(() => import('@/components/common/CmItemFileUpload.vue'))
 const CmVideoJs = defineAsyncComponent(() => import('@/components/common/CmVideoJs.vue'))
+const CmChip = defineAsyncComponent(() => import('@/components/common/CmChip.vue'))
+const CpActionFooterEdit = defineAsyncComponent(() => import('@/components/page/gereral/CpActionFooterEdit.vue'))
 
 /** store */
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
@@ -28,8 +31,10 @@ const { schemaOption, Field, Form, useForm, yup } = storeValidate
 const { submitForm } = useForm()
 const route = useRoute()
 const storeContentTypeModifyManager = contentTypeManagerStore()
-const { videoData } = storeToRefs(storeContentTypeModifyManager)
-
+const { videoData, timeComplete, contentId } = storeToRefs(storeContentTypeModifyManager)
+const { handleUpdateContent, fetchContent, resetDataVideo } = storeContentTypeModifyManager
+const store = load()
+const { unLoadComponent } = store
 const schema = yup.object({
   name: schemaOption.defaultString,
   url: schemaOption.defaultString,
@@ -46,12 +51,11 @@ const LABEL = Object.freeze({
   TITLE7: t('permistion-fringed'),
 })
 const comboboxThemetic = ref([])
-const myFormAddCourse = ref()
+const myFormAddContentVideo = ref()
 const urlEncode = ref()
 const serverCode = ref()
 const errorsInputFile = ref<any>([])
 const sizeFile = ref(0)
-const haveVideoLocal = ref(false)
 const vSelectOwner = ref<any>({
   listCombobox: [],
   totalRecord: 0,
@@ -82,7 +86,11 @@ const localFile = reactive({
   urlEncode: null,
   haveVideoLocal: false,
   localVideoFileName: null,
+  file: [] as any[],
 })
+
+// video cdn
+const cdnUrl = ref('')
 const intervalLoadingLocalFile = ref<any>()
 const fileUpload = ref([{ name: 'Real-Time', icon: 'tabler:file', size: 0, processing: 95 }])
 const SERVERFILE = process.env.VUE_APP_BASE_SERVER_FILE
@@ -179,8 +187,8 @@ function addVideoYoutube() {
     const youtubeId = getYoutubeId(youtube.youtubeUrl)
     youtube.iframeUrl = `https://www.youtube.com/embed/${youtubeId}`
     youtube.haveVideoYoutube = true
+    videoData.value.acceptDownload = false
     if (videoData.value.name === null || videoData.value.name.length === 0)
-
       videoData.value.name = youtubeId
 
     getYoutubeDuration(youtubeId)
@@ -190,6 +198,7 @@ function addVideoYoutube() {
 // thời gian media
 function getDuration(file: any) {
   const video = document.createElement('video')
+  localFile.file = [file]
   video.preload = 'metadata'
   video.src = URL.createObjectURL(file)
 
@@ -205,6 +214,7 @@ function getDuration(file: any) {
 async function getVideoLocalInfo(folder: any, getFileSize?: any) {
   const data = await MethodsUtil.requestApiCustom(`${SERVERFILE}${ServerFileService.GetInforFile}${folder}`, TYPE_REQUEST.GET)
   localFile.localVideoFileName = data.fileName
+  videoData.value.urlFileName = data.fileName
   if (acceptDownload.value && data.filePath) {
     // video cho phép tải( không mã hóa)
     localFile.localUrl = data.filePath
@@ -217,7 +227,54 @@ async function getVideoLocalInfo(folder: any, getFileSize?: any) {
     isLoadingVideo.value = false
   }
 }
-function handleChangeFile(data: any) {
+async function getCdnFileInfo(cdnUrl) {
+  const data = await this.$store.dispatch(`${SERVER_FILE_STORE_MODULE}/getInfo`, cdnUrl)
+
+  // this.haveVideoCdn = true
+  // if (data.isProcessing) {
+  //   if (data?.serverCode && data?.serverCode !== this.serverCode)
+  //     this.serverCode = data.serverCode
+
+  //   this.isProcessing = false
+  //   clearTimeout(this.intervalLoadingCdnFile)
+  //   this.intervalLoadingCdnFile = null
+  // }
+}
+
+// cập nhật dữ liệu chỉnh sửa
+function getDetailVideoContent() {
+  if (videoData.value.url && videoData.value.url !== null) {
+    if (videoData.value.urlCdn) {
+      videoType.value = 'cdn'
+      cdnUrl.value = videoData.value.url
+      isLoadingVideo.value = false
+      getCdnFileInfo(cdnUrl.value)
+    }
+    else if (videoData.value.url.includes(youtube.youtubeOrginUrl) === true) {
+      videoType.value = 'youtube'
+      youtube.youtubeUrl = videoData.value.url
+      youtube.haveVideoYoutube = true
+      const youtubeId = getYoutubeId(youtube.youtubeUrl)
+      youtube.iframeUrl = `https://www.youtube.com/embed/${youtubeId}`
+    }
+    else {
+      videoType.value = 'local'
+      localFile.localUrl = videoData.value.url
+      localFile.haveVideoLocal = true
+      getVideoLocalInfo(videoData.value.acceptDownload ? videoData.value.urlFileName : videoData.value.url)
+    }
+    if (videoData.value.timeTypeId === 2) {
+      time.value.selfMinute = Math.floor(videoData.value.time / 60)
+      time.value.selfSecond = Math.floor(videoData.value.time % 60)
+    }
+    else {
+      time.value.contentMinute = Math.floor(videoData.value.time / 60)
+      time.value.contentSecond = Math.floor(videoData.value.time % 60)
+    }
+  }
+  else { videoData.value.timeTypeId = 1 }
+}
+function uploadVideoLocal(data: any) {
   console.log(data)
   fileUpload.value[0].size = data.size
   fileUpload.value[0].name = data.name
@@ -227,23 +284,103 @@ function handleChangeFile(data: any) {
   if (videoData.value.name === null || videoData.value.name.length === 0)
     videoData.value.name = data.name
   videoData.value.acceptDownload = acceptDownload.value
-  haveVideoLocal.value = true
+  localFile.haveVideoLocal = true
   isLoadingVideo.value = true
   getVideoLocalInfo(data.filePath, true)
   intervalLoadingLocalFile.value = setInterval(() => {
     getVideoLocalInfo(data.filePath)
   }, 4000)
 }
-onMounted(() => {
-  getListThematicContent()
-  getTeacherOwnerCourse()
+
+// lưu
+function saveAndUpdate(idx: any, isUpdate: boolean) {
+  if (!isUpdate)
+    isUpdate = false
+  videoData.value.timeVideoOrSound = Number(time.value.contentMinute) * 60 + Number(time.value.contentSecond)
+  if (videoData.value.timeTypeId === 1)
+    videoData.value.time = Number(time.value.contentMinute) * 60 + Number(time.value.contentSecond)
+
+  else
+    videoData.value.time = Number(time.value.selfMinute) * 60 + Number(time.value.selfSecond)
+
+  if (videoData.value.time === 0) {
+    toast('WARNING', t('time-min-0'))
+    unLoadComponent(idx)
+    return
+  }
+
+  if (timeComplete.value && videoData.value.time < timeComplete.value) {
+    toast('WARNING', t('content-time-less-than-success-time'))
+    unLoadComponent(idx)
+    return
+  }
+
+  // this.$refs.rule.validate().then(async success => {
+  //   if (success) {
+  //     else if (this.videoType === 'local') {
+  //       videoData.value.url = this.localUrl
+  //       if (this.acceptDownload)
+  //         videoData.value.urlFileName = this.urlEncode
+
+  //       videoData.value.urlCdn = null
+  //     }
+  //     else { videoData.value.url = this.cdnUrl }
+  //     this.$emit('saveData', isUpdate)
+  //   }
+  // })
+  myFormAddContentVideo.value.validate().then(async (success: any) => {
+    console.log(success)
+
+    if (success.valid) {
+      videoData.value.courseId = Number(route.params.id)
+      videoData.value.archiveTypeId = 4
+      if (videoType.value === 'youtube') {
+        videoData.value.url = youtube.youtubeUrl
+        videoData.value.urlCdn = null
+        videoData.value.isRewind = false
+      }
+      else if (videoType.value === 'local') {
+        videoData.value.url = localFile.localUrl
+        if (acceptDownload.value)
+          videoData.value.urlFileName = localFile.urlEncode
+
+        videoData.value.urlCdn = null
+      }
+      else { videoData.value.url = cdnUrl.value }
+
+      handleUpdateContent(idx, isUpdate)
+    }
+    else {
+      unLoadComponent(idx)
+    }
+  })
+  console.log(videoData.value)
+}
+async function abc() {
+  await getListThematicContent()
+  await getTeacherOwnerCourse()
+  await console.log(123)
+
+  if (route.params && route.params.contentId) {
+    const id = Number(route.params.contentId)
+    contentId.value = id
+    await fetchContent(id).then(() => {
+      getDetailVideoContent()
+    })
+  }
+}
+abc()
+
+onUnmounted(() => {
+  resetDataVideo()
+  storeContentTypeModifyManager.$dispose()
 })
 </script>
 
 <template>
   <div class="mt-6">
     <Form
-      ref="myFormAddCourse"
+      ref="myFormAddContentVideo"
       :validation-schema="schema"
       @submit.prevent="submitForm"
     >
@@ -330,8 +467,8 @@ onMounted(() => {
         <VCol
           cols="12"
         >
-          <div class="mb-4 text-medium-sm">
-            {{ t('setting') }}
+          <div class="text-semibold-md color-text-900 mb-4 ">
+            {{ t('duration-time') }}
           </div>
           <div class="d-flex align-center mb-6">
             <div class="d-flex align-center mr-4">
@@ -532,7 +669,7 @@ onMounted(() => {
         </div>
       </div>
       <div v-if="videoType === 'youtube'">
-        <VRow class="mb-4">
+        <VRow>
           <VCol
             cols="12"
             sm="6"
@@ -563,12 +700,7 @@ onMounted(() => {
             </div>
           </VCol>
         </VRow>
-        <div class="embed-responsive mb-4">
-          <embed
-            :src="youtube.iframeUrl"
-          >
-        </div>
-        <VRow class="mb-4">
+        <VRow>
           <VCol
             cols="12"
           >
@@ -576,6 +708,21 @@ onMounted(() => {
               v-model:model-value="videoData.isSpeed"
               :label="LABEL.TITLE6"
             />
+          </VCol>
+        </VRow>
+        <VRow>
+          <VCol
+            cols="12"
+            sm="6"
+          >
+            <div
+              v-if="youtube.haveVideoYoutube"
+              class="embed-responsive"
+            >
+              <embed
+                :src="youtube.iframeUrl"
+              >
+            </div>
           </VCol>
         </VRow>
       </div>
@@ -595,28 +742,43 @@ onMounted(() => {
                 type="text"
               >
                 <CpInputFile
+                  v-model="localFile.file"
                   v-model:accept-download="acceptDownload"
                   class="w-100"
+                  :file-name="videoData.urlFileName"
                   :accept="acceptDownload ? '.mp4' : Globals.videoExtention"
                   :is-btn-download="false"
                   is-request-file-install
                   :is-background="true"
                   :errors="errorsInputFile"
                   :is-secure="!acceptDownload"
-                  @change="handleChangeFile"
+                  @change="uploadVideoLocal"
                   @onChangeFile="getDuration"
                 />
               </Field>
             </div>
           </VCol>
         </VRow>
-        <VRow class="mb-4">
+        <VRow v-if="localFile.haveVideoLocal">
+          <VCol
+            cols="12"
+            class="d-flex"
+          >
+            <CmChip
+              :color="acceptDownload ? 'primary' : 'error'"
+            >
+              <span>{{ acceptDownload ? t("Cho phép tải") : t("Không cho phép tải") }}</span>
+            </CmChip>
+          </VCol>
+        </VRow>
+        <VRow>
           <VCol
             cols="12"
             class="d-flex"
           >
             <CmCheckBox
               v-model:model-value="videoData.isRewind"
+              class="mr-6"
               :label="LABEL.TITLE7"
             />
             <CmCheckBox
@@ -625,7 +787,8 @@ onMounted(() => {
             />
           </VCol>
         </VRow>
-        <VRow v-if="haveVideoLocal">
+
+        <VRow v-if="localFile.haveVideoLocal">
           <VCol
             v-if="isLoadingVideo"
             cols="12"
@@ -639,29 +802,31 @@ onMounted(() => {
             </div>
           </VCol>
         </VRow>
-        <div
-          v-if="!isLoadingVideo"
-          class="embed-responsive mb-4"
-        >
-          <embed
-            :src="`${SERVERFILE}/${localFile.localUrl}`"
-          >
-          <CmVideoJs
-            :is-secure="!acceptDownload"
-            :src="localFile.localUrl"
-            :server-code="serverCode"
-          />
-        </div>
-        <VRow class="mb-4">
+        <VRow v-if="localFile.haveVideoLocal">
           <VCol
+            v-if="!isLoadingVideo"
             cols="12"
+            sm="6"
           >
-            <CmCheckBox
-              v-model:model-value="videoData.isSpeed"
-              :label="LABEL.TITLE6"
+            <CmVideoJs
+              :is-secure="!acceptDownload"
+              :src="localFile.localUrl"
+              :server-code="serverCode"
             />
           </VCol>
         </VRow>
+      </div>
+      <div>
+        <CpActionFooterEdit
+          is-cancel
+          is-save
+          :is-save-and-update="!videoData.courseContentId || videoData.courseContentId === null"
+          :title-cancel="t('come-back')"
+          :title-save="t('save')"
+          :title-save-and-update="t('save-and-update')"
+          @on-save="(idx: any) => saveAndUpdate(idx, false)"
+          @on-save-update="(idx: any) => saveAndUpdate(idx, true)"
+        />
       </div>
     </Form>
   </div>

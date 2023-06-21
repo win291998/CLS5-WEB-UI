@@ -70,6 +70,8 @@ const CourseService = {
   PostMoveThemetic: '/coursecontent/move-themetic', // Cập nhật chuyên đề cho nội dung
   PostListStockContent: '/contentarchive/get-paging', // Lấy dánh sách kho nội dung
   PostAddLContentStock: '/coursecontent/save-archive-to-course-content', // Thêm dánh sách kho nội dung
+  PostUpdateContent: '/contentarchive/update', // Cập nhật nội dung khóa học
+  PostCreateContent: '/contentarchive/create', // Thêm nội dung khóa học
 
   /** Delete */
   DeleteUserReg: 'courseuser/delete-register',

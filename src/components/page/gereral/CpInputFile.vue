@@ -28,7 +28,9 @@ const store = load()
 const { unLoadComponent } = store
 interface Props {
   accept?: string
+  fileName?: string | null
   errors?: any
+  modelValue?: any
   isBtnDownload?: boolean
   isSecure?: boolean
   isBackground?: boolean
@@ -43,6 +45,7 @@ const intervalTime = ref(100)
 const haveFile = ref(false)
 const SERVERFILE = process.env.VUE_APP_BASE_SERVER_FILE
 const userData = JSON.parse(localStorage.getItem('userData') || '')
+const dataFile = ref(props.modelValue)
 const params = ref({
   files: null as any,
   isSecure: props.isSecure || false as any,
@@ -207,6 +210,7 @@ watch(() => props.isSecure, (val: any) => {
     <div class="d-flex cm-input-file">
       <VFileInput
         ref="inputFile"
+        v-model="dataFile"
         :error="errors?.length > 0 ?? false"
         :error-messages="messageError"
         class="mr-3"
@@ -214,9 +218,14 @@ watch(() => props.isSecure, (val: any) => {
         :placeholder="t('upload')"
         outlined
         dense
+        :clearable="false"
         :accept="accept"
         @change="onFileSelected"
-      />
+      >
+        <template #prepend-inner>
+          <span>{{ fileName }}</span>
+        </template>
+      </VFileInput>
       <CmButton
         class="mr-2"
         color="primary"

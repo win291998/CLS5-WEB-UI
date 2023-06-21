@@ -444,6 +444,7 @@ export const contentManagerStore = defineStore('contentManager', () => {
         cloneData.value = window._.cloneDeep(value.data)
         let dataRow = ArraysUtil.unFlatMapTree(value.data)
         dataRow = ArraysUtil.formatTreeTable(dataRow, customId.value)
+
         dataRow.forEach((element: any) => {
           // element.actions = element.actions?.map((el: any) => {
           //   return MethodsUtil.checkActionType(el, actionItemUserReg)
@@ -464,6 +465,7 @@ export const contentManagerStore = defineStore('contentManager', () => {
         })
 
         items.value = dataRow
+
         updatePosition()
       })
   }
