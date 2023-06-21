@@ -3403,5 +3403,14 @@
   "add-content-to-repo-success": "Thêm vào ngân hàng nội dung thành công",
   "QrCode": "Mã QR",
   "auto-seting": "Thiết lập tự động",
-  "setting-ratio": "Thiết lập tỉ lệ"
+  "setting-ratio": "Thiết lập tỉ lệ",
+  "implement": "Áp dụng",
+  "Mo" : "T2",
+  "Tu" : "T3",
+  "We" : "T4",
+  "Th" : "T5",
+  "Fr" : "T6",
+  "Sa" : "T7",
+  "Su" : "CN",
+  "today": "Hôm nay"
 }
