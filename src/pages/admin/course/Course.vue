@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { courseListManagerStore } from '@/stores/admin/course/courseList'
 import { courseApproveManagerStore } from '@/stores/admin/course/approve'
+import { courseManagerStore } from '@/stores/admin/course/course'
 import StringUtil from '@/utils/StringUtil'
 import MethodsUtil from '@/utils/MethodsUtil'
 import DateUtil from '@/utils/DateUtil'
@@ -9,6 +10,7 @@ import StringJwt from '@/utils/Jwt'
 import CourseService from '@/api/course/index'
 import { TYPE_REQUEST } from '@/typescript/enums/enums'
 import CmCollapse from '@/components/common/CmCollapse.vue'
+import toast from '@/plugins/toast'
 
 window.showAllPageLoading('COMPONENT')
 
@@ -35,14 +37,18 @@ const {
   isShowFilter, queryParams, items, totalRecord,
   settingDefaults, constant, compoboxSortCourse,
   users, topicCombobox, disabledDelete,
-  disabledApprove, isShowDialogNotiDelete, isShowModalCoppyCourse,
+  disabledApprove, isShowDialogNotiDelete,
+
 } = storeToRefs(storeCourseListManager)
 const {
   handlerActionHeader, handleFilterCombobox,
   handlePageClick, selectedRows, pushQuery, handleSearch,
   deleteItem, deleteItems, confirmDialogDelete,
-  updateDialogVisible, approveCourses, approve, handleCoppyCourse,
+  updateDialogVisible, approveCourses, approve,
 } = storeCourseListManager
+
+const storecourseManager = courseManagerStore()
+const { isShowModalCoppyCourse, coppyData } = storeToRefs(storecourseManager)
 
 const storeCourseApproveManager = courseApproveManagerStore()
 const { idModalSendApproveCourse, idModalSendRatioPoint } = storeToRefs(storeCourseApproveManager)
@@ -63,7 +69,11 @@ const queryParamsInit = {
   ownerId: null,
 }
 watch(() => route.query, (val: any) => {
+  console.log(val)
+
   if (Object.keys(val).length > 0) {
+    console.log(val)
+
     queryParams.value.pageNumber = val.pageNumber ? Number(val.pageNumber) : 1
     queryParams.value.pageSize = val.pageSize ? Number(val.pageSize) : 10
     queryParams.value.search = val.search ? val.search : null
@@ -121,8 +131,6 @@ const dataFeedBack = ref<any>()
 
 // hàm trả về các loại action khi click
 function actionItem(type: any) {
-  console.log(type)
-
   switch (type[0]?.name) {
     case 'ActionDelete':
       deleteItem(type[1].id)
@@ -141,6 +149,7 @@ function actionItem(type: any) {
       break
     case 'CopyCourse':
       isShowModalCoppyCourse.value = true
+      coppyData.value.id = type[1].id
       break
     default:
       break
@@ -172,13 +181,28 @@ async function handleViewFeedBack(id: number) {
     id,
   }
   await MethodsUtil.requestApiCustom(CourseService.GetFeedBackCourse, TYPE_REQUEST.GET, params).then((value: any) => {
-    console.log(value)
     dataFeedBack.value = value.data?.feedback
   })
 }
 async function handleApproveCourse() {
   queryParams.value = queryParamsInit
   await pushQuery()
+}
+
+async function handleCoppyCourse() {
+  window.showAllPageLoading('FULL-OPACITY')
+  await MethodsUtil.requestApiCustom(CourseService.PostCoppyCourse, TYPE_REQUEST.POST, coppyData.value).then((value: any) => {
+    toast('SUCCESS', t(value.message))
+    nextTick(() => {
+      isShowModalCoppyCourse.value = false
+      fetchListCourse()
+      window.hideAllPageLoading()
+    })
+  })
+    .catch((error: any) => {
+      toast('ERROR', t(error.response.data.message))
+      window.hideAllPageLoading()
+    })
 }
 
 // Fetch data danh sách khóa học
@@ -270,7 +294,6 @@ window.hideAllPageLoading()
         :headers="headers"
         :items="items"
         :total-record="totalRecord"
-        custom-id="courseContentId"
         :page-number="queryParams.pageNumber"
         @handlePageClick="handlePageClick"
         @update:selected="selectedRows"
@@ -311,7 +334,7 @@ window.hideAllPageLoading()
     />
     <CpMdCoppyCourse
       v-model:is-show-modal="isShowModalCoppyCourse"
-      @confirm="handleCoppyCourse"
+      @save-change="handleCoppyCourse"
     />
     <CpMdRatioPointContent
       v-model:is-dialog-visible="idModalSendRatioPoint"

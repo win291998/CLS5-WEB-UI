@@ -68,7 +68,40 @@ export default [
         },
         component: () => import('@/pages/admin/course/modify/ModifyCourse.vue'),
       },
-
+      {
+        path: ':id/edit/:tab/add-content/:type/:contentTab',
+        name: 'content-add',
+        meta: {
+          breadcrumb: [
+            {
+              title: 'course-edit',
+              to: { name: 'course-edit' },
+            },
+            {
+              title: 'add-content',
+              active: true,
+            },
+          ],
+        },
+        component: () => import('@/pages/admin/course/modify/content/Content.vue'),
+      },
+      {
+        path: ':id/edit/:tab/edit-content/:contentId/:type/:contentTab',
+        name: 'content-edit',
+        meta: {
+          breadcrumb: [
+            {
+              title: 'course-edit',
+              to: { name: 'course-edit' },
+            },
+            {
+              title: 'add-content',
+              active: true,
+            },
+          ],
+        },
+        component: () => import('@/pages/admin/course/modify/content/Content.vue'),
+      },
     ],
   },
 ]

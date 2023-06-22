@@ -67,15 +67,12 @@ export const courseListManagerStore = defineStore('courseListManager', () => {
     selectedRowsIds: [], // list id các row table được chọn
   })
   const isShowDialogNotiDelete = ref(false)
-  const isShowModalCoppyCourse = ref(false)
   const disabledDelete = computed(() => !data.selectedRowsIds.length)
   const disabledApprove = computed(() => !data.selectedRowsIds.length)
 
   /** method */
   /* ==> thực hiện các action được chọn ở header page CP */
   function handlerActionHeader(type: any) {
-    console.log(type)
-
     switch (type) {
       case 'handlerAddButton':
 
@@ -130,6 +127,8 @@ export const courseListManagerStore = defineStore('courseListManager', () => {
   async function handleSearch(value: any) {
     queryParams.value.pageNumber = 1
     queryParams.value.search = value
+    console.log(value)
+
     await pushQuery()
   }
   function selectedRows(e: any) {
@@ -232,10 +231,6 @@ export const courseListManagerStore = defineStore('courseListManager', () => {
     isShowDialogNotiDelete.value = event
   }
 
-  // sao chép khóa học
-  function handleCoppyCourse() {
-    isShowModalCoppyCourse.value = false
-  }
   async function approveCourses() {
     if (MethodsUtil.checkPermission(permission.value, 'CourseManaging', 128)) {
       const params = {
@@ -341,7 +336,6 @@ export const courseListManagerStore = defineStore('courseListManager', () => {
     disabledApprove,
     data,
     isApprovingDisable,
-    isShowModalCoppyCourse,
     handlerActionHeader,
     handleFilterCombobox,
     handlePageClick,
@@ -356,6 +350,5 @@ export const courseListManagerStore = defineStore('courseListManager', () => {
     updateDialogVisible,
     approveCourses,
     approve,
-    handleCoppyCourse,
   }
 })

@@ -29,8 +29,6 @@ function onConfirm(params: any) {
   handleUpdatePointCourse()
 }
 watch(idModalSendRatioPoint, isShow => {
-  console.log(isShow)
-
   if (isShow) {
     scoreSettingCourse.value.courseId = Number(route.params.id)
     scoreSetting(Number(route.params.id))

@@ -88,7 +88,6 @@ async function getListSemester() {
   queryParams.value.exceptIds = props.excludeIds ? props.excludeIds : []
   await MethodsUtil.requestApiCustom(ReportService.PostComboboxTest, TYPE_REQUEST.POST, queryParams.value).then((value: any) => {
     if (value.data) {
-      console.log(value.data)
       value.data.pageLists.forEach((element: any) => {
         element.selectedLevel = null
       })
@@ -109,10 +108,8 @@ async function handlePageClick(page: any) {
 }
 function selectedRows(e: any) {
   data.selectedRowsIds = e
-  console.log(e)
 }
 function changeCellvalue(params: any, context: any) {
-  console.log(params, context)
   items.value[context.originIndex].typeId = context?.typeId
 }
 

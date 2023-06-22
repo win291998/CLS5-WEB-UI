@@ -72,7 +72,6 @@ async function getListCapacity() {
   queryParams.value.excludeProficiencyLevelMapIdList = props.excludeIds ? props.excludeIds : []
   await MethodsUtil.requestApiCustom(UserService.PostProciencyPaging, TYPE_REQUEST.POST, queryParams.value).then((value: any) => {
     if (value.data) {
-      console.log(value.data)
       value.data.pageLists.forEach((element: any) => {
         element.selectedLevel = null
       })
@@ -95,7 +94,6 @@ function selectedRows(e: any) {
   data.selectedRowsIds = e
 }
 function changeCellvalue(params: any, context: any) {
-  console.log(params, context)
   items.value[context.originIndex].selectedLevel = context?.selectedLevel
 }
 

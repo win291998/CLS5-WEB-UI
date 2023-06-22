@@ -64,7 +64,6 @@ export const conditionManagerStore = defineStore('conditionManager', () => {
   async function getCapacityRequired() {
     queryParamsCapacity.value.courseId = courseData.value?.id
     await MethodsUtil.requestApiCustom(CourseService.GetRequiredProficiencies, TYPE_REQUEST.GET, queryParamsCapacity.value).then((value: any) => {
-      console.log(value)
       const params = {
         keyword: queryParamsCapacity.value?.search,
         proficiencyLevelMapIdList: value.data?.map(({ proficiencyLevelMapId }: any) => proficiencyLevelMapId),
@@ -96,8 +95,6 @@ export const conditionManagerStore = defineStore('conditionManager', () => {
 
   // hàm trả về các loại action khi click
   function actionItemCapacity(type: any) {
-    console.log(type)
-
     switch (type[0]?.name) {
       case 'ActionDelete':
         deleteItemCapacity(type[1].id)
@@ -118,7 +115,6 @@ export const conditionManagerStore = defineStore('conditionManager', () => {
     const params = {
       listId: dataCapacity.deleteIds,
     }
-    console.log(params)
     await MethodsUtil.requestApiCustom(CourseService.PostDeleteRequiredProficiencies, TYPE_REQUEST.POST, params).then((value: any) => {
       getCapacityRequired()
       dataCapacity.selectedRowsIds = []
@@ -172,7 +168,6 @@ export const conditionManagerStore = defineStore('conditionManager', () => {
     const params = {
       listId: dataCourse.deleteIds,
     }
-    console.log(params)
     await MethodsUtil.requestApiCustom(CourseService.PostDeleteCourseRequired, TYPE_REQUEST.POST, params).then((value: any) => {
       getCourseRequired()
       dataCourse.selectedRowsIds = []
@@ -197,8 +192,6 @@ export const conditionManagerStore = defineStore('conditionManager', () => {
   }
 
   function actionItemCourse(type: any) {
-    console.log(type)
-
     switch (type[0]?.name) {
       case 'ActionDelete':
         deleteItemCourse(type[1].courseRequiredId)
@@ -210,7 +203,6 @@ export const conditionManagerStore = defineStore('conditionManager', () => {
   async function getCourseRequired() {
     queryParamsCourse.value.courseId = courseData.value?.id
     await MethodsUtil.requestApiCustom(CourseService.GetRequiredCourse, TYPE_REQUEST.GET, queryParamsCourse.value).then(async (value: any) => {
-      console.log(value)
       if (!listTopicCourseCombobox.value?.length)
         await getlistTopicCourseCombobox()
       value?.data.forEach((element: any) => {
@@ -232,12 +224,10 @@ export const conditionManagerStore = defineStore('conditionManager', () => {
       toast('WARNING', t('course-invalid'))
       return
     }
-    console.log(courses)
     const params = {
       courseId: courseData.value?.id,
       requiredCourseList: courses.map(({ id }: any) => id),
     }
-    console.log(params)
 
     await MethodsUtil.requestApiCustom(CourseService.PostAddCourseRequired, TYPE_REQUEST.POST, params).then((value: any) => {
       getCourseRequired()

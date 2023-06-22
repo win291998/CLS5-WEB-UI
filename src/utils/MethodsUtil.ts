@@ -1,5 +1,6 @@
 import jwt_decode from 'jwt-decode'
 import { ActionType } from '@/constant/data/actionType.json'
+import { typeFile } from '@/constant/data/typeFile.json'
 import { StatusTypeUser } from '@/constant/data/status.json'
 import ApiUser from '@/api/user/index'
 import { TYPE_REQUEST } from '@/typescript/enums/enums'
@@ -55,30 +56,38 @@ export default class MethodsUtil {
    * @param {any} payload =>  Dữ liệu đính kèm api
    * @return {string}
    */
-  static dowloadSampleFile = async (url: string, method: string, nameFile: string, payload?: any) => {
-    const model = {
-      language: localStorage.getItem('lang') === null ? 'vi' : localStorage.getItem('lang'),
-    }
+  static dowloadSampleFile = async (url: string, method: string, nameFile: string, payload?: any): Promise<void> => {
+    return new Promise<void>((resolve, reject) => {
+      const model = {
+        language: localStorage.getItem('lang') === null ? 'vi' : localStorage.getItem('lang'),
+      }
 
-    const data = method === 'GET' ? model : !window._.isEmpty(payload) ? payload : model
-    const params = method === 'GET' ? payload : null
+      const data = method === 'GET' ? model : !window._.isEmpty(payload) ? payload : model
+      const params = method === 'GET' ? payload : null
 
-    const response = await window.axios({
-      url,
-      method,
-      responseType: 'blob',
-      data,
-      params,
+      window.axios({
+        url,
+        method,
+        responseType: 'blob',
+        data,
+        params,
+      })
+        .then(response => {
+          const fileURL = window.URL.createObjectURL(new Blob([response.data]))
+
+          const fileLink = document.createElement('a')
+
+          fileLink.href = fileURL
+          fileLink.setAttribute('download', nameFile)
+          document.body.appendChild(fileLink)
+          fileLink.click()
+
+          resolve()
+        })
+        .catch(error => {
+          reject(error)
+        })
     })
-
-    const fileURL = window.URL.createObjectURL(new Blob([response]))
-
-    const fileLink = document.createElement('a')
-
-    fileLink.href = fileURL
-    fileLink.setAttribute('download', nameFile)
-    document.body.appendChild(fileLink)
-    fileLink.click()
   }
 
   /**
@@ -93,6 +102,7 @@ export default class MethodsUtil {
       return
     const data = (method === 'GET') ? null : (payload || null)
     const params = (method === 'GET') ? payload : null
+    console.log(data, params)
 
     return window.axios({
       url,
@@ -250,5 +260,22 @@ export default class MethodsUtil {
     catch (err: any) {
       return err?.response?.data
     }
+  }
+
+  static formatCapacity(val: any) {
+    if (val < 1024)
+      return `${val} Byte`
+
+    if (val < 1024 ** 2)
+      return `${Math.round((val / 1024) * 100) / 100} KB`
+
+    if (val < 1024 ** 3)
+      return `${Math.round((val / 1024 ** 2) * 100) / 100} MB`
+
+    return `${Math.round((val / 1024 ** 3) * 100) / 100} GB`
+  }
+
+  static checkTypeFile(type: string) {
+    return (typeFile as any)[type ?? 'default']
   }
 }

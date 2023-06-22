@@ -85,7 +85,6 @@ function handleClickBtn(type: string) {
   }
 }
 async function changeCellvalue(params: any, context: any) {
-  console.log(params, context)
   itemsUserReg.value[context.originIndex].isContact = context?.isContact
   await postRegisterContactUser(context?.id)
 }

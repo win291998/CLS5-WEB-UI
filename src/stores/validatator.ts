@@ -104,6 +104,7 @@ export const validatorStore = defineStore('validator', () => {
     positive: 'Vui lòng nhập số dương.',
     numberMin: 'Vui lòng nhập số lớn hơn 0.',
     email: 'Định dạng email không hợp lệ.',
+    file: 'Vui lòng chọn tệp đính kèm',
     url: 'Định dạng url không hợp lệ.',
     username: 'Tên đăng nhập không hợp lệ, cho phép tiếng việt không dấu và các ký tự đặc biệt -_.@ không liên tiếp',
     requiredOption: (field?: any) => `${field || ''} phải chứa ít nhất một lựa chọn`,
@@ -129,6 +130,7 @@ export const validatorStore = defineStore('validator', () => {
   const schemaOption = reactive({
     defaultField: yup.string().max(CONFIG.DEFAULT_FIELD.MAX, ruleMessage.max(CONFIG.DEFAULT_FIELD.MAX)),
     defaultString: yup.string().required(ruleMessage.required()).max(CONFIG.DEFAULT_STRING.MAX, ruleMessage.max(CONFIG.DEFAULT_STRING.MAX)),
+    defaultFile: yup.string().required(ruleMessage.file),
     defaultStringArea: yup.string().required(ruleMessage.required()).max(CONFIG.DEFAULT_ARIA.MAX, ruleMessage.max(CONFIG.DEFAULT_ARIA.MAX)),
     defaultNumber: yup.number().typeError(ruleMessage.typeNumber).test('positive', ruleMessage.positive, (value: any) => value >= 0).nullable().required(ruleMessage.required()).max(CONFIG.DEFAULT_NUMBER.MAX_VALUE, ruleMessage.max(CONFIG.DEFAULT_NUMBER.MAX_VALUE)),
     defaultNumberPrice: yup.number().typeError(ruleMessage.typeNumber).test('positive', ruleMessage.positive, (value: any) => value >= 0).nullable().required(ruleMessage.required()).max(CONFIG.DEFAULT_NUMBER_PRICE.MAX_VALUE, ruleMessage.max(CONFIG.DEFAULT_NUMBER_PRICE.MAX_VALUE)),
@@ -141,7 +143,10 @@ export const validatorStore = defineStore('validator', () => {
     defaultNumber100YubNoRequire: yup.number().typeError(ruleMessage.typeNumber).test('positive', ruleMessage.positive, (value: any) => value >= 0).nullable().max(CONFIG.DEFAULT_NUMBER_100.MAX_VALUE, ruleMessage.maxValue(CONFIG.DEFAULT_NUMBER_100.MAX_VALUE)),
     defaultNumber100Not0YubNoRequire: yup.number().typeError(ruleMessage.typeNumber).test('positive', ruleMessage.numberMin, (value: any) => value > 0 || value === null).nullable().max(CONFIG.DEFAULT_NUMBER_100.MAX_VALUE, ruleMessage.maxValue(CONFIG.DEFAULT_NUMBER_100.MAX_VALUE)),
     defaultNumberNot0: yup.number().typeError(ruleMessage.typeNumber).test('positive', ruleMessage.numberMin, (value: any) => value > 0).nullable().required(ruleMessage.required()).max(CONFIG.DEFAULT_NUMBER.MAX_VALUE, ruleMessage.max(CONFIG.DEFAULT_NUMBER.MAX_VALUE)),
-
+    defaultNumberTime: yup.number().typeError(ruleMessage.typeNumber).test('positive', ruleMessage.numberMin, (value: any) => {
+      console.log(value)
+      return Number(value) >= 0
+    }).max(59, ruleMessage.maxValue(59)),
     requiredString: (field?: any) => yup.string().required(ruleMessage.required(field)).max(CONFIG.DEFAULT_STRING.MAX, ruleMessage.max(CONFIG.DEFAULT_STRING.MAX)),
     code: yup.string().max(CONFIG.CODE.MAX, ruleMessage.max(CONFIG.CODE.MAX)).nullable(),
     require: yup.string().required(ruleMessage.required()),

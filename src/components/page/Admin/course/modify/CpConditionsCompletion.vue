@@ -43,11 +43,9 @@ function onCancel() {
   router.push({ name: 'course-list' })
 }
 async function handleSave() {
-  console.log(myFormAddRequiredComplete.value)
   if (isAmount.value) {
     myFormAddRequiredComplete.value.validate().then(async (success: any) => {
       if (success.valid) {
-        console.log(success)
         if (condition.value.requiredContentQuantity > condition.value.totalRequireContent) {
           toast('WARNING', t('amount-required-invalid'))
           return
@@ -57,7 +55,6 @@ async function handleSave() {
           return
         }
         await MethodsUtil.requestApiCustom(CourseService.PostUpdateFinishRequired, TYPE_REQUEST.POST, condition).then((value: any) => {
-          console.log(value)
           toast('SUCCESS', t(value.message))
         }).catch((error: any) => {
           toast('ERROR', t(error.response.data.message))
@@ -111,7 +108,7 @@ onMounted(() => {
                 </div>
                 <span class="text-regular-md">/{{ condition.totalRequireContent }} {{ t('content').toLowerCase() }}</span>
               </div>
-              <div class="styleError text-error">
+              <div class="styleError text-errors">
                 {{ errors[0] }}
               </div>
             </Field>

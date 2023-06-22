@@ -57,8 +57,6 @@ async function getListTeacher() {
   queryParams.value.excludeIds = props.excludeIds ? props.excludeIds : []
   await MethodsUtil.requestApiCustom(UserService.PostGetTeacher, TYPE_REQUEST.POST, queryParams.value).then((value: any) => {
     if (value.data) {
-      console.log(value.data)
-
       items.value = value.data.pageLists
       totalRecord.value = value.data.totalRecord
     }
@@ -91,8 +89,6 @@ async function onConfirm() {
   })
 }
 watch(() => props.isShowModalAddTeacher, isShow => {
-  console.log(123)
-
   if (isShow) {
     getListTeacher()
   }

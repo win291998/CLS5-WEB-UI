@@ -32,7 +32,7 @@ const theme: VuetifyOptions['theme'] = {
       variables: {
         'default': '#1849a9',
         'line-default': '#eaecf0',
-        'border-color': '#d0d5dd',
+        'border-color': '#D0D5DD',
         'medium-emphasis-opacity': 1,
         'color-text-primary': color['color-text-primary'],
         'color-primary': color['color-primary'],

@@ -21,6 +21,9 @@ const CourseService = {
   GetExportExcelUserRegCourse: '/CourseUser/export-excel-register', // Xuất excel người đăng ký khóa học
   GetListContentCourse: '/contentarchive/get-by-course', // Xuất excel người đăng ký khóa học
   GetFeadback: '/coursecontent/get-feedback-course-content', // Xuất excel người đăng ký khóa học
+  GetListReferContent: '/coursecontent/get-list-reference-content', // Lấy danh sách nội dung tham khảo
+  GetListThematicContent: '/course/get-list-themetic-by-course', // Lấy danh sách nội dung tham khảo
+  GetInforContentById: '/coursecontent/get-by-id', // Lấy danh sách nội dung tham khảo
 
   /** Post */
   PostAddCourseOrg: '/course/add-course-to-organizational-structures',
@@ -58,6 +61,17 @@ const CourseService = {
   PostDeleteUserGroup: '/course/delete-user-from-groupser', // cập nhật vị trí nội dung
   PostListApproveContent: '/coursecontent/get-paging-agree-course-content', // Danh sách nội dung gửi duỵet
   PostSendApproveContent: '/coursecontent/send-agree-course-content', // Danh sách nội dung gửi duỵet
+  PostCoppyCourse: '/course/copy-course', // Sao chép khóa học
+  PostUpdateRefer: '/contentarchive/update', // Lưu nội dung tham khảo
+  PostAddRefer: '/contentarchive/create', // Lưu nội dung tham khảo
+  PostDeleteRefer: '/coursecontent/delete-reference-content', // Xóa nội dung tham khảo
+  PostListReferStock: '/coursecontent/get-reference-content', // Danh sách nội dung tham khảo trong kho nội dung
+  PostSaveRefContent: '/coursecontent/save-reference-content', // Danh sách nội dung tham khảo trong kho nội dung
+  PostMoveThemetic: '/coursecontent/move-themetic', // Cập nhật chuyên đề cho nội dung
+  PostListStockContent: '/contentarchive/get-paging', // Lấy dánh sách kho nội dung
+  PostAddLContentStock: '/coursecontent/save-archive-to-course-content', // Thêm dánh sách kho nội dung
+  PostUpdateContent: '/contentarchive/update', // Cập nhật nội dung khóa học
+  PostCreateContent: '/contentarchive/create', // Thêm nội dung khóa học
 
   /** Delete */
   DeleteUserReg: 'courseuser/delete-register',

@@ -4,7 +4,7 @@
 
 <template>
   <div>
-    nooij dung tham khao
+    content off
   </div>
 </template>
 

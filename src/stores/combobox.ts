@@ -76,7 +76,6 @@ export const comboboxStore = defineStore('combobox', () => {
   }
   const getComboboxTypeContent = async () => {
     return await MethodsUtil.requestApiCustom(ComboboxService.GetComboboxContentType, TYPE_REQUEST.GET).then(async (value: any) => {
-      console.log(value)
       return value
     })
   }
@@ -125,7 +124,6 @@ export const comboboxStore = defineStore('combobox', () => {
         element.fullName = StringUtil.formatFullName(element.firstName, element.lastName)
       })
       compoboxCourseApprove.value = value?.data
-      console.log(compoboxCourseApprove.value)
     })
   }
 

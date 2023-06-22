@@ -53,8 +53,6 @@ const disabledApprove = computed(() => !data.selectedRowsIds.length)
 /** method */
 // hàm trả về các loại action khi click
 function actionItem(type: any) {
-  console.log(type)
-
   switch (type[0]?.name) {
     case 'ActionDeclined':
       handleApproveRejectById(type[1], 'back')
@@ -101,7 +99,6 @@ async function handleApproveReject(key: string) {
       description: items.value.find((rowData: any) => rowData.id = item)?.description,
     })
   })
-  console.log(key)
 
   await MethodsUtil.requestApiCustom(
     key === 'approve'
@@ -141,8 +138,6 @@ async function handleApproveRejectById(rowItem: any, key: string) {
 
 // hàm trả về các loại action từ header filter
 function handleClickBtn(type: string) {
-  console.log(type)
-
   switch (type) {
     case 'fillter':
       isShowFilter.value = !isShowFilter.value

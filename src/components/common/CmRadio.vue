@@ -5,6 +5,7 @@ interface Props {
   modelValue: any
   size?: number
   label?: any
+  type?: number
   disabled?: boolean
 }
 interface Emit {
@@ -21,13 +22,17 @@ const selectedOption = ref(props.modelValue)
 function change() {
   emit('update:model-value', selectedOption.value)
 }
-watch(() => props.value, val => {
-  // console.log(val)
-})
+watch(() => props.modelValue, val => {
+  console.log(val)
+  selectedOption.value = val
+}, { immediate: true })
 </script>
 
 <template>
-  <div class="radio-item">
+  <div
+    class="radio-item"
+    :class="{ 'radio-item2': type === 1 }"
+  >
     <input
       :id="`radio-${value}`"
       v-model="selectedOption"
@@ -38,10 +43,12 @@ watch(() => props.value, val => {
       :disabled="disabled"
       @change="change"
     >
-    <label
+    <!--
+      <label
       :class="{ disabled }"
       :for="`radio-${value}`"
-    >{{ label }}</label>
+      >{{ label }}</label>
+    -->
   </div>
 </template>
 
@@ -49,12 +56,10 @@ watch(() => props.value, val => {
   .radio-item {
   display: inline-block;
   position: relative;
-  padding: 0 6px;
-  margin: 10px 0 0;
 }
 
 .radio-item input[type='radio'] {
-  display: none;
+  // display: none;
 }
 
 .radio-item label {
@@ -67,7 +72,6 @@ watch(() => props.value, val => {
   display: inline-block;
   position: relative;
   top: 5px;
-  margin: 0 5px 0 0;
   width: 20px;
   height: 20px;
   border-radius: 11px;
@@ -93,7 +97,20 @@ watch(() => props.value, val => {
   height: 12px;
   position: absolute;
   top: 9px;
-  left: 10px;
+  left: 4px;
+  transform: translate(0%, 0%);
+  content: " ";
+  display: block;
+  background: rgb(var(--v-primary-600));
+}
+.radio-item.radio-item2 input[type=radio]:checked + label:after {
+  border-radius: 11px;
+  width: 8px;
+  height: 8px;
+  position: absolute;
+  top: 11px;
+  left: 6px;
+  transform: translate(0%, 0%);
   content: " ";
   display: block;
   background: rgb(var(--v-primary-600));

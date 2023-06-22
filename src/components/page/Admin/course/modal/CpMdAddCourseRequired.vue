@@ -73,12 +73,10 @@ async function getListCourse() {
   queryParams.value.excludeListId = props.excludeIds ? props.excludeIds : []
   await MethodsUtil.requestApiCustom(CourseService.GetListCourseAdd, TYPE_REQUEST.GET, queryParams.value).then(async (value: any) => {
     if (value.data) {
-      console.log(value.data)
       if (!listTopicCourseCombobox.value?.length)
         await getlistTopicCourseCombobox()
       value.data.pageLists.forEach((element: any) => {
         const topic: any = listTopicCourseCombobox.value?.find((x: any) => x.key === element.topicCourseId)
-        console.log(topic)
 
         if (topic)
           element.topicCourseName = topic.value

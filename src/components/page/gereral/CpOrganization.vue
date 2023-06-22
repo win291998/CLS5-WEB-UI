@@ -72,7 +72,6 @@ async function getListOrgStruct() {
 }
 async function getListDetailOrgStruct() {
   await MethodsUtil.requestApiCustom(props.apiDetail.api, props.apiDetail.method, props.apiDetail.params).then((value: any) => {
-    console.log(value.data)
     valueNodeCurrent.value = value.data
     listModelOld.value = window._.cloneDeep(value.data)
   })
@@ -80,7 +79,6 @@ async function getListDetailOrgStruct() {
 async function updateValueOrg(value: any) {
   emit('update:modelValue', value)
   listModelNew.value = value
-  console.log(value)
 }
 async function handleSave() {
   const params = {

@@ -105,7 +105,10 @@ const sizeModal = computed(() => {
       @update:model-value="onCancel"
       @before-enter="onDialogShown"
     >
-      <CmCard backgroud="bg-white">
+      <CmCard
+        :class="{ 'modal-custom-divspace': isDivSpace }"
+        backgroud="bg-white"
+      >
         <template #title>
           <VCardTitle>
             {{ title }}
@@ -116,6 +119,12 @@ const sizeModal = computed(() => {
             {{ subTitle }}
             <slot name="sub-title" />
           </VCardSubtitle>
+          <VIcon
+            class="btn-close-x"
+            @click="onCancel"
+          >
+            mdi-close
+          </VIcon>
         </template>
         <template
           #text
@@ -165,7 +174,7 @@ const sizeModal = computed(() => {
   padding-inline: 24px;
 }
 
-.v-card-item {
+.modal-custom-divspace .v-card-item {
   border-block-end: 1px solid $color-line-default;
 }
 .cm-dialogs.appendToBody {
@@ -178,5 +187,10 @@ const sizeModal = computed(() => {
     }
 
   }
+}
+.btn-close-x{
+  position: absolute;
+  top: 14px;
+  right: 24px;
 }
 </style>

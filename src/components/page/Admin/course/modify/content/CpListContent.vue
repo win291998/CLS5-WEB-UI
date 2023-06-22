@@ -16,15 +16,21 @@ const CmDropDown = defineAsyncComponent(() => import('@/components/common/CmDrop
 const CpMdRatioPointContent = defineAsyncComponent(() => import('@/components/page/Admin/course/modal/CpMdRatioPointContent.vue'))
 const CpContentApprove = defineAsyncComponent(() => import('@/components/page/Admin/course/modify/content/CpContentApprove.vue'))
 const CpActionFooterEdit = defineAsyncComponent(() => import('@/components/page/gereral/CpActionFooterEdit.vue'))
-const CpMdUpdateThematicContent = defineAsyncComponent(() => import('@/components/page/Admin/course/modal/CpMdUpdateThematicContent.vue'))
+const CpMdMoveThematicContent = defineAsyncComponent(() => import('@/components/page/Admin/course/modal/CpMdMoveThematicContent.vue'))
+const CpMdEditThematic = defineAsyncComponent(() => import('@/components/page/Admin/course/modal/CpMdEditThematic.vue'))
+const CpMdAddFromStockContent = defineAsyncComponent(() => import('@/components/page/Admin/course/modal/CpMdAddFromStockContent.vue'))
 
-/** store */
 /**
  * Store
  */
+
 const storeContentManager = contentManagerStore()
-const { items, isShowModelFeedback, feedbackContent, isShowDialogNotiDelete, disabledDelete, disabledEdit, data, viewMode, isShowModalUpdateThematic } = storeToRefs(storeContentManager)
-const { getListContentCourse, confirmDialogDelete, handlerActionHeader, showUpdateThematicModal, handleSearch, selectedRows, deleteItems, actionItemUserReg, checkMove, approveContent } = storeContentManager
+const {
+  items, isShowModelFeedback, feedbackContent, isShowDialogNotiDelete,
+  disabledDelete, disabledEdit, data, viewMode, isShowModalMoveThematic,
+  isShowModalUpdateThematic, isShowModalAddStockContent,
+} = storeToRefs(storeContentManager)
+const { getListContentCourse, handleMoveThematic, handleAddContentFromStock, confirmDialogDelete, handlerActionHeader, handleSearch, selectedRows, deleteItems, actionItemUserReg, checkMove, approveContent } = storeContentManager
 const storeCourseApproveManager = courseApproveManagerStore()
 const { idModalSendRatioPoint } = storeToRefs(storeCourseApproveManager)
 const groupOptions = {
@@ -35,6 +41,7 @@ const groupOptions = {
 
 /** lib */
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
+const route = useRoute()
 const router = useRouter()
 
 const headers = reactive([
@@ -49,17 +56,34 @@ const headers = reactive([
 ])
 const actionUpdate = [
   {
-    title: t('Update-user-info'),
+    title: t('add-from-stock-content'),
     icon: 'tabler:folder-plus',
+    underline: true,
     action: () => {
-      // router.push({ name: 'admin-organization-user-import-file-update-user-infor' })
+      isShowModalAddStockContent.value = true
     },
   },
   {
-    title: t('update-tile-from-file'),
-    icon: 'tabler:folder-plus',
+    title: t('thematics'),
+    icon: 'tabler:list',
+    underline: true,
     action: () => {
-      // router.push({ name: 'admin-organization-user-import-file-update-user-title' })
+      isShowModalUpdateThematic.value = true
+    },
+  },
+  {
+    title: t('video'),
+    icon: 'solar:video-frame-play-vertical-linear',
+    action: () => {
+      router.push({
+        name: 'content-add',
+        params: {
+          id: Number(route.params.id),
+          tab: route.params.tab,
+          type: 'video',
+          contentTab: 'infor',
+        },
+      })
     },
   },
 
@@ -84,8 +108,6 @@ function handleClickRow(e: any) {
 }
 
 async function approveMultiContent() {
-  console.log(data.value.selectedRowsIds)
-
   const listId = data.value.selectedRowsIds.map((item: any) => ({
     id: item,
   }))
@@ -93,24 +115,20 @@ async function approveMultiContent() {
     getListContentCourse()
   })
 }
+
 function onCancel() {
   router.replace({ name: 'admin-course' })
 }
 
 // hàm trả về các loại action từ header filter
 function handleClickBtn(type: string) {
-  console.log(type)
-
   switch (type) {
-    // case 'fillter':
-    //   isShowFilter.value = !isShowFilter.value
-    //   break
     case 'delete':
       deleteItems()
       break
 
     case 'edit':
-      showUpdateThematicModal()
+      isShowModalMoveThematic.value = true
       break
 
     default:
@@ -159,6 +177,7 @@ onUnmounted(() => {
               :list-item="actionApprove"
               :type="2"
               icon="tabler:chevron-down"
+              @click.stop
             />
           </div>
           <div
@@ -173,6 +192,7 @@ onUnmounted(() => {
               :list-item="actionUpdate"
               :type="2"
               icon="tabler:chevron-down"
+              @click.stop
             />
           </div>
         </template>
@@ -200,6 +220,8 @@ onUnmounted(() => {
     </div>
     <div class="mb-6">
       <CmTableGroup
+        key-check-parent-row="contentArchiveTypeId"
+        :value-check-parent-row="13"
         :group-options="groupOptions"
         :headers="headers"
         :items="items"
@@ -209,6 +231,9 @@ onUnmounted(() => {
         @update:selected="selectedRows"
       >
         <template #rowItem="{ col, context }">
+          <div v-if="col === 'fullname'">
+            {{ MethodsUtil.formatFullName(context.firstName, context.lastName) }}
+          </div>
           <div v-if="col === 'contentArchiveTypeName'">
             {{ t(context[col]) }}
           </div>
@@ -287,8 +312,17 @@ onUnmounted(() => {
     <CpMdRatioPointContent
       v-model:is-dialog-visible="idModalSendRatioPoint"
     />
-    <CpMdUpdateThematicContent
-      v-model:isShowModalUpdateThematic="isShowModalUpdateThematic"
+    <CpMdMoveThematicContent
+      v-model:isShowModal="isShowModalMoveThematic"
+      @saveChange="handleMoveThematic"
+    />
+    <CpMdEditThematic
+      v-model:isShowModal="isShowModalUpdateThematic"
+      @saveChange="handleMoveThematic"
+    />
+    <CpMdAddFromStockContent
+      v-model:isShowModal="isShowModalAddStockContent"
+      @saveChange="handleAddContentFromStock"
     />
   </div>
   <div

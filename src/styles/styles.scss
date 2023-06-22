@@ -77,6 +77,9 @@ html, body{
 .color-warning-300 {
   color: $color-warning-300 !important;
 }
+.color-text-900 {
+  color: $color-gray-900 !important;
+}
 
 .color-success {
   color: $color-success-600 !important;
@@ -332,7 +335,7 @@ span {
   padding: $xl-5;
 }
 
-.text-error {
+.text-errors {
   color: $color-error-600 !important;
   line-height: 12px;
   word-break: break-word;

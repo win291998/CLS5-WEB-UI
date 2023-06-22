@@ -22,6 +22,7 @@ export const contentManagerStore = defineStore('contentManager', () => {
   const { idModalSendRatioPoint } = storeToRefs(storeCourseApproveManager)
   const { handleUpdatePointCourse } = storeCourseApproveManager
 
+  /** ********************************Content******************************************** */
   /** state */
   const data = reactive({
     deleteIds: [], // list id các row table muốn xóa
@@ -35,8 +36,23 @@ export const contentManagerStore = defineStore('contentManager', () => {
   const isShowModelFeedback = ref(false)
   const isShowDialogNotiDelete = ref(false)
   const isShowModalUpdateThematic = ref(false)
+  const isShowModalMoveThematic = ref(false)
+  const courseContentId = ref<number | null>(null)
   const disabledDelete = computed(() => !data.selectedRowsIds.length)
   const disabledEdit = computed(() => !data.selectedRowsIds.length)
+  const contentDataEdit = ref<any>({
+    name: null,
+    themeticId: null,
+    courseId: null,
+    topicCourseId: 0,
+    archiveTypeId: 13,
+    description: '',
+    url: null,
+    dateTimeStart: null,
+    dateTimeEnd: null,
+    isRewind: false,
+    isPdf: false,
+  })
   const paramsContent = ref({
     id: Number(route?.params?.id) || null,
     search: null as any,
@@ -44,12 +60,52 @@ export const contentManagerStore = defineStore('contentManager', () => {
   })
 
   /** method */
+  function handleUpdateThematic() {
+    contentDataEdit.value.courseId = Number(route.params?.id)
+    MethodsUtil.requestApiCustom(courseContentId.value ? CourseService.PostUpdateRefer : CourseService.PostAddRefer, TYPE_REQUEST.POST, contentDataEdit.value).then((value: any) => {
+      toast('SUCCESS', t(value?.message))
+      getListContentCourse()
+    }).catch((error: any) => {
+      toast('ERROR', t(error.response.data.message))
+    })
+  }
+  async function getInforContent(id: any) {
+    const params = {
+      isView: false,
+      id,
+    }
+    await MethodsUtil.requestApiCustom(CourseService.GetInforContentById, TYPE_REQUEST.GET, params).then((value: any) => {
+      console.log(value)
+      if (value.data?.themeticId === 0)
+        value.data.themeticId = null
+      contentDataEdit.value = value?.data
+    })
+  }
   async function actionItemUserReg(type: any) {
     console.log(type)
 
     switch (type[0]?.name) {
       case 'ActionEdit':
-        console.log('ActionEdit')
+        console.log(type)
+        if (type[1]?.contentArchiveTypeId === 13) {
+          getInforContent(type[1]?.courseContentId)
+          courseContentId.value = type[1]?.courseContentId
+          nextTick(() => {
+            isShowModalUpdateThematic.value = true
+          })
+        }
+        else {
+          router.push({
+            name: 'content-edit',
+            params: {
+              id: Number(route.params.id),
+              tab: 'content',
+              type: 'video',
+              contentTab: 'infor',
+              contentId: type[1]?.courseContentId,
+            },
+          })
+        }
         break
       case 'ActionDelete':
         deleteItem(type[1].courseContentId)
@@ -121,27 +177,19 @@ export const contentManagerStore = defineStore('contentManager', () => {
 
     return newListContent
   }
-  function showUpdateThematicModal() {
-    const thematic = data.selectedRowsIds.find((x: any) => x.contentArchiveTypeId === 13)
-    if (thematic) {
-      toast('WARNING', t('not-select-thematic'))
-      return
-    }
-    isShowModalUpdateThematic.value = true
-  }
+
   async function handleSearch(val: any) {
-    // paramsContent.value.search = value
-    // await getListContentCourse()
     paramsContent.value.search = val
     let dataRow = ArraysUtil.unFlatMapTree(updateStatusListCourse(cloneData.value, val))
     dataRow = ArraysUtil.formatTreeTable(dataRow, customId.value)
     dataRow.forEach((element: any) => {
-      element.actions = element.actions?.map((el: any) => {
-        return MethodsUtil.checkActionType(el, actionItemUserReg)
-      })
+      // element.actions = element.actions?.map((el: any) => {
+      //   return MethodsUtil.checkActionType(el, actionItemUserReg)
+      // })
       element.actions = [
-        ...element.actions,
+        MethodsUtil.checkActionType({ id: 1 }, actionItemUserReg),
         MethodsUtil.checkActionType({ id: 2 }, actionItemUserReg),
+        MethodsUtil.checkActionType({ id: 3 }, actionItemUserReg),
         MethodsUtil.checkActionType({ id: 5 }, actionItemUserReg),
         MethodsUtil.checkActionType({ id: 6 }, actionItemUserReg),
         MethodsUtil.checkActionType({ id: 7 }, actionItemUserReg),
@@ -155,8 +203,6 @@ export const contentManagerStore = defineStore('contentManager', () => {
     items.value = dataRow
   }
   function handlerActionHeader(type: any) {
-    console.log(type)
-
     switch (type) {
       case 'handlerCustomButton':
 
@@ -222,8 +268,6 @@ export const contentManagerStore = defineStore('contentManager', () => {
       id,
     }
     await MethodsUtil.requestApiCustom(CourseService.GetFeadback, TYPE_REQUEST.GET, params).then((value: any) => {
-      console.log(value)
-
       feedbackContent.value = value.data
       isShowModelFeedback.value = true
     })
@@ -293,7 +337,6 @@ export const contentManagerStore = defineStore('contentManager', () => {
       let index = 0
       if (parent?.id === item?.id) {
         index = window._.findIndex(cloneData.value, (element: any) => window._.isEqual(element.id, parent.id))
-        console.log(index)
         if (isMoveUp === true)
           return index > 0
         return index < cloneData.value.length - 1
@@ -308,7 +351,7 @@ export const contentManagerStore = defineStore('contentManager', () => {
   }
 
   // cập nhật vị trí
-  async function updatePosition(toash: any) {
+  async function updatePosition(toash?: any) {
     const params = {
       courseId: Number(route?.params?.id),
       listId: items.value.map((itemRow: any, indexRow: any) => ({
@@ -324,6 +367,27 @@ export const contentManagerStore = defineStore('contentManager', () => {
         toast('ERROR', t(error.response.data.message))
 
       // items.value = dataClone.value
+      })
+  }
+
+  // cập nhật chuyên đề
+  async function handleMoveThematic(thematic: any) {
+    console.log(thematic)
+
+    const params = {
+      courseId: Number(route?.params?.id),
+      themeticId: thematic,
+      model: data.selectedRowsIds,
+    }
+
+    await MethodsUtil.requestApiCustom(CourseService.PostMoveThemetic, TYPE_REQUEST.POST, params).then((value: any) => {
+      toast('SUCCESS', t(value?.message))
+      data.deleteIds = []
+      data.selectedRowsIds = []
+      getListContentCourse()
+    })
+      .catch((error: any) => {
+        toast('ERROR', t(error.response.data.message))
       })
   }
 
@@ -392,13 +456,13 @@ export const contentManagerStore = defineStore('contentManager', () => {
         cloneData.value = window._.cloneDeep(value.data)
         let dataRow = ArraysUtil.unFlatMapTree(value.data)
         dataRow = ArraysUtil.formatTreeTable(dataRow, customId.value)
-        dataRow.forEach((element: any) => {
-          console.log(element.actions)
 
+        dataRow.forEach((element: any) => {
           // element.actions = element.actions?.map((el: any) => {
           //   return MethodsUtil.checkActionType(el, actionItemUserReg)
           // })
           element.actions = [
+            MethodsUtil.checkActionType({ id: 1 }, actionItemUserReg),
             MethodsUtil.checkActionType({ id: 2 }, actionItemUserReg),
             MethodsUtil.checkActionType({ id: 3 }, actionItemUserReg),
             MethodsUtil.checkActionType({ id: 5 }, actionItemUserReg),
@@ -411,9 +475,166 @@ export const contentManagerStore = defineStore('contentManager', () => {
             // MethodsUtil.checkActionType({ id: 21 }, actionItemUserReg),
           ]
         })
-        console.log(dataRow)
 
         items.value = dataRow
+
+        updatePosition()
+      })
+  }
+
+  /** ********************************end Content******************************************** */
+  /** ********************************Reference******************************************** */
+  // state
+  const viewModeRefer = ref('view')
+  const itemsRefer = ref()
+  const customIdRefer = ref('id')
+  const isShowDialogNotiDeleteRefer = ref(false)
+  const isShowModalAddRefStock = ref(false)
+  const cloneDataRefer = ref<any>([])
+  const contentRefer = ref<any>({
+    courseId: route.params.id,
+    archiveTypeId: 0,
+    description: '',
+    name: null,
+    url: null,
+    dateTimeStart: null,
+    dateTimeEnd: null,
+    isRewind: false,
+    isPdf: false,
+  })
+  const paramsRefer = ref({
+    id: Number(route?.params?.id) || null,
+    search: null as any,
+    role: StringJwt.getRole(),
+  })
+  const dataRefer = reactive({
+    deleteIds: [], // list id các row table muốn xóa
+    selectedRowsIds: [], // list id các row table được chọn
+  })
+  const disabledDeleteRefer = computed(() => !dataRefer.selectedRowsIds.length)
+
+  // Xóa từng item
+  function deleteItemRefer(id: number) {
+    dataRefer.deleteIds = [id as never]
+    isShowDialogNotiDeleteRefer.value = true
+  }
+  function deleteItemsRefer() {
+    dataRefer.deleteIds = dataRefer.selectedRowsIds
+    isShowDialogNotiDeleteRefer.value = true
+  }
+  async function deleteActionRefer() {
+    const params = {
+      courseId: Number(route?.params?.id),
+      model: dataRefer.deleteIds,
+    }
+    await MethodsUtil.requestApiCustom(CourseService.PostDeleteRefer, TYPE_REQUEST.POST, params)
+      .then(async (value: any) => {
+        toast('SUCCESS', t(value?.message))
+        await getListReferContentCourse(Number(route?.params?.id))
+        dataRefer.deleteIds = []
+        dataRefer.selectedRowsIds = []
+      })
+      .catch(() => {
+        toast('ERROR', t('USR_DeleteFail'))
+      })
+  }
+  function confirmDialogDeleteRefer(event: any) {
+    if (event)
+      deleteActionRefer()
+  }
+  function selectedRowsRefer(e: any) {
+    dataRefer.selectedRowsIds = e
+  }
+  async function actionItemRefer(type: any) {
+    switch (type[0]?.name) {
+      case 'ActionDelete':
+        deleteItemRefer(type[1].courseContentId)
+        break
+
+      default:
+        break
+    }
+  }
+
+  async function handleSearchRefer(val: any) {
+    paramsRefer.value.search = val
+    let dataRow = ArraysUtil.unFlatMapTree(updateStatusListCourse(cloneDataRefer.value, val))
+    dataRow = ArraysUtil.formatTreeTable(dataRow, customIdRefer.value)
+    dataRow.forEach((element: any) => {
+      element.actions = [
+        MethodsUtil.checkActionType({ id: 2 }, actionItemRefer),
+      ]
+    })
+    itemsRefer.value = dataRow
+  }
+  async function getListReferContentCourse(id: number) {
+    const params = {
+      id,
+    }
+    await MethodsUtil.requestApiCustom(CourseService.GetListReferContent, TYPE_REQUEST.GET, params)
+      .then((value: any) => {
+        cloneDataRefer.value = window._.cloneDeep(value.data)
+        let dataRow = ArraysUtil.unFlatMapTree(value.data)
+        dataRow = ArraysUtil.formatTreeTable(dataRow, customIdRefer.value)
+        dataRow.forEach((element: any) => {
+          element.actions = [
+            MethodsUtil.checkActionType({ id: 2 }, actionItemRefer),
+          ]
+        })
+        itemsRefer.value = dataRow
+      })
+  }
+  async function handleAddRefContentStock(dataRef: any) {
+    console.log(dataRef)
+    const params = {
+      courseId: Number(route?.params?.id),
+      model: dataRef,
+    }
+    await MethodsUtil.requestApiCustom(CourseService.PostSaveRefContent, TYPE_REQUEST.POST, params).then((value: any) => {
+      toast('SUCCESS', t(value?.message))
+      getListReferContentCourse(Number(route?.params?.id))
+    })
+      .catch((error: any) => {
+        toast('ERROR', t(error.response.data.message))
+      })
+  }
+
+  /** ********************************Reference******************************************** */
+  /** ********************************Stock content******************************************** */
+  const isShowModalAddStockContent = ref(false)
+  const paramsContentStock = ref({
+    listTopic: [
+    ],
+    authorId: null,
+    topicId: null,
+    archiveTypeId: null,
+    fromDate: '',
+    toDate: '',
+    pageSize: 10,
+    pageNumber: 1,
+    searchData: '',
+    role: StringJwt.getRole(),
+  })
+  const dataStock = reactive({
+    deleteIds: [], // list id các row table muốn xóa
+    selectedRowsIds: [], // list id các row table được chọn
+  })
+  async function handleAddContentFromStock(listId: any) {
+    console.log(listId)
+
+    const params = {
+      courseId: Number(route?.params?.id),
+      listId,
+    }
+
+    await MethodsUtil.requestApiCustom(CourseService.PostAddLContentStock, TYPE_REQUEST.POST, params).then((value: any) => {
+      toast('SUCCESS', t(value?.message))
+      data.deleteIds = []
+      data.selectedRowsIds = []
+      getListContentCourse()
+    })
+      .catch((error: any) => {
+        toast('ERROR', t(error.response.data.message))
       })
   }
 
@@ -425,6 +646,7 @@ export const contentManagerStore = defineStore('contentManager', () => {
   })
 
   return {
+    /** Nội dung */
     items,
     data,
     disabledDelete,
@@ -433,7 +655,10 @@ export const contentManagerStore = defineStore('contentManager', () => {
     feedbackContent,
     isShowDialogNotiDelete,
     isShowModalUpdateThematic,
+    isShowModalMoveThematic,
     viewMode,
+    contentDataEdit,
+    courseContentId,
     getListContentCourse,
     confirmDialogDelete,
     handlerActionHeader,
@@ -444,6 +669,27 @@ export const contentManagerStore = defineStore('contentManager', () => {
     actionItemUserReg,
     checkMove,
     approveContent,
-    showUpdateThematicModal,
+    handleMoveThematic,
+    handleUpdateThematic,
+
+    /** Nội dung tham khảo */
+    itemsRefer,
+    viewModeRefer,
+    contentRefer,
+    isShowDialogNotiDeleteRefer,
+    disabledDeleteRefer,
+    isShowModalAddRefStock,
+    confirmDialogDeleteRefer,
+    getListReferContentCourse,
+    selectedRowsRefer,
+    deleteItemsRefer,
+    handleSearchRefer,
+    handleAddRefContentStock,
+
+    /** Stock content */
+    dataStock,
+    isShowModalAddStockContent,
+    paramsContentStock,
+    handleAddContentFromStock,
   }
 })

@@ -39,8 +39,6 @@ const SERVERFILE = process.env.VUE_APP_BASE_SERVER_FILE
 /** method  */
 async function getFileInfo(folder: any) {
   const data = await MethodsUtil.requestApiCustom(`${SERVERFILE}${ServerFileService.GetInforFile}${folder}`, TYPE_REQUEST.GET)
-  console.log(data)
-
   if (data.isProcessing) {
     videoUrl.value = data.filePath
     isLoadingVideo.value = false
@@ -69,7 +67,6 @@ async function uploadFileToServerfile(file: any) {
     IsBackground: true,
   }
   const data = await MethodsUtil.uploadFile(model)
-  console.log('data: ', data)
 
   if (data?.error)
     isLoadingVideo.value = false

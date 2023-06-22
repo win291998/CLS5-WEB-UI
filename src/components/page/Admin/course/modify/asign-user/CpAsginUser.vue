@@ -144,7 +144,6 @@ const listTab: Tab[] = [
         },
       },
       routerCancel: 'course-list',
-
     },
   },
   {
