@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 import { useToast } from 'vue-toastification'
-import login from '../login.vue'
 import Permission from '../admin/organization/permission/Permission.vue'
 import treeSelect from './tree-select.vue'
 import demotab from './demotab.vue'
@@ -14,8 +13,9 @@ import CmDropDown from '@/components/common/CmDropDown.vue'
 import CmButtonGroup from '@/components/common/CmButtonGroup.vue'
 import CmSwitch from '@/components/common/CmSwitch.vue'
 import CmTab from '@/components/common/CmTab.vue'
+import CmDateTimpickerNew from '@/components/common/CmDateTimpickerNew.vue'
 
-const showToast = () => {
+function showToast() {
   // console.log(button123.value.unLoadButton())
   button123?.value.unLoadButton()
 
@@ -35,15 +35,15 @@ const showToast = () => {
   })
 }
 
-const handleItem1 = value => {
+function handleItem1(value) {
   // console.log(value)
 }
 
-const handleItem2 = value => {
+function handleItem2(value) {
   // console.log(value)
 }
 
-const handleItem3 = (value: any) => {
+function handleItem3(value: any) {
   // console.log(value)
 }
 
@@ -111,7 +111,7 @@ const action = [{
   },
 }]
 
-const handleClick = (value: any) => {
+function handleClick(value: any) {
 
   // console.log(action)
 }
@@ -128,7 +128,7 @@ const { loadMultiplecomponents, unLoadComponent } = store
 
 const router = useRouter()
 
-const handlerPreButton = () => {
+function handlerPreButton() {
   debugger
 }
 
@@ -136,7 +136,7 @@ const toast = useToast()
 
 const button123 = ref(null)
 
-const abcd = (val: any) => {
+function abcd(val: any) {
   //
 }
 </script>
@@ -349,6 +349,11 @@ const abcd = (val: any) => {
       type="underline"
       abc="abc"
       @hello="abcd"
+    />
+  </div>
+  <div style="width: 300px">
+    <CmDateTimpickerNew
+      class="w-100"
     />
   </div>
 </template>

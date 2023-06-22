@@ -28,6 +28,7 @@
     "@types/vue-select": "^3.16.2",
     "@vee-validate/rules": "^4.9.5",
     "@videojs/http-streaming": "^2.16.2",
+    "@vuepic/vue-datepicker": "^5.3.0",
     "@vueuse/core": "^10.1.2",
     "apexcharts-clevision": "^3.28.5",
     "axios": "1.4.0",
