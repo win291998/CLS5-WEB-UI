@@ -143,7 +143,10 @@ export const validatorStore = defineStore('validator', () => {
     defaultNumber100YubNoRequire: yup.number().typeError(ruleMessage.typeNumber).test('positive', ruleMessage.positive, (value: any) => value >= 0).nullable().max(CONFIG.DEFAULT_NUMBER_100.MAX_VALUE, ruleMessage.maxValue(CONFIG.DEFAULT_NUMBER_100.MAX_VALUE)),
     defaultNumber100Not0YubNoRequire: yup.number().typeError(ruleMessage.typeNumber).test('positive', ruleMessage.numberMin, (value: any) => value > 0 || value === null).nullable().max(CONFIG.DEFAULT_NUMBER_100.MAX_VALUE, ruleMessage.maxValue(CONFIG.DEFAULT_NUMBER_100.MAX_VALUE)),
     defaultNumberNot0: yup.number().typeError(ruleMessage.typeNumber).test('positive', ruleMessage.numberMin, (value: any) => value > 0).nullable().required(ruleMessage.required()).max(CONFIG.DEFAULT_NUMBER.MAX_VALUE, ruleMessage.max(CONFIG.DEFAULT_NUMBER.MAX_VALUE)),
-
+    defaultNumberTime: yup.number().typeError(ruleMessage.typeNumber).test('positive', ruleMessage.numberMin, (value: any) => {
+      console.log(value)
+      return Number(value) >= 0
+    }).max(59, ruleMessage.maxValue(59)),
     requiredString: (field?: any) => yup.string().required(ruleMessage.required(field)).max(CONFIG.DEFAULT_STRING.MAX, ruleMessage.max(CONFIG.DEFAULT_STRING.MAX)),
     code: yup.string().max(CONFIG.CODE.MAX, ruleMessage.max(CONFIG.CODE.MAX)).nullable(),
     require: yup.string().required(ruleMessage.required()),

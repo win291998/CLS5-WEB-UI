@@ -22,9 +22,10 @@ const selectedOption = ref(props.modelValue)
 function change() {
   emit('update:model-value', selectedOption.value)
 }
-watch(() => props.value, val => {
-  // console.log(val)
-})
+watch(() => props.modelValue, val => {
+  console.log(val)
+  selectedOption.value = val
+}, { immediate: true })
 </script>
 
 <template>
@@ -42,10 +43,12 @@ watch(() => props.value, val => {
       :disabled="disabled"
       @change="change"
     >
-    <label
+    <!--
+      <label
       :class="{ disabled }"
       :for="`radio-${value}`"
-    >{{ label }}</label>
+      >{{ label }}</label>
+    -->
   </div>
 </template>
 
@@ -56,7 +59,7 @@ watch(() => props.value, val => {
 }
 
 .radio-item input[type='radio'] {
-  display: none;
+  // display: none;
 }
 
 .radio-item label {

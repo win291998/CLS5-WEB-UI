@@ -19,6 +19,7 @@ interface item {
   icon?: string
   size?: number
   processing?: number
+  [name: string]: any
 }
 interface Props {
   isShowModal: boolean
@@ -73,7 +74,7 @@ async function cancel(index: any) {
             {{ item.name }}
           </div>
           <div class="ml-3 mb-2 text-regular-sm ">
-            {{ MethodsUtil.formatCapacity(item.size) }}
+            {{ item.size ? MethodsUtil.formatCapacity(item.size) : t("undefined") }}
           </div>
           <div class="ml-3 text-regular-sm ">
             <VProgressLinear

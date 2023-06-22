@@ -26,7 +26,7 @@ export const contentTypeManagerStore = defineStore('contentTypeManager', () => {
     name: '',
     url: null as null | string,
     urlFileName: null as null | string,
-    urlCdn: null,
+    urlCdn: '',
     ownerId: null,
     courseContentId: null,
     dateTimeStart: null,
@@ -173,7 +173,7 @@ export const contentTypeManagerStore = defineStore('contentTypeManager', () => {
   }
 
   // lấy nội dung điều kiện tham gia khóa học
-  async function fetchConditionAttend(id) {
+  async function fetchConditionAttend(id?: number | null) {
     // const { data } = await this.$store.dispatch(`${COURSE_CONTENT_STORE_MODULE_MODULE}/getConditionAttend`, id)
     // this.conditionAttend = data
     // if (data.dateTimeStart && data.dateTimeStart !== null) {
@@ -193,7 +193,7 @@ export const contentTypeManagerStore = defineStore('contentTypeManager', () => {
   }
 
   // lấy nội dung điều kiện hoàn thành khóa học
-  async function fetchConditionComplete(model) {
+  async function fetchConditionComplete(model: any) {
     // const { data } = await this.$store.dispatch(`${COURSE_CONTENT_STORE_MODULE_MODULE}/getConditionComplete`, model)
     // this.conditionComplete = data
   }
@@ -201,12 +201,12 @@ export const contentTypeManagerStore = defineStore('contentTypeManager', () => {
     const params = {
       id, isView: isView === true ? true : isViewDetail.value,
     }
-    console.log(params)
-
     return await MethodsUtil.requestApiCustom(CourseService.GetInforContentById, TYPE_REQUEST.GET, params).then((value: any) => {
       console.log(value)
-      if (value?.data)
+      if (value?.data) {
+        value.data.themeticId = value.data.themeticId ? value.data.themeticId : null
         videoData.value = value?.data
+      }
 
       if (videoData.value.archiveTypeId !== 12)
         fetchConditionAttend(videoData.value.courseContentId)
@@ -216,6 +216,11 @@ export const contentTypeManagerStore = defineStore('contentTypeManager', () => {
       typeContent.value = getTypeContent(videoData.value.archiveTypeId)
     })
   }
+
+  // youtobe
+  // local
+  // cdn
+
   onMounted(() => {
     //
   })
@@ -229,6 +234,7 @@ export const contentTypeManagerStore = defineStore('contentTypeManager', () => {
     timeComplete,
     isUpdate,
     contentId,
+    isViewDetail,
     handleUpdateContent,
     fetchContent,
     resetDataVideo,

@@ -102,6 +102,7 @@ export default class MethodsUtil {
       return
     const data = (method === 'GET') ? null : (payload || null)
     const params = (method === 'GET') ? payload : null
+    console.log(data, params)
 
     return window.axios({
       url,

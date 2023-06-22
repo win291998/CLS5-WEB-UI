@@ -2,7 +2,7 @@
 import axios from 'axios'
 import moment from 'moment'
 import { validatorStore } from '@/stores/validatator'
-import { contentTypeManagerStore } from '@/stores/admin/course/type/contentTypeModify'
+import { contentTypeManagerStore } from '@/stores/admin/course/type/contentVideoTypeModify'
 import { TYPE_REQUEST } from '@/typescript/enums/enums'
 import MethodsUtil from '@/utils/MethodsUtil'
 import CourseService from '@/api/course/index'
@@ -23,6 +23,7 @@ const CmItemFileUpload = defineAsyncComponent(() => import('@/components/common/
 const CmVideoJs = defineAsyncComponent(() => import('@/components/common/CmVideoJs.vue'))
 const CmChip = defineAsyncComponent(() => import('@/components/common/CmChip.vue'))
 const CpActionFooterEdit = defineAsyncComponent(() => import('@/components/page/gereral/CpActionFooterEdit.vue'))
+const CpMdProcessing = defineAsyncComponent(() => import('@/components/page/gereral/modal/CpMdProcessing.vue'))
 
 /** store */
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
@@ -30,14 +31,18 @@ const storeValidate = validatorStore()
 const { schemaOption, Field, Form, useForm, yup } = storeValidate
 const { submitForm } = useForm()
 const route = useRoute()
-const storeContentTypeModifyManager = contentTypeManagerStore()
-const { videoData, timeComplete, contentId } = storeToRefs(storeContentTypeModifyManager)
-const { handleUpdateContent, fetchContent, resetDataVideo } = storeContentTypeModifyManager
+const storeContentVideoTypeModifyManager = contentTypeManagerStore()
+const { videoData, timeComplete, contentId, isViewDetail } = storeToRefs(storeContentVideoTypeModifyManager)
+const {
+  handleUpdateContent, fetchContent, resetDataVideo,
+} = storeContentVideoTypeModifyManager
 const store = load()
 const { unLoadComponent } = store
 const schema = yup.object({
   name: schemaOption.defaultString,
   url: schemaOption.defaultString,
+  selfMinute: schemaOption.defaultNumberTime,
+  selfSecond: schemaOption.defaultNumberTime,
 })
 
 /** state */
@@ -63,6 +68,7 @@ const vSelectOwner = ref<any>({
   pageSize: 30,
   search: '',
   excludeList: [],
+  currentUserIds: [],
   itemSelected: {} as any,
 })
 const myFormAddTime = ref()
@@ -81,7 +87,7 @@ const youtube = reactive({
 })
 
 // Video local variable
-const localFile = reactive({
+const localFile = ref({
   localUrl: '',
   urlEncode: null,
   haveVideoLocal: false,
@@ -90,7 +96,10 @@ const localFile = reactive({
 })
 
 // video cdn
-const cdnUrl = ref('')
+const cdn = reactive({
+  haveVideoCdn: false,
+  cdnUrl: '',
+})
 const intervalLoadingLocalFile = ref<any>()
 const fileUpload = ref([{ name: 'Real-Time', icon: 'tabler:file', size: 0, processing: 95 }])
 const SERVERFILE = process.env.VUE_APP_BASE_SERVER_FILE
@@ -121,6 +130,7 @@ async function getTeacherOwnerCourse(loadMore?: any) {
     pageNumber: vSelectOwner.value.pageNumber,
     keyword: vSelectOwner.value.search,
     excludeIds: vSelectOwner.value.excludeList,
+    currentUserIds: vSelectOwner.value.currentUserIds,
   }
   await MethodsUtil.requestApiCustom(UserService.PostGetTeacher, TYPE_REQUEST.POST, params).then((value: any) => {
     if (value?.data?.pageLists.length) {
@@ -198,26 +208,31 @@ function addVideoYoutube() {
 // thời gian media
 function getDuration(file: any) {
   const video = document.createElement('video')
-  localFile.file = [file]
+  localFile.value.file = [file]
   video.preload = 'metadata'
   video.src = URL.createObjectURL(file)
+  console.log(video)
 
   video.onloadedmetadata = function () {
     window.URL.revokeObjectURL(video.src)
     const { duration } = video
     if (duration) {
+      console.log(duration)
+      console.log(Math.floor(Math.ceil(duration) / 60))
+      console.log(Math.floor(Math.ceil(duration) % 60))
       time.value.contentMinute = Math.floor(Math.ceil(duration) / 60)
       time.value.contentSecond = Math.floor(Math.ceil(duration) % 60)
+      console.log(time.value)
     }
   }
 }
 async function getVideoLocalInfo(folder: any, getFileSize?: any) {
   const data = await MethodsUtil.requestApiCustom(`${SERVERFILE}${ServerFileService.GetInforFile}${folder}`, TYPE_REQUEST.GET)
-  localFile.localVideoFileName = data.fileName
+  localFile.value.localVideoFileName = data.fileName
   videoData.value.urlFileName = data.fileName
   if (acceptDownload.value && data.filePath) {
     // video cho phép tải( không mã hóa)
-    localFile.localUrl = data.filePath
+    localFile.value.localUrl = data.filePath
   }
   if (data.isProcessing && !getFileSize) {
     if (data?.serverCode && data?.serverCode !== serverCode.value)
@@ -227,28 +242,15 @@ async function getVideoLocalInfo(folder: any, getFileSize?: any) {
     isLoadingVideo.value = false
   }
 }
-async function getCdnFileInfo(cdnUrl) {
-  const data = await this.$store.dispatch(`${SERVER_FILE_STORE_MODULE}/getInfo`, cdnUrl)
-
-  // this.haveVideoCdn = true
-  // if (data.isProcessing) {
-  //   if (data?.serverCode && data?.serverCode !== this.serverCode)
-  //     this.serverCode = data.serverCode
-
-  //   this.isProcessing = false
-  //   clearTimeout(this.intervalLoadingCdnFile)
-  //   this.intervalLoadingCdnFile = null
-  // }
-}
 
 // cập nhật dữ liệu chỉnh sửa
 function getDetailVideoContent() {
   if (videoData.value.url && videoData.value.url !== null) {
     if (videoData.value.urlCdn) {
       videoType.value = 'cdn'
-      cdnUrl.value = videoData.value.url
+      cdn.cdnUrl = videoData.value.url
       isLoadingVideo.value = false
-      getCdnFileInfo(cdnUrl.value)
+      getCdnFileInfo(cdn.cdnUrl)
     }
     else if (videoData.value.url.includes(youtube.youtubeOrginUrl) === true) {
       videoType.value = 'youtube'
@@ -259,8 +261,8 @@ function getDetailVideoContent() {
     }
     else {
       videoType.value = 'local'
-      localFile.localUrl = videoData.value.url
-      localFile.haveVideoLocal = true
+      localFile.value.localUrl = videoData.value.url
+      localFile.value.haveVideoLocal = true
       getVideoLocalInfo(videoData.value.acceptDownload ? videoData.value.urlFileName : videoData.value.url)
     }
     if (videoData.value.timeTypeId === 2) {
@@ -274,22 +276,150 @@ function getDetailVideoContent() {
   }
   else { videoData.value.timeTypeId = 1 }
 }
+async function downloadFile(idx: any) {
+  MethodsUtil.dowloadSampleFile(`${SERVERFILE}${localFile.value.localUrl}`,
+    TYPE_REQUEST.GET, localFile.value.localVideoFileName || 'video local').then((data: any) => {
+    unLoadComponent(idx)
+    if (data.status === 200) {
+      //
+    }
+    else {
+      toast('WARNING', t('download-file-failed'))
+    }
+  })
+    .catch(() => {
+      unLoadComponent(idx)
+    })
+}
+function handleDeleteVideo(type: any, idx: any) {
+  switch (type) {
+    case 'local':
+      localFile.value = {
+        localUrl: '',
+        urlEncode: null,
+        haveVideoLocal: false,
+        localVideoFileName: null,
+        file: [] as any[],
+      }
+      videoData.value.urlFileName = ''
+      break
+
+    default:
+      break
+  }
+  unLoadComponent(idx)
+}
 function uploadVideoLocal(data: any) {
   console.log(data)
   fileUpload.value[0].size = data.size
   fileUpload.value[0].name = data.name
   urlEncode.value = data.filePath
   if (!acceptDownload.value)
-    localFile.localUrl = data.filePath
+    localFile.value.localUrl = data.filePath
   if (videoData.value.name === null || videoData.value.name.length === 0)
     videoData.value.name = data.name
   videoData.value.acceptDownload = acceptDownload.value
-  localFile.haveVideoLocal = true
+  localFile.value.haveVideoLocal = true
   isLoadingVideo.value = true
   getVideoLocalInfo(data.filePath, true)
   intervalLoadingLocalFile.value = setInterval(() => {
     getVideoLocalInfo(data.filePath)
   }, 4000)
+}
+
+// cnd
+const isShowModalProcessing = ref(false)
+const isLoadingVideoCnd = ref(false)
+const intervalLoadingCndFile = ref()
+const serverCodeCdn = ref()
+const uploadRequestsCdn = ref<any>([])
+const filesDataCdn = ref(
+  {
+    name: '',
+    icon: 'tabler:file',
+    size: 0,
+    processing: 50,
+    fileName: '',
+    fileType: null,
+    fileExtension: '',
+    filePath: '',
+    fileOrigin: '',
+    fileFolder: '',
+  },
+)
+async function getCdnFileInfo(cdnUrlLink: any) {
+  await MethodsUtil.requestApiCustom(`${SERVERFILE}${ServerFileService.GetInforFile}${cdnUrlLink}`, TYPE_REQUEST.GET)
+    .then((data: any) => {
+      cdn.haveVideoCdn = true
+      if (data?.isProcessing) {
+        if (data?.serverCode && data?.serverCode !== serverCodeCdn.value)
+          serverCodeCdn.value = data.serverCode
+
+        isLoadingVideoCnd.value = false
+        clearTimeout(intervalLoadingCndFile.value)
+        intervalLoadingCndFile.value = null
+      }
+    })
+}
+async function getCdnVideoTime() {
+  const params = {
+    cdn: 'https://cdnprod.masterkorean.vn/',
+    url: videoData.value.urlCdn,
+    secretKey: 'maiwoodei6oophieloh1thak9ahphuch',
+  }
+  console.log(params)
+
+  return await MethodsUtil.requestApiCustom(`${SERVERFILE}${ServerFileService.GetCdnVideoTime}`, TYPE_REQUEST.GET, params).then((data: any) => {
+    if (data && data.duration) {
+      time.value.contentMinute = Math.floor(Math.ceil(data.duration) / 60)
+      time.value.contentSecond = Math.floor(Math.ceil(data.duration) % 60)
+      return true
+    }
+    return false
+  })
+}
+async function uploadCdnVideo(idx: any) {
+  const isHaveTime = await getCdnVideoTime()
+  console.log(isHaveTime)
+
+  const params = {
+    isBackground: true,
+    fileType: 'Video',
+    isSecure: true,
+    cdn: 'https://cdnprod.masterkorean.vn/',
+    url: videoData.value.urlCdn,
+    secretKey: 'maiwoodei6oophieloh1thak9ahphuch',
+  }
+  console.log(videoData.value.urlCdn)
+
+  filesDataCdn.value.name = videoData.value.urlCdn
+  isShowModalProcessing.value = true
+  await MethodsUtil.requestApiCustom(`${SERVERFILE}${ServerFileService.UploadFileCnd}`, TYPE_REQUEST.POST, params).then((data: any) => {
+    setTimeout(() => {
+      isShowModalProcessing.value = false
+    }, 1000)
+    unLoadComponent(idx)
+    if (data) {
+      isLoadingVideoCnd.value = true
+      cdn.haveVideoCdn = true
+      cdn.cdnUrl = data.fileFolder
+      videoData.value.timeTypeId = isHaveTime ? 1 : 2
+      intervalLoadingCndFile.value = setInterval(() => {
+        getCdnFileInfo(cdn.cdnUrl)
+      }, 4000)
+    }
+  })
+    .catch(() => {
+      isShowModalProcessing.value = false
+      unLoadComponent(idx)
+    })
+}
+function cancelProcessing(index: any) {
+  if (!window._.isEmpty(uploadRequestsCdn.value[index])) {
+    uploadRequestsCdn.value[index].cancelTokenSource.cancel('Hủy cuộc gọi')
+    uploadRequestsCdn.value[index].request.cancel() // Hủy cuộc gọi Axios
+    uploadRequestsCdn.value.splice(index, 1)
+  }
 }
 
 // lưu
@@ -314,20 +444,6 @@ function saveAndUpdate(idx: any, isUpdate: boolean) {
     unLoadComponent(idx)
     return
   }
-
-  // this.$refs.rule.validate().then(async success => {
-  //   if (success) {
-  //     else if (this.videoType === 'local') {
-  //       videoData.value.url = this.localUrl
-  //       if (this.acceptDownload)
-  //         videoData.value.urlFileName = this.urlEncode
-
-  //       videoData.value.urlCdn = null
-  //     }
-  //     else { videoData.value.url = this.cdnUrl }
-  //     this.$emit('saveData', isUpdate)
-  //   }
-  // })
   myFormAddContentVideo.value.validate().then(async (success: any) => {
     console.log(success)
 
@@ -336,17 +452,17 @@ function saveAndUpdate(idx: any, isUpdate: boolean) {
       videoData.value.archiveTypeId = 4
       if (videoType.value === 'youtube') {
         videoData.value.url = youtube.youtubeUrl
-        videoData.value.urlCdn = null
+        videoData.value.urlCdn = ''
         videoData.value.isRewind = false
       }
       else if (videoType.value === 'local') {
-        videoData.value.url = localFile.localUrl
+        videoData.value.url = localFile.value.localUrl
         if (acceptDownload.value)
-          videoData.value.urlFileName = localFile.urlEncode
+          videoData.value.urlFileName = localFile.value.urlEncode
 
-        videoData.value.urlCdn = null
+        videoData.value.urlCdn = ''
       }
-      else { videoData.value.url = cdnUrl.value }
+      else { videoData.value.url = cdn.cdnUrl }
 
       handleUpdateContent(idx, isUpdate)
     }
@@ -356,24 +472,24 @@ function saveAndUpdate(idx: any, isUpdate: boolean) {
   })
   console.log(videoData.value)
 }
-async function abc() {
+onMounted(async () => {
   await getListThematicContent()
-  await getTeacherOwnerCourse()
-  await console.log(123)
-
   if (route.params && route.params.contentId) {
     const id = Number(route.params.contentId)
     contentId.value = id
     await fetchContent(id).then(() => {
       getDetailVideoContent()
+      vSelectOwner.value.currentUserIds = videoData.value.ownerId
+      getTeacherOwnerCourse()
     })
   }
-}
-abc()
+  else {
+    getTeacherOwnerCourse()
+  }
+})
 
 onUnmounted(() => {
   resetDataVideo()
-  storeContentTypeModifyManager.$dispose()
 })
 </script>
 
@@ -483,62 +599,58 @@ onUnmounted(() => {
               <div>{{ t('auto-setting-content') }}</div>
             </div>
             <div v-if="videoData.timeTypeId === 1">
-              <Form
-                ref="myFormAddTime"
-                :validation-schema="schema"
-                @submit.prevent="submitForm"
-              >
-                <div class="d-flex">
-                  <Field
-                    v-slot="{ field, errors }"
-                    v-model="time.contentMinute"
-                    name="requiredContentQuantity"
-                    type="number"
-                  >
-                    <div class="mr-3">
-                      <div class="d-flex align-center">
-                        <div class="mr-3 conditon-input">
-                          <CmTextField
-                            :field="field"
-                            type="number"
-                            disabled
-                            :min="1"
-                            :max="59"
-                          />
-                        </div>
-                        <span class="text-regular-md">{{ t('minutes').toLowerCase() }}</span>
+              <div class="d-flex">
+                <Field
+                  v-slot="{ field, errors }"
+                  v-model="time.contentMinute"
+                  name="contentMinute"
+                  type="number"
+                >
+                  <div class="mr-3">
+                    <div class="d-flex align-center">
+                      <div class="mr-3 conditon-input">
+                        <CmTextField
+                          :field="field"
+                          type="number"
+                          :model-value="time.contentMinute"
+                          disabled
+                          :min="1"
+                          :max="59"
+                        />
                       </div>
-                      <div class="styleError text-errors">
-                        {{ errors[0] }}
-                      </div>
+                      <span class="text-regular-md">{{ t('minutes').toLowerCase() }}</span>
                     </div>
-                  </Field>
-                  <Field
-                    v-slot="{ field, errors }"
-                    v-model="time.contentSecond"
-                    name="requiredContentQuantity"
-                    type="number"
-                  >
-                    <div class="mr-3">
-                      <div class="d-flex align-center">
-                        <div class="mr-3 conditon-input">
-                          <CmTextField
-                            :field="field"
-                            disabled
-                            type="number"
-                            :min="1"
-                            :max="59"
-                          />
-                        </div>
-                        <span class="text-regular-md">{{ t('seconds').toLowerCase() }}</span>
-                      </div>
-                      <div class="styleError text-errors">
-                        {{ errors[0] }}
-                      </div>
+                    <div class="styleError text-errors">
+                      {{ errors[0] }}
                     </div>
-                  </Field>
-                </div>
-              </Form>
+                  </div>
+                </Field>
+                <Field
+                  v-slot="{ field, errors }"
+                  v-model="time.contentSecond"
+                  name="contentSecond"
+                  type="number"
+                >
+                  <div class="mr-3">
+                    <div class="d-flex align-center">
+                      <div class="mr-3 conditon-input">
+                        <CmTextField
+                          :field="field"
+                          disabled
+                          :model-value="time.contentSecond"
+                          type="number"
+                          :min="1"
+                          :max="59"
+                        />
+                      </div>
+                      <span class="text-regular-md">{{ t('seconds').toLowerCase() }}</span>
+                    </div>
+                    <div class="styleError text-errors">
+                      {{ errors[0] }}
+                    </div>
+                  </div>
+                </Field>
+              </div>
             </div>
           </div>
           <div class="d-flex align-center">
@@ -554,60 +666,49 @@ onUnmounted(() => {
               <div>{{ t('auto-setting') }}</div>
             </div>
             <div v-if="videoData.timeTypeId === 2">
-              <Form
-                ref="myFormAddTime"
-                :validation-schema="schema"
-                @submit.prevent="submitForm"
-              >
-                <div class="d-flex">
-                  <Field
-                    v-slot="{ field, errors }"
-                    v-model="time.selfMinute"
-                    name="requiredContentQuantity"
-                    type="number"
-                  >
-                    <div class="mr-3">
-                      <div class="d-flex align-center">
-                        <div class="mr-3 conditon-input">
-                          <CmTextField
-                            :field="field"
-                            type="number"
-                            :min="1"
-                            :max="59"
-                          />
-                        </div>
-                        <span class="text-regular-md">{{ t('minutes').toLowerCase() }}</span>
+              <div class="d-flex">
+                <Field
+                  v-slot="{ field, errors }"
+                  v-model="time.selfMinute"
+                  name="selfMinute"
+                  type="number"
+                >
+                  <div class="mr-3">
+                    <div class="d-flex align-center">
+                      <div class="mr-3 conditon-input">
+                        <CmTextField
+                          :field="field"
+                          :errors="errors"
+                          type="number"
+                          :min="0"
+                          :max="59"
+                        />
                       </div>
-                      <div class="styleError text-errors">
-                        {{ errors[0] }}
-                      </div>
+                      <span class="text-regular-md">{{ t('minutes').toLowerCase() }}</span>
                     </div>
-                  </Field>
-                  <Field
-                    v-slot="{ field, errors }"
-                    v-model="time.selfSecond"
-                    name="requiredContentQuantity"
-                    type="number"
-                  >
-                    <div class="mr-3">
-                      <div class="d-flex align-center">
-                        <div class="mr-3 conditon-input">
-                          <CmTextField
-                            :field="field"
-                            type="number"
-                            :min="1"
-                            :max="59"
-                          />
-                        </div>
-                        <span class="text-regular-md">{{ t('seconds').toLowerCase() }}</span>
+                  </div>
+                </Field>
+                <Field
+                  v-slot="{ field, errors }"
+                  v-model="time.selfSecond"
+                  name="selfSecond"
+                >
+                  <div class="mr-3">
+                    <div class="d-flex align-center">
+                      <div class="mr-3 conditon-input">
+                        <CmTextField
+                          :field="field"
+                          :errors="errors"
+                          type="number"
+                          :min="0"
+                          :max="59"
+                        />
                       </div>
-                      <div class="styleError text-errors">
-                        {{ errors[0] }}
-                      </div>
+                      <span class="text-regular-md">{{ t('seconds').toLowerCase() }}</span>
                     </div>
-                  </Field>
-                </div>
-              </Form>
+                  </div>
+                </Field>
+              </div>
             </div>
           </div>
         </VCol>
@@ -687,12 +788,14 @@ onUnmounted(() => {
                 <CmTextField
                   :field="field"
                   :errors="errors"
+                  :disabled="isViewDetail"
                   :placeholder="t('enter-link')"
                   class="mr-3 w-100"
                 />
               </Field>
               <CmButton
-                :disabled="youtube.youtubeUrl === null || youtube.youtubeUrl?.length === 0"
+                v-if="isViewDetail !== true"
+                :disabled="!youtube.youtubeUrl || youtube.youtubeUrl?.length === 0"
                 @click="addVideoYoutube"
               >
                 {{ t("search") }}
@@ -745,6 +848,7 @@ onUnmounted(() => {
                   v-model="localFile.file"
                   v-model:accept-download="acceptDownload"
                   class="w-100"
+                  :disabled="isViewDetail"
                   :file-name="videoData.urlFileName"
                   :accept="acceptDownload ? '.mp4' : Globals.videoExtention"
                   :is-btn-download="false"
@@ -809,9 +913,126 @@ onUnmounted(() => {
             sm="6"
           >
             <CmVideoJs
+              v-if="!acceptDownload && localFile.localUrl"
               :is-secure="!acceptDownload"
               :src="localFile.localUrl"
               :server-code="serverCode"
+            />
+            <div
+              v-else
+              class="embed-responsive"
+            >
+              <embed
+                :src="`${SERVERFILE}${localFile.localUrl}`"
+              >
+            </div>
+          </VCol>
+        </VRow>
+        <VRow v-if="!isLoadingVideo && localFile.haveVideoLocal">
+          <VCol
+            cols="12"
+            sm="6"
+          >
+            <div class=" d-flex justify-center">
+              <CmButton
+                v-if="!isViewDetail && acceptDownload"
+                class="mr-2"
+                variant="outlined"
+                is-load
+                icon="tabler:download"
+                :size-icon="18"
+                @click="downloadFile"
+              />
+              <CmButton
+                v-if="!isViewDetail && localFile.localUrl"
+                is-load
+                icon="tabler:trash"
+                variant="outlined"
+                color="error"
+                :size-icon="18"
+                @click="((idx: any) => handleDeleteVideo('local', idx))"
+              />
+            </div>
+          </VCol>
+        </VRow>
+      </div>
+      <div v-if="videoType === 'cdn'">
+        <VRow>
+          <VCol
+            cols="12"
+            sm="6"
+          >
+            <div class="mb-1">
+              {{ t('choose-file-cdn') }}*
+            </div>
+            <div class="d-flex">
+              <Field
+                v-slot="{ field, errors }"
+                v-model="videoData.urlCdn"
+                name="url"
+                type="text"
+              >
+                <CmTextField
+                  :field="field"
+                  :errors="errors"
+                  :disabled="isViewDetail"
+                  :placeholder="t('choose-file-cdn')"
+                  class="mr-3 w-100"
+                />
+              </Field>
+              <CmButton
+                v-if="!isViewDetail"
+                is-load
+                :disabled="!videoData.urlCdn "
+                @click="
+                  uploadCdnVideo"
+              >
+                {{ t("search") }}
+              </CmButton>
+            </div>
+          </VCol>
+        </VRow>
+        <VRow>
+          <VCol
+            cols="12"
+            class="d-flex"
+          >
+            <CmCheckBox
+              v-model:model-value="videoData.isRewind"
+              class="mr-6"
+              :label="LABEL.TITLE7"
+            />
+            <CmCheckBox
+              v-model:model-value="videoData.isSpeed"
+              :label="LABEL.TITLE6"
+            />
+          </VCol>
+        </VRow>
+
+        <VRow v-if="cdn.cdnUrl">
+          <VCol
+            v-if="isLoadingVideoCnd"
+            cols="12"
+            sm="6"
+          >
+            <div>
+              <CmItemFileUpload
+                :icon-status="false"
+                :files="[filesDataCdn]"
+              />
+            </div>
+          </VCol>
+        </VRow>
+        <VRow v-if="cdn.cdnUrl">
+          <VCol
+            v-if="!isLoadingVideoCnd"
+            cols="12"
+            sm="6"
+          >
+            <CmVideoJs
+              v-if="cdn.cdnUrl"
+              :src="cdn.cdnUrl"
+              :server-code="serverCodeCdn"
             />
           </VCol>
         </VRow>
@@ -829,6 +1050,11 @@ onUnmounted(() => {
         />
       </div>
     </Form>
+    <CpMdProcessing
+      v-model:is-show-modal="isShowModalProcessing"
+      :files="[filesDataCdn]"
+      @cancel="cancelProcessing"
+    />
   </div>
 </template>
 

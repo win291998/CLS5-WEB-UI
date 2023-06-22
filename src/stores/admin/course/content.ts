@@ -94,6 +94,18 @@ export const contentManagerStore = defineStore('contentManager', () => {
             isShowModalUpdateThematic.value = true
           })
         }
+        else {
+          router.push({
+            name: 'content-edit',
+            params: {
+              id: Number(route.params.id),
+              tab: 'content',
+              type: 'video',
+              contentTab: 'infor',
+              contentId: type[1]?.courseContentId,
+            },
+          })
+        }
         break
       case 'ActionDelete':
         deleteItem(type[1].courseContentId)

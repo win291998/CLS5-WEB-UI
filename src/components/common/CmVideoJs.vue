@@ -11,6 +11,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), ({
+  isSecure: true,
 }))
 const SERVERFILE = process.env.VUE_APP_BASE_SERVER_FILE
 const videoPlayer = ref()

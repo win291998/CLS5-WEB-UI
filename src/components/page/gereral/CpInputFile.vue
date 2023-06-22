@@ -5,6 +5,7 @@ import ServerFileService from '@/api/server-file'
 import toast from '@/plugins/toast'
 import AuthUtil from '@/auth'
 import { load } from '@/stores/loadComponent.js'
+import CmTextField from '@/components/common/CmTextField.vue'
 
 const props = withDefaults(defineProps<Props>(), ({
   accept: '',
@@ -203,17 +204,40 @@ async function dowloadFile(idx: any) {
 watch(() => props.isSecure, (val: any) => {
   params.value.isSecure = val
 })
+watch(() => props.modelValue, (val: any) => {
+  if (window._.isEmpty(val)) {
+    dataFile.value = null
+    filesData.value = {
+      name: '',
+      icon: 'tabler:file',
+      size: 0,
+      processing: 0,
+      fileName: '',
+      fileType: null,
+      fileExtension: '',
+      filePath: '',
+      fileOrigin: '',
+      fileFolder: '',
+    }
+  }
+})
 </script>
 
 <template>
   <div>
     <div class="d-flex cm-input-file">
+      <CmTextField
+        class="w-100 mr-3"
+        disabled
+        :model-value="fileName"
+      />
+
       <VFileInput
         ref="inputFile"
         v-model="dataFile"
         :error="errors?.length > 0 ?? false"
         :error-messages="messageError"
-        class="mr-3"
+        class="mr-3 d-none"
         prepend-icon=""
         :placeholder="t('upload')"
         outlined
@@ -222,7 +246,10 @@ watch(() => props.isSecure, (val: any) => {
         :accept="accept"
         @change="onFileSelected"
       >
-        <template #prepend-inner>
+        <template
+          v-if="!dataFile.length"
+          #prepend-inner
+        >
           <span>{{ fileName }}</span>
         </template>
       </VFileInput>
