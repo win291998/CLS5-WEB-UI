@@ -5,6 +5,7 @@ import MethodsUtil from '@/utils/MethodsUtil'
 import { TYPE_REQUEST } from '@/typescript/enums/enums'
 import toast from '@/plugins/toast'
 import CmCollapse from '@/components/common/CmCollapse.vue'
+import { tableStore } from '@/stores/table'
 
 // mock api
 
@@ -26,6 +27,8 @@ const CpImportXml = defineAsyncComponent(() => import('@/components/page/Admin/o
 /** params */
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 const refTableUserList = ref()
+const storeTable = tableStore()
+const { callBackAction } = storeToRefs(storeTable)
 
 const isShowFilter = ref(true)
 const route = useRoute()
@@ -244,6 +247,7 @@ function actionItem(type: any) {
       break
   }
 }
+callBackAction.value = actionItem
 
 // Get list Users
 async function fectchListUsers() {
@@ -266,10 +270,6 @@ async function fectchListUsers() {
             ...titleModels,
             content: titleData,
           }
-
-          item.actions = item.actions.map((el: any) => {
-            return MethodsUtil.checkActionType(el, actionItem)
-          })
         })
       }
       items.value = value.data.pageLists

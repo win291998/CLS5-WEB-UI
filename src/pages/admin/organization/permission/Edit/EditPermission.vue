@@ -17,7 +17,7 @@ const TITLE_PAGE = Object.freeze({
 })
 const store = load()
 const { unLoadComponent } = store
-const config = (idx: number) => {
+function config(idx: number) {
   return {
     roots: [`node-${idx + 1}`],
     keyboardNavigation: false,
@@ -51,11 +51,11 @@ const dataInput = ref<DataInput>({
 const route = useRoute()
 const listFeaturePermission = ref<any[]>([])
 const isShowPermission = ref<boolean>(false)
-const getDataDetail = async () => {
+async function getDataDetail() {
   const { data } = await MethodsUtil.requestApiCustom(apiPermission.getDetailPermission, TYPE_REQUEST.GET, { id: route.params.id })
   dataInput.value = data
 }
-const getListFeaturePermission = async () => {
+async function getListFeaturePermission() {
   const { data } = await MethodsUtil.requestApiCustom(apiPermission.featurePermissionByPortal, TYPE_REQUEST.GET)
   const listTree: any[] = []
   data.forEach((element: any[], index: number) => {
@@ -68,7 +68,7 @@ const getListFeaturePermission = async () => {
   isShowPermission.value = true
 }
 const listRoleDefault = ref<any[]>([])
-const getRoleDefault = async () => {
+async function getRoleDefault() {
   const { data } = await MethodsUtil.requestApiCustom(apiPermission.comboboxRoleDefailt, TYPE_REQUEST.GET)
   data.forEach((element: any) => {
     element.text = t(element.defaultRoleName)
@@ -83,7 +83,7 @@ onMounted(async () => {
 })
 
 // lấy permission và orgPermission
-const getListFeature = () => {
+function getListFeature() {
   const listFeature: any[] = []
   listFeaturePermission.value.forEach((element: any, index: number) => {
     element[`node-p${index + 1}`].children.forEach((item: any, idx: number) => {
@@ -100,7 +100,7 @@ const getListFeature = () => {
   return listFeature
 }
 
-const handleEditPer = (idx: number) => {
+function handleEditPer(idx: number) {
   dataInput.value.listFeature = getListFeature()
   let message = 'USR_AddSuccess'
   let typeErr: any = 'SUCCESS'
@@ -122,7 +122,7 @@ const handleEditPer = (idx: number) => {
   toast(typeErr, t(message))
 }
 
-const reset = () => {
+function reset() {
   listFeaturePermission.value.forEach((element: any, index: number) => {
     element[`node-p${index + 1}`].children.forEach((item: any, idx: number) => {
       if ((element[item].state.checked || element[item].state.indeterminate) && element[item].children && element[item].children.length) {
@@ -170,4 +170,3 @@ const reset = () => {
     />
   </div>
 </template>
-

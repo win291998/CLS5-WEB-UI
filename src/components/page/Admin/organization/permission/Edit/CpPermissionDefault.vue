@@ -9,7 +9,7 @@ interface Emit {
 }
 const props = withDefaults(defineProps<Props>(), {})
 const emit = defineEmits<Emit>()
-const config = (idx: number) => {
+function config(idx: number) {
   return {
     roots: [`node-p${idx + 1}`],
     keyboardNavigation: false,
@@ -22,7 +22,7 @@ const config = (idx: number) => {
   }
 }
 
-const handleChecked = (node: any, idx: number) => {
+function handleChecked(node: any, idx: number) {
   if (node.children && node.children.length) {
     //
     node.permissionValue = node.permission
@@ -33,7 +33,7 @@ const handleChecked = (node: any, idx: number) => {
   }
 }
 
-const handleUnChecked = (node: any, idx: number) => {
+function handleUnChecked(node: any, idx: number) {
   if (node.children && node.children.length) {
     //
     node.permissionValue = 0

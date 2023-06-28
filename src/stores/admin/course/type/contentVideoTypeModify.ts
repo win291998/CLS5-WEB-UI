@@ -223,7 +223,6 @@ export const contentTypeManagerStore = defineStore('contentTypeManager', () => {
 
   // lấy nội dung điều kiện tham gia khóa học
   async function fetchConditionAttend(id?: number | null) {
-    console.log(id)
     const params = {
       id,
     }
@@ -266,7 +265,6 @@ export const contentTypeManagerStore = defineStore('contentTypeManager', () => {
         value.data.themeticId = value.data.themeticId ? value.data.themeticId : null
         videoData.value = value?.data
       }
-      console.log(videoData.value)
 
       if (videoData.value.archiveTypeId !== 12)
         await fetchConditionAttend(videoData.value.courseContentId)

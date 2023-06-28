@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import CmCheckBox from '@/components/common/CmCheckBox.vue'
 import 'vue3-treeview/dist/style.css'
+import Treeview from 'vue3-treeview'
 import { configStore } from '@/stores/index'
 import { ActionType } from '@/constant/data/actionType.json'
+import CmCheckBox from '@/components/common/CmCheckBox.vue'
+import CmDropDown from '@/components/common/CmDropDown.vue'
 
 /** ** Khởi tạo prop emit */
 const props = withDefaults(defineProps<Props>(), ({
@@ -27,8 +29,6 @@ const props = withDefaults(defineProps<Props>(), ({
 
 const emit = defineEmits<Emit>()
 
-const Treeview = defineAsyncComponent(() => import('vue3-treeview'))
-const CmDropDown = defineAsyncComponent(() => import('@/components/common/CmDropDown.vue'))
 interface Props {
   config?: Config
   nodes: NodeTree
@@ -227,6 +227,15 @@ function onChangeOrgChecked(val: any, node: any) {
     nodesTree.value[childeNode].orgPermissionValue = val ? nodesTree.value[childeNode].orgPermission : 0
   })
 }
+console.time('tree')
+
+onUpdated(() => {
+  console.log('updates')
+
+  nextTick(() => {
+    console.timeEnd('update')
+  })
+})
 </script>
 
 <template>

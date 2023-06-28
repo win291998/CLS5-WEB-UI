@@ -85,8 +85,6 @@ async function getDefaultSetting() {
   testConfig.value.isCompleteEnoughPoints = !!defaultRatioPoints?.value
 }
 function loadDataEdit() {
-  console.log(conditionComplete.value)
-
   time.value.minuteTime = Math.floor(conditionComplete.value.timeFinish / 60)
   time.value.secondTime = (conditionComplete.value.timeFinish % 60)
   time.value.noActiveMinute = Math.floor(conditionComplete.value.noticeTimeAttendance / 60)
@@ -111,7 +109,6 @@ async function fetchConfig() {
 }
 function showNotiError(errorObject: any) {
   window._.forEach(errorObject, (value, key) => {
-    console.log(key, value)
     toast('ERROR', t('Thông tin tùy chỉnh không hợp lệ'))
   })
 }
@@ -119,7 +116,6 @@ function showNotiError(errorObject: any) {
 // lưu  dữ liệu
 async function saveDataCondition(idx: any) {
   myFormAddConditionComplete.value.validate().then(async (success: any) => {
-    console.log(success)
     unLoadComponent(idx)
     if (success.valid) {
       if (conditionComplete.value.isComplete === false && conditionComplete.value.isAfterTime === false && conditionComplete.value.isAnswerTheQuestion === false) {
@@ -172,12 +168,10 @@ async function saveDataCondition(idx: any) {
           }
           else {
             unLoadComponent(idx)
-            console.log(successSetting)
             showNotiError(successSetting.errors)
             return false
           }
         })
-        console.log(validateSet)
         if (!validateSet)
           return
       }
@@ -237,7 +231,6 @@ onMounted(async () => {
     await fetchConfig()
 })
 watch(() => conditionComplete.value, (val: any) => {
-  console.log(val)
   loadDataEdit()
 })
 </script>
