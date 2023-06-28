@@ -210,7 +210,7 @@ getListAprove()
         :disabled-back="disabledBack"
         :disabled-approve="disabledApprove"
         @click="handleClickBtn"
-        @search="handleSearch"
+        @update:keyword="handleSearch"
       />
     </div>
     <div>

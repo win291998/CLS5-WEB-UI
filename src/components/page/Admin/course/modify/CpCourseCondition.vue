@@ -71,7 +71,7 @@ onMounted(async () => {
         :is-fillter="false"
         :disabled-delete="disabledDeleteCourse"
         @click="handleClickBtn"
-        @search="handleSearchCourse"
+        @update:keyword="handleSearchCourse"
       />
     </div>
     <div>

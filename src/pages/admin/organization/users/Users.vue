@@ -430,7 +430,7 @@ window.hideAllPageLoading()
       :disabled-delete="disabledDelete"
       is-fillter
       @click="handleClickBtn"
-      @search="handleSearch"
+      @update:keyword="handleSearch"
     />
   </div>
   <div id="cap-report-overview">

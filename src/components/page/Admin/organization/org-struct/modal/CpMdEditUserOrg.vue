@@ -118,7 +118,9 @@ async function handlePageClick(value: any) {
   getUserAsignOrg()
 }
 function changeTitleAll(idTitle: any) {
-  items.value.forEach((item: any) => { item.titleId = idTitle })
+  items.value.forEach((item: any) => {
+    item.titleId = idTitle
+  })
   tableAsignUser.value.checkedAll()
 }
 function changeCellvalue(id: any, content: any) {
@@ -186,7 +188,6 @@ watch(() => props.isDialogVisible, isShow => {
 
 <template>
   <CmDialogs
-    ref="dialog"
     :is-dialog-visible="isDialogVisible"
     :title="LABEL.TITLE"
     persistent
@@ -212,7 +213,7 @@ watch(() => props.isDialogVisible, isShow => {
         <CpHeaderAction
           is-fillter
           @click="handleClickBtn"
-          @search="handleSearch"
+          @update:keyword="handleSearch"
         />
       </div>
     </div>

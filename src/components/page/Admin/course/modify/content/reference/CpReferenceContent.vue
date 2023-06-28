@@ -121,7 +121,7 @@ onUnmounted(() => {
         :is-fillter="false"
         :disabled-delete="disabledDeleteRefer"
         @click="handleClickBtn"
-        @search="handleSearchRefer"
+        @update:keyword="handleSearchRefer"
       />
     </div>
     <div class="mb-6">
