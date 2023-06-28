@@ -299,12 +299,11 @@ window.hideAllPageLoading()
       :disabled-approve="disabledApprove"
       :disabled-back="disabledBack"
       @click="handleClickBtn"
-      @search="handleSearch"
+      @update:keyword="handleSearch"
     />
   </div>
   <div>
     <CmTable
-      ref="refTableUserList"
       :headers="headers"
       :items="items"
       :total-record="totalRecord"

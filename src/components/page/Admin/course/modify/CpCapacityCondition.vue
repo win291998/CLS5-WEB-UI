@@ -68,7 +68,7 @@ onMounted(async () => {
         :is-fillter="false"
         :disabled-delete="disabledDeleteCapacity"
         @click="handleClickBtn"
-        @search="handleSearchCapacity"
+        @update:keyword="handleSearchCapacity"
       />
     </div>
     <div>

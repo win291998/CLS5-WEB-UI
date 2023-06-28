@@ -89,7 +89,7 @@ onMounted(async () => {
         is-fillter
         :disabled-delete="disabledDeleteEval"
         @click="handleClickBtn"
-        @search="handleSearchEvaluation"
+        @update:keyword="handleSearchEvaluation"
       />
     </div>
     <div>
