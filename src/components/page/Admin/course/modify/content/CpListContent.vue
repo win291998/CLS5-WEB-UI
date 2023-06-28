@@ -5,20 +5,19 @@ import MethodsUtil from '@/utils/MethodsUtil'
 import { StatusTypeCourse } from '@/constant/data/status.json'
 import DateUtil from '@/utils/DateUtil'
 import CmTableGroup from '@/components/common/CmTableGroup.vue'
-
-const CpActionHeaderPage = defineAsyncComponent(() => import('@/components/page/gereral/CpActionHeaderPage.vue'))
-const CpMdFeedBack = defineAsyncComponent(() => import('@/components/page/Admin/course/modal/CpMdFeedBack.vue'))
-const CmChip = defineAsyncComponent(() => import('@/components/common/CmChip.vue'))
-const CpConfirmDialog = defineAsyncComponent(() => import('@/components/page/gereral/CpConfirmDialog.vue'))
-const CpHeaderAction = defineAsyncComponent(() => import('@/components/page/gereral/CpHeaderAction.vue'))
-const CmButton = defineAsyncComponent(() => import('@/components/common/CmButton.vue'))
-const CmDropDown = defineAsyncComponent(() => import('@/components/common/CmDropDown.vue'))
-const CpMdRatioPointContent = defineAsyncComponent(() => import('@/components/page/Admin/course/modal/CpMdRatioPointContent.vue'))
-const CpContentApprove = defineAsyncComponent(() => import('@/components/page/Admin/course/modify/content/CpContentApprove.vue'))
-const CpActionFooterEdit = defineAsyncComponent(() => import('@/components/page/gereral/CpActionFooterEdit.vue'))
-const CpMdMoveThematicContent = defineAsyncComponent(() => import('@/components/page/Admin/course/modal/CpMdMoveThematicContent.vue'))
-const CpMdEditThematic = defineAsyncComponent(() => import('@/components/page/Admin/course/modal/CpMdEditThematic.vue'))
-const CpMdAddFromStockContent = defineAsyncComponent(() => import('@/components/page/Admin/course/modal/CpMdAddFromStockContent.vue'))
+import CpActionHeaderPage from '@/components/page/gereral/CpActionHeaderPage.vue'
+import CpMdFeedBack from '@/components/page/Admin/course/modal/CpMdFeedBack.vue'
+import CmChip from '@/components/common/CmChip.vue'
+import CpConfirmDialog from '@/components/page/gereral/CpConfirmDialog.vue'
+import CpHeaderAction from '@/components/page/gereral/CpHeaderAction.vue'
+import CmButton from '@/components/common/CmButton.vue'
+import CmDropDown from '@/components/common/CmDropDown.vue'
+import CpMdRatioPointContent from '@/components/page/Admin/course/modal/CpMdRatioPointContent.vue'
+import CpContentApprove from '@/components/page/Admin/course/modify/content/CpContentApprove.vue'
+import CpActionFooterEdit from '@/components/page/gereral/CpActionFooterEdit.vue'
+import CpMdMoveThematicContent from '@/components/page/Admin/course/modal/CpMdMoveThematicContent.vue'
+import CpMdEditThematic from '@/components/page/Admin/course/modal/CpMdEditThematic.vue'
+import CpMdAddFromStockContent from '@/components/page/Admin/course/modal/CpMdAddFromStockContent.vue'
 
 /**
  * Store
@@ -33,6 +32,7 @@ const {
 const { getListContentCourse, handleMoveThematic, handleAddContentFromStock, confirmDialogDelete, handlerActionHeader, handleSearch, selectedRows, deleteItems, actionItemUserReg, checkMove, approveContent } = storeContentManager
 const storeCourseApproveManager = courseApproveManagerStore()
 const { idModalSendRatioPoint } = storeToRefs(storeCourseApproveManager)
+
 const groupOptions = {
   allowEmptySelect: false,
   collapsable: false,
@@ -135,11 +135,12 @@ function handleClickBtn(type: string) {
       break
   }
 }
-onMounted(async () => {
-  await getListContentCourse()
+onMounted(() => {
+  getListContentCourse()
 })
+
 onUnmounted(() => {
-  viewMode.value = 'view'
+  items.value = []
 })
 </script>
 
@@ -204,7 +205,7 @@ onUnmounted(() => {
         :is-fillter="false"
         :disabled-delete="disabledDelete"
         @click="handleClickBtn"
-        @search="handleSearch"
+        @update:keyword="handleSearch"
       >
         <template #actionLeft>
           <CmButton
@@ -218,7 +219,9 @@ onUnmounted(() => {
         </template>
       </CpHeaderAction>
     </div>
-    <div class="mb-6">
+    <div
+      class="mb-6"
+    >
       <CmTableGroup
         key-check-parent-row="contentArchiveTypeId"
         :value-check-parent-row="13"

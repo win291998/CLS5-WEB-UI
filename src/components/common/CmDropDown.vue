@@ -2,6 +2,8 @@
 import CmCheckBox from './CmCheckBox.vue'
 import MethodsUtil from '@/utils/MethodsUtil'
 import type { typeVariant } from '@/typescript/enums/enums'
+import CmButton from '@/components/common/CmButton.vue'
+import { tableStore } from '@/stores/table'
 
 const propsValue = withDefaults(defineProps<Props>(), ({
   listItem: () => ([]),
@@ -14,9 +16,11 @@ const propsValue = withDefaults(defineProps<Props>(), ({
   data: undefined,
   index: 0,
   variant: 'outlined',
+  isAction: false,
 }))
 const emit = defineEmits<Emit>()
-const CmButton = defineAsyncComponent(() => import('@/components/common/CmButton.vue'))
+const storeTable = tableStore()
+const { handleActionTable } = storeTable
 
 /**
  * listItem: danh sách các item
@@ -37,6 +41,7 @@ interface Props {
   icon?: string
   data?: any
   multiple?: boolean
+  isAction?: boolean
   customKey: string
   dataResend?: any
   type?: number
@@ -93,6 +98,15 @@ const textButton = computed(() => {
 
   return ''
 })
+function handleClickItemList(item: any) {
+  if (propsValue.isAction)
+    propsValue.type === 1 ? handleActionTable(MethodsUtil.checlActionKey(item, propsValue.data), propsValue.index, propsValue.dataResend) : handleActionTable()
+  else if (item?.action)
+    propsValue.type === 1 ? item?.action(MethodsUtil.checlActionKey(item, propsValue.data), propsValue.index, propsValue.dataResend) : item?.action()
+
+  else
+    emit('click', item, propsValue.dataResend)
+}
 </script>
 
 <template>
@@ -152,7 +166,7 @@ const textButton = computed(() => {
           </template>
           <VListItemTitle
 
-            @click="item?.action ? propsValue.type === 1 ? item?.action(MethodsUtil.checlActionKey(item, data), index, dataResend) : item?.action() : emit('click', item, dataResend)"
+            @click="handleClickItemList(item)"
           >
             <VIcon
               v-if="item?.icon || MethodsUtil.checlActionKey(item)[0]?.icon"

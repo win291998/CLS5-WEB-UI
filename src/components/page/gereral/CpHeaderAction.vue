@@ -43,7 +43,7 @@ interface Props {
   isAdd?: boolean
   addButtonName?: string
   disabledFillter?: boolean
-  keyword: string
+  keyword?: string
 }
 
 const isShowFilter = ref(props.isFillter)

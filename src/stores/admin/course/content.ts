@@ -7,6 +7,7 @@ import ArraysUtil from '@/utils/ArrayUtil'
 import StringUtil from '@/utils/StringUtil'
 import toast from '@/plugins/toast'
 import { courseApproveManagerStore } from '@/stores/admin/course/approve'
+import { tableStore } from '@/stores/table'
 
 export const contentManagerStore = defineStore('contentManager', () => {
   /** lib ****************************************************************/
@@ -18,6 +19,8 @@ export const contentManagerStore = defineStore('contentManager', () => {
  * Store
  */
   const storeCourseApproveManager = courseApproveManagerStore()
+  const storeTable = tableStore()
+  const { callBackAction } = storeToRefs(storeTable)
 
   const { idModalSendRatioPoint } = storeToRefs(storeCourseApproveManager)
   const { handleUpdatePointCourse } = storeCourseApproveManager
@@ -75,18 +78,14 @@ export const contentManagerStore = defineStore('contentManager', () => {
       id,
     }
     await MethodsUtil.requestApiCustom(CourseService.GetInforContentById, TYPE_REQUEST.GET, params).then((value: any) => {
-      console.log(value)
       if (value.data?.themeticId === 0)
         value.data.themeticId = null
       contentDataEdit.value = value?.data
     })
   }
   async function actionItemUserReg(type: any) {
-    console.log(type)
-
     switch (type[0]?.name) {
       case 'ActionEdit':
-        console.log(type)
         if (type[1]?.contentArchiveTypeId === 13) {
           getInforContent(type[1]?.courseContentId)
           courseContentId.value = type[1]?.courseContentId
@@ -140,6 +139,7 @@ export const contentManagerStore = defineStore('contentManager', () => {
         break
     }
   }
+  callBackAction.value = actionItemUserReg
   function selectedRows(e: any) {
     data.selectedRowsIds = e
   }
@@ -180,27 +180,14 @@ export const contentManagerStore = defineStore('contentManager', () => {
 
   async function handleSearch(val: any) {
     paramsContent.value.search = val
-    let dataRow = ArraysUtil.unFlatMapTree(updateStatusListCourse(cloneData.value, val))
-    dataRow = ArraysUtil.formatTreeTable(dataRow, customId.value)
-    dataRow.forEach((element: any) => {
-      // element.actions = element.actions?.map((el: any) => {
-      //   return MethodsUtil.checkActionType(el, actionItemUserReg)
-      // })
-      element.actions = [
-        MethodsUtil.checkActionType({ id: 1 }, actionItemUserReg),
-        MethodsUtil.checkActionType({ id: 2 }, actionItemUserReg),
-        MethodsUtil.checkActionType({ id: 3 }, actionItemUserReg),
-        MethodsUtil.checkActionType({ id: 5 }, actionItemUserReg),
-        MethodsUtil.checkActionType({ id: 6 }, actionItemUserReg),
-        MethodsUtil.checkActionType({ id: 7 }, actionItemUserReg),
-        MethodsUtil.checkActionType({ id: 9 }, actionItemUserReg),
-        MethodsUtil.checkActionType({ id: 19 }, actionItemUserReg),
+    const result: any[] = []
+    console.log(updateStatusListCourse(cloneData.value, val))
+    convertNoneLv(updateStatusListCourse(cloneData.value, val), result, 0)
 
-        // MethodsUtil.checkActionType({ id: 20 }, actionItemUserReg),
-        // MethodsUtil.checkActionType({ id: 21 }, actionItemUserReg),
-      ]
-    })
-    items.value = dataRow
+    // let dataRow = ArraysUtil.unFlatMapTree(updateStatusListCourse(cloneData.value, val))
+    // dataRow = ArraysUtil.formatTreeTable(dataRow, customId.value)
+    console.log(result)
+    items.value = result
   }
   function handlerActionHeader(type: any) {
     switch (type) {
@@ -372,8 +359,6 @@ export const contentManagerStore = defineStore('contentManager', () => {
 
   // cập nhật chuyên đề
   async function handleMoveThematic(thematic: any) {
-    console.log(thematic)
-
     const params = {
       courseId: Number(route?.params?.id),
       themeticId: thematic,
@@ -449,37 +434,43 @@ export const contentManagerStore = defineStore('contentManager', () => {
       })
   }
 
+  function convertNoneLv(listData: any[], result: any[], level: number) {
+    listData?.forEach((item: any) => {
+      if (item?.children && item?.children?.length > 0) {
+        result.push({ ...item, level })
+        convertNoneLv(item?.children, result, level + 1)
+      }
+      else {
+        result.push({ ...item, level })
+      }
+      return { ...item, level }
+    })
+  }
+
   /** *****Lấy danh sách nội dung */
   async function getListContentCourse() {
-    await MethodsUtil.requestApiCustom(CourseService.GetListContentCourse, TYPE_REQUEST.GET, paramsContent.value)
-      .then((value: any) => {
-        cloneData.value = window._.cloneDeep(value.data)
-        let dataRow = ArraysUtil.unFlatMapTree(value.data)
-        dataRow = ArraysUtil.formatTreeTable(dataRow, customId.value)
+    console.time('updates')
+    console.log('updates')
+    paramsContent.value.id = Number(route.params?.id)
+    console.log(route.params?.id)
 
-        dataRow.forEach((element: any) => {
-          // element.actions = element.actions?.map((el: any) => {
-          //   return MethodsUtil.checkActionType(el, actionItemUserReg)
-          // })
-          element.actions = [
-            MethodsUtil.checkActionType({ id: 1 }, actionItemUserReg),
-            MethodsUtil.checkActionType({ id: 2 }, actionItemUserReg),
-            MethodsUtil.checkActionType({ id: 3 }, actionItemUserReg),
-            MethodsUtil.checkActionType({ id: 5 }, actionItemUserReg),
-            MethodsUtil.checkActionType({ id: 6 }, actionItemUserReg),
-            MethodsUtil.checkActionType({ id: 7 }, actionItemUserReg),
-            MethodsUtil.checkActionType({ id: 9 }, actionItemUserReg),
-            MethodsUtil.checkActionType({ id: 19 }, actionItemUserReg),
+    const value = await MethodsUtil.requestApiCustom(CourseService.GetListContentCourse, TYPE_REQUEST.GET, paramsContent.value)
+    if (value.data) {
+      const result: any[] = []
 
-            // MethodsUtil.checkActionType({ id: 20 }, actionItemUserReg),
-            // MethodsUtil.checkActionType({ id: 21 }, actionItemUserReg),
-          ]
-        })
+      cloneData.value = window._.cloneDeep(value.data)
+      convertNoneLv(value.data, result, 0)
+      console.log(result)
 
-        items.value = dataRow
+      // let dataRow = ArraysUtil.unFlatMapTree(value.data)
+      // console.log('unFlatMapTree', dataRow)
+      // dataRow = ArraysUtil.formatTreeTable(dataRow, customId.value)
+      // console.log('formatTreeTable', dataRow)
+      items.value = result
 
-        updatePosition()
-      })
+      // updatePosition()
+      console.timeEnd('updates')
+    }
   }
 
   /** ********************************end Content******************************************** */
@@ -585,7 +576,6 @@ export const contentManagerStore = defineStore('contentManager', () => {
       })
   }
   async function handleAddRefContentStock(dataRef: any) {
-    console.log(dataRef)
     const params = {
       courseId: Number(route?.params?.id),
       model: dataRef,
@@ -620,8 +610,6 @@ export const contentManagerStore = defineStore('contentManager', () => {
     selectedRowsIds: [], // list id các row table được chọn
   })
   async function handleAddContentFromStock(listId: any) {
-    console.log(listId)
-
     const params = {
       courseId: Number(route?.params?.id),
       listId,

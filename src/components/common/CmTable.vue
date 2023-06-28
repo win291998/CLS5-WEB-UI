@@ -1,8 +1,16 @@
 <script setup lang="ts">
 import type { ClickRowArgument, Header, Item } from 'vue3-easy-data-table'
+import CmPagination from './CmPagination.vue'
 import Globals from '@/constant/Globals'
 import ArrayUtil from '@/utils/ArrayUtil'
 import MethodsUtil from '@/utils/MethodsUtil'
+import { tableStore } from '@/stores/table'
+
+import SkTable from '@/components/page/gereral/skeleton/SkTable.vue'
+import CmDropDown from '@/components/common/CmDropDown.vue'
+import CmSelect from '@/components/common/CmSelect.vue'
+import CpOrganizationSelect from '@/components/page/gereral/CpOrganizationSelect.vue'
+import CmDateTimePicker from '@/components/common/CmDateTimePicker.vue'
 
 const props = withDefaults(defineProps<Props>(), ({
   headers: () => ([]),
@@ -27,13 +35,9 @@ const props = withDefaults(defineProps<Props>(), ({
   isUpdateRowForce: false,
 }))
 const emit = defineEmits<Emit>()
-const SkTable = defineAsyncComponent(() => import('@/components/page/gereral/skeleton/SkTable.vue'))
+
 const isLoading = ref<boolean>(true)
-const CmPagination = defineAsyncComponent(() => import('./CmPagination.vue'))
-const CmDropDown = defineAsyncComponent(() => import('@/components/common/CmDropDown.vue'))
-const CmSelect = defineAsyncComponent(() => import('@/components/common/CmSelect.vue'))
-const CpOrganizationSelect = defineAsyncComponent(() => import('@/components/page/gereral/CpOrganizationSelect.vue'))
-const CmDateTimePicker = defineAsyncComponent(() => import('@/components/common/CmDateTimePicker.vue'))
+
 interface HeaderCustom extends Header {
   type?: string
   typeOrg?: number
@@ -81,6 +85,9 @@ interface Emit {
   (e: 'update:selected', data: Item): void
 }
 
+const storeTable = tableStore()
+const { handleActionTable } = storeTable
+
 // $ref dataTable
 const dataTable = ref()
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
@@ -102,18 +109,6 @@ const keyid = computed(() => {
 function checkActionShow(action: Array<any>) {
   return action?.filter((item: any) => item.isShow === true)?.length > 0
 }
-
-watch(() => props.items, (val: Item[]) => {
-  isLoading.value = true
-
-  props.items?.forEach((element, index) => {
-    element.originIndex = index
-    element.isSelected = !!element.isSelected
-    selectedRows.value = []
-    if (element.isSelected)
-      selectedRows.value.push([keyid.value])
-  })
-}, { immediate: true })
 
 const pageSize = ref(props.pageSize) // số lượng item trên 1 page
 const serverfile = window.SERVER_FILE || ''
@@ -208,13 +203,21 @@ defineExpose({
   items: props.items,
 })
 onUpdated(() => {
-  setTimeout(() => {
-    isLoading.value = false
-  }, 500)
+  isLoading.value = false
+
+  nextTick(() => {
+    console.timeEnd('update')
+  })
 })
+
 onMounted(() => {
   isLoading.value = false
+  nextTick(() => {
+    console.timeEnd('mout')
+  })
 })
+console.time('mout')
+console.time('update')
 
 // watch
 if (props.isUpdateRowForce) {
@@ -222,10 +225,24 @@ if (props.isUpdateRowForce) {
     updateSelectedRows()
   }, { deep: true, immediate: true })
 }
+watch(() => props.items, (val: Item[]) => {
+  isLoading.value = true
+  selectedRows.value = []
+  console.time('mout')
+  console.time('update')
+
+  props.items?.forEach((element, index) => {
+    element.originIndex = index
+    element.isSelected = !!element.isSelected
+
+    if (element.isSelected)
+      selectedRows.value.push(element[keyid.value])
+  })
+}, { immediate: true })
 </script>
 
 <template>
-  <SkTable v-if="isLoading" />
+  <SkTable v-show="isLoading" />
   <div
     v-show="!isLoading"
     class="table-box"
@@ -341,13 +358,14 @@ if (props.isUpdateRowForce) {
               class="px-2 "
             >
               <VIcon
-                v-if="actionItem?.icon"
-                :icon="actionItem?.icon"
-                :size="actionItem?.size || 18"
+                v-if="MethodsUtil.checkActionType(actionItem).icon"
+                :icon="MethodsUtil.checkActionType(actionItem).icon"
+                :size="18"
                 class="align-middle"
-                :class="actionItem?.color"
-                @click="actionItem?.action ? actionItem?.action(MethodsUtil.checlActionKey(actionItem, context)) : ''"
+                :class="MethodsUtil.checkActionType(actionItem)?.color"
+                @click="handleActionTable(MethodsUtil.checlActionKey(actionItem, context))"
               />
+
               <VTooltip
                 activator="parent"
                 location="top"
@@ -363,6 +381,7 @@ if (props.isUpdateRowForce) {
               <CmDropDown
                 :list-item="ArrayUtil.sliceArray(context?.actions, Globals.MAX_ITEM_ACTION - 1)"
                 :data="context"
+                is-action
                 custom-key="name"
                 :type="1"
               />

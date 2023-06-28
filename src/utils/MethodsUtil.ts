@@ -72,7 +72,7 @@ export default class MethodsUtil {
         data,
         params,
       })
-        .then(response => {
+        .then((response: any) => {
           const fileURL = window.URL.createObjectURL(new Blob([response.data]))
 
           const fileLink = document.createElement('a')
@@ -84,7 +84,7 @@ export default class MethodsUtil {
 
           resolve()
         })
-        .catch(error => {
+        .catch((error: any) => {
           reject(error)
         })
     })
@@ -102,7 +102,6 @@ export default class MethodsUtil {
       return
     const data = (method === 'GET') ? null : (payload || null)
     const params = (method === 'GET') ? payload : null
-    console.log(data, params)
 
     return window.axios({
       url,
@@ -118,7 +117,7 @@ export default class MethodsUtil {
     return data ? [action || itemRow, data] : [action || itemRow]
   }
 
-  static checkActionType = (data: any, callback: CallbackFunction) => {
+  static checkActionType = (data: any, callback?: CallbackFunction) => {
     const dataFormat = {
       ...data,
       action: callback,

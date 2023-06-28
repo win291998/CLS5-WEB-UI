@@ -2,10 +2,12 @@
 import { computed, ref } from 'vue'
 import type { ClickRowArgument, Header, Item } from 'vue3-easy-data-table'
 import CmPagination from './CmPagination.vue'
-import CmDropDown from '@/components/common/CmDropDown.vue'
 import Globals from '@/constant/Globals'
-import ArrayUtil from '@/utils/ArrayUtil'
+import SkTable from '@/components/page/gereral/skeleton/SkTable.vue'
+import { tableStore } from '@/stores/table'
 import MethodsUtil from '@/utils/MethodsUtil'
+import ArrayUtil from '@/utils/ArrayUtil'
+import CmDropDown from '@/components/common/CmDropDown.vue'
 
 //* ***********prop */
 const props = withDefaults(defineProps<Props>(), ({
@@ -26,7 +28,11 @@ const props = withDefaults(defineProps<Props>(), ({
 //* ***********emit */
 const emit = defineEmits<Emit>()
 
+const isLoading = ref<boolean>(true)
+
 const CpTableSub = defineAsyncComponent(() => import('@/components/page/gereral/CpTableSub.vue'))
+const storeTable = tableStore()
+const { handleActionTable } = storeTable
 
 //* ***********interface */
 
@@ -156,11 +162,6 @@ function pageSizeChange(page: number, size: number) {
   updateRowsPerPageSelect(size)
 }
 
-// check level
-function classLevelTreeTable(item: any) {
-  return `group-child-${item.level}`
-}
-
 // click mở colap
 function toggleRowSelection(row: any, type: boolean | null = null) {
   let typeNew: any = null
@@ -194,7 +195,9 @@ const bodyRowClassName = computed(() => {
 })
 
 watch(() => props.items, (val: Item[]) => {
-  // isLoading.value = true
+  isLoading.value = true
+  console.log(val)
+
   itemsData.value = val
   itemsData.value?.forEach((element: any, index: any) => {
     element.originIndex = index
@@ -204,10 +207,36 @@ watch(() => props.items, (val: Item[]) => {
       selectedRows.value.push([props.customId])
   })
 }, { immediate: true })
+onUpdated(() => {
+  nextTick(() => {
+    console.timeEnd('update')
+
+    isLoading.value = false
+  })
+})
+onMounted(() => {
+  // isLoading.value = true
+  nextTick(() => {
+    console.timeEnd('mout')
+
+    // isLoading.value = false
+  })
+})
+
+console.time('mout')
+console.time('update')
+function iconEvents(e: any, status: boolean) {
+  console.log(e)
+  e.isShow = status
+}
 </script>
 
 <template>
-  <div class="table-box">
+  <SkTable v-show="isLoading" />
+  <div
+    v-show="!isLoading"
+    class="table-box"
+  >
     <EasyDataTable
       id="dataTableGroup"
       ref="dataTable"
@@ -243,6 +272,7 @@ watch(() => props.items, (val: Item[]) => {
       </template>
 
       <template #header-select />
+
       <template #empty-message>
         <div class="d-flex justify-center">
           <div>
@@ -255,6 +285,7 @@ watch(() => props.items, (val: Item[]) => {
           </div>
         </div>
       </template>
+
       <template
         v-if="isExpand"
         #expand
@@ -263,6 +294,7 @@ watch(() => props.items, (val: Item[]) => {
           <CpTableSub />
         </div>
       </template>
+
       <!--
         header => nội dung cột
         context  => nội dung hàng
@@ -299,21 +331,33 @@ watch(() => props.items, (val: Item[]) => {
           <template
             v-for="(actionItem, idKey) in context?.actions "
           >
-            <div
+            <!--
+              <div
               v-if="checkActionShow(context?.actions) && actionItem.isShow
-                || !checkActionShow(context?.actions) && (context?.actions.length <= 3 || idKey < (Globals.MAX_ITEM_ACTION - 1))"
+              || !checkActionShow(context?.actions) && (context?.actions.length <= 3 || idKey < (Globals.MAX_ITEM_ACTION - 1))"
               :key="idKey"
               class="px-2 "
+              >
+              </div>
+            -->
+
+            <div
+              v-if="(context?.actions.length <= 3 || idKey < (Globals.MAX_ITEM_ACTION - 1))"
+              :key="idKey"
+              class="px-2 "
+              @mouseover="iconEvents(actionItem, true)"
+              @mouseleave="iconEvents(actionItem, false)"
             >
               <VIcon
-                v-if="actionItem?.icon"
-                :icon="actionItem?.icon"
-                :size="actionItem?.size || 18"
+                v-if="MethodsUtil.checkActionType(actionItem).icon"
+                :icon="MethodsUtil.checkActionType(actionItem).icon"
+                :size="18"
                 class="align-middle"
-                :class="actionItem?.color"
-                @click="actionItem?.action ? actionItem?.action(MethodsUtil.checlActionKey(actionItem, context)) : ''"
+                :class="MethodsUtil.checkActionType(actionItem)?.color"
+                @click="handleActionTable(MethodsUtil.checlActionKey(actionItem, context))"
               />
               <VTooltip
+                v-if="actionItem?.isShow"
                 activator="parent"
                 location="top"
               >
@@ -326,6 +370,7 @@ watch(() => props.items, (val: Item[]) => {
           >
             <div class="action-more px-2">
               <CmDropDown
+                is-action
                 :list-item="ArrayUtil.sliceArray(context?.actions, Globals.MAX_ITEM_ACTION - 1)"
                 :data="context"
                 custom-key="name"
