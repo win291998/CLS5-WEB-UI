@@ -65,7 +65,6 @@ async function getListThematicContent() {
     courseId: Number(route.params.id),
   }
   await MethodsUtil.requestApiCustom(CourseService.GetListThematicContent, TYPE_REQUEST.GET, params).then((value: any) => {
-    console.log(value)
     comboboxThemetic.value = value.data
   })
 }

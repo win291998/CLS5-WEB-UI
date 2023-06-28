@@ -31,7 +31,6 @@ onMounted(() => {
   }
   player.value = videojs(videoElement, options, () => {
     if (props.isSecure) {
-      console.log(player.value.tech())
       player.value.tech().vhs.xhr.beforeRequest = (optionsItem: any) => {
         const fileName = optionsItem.uri.replace(/^.*[\\\/]/, '')
         optionsItem.headers = optionsItem.headers || {}

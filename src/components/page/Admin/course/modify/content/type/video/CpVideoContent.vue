@@ -1,6 +1,10 @@
 <script setup lang="ts">
 const CmTab = defineAsyncComponent(() => import('@/components/common/CmTab.vue'))
 const CpTabInforVideo = defineAsyncComponent(() => import('@/components/page/Admin/course/modify/content/type/video/CpTabInforVideo.vue'))
+const CpConditionVideo = defineAsyncComponent(() => import('@/components/page/Admin/course/modify/content/type/video/CpConditionVideo.vue'))
+const CpConditionCompletedVideo = defineAsyncComponent(() => import('@/components/page/Admin/course/modify/content/type/video/CpConditionCompletedVideo.vue'))
+
+const route = useRoute()
 
 /**
  *
@@ -12,6 +16,20 @@ const listTab = [
     title: 'content',
     component: CpTabInforVideo,
     isRendered: true,
+  },
+  {
+    key: 'condition',
+    title: 'condition-content',
+    component: CpConditionVideo,
+    isRendered: true,
+    isDisabled: computed(() => !route.params.contentId).value,
+  },
+  {
+    key: 'condition-complete',
+    title: 'condition-completed-content',
+    component: CpConditionCompletedVideo,
+    isRendered: true,
+    isDisabled: computed(() => !route.params.contentId).value,
   },
 ]
 </script>

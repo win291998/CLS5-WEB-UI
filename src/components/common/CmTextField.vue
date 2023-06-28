@@ -38,19 +38,21 @@ interface Emit {
   (e: 'change', value: any): void
 }
 
-const formModelValue = ref(null)
+const formModelValue = ref<any>(null)
 watch(() => props.modelValue, (val: any) => {
   formModelValue.value = props.modelValue
 }, { immediate: true })
 
 /** Method */
 function handleChangeText() {
+  formModelValue.value = props.type === 'number' ? Number(formModelValue.value || 0) : formModelValue.value
   emit('change', props.type === 'number' ? Number(formModelValue.value) : formModelValue.value)
 
   // emit('update:modelValue', props.type === 'number' ? Number(formModelValue.value || 0) : formModelValue.value)
 }
 
 function handleUpdateText() {
+  formModelValue.value = props.type === 'number' ? Number(formModelValue.value || 0) : formModelValue.value
   emit('update:modelValue', props.type === 'number' ? Number(formModelValue.value || 0) : formModelValue.value)
 }
 

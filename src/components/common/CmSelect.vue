@@ -177,7 +177,6 @@ watch(() => props.modelValue, newValue => {
 // xử lý vị trí menu list không bị nhảy loạn khi scroll
 const placement = ref<Placement>('bottom')
 function withPopper(dropdownList: any, component: any, { width }: any) {
-  console.log(dropdownList, component, { width })
   dropdownList.style.width = width
   const popper = createPopper(component.$refs.toggle, dropdownList, {
     placement: 'bottom',

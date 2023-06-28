@@ -31,6 +31,7 @@ const storeValidate = validatorStore()
 const { schemaOption, Field, Form, useForm, yup } = storeValidate
 const { submitForm } = useForm()
 const route = useRoute()
+const router = useRouter()
 const storeContentVideoTypeModifyManager = contentTypeManagerStore()
 const { videoData, timeComplete, contentId, isViewDetail } = storeToRefs(storeContentVideoTypeModifyManager)
 const {
@@ -38,12 +39,18 @@ const {
 } = storeContentVideoTypeModifyManager
 const store = load()
 const { unLoadComponent } = store
-const schema = yup.object({
+const schemaInit = reactive({
   name: schemaOption.defaultString,
   url: schemaOption.defaultString,
+})
+const schemaTime = reactive({
   selfMinute: schemaOption.defaultNumberTime,
   selfSecond: schemaOption.defaultNumberTime,
 })
+const schema = computed(() => ({
+  ...schemaInit,
+  ...(videoData.value.timeTypeId === 2 ? schemaTime : {}),
+}))
 
 /** state */
 const LABEL = Object.freeze({
@@ -110,10 +117,8 @@ async function getListThematicContent() {
   const params = {
     courseId: Number(route.params.id),
   }
-  console.log(params)
 
   await MethodsUtil.requestApiCustom(CourseService.GetListThematicContent, TYPE_REQUEST.GET, params).then((value: any) => {
-    console.log(value)
     comboboxThemetic.value = value.data
   })
 }
@@ -174,11 +179,8 @@ function getYoutubeId(url: string) {
 async function getYoutubeDuration(id: any) {
   await axios.get(`https://www.googleapis.com/youtube/v3/videos?id=${id}&part=contentDetails&key=AIzaSyBa5drRTp_wRhS7n4PpdAzXkJJeLCcGCh4`)
     .then((value: any) => {
-      console.log(value)
-
       const { duration } = value?.data.items[0].contentDetails
       const timeDuration: any = moment.duration(duration)
-      console.log(timeDuration)
 
       time.value.contentMinute = timeDuration._data.minutes + timeDuration._data.hours * 60 + timeDuration._data.days * 24 * 60 // months + years
 
@@ -206,23 +208,37 @@ function addVideoYoutube() {
 }
 
 // thời gian media
+async function getDurationContent() {
+  if (videoType.value === 'youtube') {
+    const youtubeId = (youtube.youtubeUrl)
+    await getYoutubeDuration(youtubeId)
+  }
+  else if (videoType.value === 'local') {
+    const videoPreview = document.querySelector('#video-preview')
+
+    const videoTag = videoPreview?.getElementsByTagName('video') || []
+    if (videoTag[0] && videoTag[0]?.duration) {
+      const { duration } = videoTag[0]
+      time.value.contentMinute = Math.floor(Math.ceil(duration) / 60)
+      time.value.contentSecond = Math.floor(Math.ceil(duration) % 60)
+    }
+  }
+  else if (videoType.value === 'cdn') {
+    await getCdnVideoTime()
+  }
+}
 function getDuration(file: any) {
   const video = document.createElement('video')
   localFile.value.file = [file]
   video.preload = 'metadata'
   video.src = URL.createObjectURL(file)
-  console.log(video)
 
   video.onloadedmetadata = function () {
     window.URL.revokeObjectURL(video.src)
     const { duration } = video
     if (duration) {
-      console.log(duration)
-      console.log(Math.floor(Math.ceil(duration) / 60))
-      console.log(Math.floor(Math.ceil(duration) % 60))
       time.value.contentMinute = Math.floor(Math.ceil(duration) / 60)
       time.value.contentSecond = Math.floor(Math.ceil(duration) % 60)
-      console.log(time.value)
     }
   }
 }
@@ -310,7 +326,6 @@ function handleDeleteVideo(type: any, idx: any) {
   unLoadComponent(idx)
 }
 function uploadVideoLocal(data: any) {
-  console.log(data)
   fileUpload.value[0].size = data.size
   fileUpload.value[0].name = data.name
   urlEncode.value = data.filePath
@@ -367,7 +382,6 @@ async function getCdnVideoTime() {
     url: videoData.value.urlCdn,
     secretKey: 'maiwoodei6oophieloh1thak9ahphuch',
   }
-  console.log(params)
 
   return await MethodsUtil.requestApiCustom(`${SERVERFILE}${ServerFileService.GetCdnVideoTime}`, TYPE_REQUEST.GET, params).then((data: any) => {
     if (data && data.duration) {
@@ -380,7 +394,6 @@ async function getCdnVideoTime() {
 }
 async function uploadCdnVideo(idx: any) {
   const isHaveTime = await getCdnVideoTime()
-  console.log(isHaveTime)
 
   const params = {
     isBackground: true,
@@ -390,7 +403,6 @@ async function uploadCdnVideo(idx: any) {
     url: videoData.value.urlCdn,
     secretKey: 'maiwoodei6oophieloh1thak9ahphuch',
   }
-  console.log(videoData.value.urlCdn)
 
   filesDataCdn.value.name = videoData.value.urlCdn
   isShowModalProcessing.value = true
@@ -421,6 +433,9 @@ function cancelProcessing(index: any) {
     uploadRequestsCdn.value.splice(index, 1)
   }
 }
+function handleCancle() {
+  router.push({ name: 'course-edit', params: { tab: 'content', id: Number(route.params.id) } })
+}
 
 // lưu
 function saveAndUpdate(idx: any, isUpdate: boolean) {
@@ -445,8 +460,6 @@ function saveAndUpdate(idx: any, isUpdate: boolean) {
     return
   }
   myFormAddContentVideo.value.validate().then(async (success: any) => {
-    console.log(success)
-
     if (success.valid) {
       videoData.value.courseId = Number(route.params.id)
       videoData.value.archiveTypeId = 4
@@ -470,23 +483,21 @@ function saveAndUpdate(idx: any, isUpdate: boolean) {
       unLoadComponent(idx)
     }
   })
-  console.log(videoData.value)
 }
-onMounted(async () => {
-  await getListThematicContent()
-  if (route.params && route.params.contentId) {
-    const id = Number(route.params.contentId)
-    contentId.value = id
-    await fetchContent(id).then(() => {
-      getDetailVideoContent()
-      vSelectOwner.value.currentUserIds = videoData.value.ownerId
-      getTeacherOwnerCourse()
-    })
-  }
-  else {
+
+getListThematicContent()
+if (route.params && route.params.contentId) {
+  const id = Number(route.params.contentId)
+  contentId.value = id
+  fetchContent(id).then(() => {
+    getDetailVideoContent()
+    vSelectOwner.value.currentUserIds = videoData.value.ownerId
     getTeacherOwnerCourse()
-  }
-})
+  })
+}
+else {
+  getTeacherOwnerCourse()
+}
 
 onUnmounted(() => {
   resetDataVideo()
@@ -593,6 +604,7 @@ onUnmounted(() => {
                 name="time"
                 :type="1"
                 :value="timeType[0]"
+                @update:model-value="getDurationContent"
               />
             </div>
             <div class="d-flex align-center mr-4">
@@ -614,7 +626,7 @@ onUnmounted(() => {
                           type="number"
                           :model-value="time.contentMinute"
                           disabled
-                          :min="1"
+                          :min="0"
                           :max="59"
                         />
                       </div>
@@ -639,7 +651,7 @@ onUnmounted(() => {
                           disabled
                           :model-value="time.contentSecond"
                           type="number"
-                          :min="1"
+                          :min="0"
                           :max="59"
                         />
                       </div>
@@ -678,13 +690,15 @@ onUnmounted(() => {
                       <div class="mr-3 conditon-input">
                         <CmTextField
                           :field="field"
-                          :errors="errors"
                           type="number"
                           :min="0"
                           :max="59"
                         />
                       </div>
                       <span class="text-regular-md">{{ t('minutes').toLowerCase() }}</span>
+                    </div>
+                    <div class="styleError text-errors">
+                      {{ errors[0] }}
                     </div>
                   </div>
                 </Field>
@@ -698,13 +712,15 @@ onUnmounted(() => {
                       <div class="mr-3 conditon-input">
                         <CmTextField
                           :field="field"
-                          :errors="errors"
                           type="number"
                           :min="0"
                           :max="59"
                         />
                       </div>
                       <span class="text-regular-md">{{ t('seconds').toLowerCase() }}</span>
+                    </div>
+                    <div class="styleError text-errors">
+                      {{ errors[0] }}
                     </div>
                   </div>
                 </Field>
@@ -909,6 +925,7 @@ onUnmounted(() => {
         <VRow v-if="localFile.haveVideoLocal">
           <VCol
             v-if="!isLoadingVideo"
+            id="video-preview"
             cols="12"
             sm="6"
           >
@@ -1047,6 +1064,7 @@ onUnmounted(() => {
           :title-save-and-update="t('save-and-update')"
           @on-save="(idx: any) => saveAndUpdate(idx, false)"
           @on-save-update="(idx: any) => saveAndUpdate(idx, true)"
+          @on-cancel="handleCancle"
         />
       </div>
     </Form>

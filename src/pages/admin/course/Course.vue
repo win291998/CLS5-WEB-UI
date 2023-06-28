@@ -11,6 +11,7 @@ import CourseService from '@/api/course/index'
 import { TYPE_REQUEST } from '@/typescript/enums/enums'
 import CmCollapse from '@/components/common/CmCollapse.vue'
 import toast from '@/plugins/toast'
+import { tableStore } from '@/stores/table'
 
 window.showAllPageLoading('COMPONENT')
 
@@ -54,6 +55,9 @@ const storeCourseApproveManager = courseApproveManagerStore()
 const { idModalSendApproveCourse, idModalSendRatioPoint } = storeToRefs(storeCourseApproveManager)
 const { sendApproveCourse } = storeCourseApproveManager
 
+const storeTable = tableStore()
+const { callBackAction } = storeToRefs(storeTable)
+
 const queryParamsInit = {
   dateFrom: null,
   dateTo: null,
@@ -68,53 +72,6 @@ const queryParamsInit = {
   statusId: null,
   ownerId: null,
 }
-watch(() => route.query, (val: any) => {
-  console.log(val)
-
-  if (Object.keys(val).length > 0) {
-    console.log(val)
-
-    queryParams.value.pageNumber = val.pageNumber ? Number(val.pageNumber) : 1
-    queryParams.value.pageSize = val.pageSize ? Number(val.pageSize) : 10
-    queryParams.value.search = val.search ? val.search : null
-    queryParams.value.topicIds = (val.topicIds && val.topicIds.length) ? val.topicIds.map((item: any) => Number(item)) : []
-    queryParams.value.formOfStudy = val.formOfStudy ? Number(val.formOfStudy) : null
-    queryParams.value.sort = val.sort ? val.sort : '-modifiedDate'
-
-    queryParams.value.isDisplayHome = val.isDisplayHome === 'true' ? true : val.isDisplayHome === 'false' ? false : null
-    queryParams.value.statusId = val.statusId ? Number(val.statusId) : null
-    queryParams.value.dateFrom = val.dateFrom ? val.dateFrom : null
-    queryParams.value.userId = val.userId ? val.userId : null
-    queryParams.value.ownerId = val.ownerId ? Number(val.ownerId) : null
-  }
-}, { deep: true, immediate: true })
-watch(() => queryParams.value, (val: any) => {
-  if (val.dateFrom && val.dateTo) {
-    const start: any = new Date(val.dateFrom)
-    const end: any = new Date(val.dateTo)
-    if ((start - end) > 0)
-      return
-  }
-  queryParams.value = val
-  if (Object.keys(val).length <= 0) {
-    queryParams.value = {
-      pageNumber: 1,
-      pageSize: 10,
-      search: null,
-      topicIds: [],
-      formOfStudy: null,
-      sort: '-modifiedDate',
-      isDisplayHome: null,
-      statusId: null,
-      dateFrom: null,
-      dateTo: null,
-      ownerId: null,
-      userId: null,
-    }
-  }
-
-  fetchListCourse()
-}, { deep: true, immediate: true })
 
 const headers = reactive([
   { text: '', value: 'checkbox', width: 50 },
@@ -124,7 +81,7 @@ const headers = reactive([
   { text: t('form-study'), value: 'formStudy', type: 'custom' },
   { text: t('duration-time'), value: 'time', type: 'custom' },
   { text: t('date-update'), value: 'modifiedDateString' },
-  { text: '', value: 'actions', width: 150 },
+  { text: '', value: 'actions', width: 150, type: 'custom' },
 ])
 const isShowModalFeedBack = ref(false)
 const dataFeedBack = ref<any>()
@@ -155,6 +112,7 @@ function actionItem(type: any) {
       break
   }
 }
+callBackAction.value = actionItem
 
 // hàm trả về các loại action từ header filter
 function handleClickBtn(type: string) {
@@ -221,36 +179,55 @@ async function fetchListCourse() {
   }
   await MethodsUtil.requestApiCustom(CourseService.GetCourseList, TYPE_REQUEST.GET, params).then(async (value: any) => {
     if (value?.data) {
-      const userIds = MethodsUtil.getPropertyByArray(value?.data?.pageLists, 'createdBy')
-      users.value = await MethodsUtil.getUserInfoByIds(userIds)
-      if (value.data.pageLists !== null) {
-        value.data.pageLists.forEach((element: any) => {
-          const topic = topicCombobox.value?.find((x: any) => x.id === element.topicCourseId)
-
-          const user = users.value.pageLists.find((x: any) => x.id === element.createdBy)
-          if (!window._.isEmpty(topic))
-            element.topicCourseName = topic.name
-
-          if (user) {
-            element.firstName = user.firstName
-            element.lastName = user.lastName
-          }
-          element.actions = element.actions.map((el: any) => {
-            return MethodsUtil.checkActionType(el, actionItem)
-          })
-        })
-      }
-      if (value.data) {
-        value.data.pageLists.forEach((item: any) => {
-          item.isDisabled = !item.actions.find((x: any) => x.id === 2)
-        })
-      }
-
       items.value = value.data.pageLists
       totalRecord.value = value.data.totalRecord
     }
   })
 }
+watch(() => route.query, (val: any) => {
+  if (Object.keys(val).length > 0) {
+    queryParams.value.pageNumber = val.pageNumber ? Number(val.pageNumber) : 1
+    queryParams.value.pageSize = val.pageSize ? Number(val.pageSize) : 10
+    queryParams.value.search = val.search ? val.search : null
+    queryParams.value.topicIds = (val.topicIds && val.topicIds.length) ? val.topicIds.map((item: any) => Number(item)) : []
+    queryParams.value.formOfStudy = val.formOfStudy ? Number(val.formOfStudy) : null
+    queryParams.value.sort = val.sort ? val.sort : '-modifiedDate'
+
+    queryParams.value.isDisplayHome = val.isDisplayHome === 'true' ? true : val.isDisplayHome === 'false' ? false : null
+    queryParams.value.statusId = val.statusId ? Number(val.statusId) : null
+    queryParams.value.dateFrom = val.dateFrom ? val.dateFrom : null
+    queryParams.value.userId = val.userId ? val.userId : null
+    queryParams.value.ownerId = val.ownerId ? Number(val.ownerId) : null
+  }
+}, { deep: true, immediate: true })
+
+watch(() => queryParams.value, (val: any) => {
+  if (val.dateFrom && val.dateTo) {
+    const start: any = new Date(val.dateFrom)
+    const end: any = new Date(val.dateTo)
+    if ((start - end) > 0)
+      return
+  }
+  queryParams.value = val
+  if (Object.keys(val).length <= 0) {
+    queryParams.value = {
+      pageNumber: 1,
+      pageSize: 10,
+      search: null,
+      topicIds: [],
+      formOfStudy: null,
+      sort: '-modifiedDate',
+      isDisplayHome: null,
+      statusId: null,
+      dateFrom: null,
+      dateTo: null,
+      ownerId: null,
+      userId: null,
+    }
+  }
+  pushQuery()
+  fetchListCourse()
+}, { deep: true, immediate: true })
 
 // chạy
 window.hideAllPageLoading()
@@ -284,7 +261,7 @@ window.hideAllPageLoading()
         :disabled-delete="disabledDelete"
         :disabled-approve="disabledApprove"
         @click="handleClickBtn"
-        @search="handleSearch"
+        @update:keyword="handleSearch"
       />
     </div>
     <div id="cap-report-overview">

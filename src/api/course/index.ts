@@ -24,6 +24,11 @@ const CourseService = {
   GetListReferContent: '/coursecontent/get-list-reference-content', // Lấy danh sách nội dung tham khảo
   GetListThematicContent: '/course/get-list-themetic-by-course', // Lấy danh sách nội dung tham khảo
   GetInforContentById: '/coursecontent/get-by-id', // Lấy danh sách nội dung tham khảo
+  GetRequireParticipate: '/coursecontent/get-require-participate', // dữ liệu nội dung chỉnh sửa
+  GetRequireFinish: '/coursecontent/get-require-finish', // điều kiện hoàn thành khóa học
+  GetConfiguration: '/coursecontenttest/get-configuration', // Lấy thông tin tùy chỉnh bài kiểm tra
+  GetListQuestionContentSurvey: '/surveytestcode/get-list-question', // Lấy danh sách câu hỏi khảo sát
+  GetListQuestionContentTest: '/course/get-course-content-test-list-question', // Lấy danh sách câu hỏi
 
   /** Post */
   PostAddCourseOrg: '/course/add-course-to-organizational-structures',
@@ -72,6 +77,11 @@ const CourseService = {
   PostAddLContentStock: '/coursecontent/save-archive-to-course-content', // Thêm dánh sách kho nội dung
   PostUpdateContent: '/contentarchive/update', // Cập nhật nội dung khóa học
   PostCreateContent: '/contentarchive/create', // Thêm nội dung khóa học
+  PostSaveRequireParticipate: '/coursecontent/save-require-participate', // điều kiện tham gia khóa học
+  PostSaveRequireFinish: '/coursecontent/save-require-finish',
+  PostuUpdateTestConfig: '/coursecontenttest/update',
+  PostuCreateTestConfig: '/coursecontenttest/create',
+  PostuUpdateQuestionTest: '/CourseContentTest/update-question', // cập nhật danh sách câu hỏi cho bài kiểm tra
 
   /** Delete */
   DeleteUserReg: 'courseuser/delete-register',

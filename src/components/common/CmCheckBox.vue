@@ -134,5 +134,8 @@ watch(() => propsValue.modelValue, value => {
   .color-info {
     color: $color-info-600;
   }
+  .v-selection-control__input > .v-icon {
+    background-color: rgb(var(--v-theme-surface));
+  }
 }
 </style>

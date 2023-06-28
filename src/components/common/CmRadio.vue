@@ -23,7 +23,6 @@ function change() {
   emit('update:model-value', selectedOption.value)
 }
 watch(() => props.modelValue, val => {
-  console.log(val)
   selectedOption.value = val
 }, { immediate: true })
 </script>
@@ -53,8 +52,9 @@ watch(() => props.modelValue, val => {
 </template>
 
 <style lang="scss">
-  .radio-item {
-  display: inline-block;
+.radio-item {
+  vertical-align: middle;
+  display: flex;
   position: relative;
 }
 
