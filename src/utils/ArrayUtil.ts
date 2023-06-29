@@ -82,7 +82,6 @@ export default class ArraysUtil {
         const checkParrent = ArraysUtil.convertTreeView(item?.permissions, result, listFeature, mapPermission, root, t, customKey = 'permissions', item)
         if (checkParrent.indeterminate || checkParrent.checked) {
           result[`node-${perId}`].state.indeterminate = true
-          console.log(`node-${perId}`)
           indeterminate = indeterminate + 1
         }
 
