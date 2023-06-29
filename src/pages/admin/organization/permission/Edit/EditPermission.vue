@@ -57,21 +57,15 @@ async function getDataDetail() {
 }
 
 async function getListFeaturePermission() {
-  console.log(123)
-  console.time('tree')
   const { data } = await MethodsUtil.requestApiCustom(apiPermission.featurePermissionByPortal, TYPE_REQUEST.GET)
   const listTree: any[] = []
   data.forEach((element: any[], index: number) => {
     const result: any = {}
-    ArraysUtil.convertTreeView([element], result, dataInput.value.listFeature, {}, [`node-p${index + 1}`], t, 'permissions')
+    ArraysUtil.convertTreeViewOrg([element], result, dataInput.value.listFeature, {}, [`node-p${index + 1}`], t, 'permissions')
     listTree.push(result)
   })
   listFeaturePermission.value = listTree
   isShowPermission.value = true
-  nextTick(() => {
-    console.timeEnd('tree')
-    console.log(123)
-  })
 }
 const listRoleDefault = ref<any[]>([])
 async function getRoleDefault() {
@@ -84,7 +78,6 @@ async function getRoleDefault() {
 onMounted(async () => {
   if (route.params.id)
     await getDataDetail()
-  console.log(123)
 
   await getListFeaturePermission()
   getRoleDefault()
