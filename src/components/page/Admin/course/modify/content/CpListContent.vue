@@ -88,6 +88,21 @@ const actionUpdate = [
       })
     },
   },
+  {
+    title: t('document-course'),
+    icon: 'tabler:file-description',
+    action: () => {
+      router.push({
+        name: 'content-add',
+        params: {
+          id: Number(route.params.id),
+          tab: route.params.tab,
+          type: 'document',
+          contentTab: 'infor',
+        },
+      })
+    },
+  },
 
 ]
 const actionApprove = [

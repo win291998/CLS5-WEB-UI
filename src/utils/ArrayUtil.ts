@@ -58,11 +58,11 @@ export default class ArraysUtil {
     }, {})
   }
 
-  static convertTreeView = (listData: any[], result: any, listFeature: any, mapPermissionParent: any, root: string[] = [], t: any, customKey = 'permissions', parent?: any) => {
+  static convertTreeViewOrg = (listData: any[], result: any, listFeature: any[], mapPermissionParent: any, root: string[] = [], t: any, customKey = 'permissions', parent?: any) => {
     let checked = 0
     let indeterminate = 0
     listData?.forEach((item: any) => {
-      const mapPermission = listFeature.find(x => x.featureId === Number(item.orgId))
+      const mapPermission: any = listFeature ? listFeature.find(x => x.featureId === Number(item.orgId)) : []
       const perId = item.orgId ? item.orgId : item.id
       if (item[customKey] && item[customKey]?.length > 0) {
         result[`node-${perId}`] = {
@@ -79,10 +79,9 @@ export default class ArraysUtil {
             ...(root.includes(`node-${perId}`) ? { opened: true } : {}),
           },
         }
-        const checkParrent = ArraysUtil.convertTreeView(item?.permissions, result, listFeature, mapPermission, root, t, customKey = 'permissions', item)
+        const checkParrent: any = ArraysUtil.convertTreeViewOrg(item?.permissions, result, listFeature, mapPermission, root, t, customKey = 'permissions', item)
         if (checkParrent.indeterminate || checkParrent.checked) {
           result[`node-${perId}`].state.indeterminate = true
-          console.log(`node-${perId}`)
           indeterminate = indeterminate + 1
         }
 
@@ -95,6 +94,7 @@ export default class ArraysUtil {
       else {
         result[`node-${perId}`] = {
           ...item,
+          ids: item.id,
           text: t(item.name),
           permission: item.permissionValue,
           orgPermission: item.orgPermissionValue,
@@ -112,6 +112,36 @@ export default class ArraysUtil {
       checked,
       indeterminate,
     }
+  }
+
+  static convertTreeView = (listData: any[], result: any, root: string[] = [], t: any, customKey = 'permissions', customNode = 'id') => {
+    listData?.forEach((item: any) => {
+      const perId = item[customNode]
+      if (item[customKey] && item[customKey]?.length > 0) {
+        result[`node-${perId}`] = {
+          ...item,
+          ids: item.id,
+          text: t(item.name),
+          children: item[customKey].map((child: any) => `node-${child[customNode]}`),
+          state: {
+            ...item.state,
+            ...(root.includes(`node-${perId}`) ? { opened: true } : {}),
+          },
+        }
+
+        ArraysUtil.convertTreeView(item[customKey], result, root, t, customKey = 'children', customNode = 'id')
+      }
+      else {
+        result[`node-${perId}`] = {
+          ...item,
+          text: t(item.name),
+          ids: item.id,
+          state: {
+            ...item.state,
+          },
+        }
+      }
+    })
   }
 
   // static formatTreeMaxSpeed = (data: any) => {
@@ -278,6 +308,8 @@ export default class ArraysUtil {
    * @return {object}
    */
   static formatSelectTree = (items: Array<any>, keyParent = 'parentId', customId = 'id') => {
+    console.log('formatSelectTree')
+
     const orderedNodes = window._.orderBy(items, ['left'], ['desc'])
     const groupedNodes = window._.groupBy(orderedNodes, keyParent)
     return window._.map(groupedNodes['0'], parent => {
