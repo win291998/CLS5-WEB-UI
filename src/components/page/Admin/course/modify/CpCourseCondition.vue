@@ -15,8 +15,8 @@ const route = useRoute()
  * Store
  */
 const storeConditionInforManager = conditionManagerStore()
-const { disabledDeleteCourse, queryParamsCourse, itemsCourse, totalRecordCourse, isShowDialogNotiDeleteCourse } = storeToRefs(storeConditionInforManager)
-const { deleteItemsCourse, handleSearchCourse, handlePageClickCourse, selectedRowsCourse, getCourseRequired, confirmDialogDeleteCourse, addCourse } = storeConditionInforManager
+const { disabledDeleteCourse, queryParamsCourse, itemsCourse, totalRecordCourse, isShowDialogNotiDeleteCourse, callBackAction } = storeToRefs(storeConditionInforManager)
+const { deleteItemsCourse, handleSearchCourse, handlePageClickCourse, selectedRowsCourse, getCourseRequired, confirmDialogDeleteCourse, addCourse, actionItemCourse } = storeConditionInforManager
 
 /** state */
 const isShowModalAddCourse = ref(false)
@@ -51,6 +51,7 @@ function handleClickBtn(type: string) {
   }
 }
 onMounted(async () => {
+  callBackAction.value = actionItemCourse
   await getCourseRequired()
 })
 </script>

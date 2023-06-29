@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import { defineStore } from 'pinia'
 import StringJwt from '@/utils/Jwt'
 import CourseService from '@/api/course/index'
@@ -139,7 +140,6 @@ export const contentManagerStore = defineStore('contentManager', () => {
         break
     }
   }
-  callBackAction.value = actionItemUserReg
   function selectedRows(e: any) {
     data.selectedRowsIds = e
   }
@@ -181,12 +181,20 @@ export const contentManagerStore = defineStore('contentManager', () => {
   async function handleSearch(val: any) {
     paramsContent.value.search = val
     const result: any[] = []
-    console.log(updateStatusListCourse(cloneData.value, val))
     convertNoneLv(updateStatusListCourse(cloneData.value, val), result, 0)
 
-    // let dataRow = ArraysUtil.unFlatMapTree(updateStatusListCourse(cloneData.value, val))
-    // dataRow = ArraysUtil.formatTreeTable(dataRow, customId.value)
-    console.log(result)
+    // result.forEach((element: any) => {
+    //   element.actions = [
+    //     MethodsUtil.checkActionType({ id: 1 }),
+    //     MethodsUtil.checkActionType({ id: 2 }),
+    //     MethodsUtil.checkActionType({ id: 3 }),
+    //     MethodsUtil.checkActionType({ id: 5 }),
+    //     MethodsUtil.checkActionType({ id: 6 }),
+    //     MethodsUtil.checkActionType({ id: 7 }),
+    //     MethodsUtil.checkActionType({ id: 9 }),
+    //     MethodsUtil.checkActionType({ id: 19 }),
+    //   ]
+    // })
     items.value = result
   }
   function handlerActionHeader(type: any) {
@@ -296,25 +304,22 @@ export const contentManagerStore = defineStore('contentManager', () => {
     return parent ?? null
   }
   function formatDataTableTree(dataFormat: any) {
-    let dataRow = ArraysUtil.unFlatMapTree(dataFormat)
-    dataRow = ArraysUtil.formatTreeTable(dataRow, customId.value)
-    dataRow.forEach((element: any) => {
-      // element.actions = element.actions?.map((el: any) => {
-      //   return MethodsUtil.checkActionType(el, actionItemUserReg)
-      // })
-      element.actions = [
-        MethodsUtil.checkActionType({ id: 2 }, actionItemUserReg),
-        MethodsUtil.checkActionType({ id: 3 }, actionItemUserReg),
-        MethodsUtil.checkActionType({ id: 5 }, actionItemUserReg),
-        MethodsUtil.checkActionType({ id: 6 }, actionItemUserReg),
-        MethodsUtil.checkActionType({ id: 7 }, actionItemUserReg),
-        MethodsUtil.checkActionType({ id: 19 }, actionItemUserReg),
+    const result: any[] = []
+    convertNoneLv(dataFormat, result, 0)
 
-        // MethodsUtil.checkActionType({ id: 20 }, actionItemUserReg),
-        // MethodsUtil.checkActionType({ id: 21 }, actionItemUserReg),
-      ]
-    })
-    return dataRow
+    // result.forEach((element: any) => {
+    //   element.actions = [
+    //     MethodsUtil.checkActionType({ id: 1 }),
+    //     MethodsUtil.checkActionType({ id: 2 }),
+    //     MethodsUtil.checkActionType({ id: 3 }),
+    //     MethodsUtil.checkActionType({ id: 5 }),
+    //     MethodsUtil.checkActionType({ id: 6 }),
+    //     MethodsUtil.checkActionType({ id: 7 }),
+    //     MethodsUtil.checkActionType({ id: 9 }),
+    //     MethodsUtil.checkActionType({ id: 19 }),
+    //   ]
+    // })
+    return result
   }
 
   // kiểm tra di chuyển
@@ -324,6 +329,7 @@ export const contentManagerStore = defineStore('contentManager', () => {
       let index = 0
       if (parent?.id === item?.id) {
         index = window._.findIndex(cloneData.value, (element: any) => window._.isEqual(element.id, parent.id))
+
         if (isMoveUp === true)
           return index > 0
         return index < cloneData.value.length - 1
@@ -434,25 +440,46 @@ export const contentManagerStore = defineStore('contentManager', () => {
       })
   }
 
-  function convertNoneLv(listData: any[], result: any[], level: number) {
+  function convertNoneLv(listData: any[], result: any[], level: number, parent?: any) {
     listData?.forEach((item: any) => {
       if (item?.children && item?.children?.length > 0) {
-        result.push({ ...item, level })
-        convertNoneLv(item?.children, result, level + 1)
+        result.push({
+          ...item,
+          level,
+          ...(
+            parent
+              ? ({
+                  parent: {
+                    [customId.value]: parent[customId.value],
+                  },
+                })
+              : {}
+          ),
+        })
+        convertNoneLv(item?.children, result, level + 1, item)
       }
       else {
-        result.push({ ...item, level })
+        result.push({
+          ...item,
+          level,
+          ...(
+            parent
+              ? ({
+                  parent: {
+                    [customId.value]: parent[customId.value],
+                  },
+                })
+              : {}
+          ),
+        })
       }
-      return { ...item, level }
     })
   }
 
   /** *****Lấy danh sách nội dung */
   async function getListContentCourse() {
     console.time('updates')
-    console.log('updates')
     paramsContent.value.id = Number(route.params?.id)
-    console.log(route.params?.id)
 
     const value = await MethodsUtil.requestApiCustom(CourseService.GetListContentCourse, TYPE_REQUEST.GET, paramsContent.value)
     if (value.data) {
@@ -460,12 +487,19 @@ export const contentManagerStore = defineStore('contentManager', () => {
 
       cloneData.value = window._.cloneDeep(value.data)
       convertNoneLv(value.data, result, 0)
-      console.log(result)
 
-      // let dataRow = ArraysUtil.unFlatMapTree(value.data)
-      // console.log('unFlatMapTree', dataRow)
-      // dataRow = ArraysUtil.formatTreeTable(dataRow, customId.value)
-      // console.log('formatTreeTable', dataRow)
+      // result.forEach((element: any) => {
+      //   element.actions = [
+      //     MethodsUtil.checkActionType({ id: 1 }),
+      //     MethodsUtil.checkActionType({ id: 2 }),
+      //     MethodsUtil.checkActionType({ id: 3 }),
+      //     MethodsUtil.checkActionType({ id: 5 }),
+      //     MethodsUtil.checkActionType({ id: 6 }),
+      //     MethodsUtil.checkActionType({ id: 7 }),
+      //     MethodsUtil.checkActionType({ id: 9 }),
+      //     MethodsUtil.checkActionType({ id: 19 }),
+      //   ]
+      // })
       items.value = result
 
       // updatePosition()
@@ -634,6 +668,8 @@ export const contentManagerStore = defineStore('contentManager', () => {
   })
 
   return {
+    callBackAction,
+
     /** Nội dung */
     items,
     data,
@@ -673,6 +709,7 @@ export const contentManagerStore = defineStore('contentManager', () => {
     deleteItemsRefer,
     handleSearchRefer,
     handleAddRefContentStock,
+    actionItemRefer,
 
     /** Stock content */
     dataStock,
