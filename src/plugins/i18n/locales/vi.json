@@ -3459,12 +3459,13 @@
   "over": "Trên",
   "custom": "Tùy chỉnh",
   "implement": "Áp dụng",
-  "Mo": "T2",
-  "Tu": "T3",
-  "We": "T4",
-  "Th": "T5",
-  "Fr": "T6",
-  "Sa": "T7",
-  "Su": "CN",
-  "today": "Hôm nay"
+  "Mo" : "T2",
+  "Tu" : "T3",
+  "We" : "T4",
+  "Th" : "T5",
+  "Fr" : "T6",
+  "Sa" : "T7",
+  "Su" : "CN",
+  "today": "Hôm nay",
+  "please-select-day":"Vui lòng chọn thời gian!"
 }

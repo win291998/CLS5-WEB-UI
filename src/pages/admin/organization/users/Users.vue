@@ -6,23 +6,23 @@ import { TYPE_REQUEST } from '@/typescript/enums/enums'
 import toast from '@/plugins/toast'
 import CmCollapse from '@/components/common/CmCollapse.vue'
 import { tableStore } from '@/stores/table'
+import CpActionHeaderPage from '@/components/page/gereral/CpActionHeaderPage.vue'
+import CpHeaderAction from '@/components/page/gereral/CpHeaderAction.vue'
+import CpUserFilter from '@/components/page/Admin/organization/users/CpUserFilter.vue'
+import CmTable from '@/components/common/CmTable.vue'
+import CmAccodion from '@/components/common/CmAccodion.vue'
+import CmChip from '@/components/common/CmChip.vue'
+import CpConfirmDialog from '@/components/page/gereral/CpConfirmDialog.vue'
+import CpModalUpdateStatus from '@/components/page/Admin/organization/users/CpModalUpdateStatus.vue'
+import CpCustomInfo from '@/components/page/gereral/CpCustomInfo.vue'
+import CpModalAddUserApi from '@/components/page/Admin/organization/users/CpModalAddUserApi.vue'
+import CpTableSub from '@/components/page/gereral/CpTableSub.vue'
+import CpTableSubIconList from '@/components/page/gereral/CpTableSubIconList.vue'
+import CpImportXml from '@/components/page/Admin/organization/users/modal/CpImportXml.vue'
 
 // mock api
 
-window.showAllPageLoading('COMPONENT')
-const CpActionHeaderPage = defineAsyncComponent(() => import('@/components/page/gereral/CpActionHeaderPage.vue'))
-const CpHeaderAction = defineAsyncComponent(() => import('@/components/page/gereral/CpHeaderAction.vue'))
-const CpUserFilter = defineAsyncComponent(() => import('@/components/page/Admin/organization/users/CpUserFilter.vue'))
-const CmTable = defineAsyncComponent(() => import('@/components/common/CmTable.vue'))
-const CmAccodion = defineAsyncComponent(() => import('@/components/common/CmAccodion.vue'))
-const CmChip = defineAsyncComponent(() => import('@/components/common/CmChip.vue'))
-const CpConfirmDialog = defineAsyncComponent(() => import('@/components/page/gereral/CpConfirmDialog.vue'))
-const CpModalUpdateStatus = defineAsyncComponent(() => import('@/components/page/Admin/organization/users/CpModalUpdateStatus.vue'))
-const CpCustomInfo = defineAsyncComponent(() => import('@/components/page/gereral/CpCustomInfo.vue'))
-const CpModalAddUserApi = defineAsyncComponent(() => import('@/components/page/Admin/organization/users/CpModalAddUserApi.vue'))
-const CpTableSub = defineAsyncComponent(() => import('@/components/page/gereral/CpTableSub.vue'))
-const CpTableSubIconList = defineAsyncComponent(() => import('@/components/page/gereral/CpTableSubIconList.vue'))
-const CpImportXml = defineAsyncComponent(() => import('@/components/page/Admin/organization/users/modal/CpImportXml.vue'))
+// window.showAllPageLoading('COMPONENT')
 
 /** params */
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
@@ -293,6 +293,7 @@ async function handleFilterCombobox(dataFilter: any) {
     ...queryParam,
     ...dataFilter,
   }
+
   await fectchListUsers()
 }
 
