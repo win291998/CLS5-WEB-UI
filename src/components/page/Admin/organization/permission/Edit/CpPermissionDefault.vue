@@ -47,22 +47,28 @@ function handleUnChecked(node: any, idx: number) {
 
 <template>
   <div class="edit-permission">
-    <div
+    <VRow
       class="permission"
     >
-      <div
+      <VCol
         v-for="(tree, index) in listFeaturePermission"
         :key="index"
-        class="content-permission"
+        xs="12"
+        sm="12"
+        md="6"
+        lg="4"
+        xl="4"
       >
-        <CmTreeView
-          :config="config(index)"
-          :nodes="tree"
-          @node-checked="handleChecked($event, index)"
-          @node-unchecked="handleUnChecked($event, index)"
-        />
-      </div>
-    </div>
+        <div class="content-permission">
+          <CmTreeView
+            :config="config(index)"
+            :nodes="tree"
+            @node-checked="handleChecked($event, index)"
+            @node-unchecked="handleUnChecked($event, index)"
+          />
+        </div>
+      </VCol>
+    </VRow>
   </div>
 </template>
 
@@ -79,9 +85,10 @@ function handleUnChecked(node: any, idx: number) {
       // Gray 200
       border: 1px solid $color-gray-200;
       border-radius: 8px;
+      height: 100%;
     }
     .content-permission:nth-child(n+2) {
-      margin-left: 24px;
+      // margin-left: 24px;
     }
   }
   .button-edit-permission:nth-child(n+2) {

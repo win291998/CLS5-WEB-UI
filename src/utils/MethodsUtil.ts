@@ -132,6 +132,24 @@ export default class MethodsUtil {
     return dataFormat
   }
 
+  static checkColorCustim = (key: string) => {
+    switch (key) {
+      case 'error':
+        return 'rgb(var(--v-error-600))'
+      case 'primary':
+        return 'rgb(var(--v-primary-600))'
+      case 'infor':
+        return 'rgb(var(--v-gray-600))'
+      case 'success':
+        return 'rgb(var(--v-success-600))'
+      case 'warrning':
+        return 'rgb(var(--v-warrning-600))'
+
+      default:
+        return 'rgb(var(--v-gray-300))'
+    }
+  }
+
   static checkStatusTypeUser = (key: number | string) => {
     if (typeof key === 'number')
       return StatusTypeUser.find((item: any) => item.id === key)

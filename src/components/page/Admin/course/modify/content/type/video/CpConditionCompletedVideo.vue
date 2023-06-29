@@ -260,7 +260,7 @@ watch(() => conditionComplete.value, (val: any) => {
           </div>
         </VCol>
       </VRow>
-      <VRow class="mb-4">
+      <VRow>
         <VCol
           cols="12"
         >
