@@ -74,14 +74,14 @@ export default class MethodsUtil {
       })
         .then((response: any) => {
           const fileURL = window.URL.createObjectURL(new Blob([response.data]))
-
           const fileLink = document.createElement('a')
 
           fileLink.href = fileURL
           fileLink.setAttribute('download', nameFile)
           document.body.appendChild(fileLink)
           fileLink.click()
-
+          document.body.removeChild(fileLink)
+          window.URL.revokeObjectURL(fileURL)
           resolve()
         })
         .catch((error: any) => {

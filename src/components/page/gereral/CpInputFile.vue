@@ -21,7 +21,7 @@ const CpMdRequestInstall = defineAsyncComponent(() => import('@/components/page/
 interface Emit {
   (e: 'onChangeFile', value: any): void
   (e: 'update:acceptDownload', value: any): void
-  (e: 'change', value: any): void
+  (e: 'change', value: any, file?: any): void
   (e: 'haveFile', value: any): void
   (e: 'update:fileUpload', value: any): void
 }
@@ -164,12 +164,12 @@ async function upFileServer(file: any) {
           ...value.data,
         }
         filesData.value.processing = 100
-        emit('update:fileUpload', filesData.value)
-        emit('change', filesData.value)
         clearInterval(intervalProgress.value)
         isShowModalProcessing.value = false
         toast('SUCCESS', t('up-file'))
         haveFile.value = true
+        emit('update:fileUpload', filesData.value)
+        emit('change', filesData.value, file)
       }
     })
     .catch(() => {
