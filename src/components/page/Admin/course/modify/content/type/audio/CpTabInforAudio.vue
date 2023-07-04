@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { validatorStore } from '@/stores/validatator'
-import { contentDocTypeManagerStore } from '@/stores/admin/course/type/contentDocumentTypeModify'
+import { contentTypeManagerStore } from '@/stores/admin/course/type/contentContentTypeModify'
 import { TYPE_REQUEST } from '@/typescript/enums/enums'
 import MethodsUtil from '@/utils/MethodsUtil'
 import CourseService from '@/api/course/index'
@@ -9,6 +9,7 @@ import toast from '@/plugins/toast'
 import Globals from '@/constant/Globals'
 import ServerFileService from '@/api/server-file/index'
 import { load } from '@/stores/loadComponent.js'
+import CmAudio from '@/components/common/CmAudio.vue'
 
 const CpInputFile = defineAsyncComponent(() => import('@/components/page/gereral/CpInputFile.vue'))
 const SkUser = defineAsyncComponent(() => import('@/components/page/gereral/skeleton/SkUser.vue'))
@@ -30,11 +31,11 @@ const { schemaOption, Field, Form, useForm, yup } = storeValidate
 const { submitForm } = useForm()
 const route = useRoute()
 const router = useRouter()
-const storeContentDocTypeModifyManager = contentDocTypeManagerStore()
-const { documentData, timeComplete, contentId, isViewDetail } = storeToRefs(storeContentDocTypeModifyManager)
+const storeContentTypeModifyManager = contentTypeManagerStore()
+const { contentData, timeComplete, contentId, isViewDetail } = storeToRefs(storeContentTypeModifyManager)
 const {
-  handleUpdateContent, fetchContent, resetDataDoc,
-} = storeContentDocTypeModifyManager
+  handleUpdateContent, fetchContent, resetData,
+} = storeContentTypeModifyManager
 const store = load()
 const { unLoadComponent } = store
 const schemaInit = reactive({
@@ -47,7 +48,7 @@ const schemaTime = reactive({
 })
 const schema = computed(() => ({
   ...schemaInit,
-  ...(documentData.value.timeTypeId === 2 ? schemaTime : {}),
+  ...(contentData.value.timeTypeId === 2 ? schemaTime : {}),
 }))
 
 /** state */
@@ -61,7 +62,7 @@ const LABEL = Object.freeze({
   TITLE7: t('permistion-fringed'),
 })
 const comboboxThemetic = ref([])
-const myFormAddContentDoc = ref()
+const myFormAddContent = ref()
 const errorsInputFile = ref<any>([])
 const vSelectOwner = ref<any>({
   listCombobox: [],
@@ -73,9 +74,10 @@ const vSelectOwner = ref<any>({
   currentUserIds: [],
   itemSelected: {} as any,
 })
+const timeType = ref([1, 2]) // thể loại thời lượng
 const time = ref({ selfMinute: 0, selfSecond: 0, contentMinute: 0, contentSecond: 0 })
 const acceptDownload = ref<any>(false)
-const documentFile = ref({
+const contentFile = ref({
   alterPath: '',
   name: '',
   size: 0,
@@ -156,11 +158,31 @@ async function getTeacherOwnerCourse(loadMore?: any) {
   })
 }
 
+// thời gian media
+async function getDurationContent() {
+  // if (videoType.value === 'youtube') {
+  //   const youtubeId = (youtube.youtubeUrl)
+  //   await getYoutubeDuration(youtubeId)
+  // }
+  // else if (videoType.value === 'local') {
+  //   const videoPreview = document.querySelector('#video-preview')
+
+  //   const videoTag = videoPreview?.getElementsByTagName('video') || []
+  //   if (videoTag[0] && videoTag[0]?.duration) {
+  //     const { duration } = videoTag[0]
+  //     time.value.contentMinute = Math.floor(Math.ceil(duration) / 60)
+  //     time.value.contentSecond = Math.floor(Math.ceil(duration) % 60)
+  //   }
+  // }
+  // else if (videoType.value === 'cdn') {
+  //   await getCdnVideoTime()
+  // }
+}
 async function getDocLocalInfo(folder: any, getFileSize?: any) {
   await MethodsUtil.requestApiCustom(`${SERVERFILE}${ServerFileService.GetInforFile}${folder}`, TYPE_REQUEST.GET).then((data: any) => {
-    documentFile.value.localDocFileName = data.fileName
-    documentFile.value = {
-      ...documentFile.value,
+    contentFile.value.localDocFileName = data.fileName
+    contentFile.value = {
+      ...contentFile.value,
       ...data,
     }
     console.log(data)
@@ -175,27 +197,27 @@ async function getDocLocalInfoFileDown(folder: any, getFileSize?: any) {
 
 // cập nhật dữ liệu chỉnh sửa
 function getDetailDocContent() {
-  if (documentData.value.url && documentData.value.url !== null) {
-    documentFile.value.localUrl = documentData.value.url
-    documentFile.value.haveDocument = true
-    documentFile.value.fileFolder = documentData.value.url
+  if (contentData.value.url && contentData.value.url !== null) {
+    contentFile.value.localUrl = contentData.value.url
+    contentFile.value.haveDocument = true
+    contentFile.value.fileFolder = contentData.value.url
 
-    getDocLocalInfo(documentData.value.url)
-    if (documentData.value.timeTypeId === 2) {
-      time.value.selfMinute = Math.floor(documentData.value.time / 60)
-      time.value.selfSecond = Math.floor(documentData.value.time % 60)
+    getDocLocalInfo(contentData.value.url)
+    if (contentData.value.timeTypeId === 2) {
+      time.value.selfMinute = Math.floor(contentData.value.time / 60)
+      time.value.selfSecond = Math.floor(contentData.value.time % 60)
     }
     else {
-      time.value.contentMinute = Math.floor(documentData.value.time / 60)
-      time.value.contentSecond = Math.floor(documentData.value.time % 60)
+      time.value.contentMinute = Math.floor(contentData.value.time / 60)
+      time.value.contentSecond = Math.floor(contentData.value.time % 60)
     }
   }
-  else { documentData.value.timeTypeId = 1 }
+  else { contentData.value.timeTypeId = 1 }
 }
 async function downloadFile(idx: any) {
-  await getDocLocalInfoFileDown(documentData.value.urlFileName).then(value => {
+  await getDocLocalInfoFileDown(contentData.value.urlFileName).then(value => {
     MethodsUtil.dowloadSampleFile(`${SERVERFILE}${value}`,
-      TYPE_REQUEST.GET, documentFile.value.fileName || ' local').then((data: any) => {
+      TYPE_REQUEST.GET, contentFile.value.fileName || ' local').then((data: any) => {
       unLoadComponent(idx)
       if (data.status === 200)
         return true
@@ -212,7 +234,7 @@ async function downloadFile(idx: any) {
 function handleDeleteDoc(type: any, idx: any) {
   switch (type) {
     case 'local':
-      documentFile.value = {
+      contentFile.value = {
         alterPath: '',
         urlDownload: '',
         name: '',
@@ -229,7 +251,7 @@ function handleDeleteDoc(type: any, idx: any) {
         localDocFileName: null,
         localUrl: '',
       }
-      documentData.value.urlFileName = ''
+      contentData.value.urlFileName = ''
       break
 
     default:
@@ -244,21 +266,21 @@ async function upFileServerAcceptDownload(file: any) {
     isSecure: true,
   }
   const data = await MethodsUtil.uploadFile(model)
-  documentFile.value.fileFolder = data.fileFolder
+  contentFile.value.fileFolder = data.fileFolder
   getDocLocalInfo(data.filePath, true)
   clearTimeout(uploadFile.value.timer)
 }
 function uploadDocLocal(data: any, file: any) {
   fileUpload.value[0].size = data.size
   fileUpload.value[0].name = data.name
-  documentFile.value.fileFolder = data.fileFolder
-  documentFile.value.urlDownload = data.filePath
-  documentData.value.urlFileName = data.fileFolder
+  contentFile.value.fileFolder = data.fileFolder
+  contentFile.value.urlDownload = data.filePath
+  contentData.value.urlFileName = data.fileFolder
 
-  if (documentData.value.name === null || documentData.value.name.length === 0)
-    documentData.value.name = data.name
-  documentData.value.acceptDownload = acceptDownload.value
-  documentFile.value.haveDocument = true
+  if (contentData.value.name === null || contentData.value.name.length === 0)
+    contentData.value.name = data.name
+  contentData.value.acceptDownload = acceptDownload.value
+  contentFile.value.haveDocument = true
 
   isLoadingFile.value = true
 
@@ -284,25 +306,25 @@ function saveAndUpdate(idx: any, isUpdate: boolean) {
   if (!isUpdate)
     isUpdate = false
 
-  documentData.value.time = Number(time.value.selfMinute) * 60 + Number(time.value.selfSecond)
+  contentData.value.time = Number(time.value.selfMinute) * 60 + Number(time.value.selfSecond)
 
-  if (documentData.value.time === 0) {
+  if (contentData.value.time === 0) {
     toast('WARNING', t('time-min-0'))
     unLoadComponent(idx)
     return
   }
 
-  if (timeComplete.value && documentData.value.time < timeComplete.value) {
+  if (timeComplete.value && contentData.value.time < timeComplete.value) {
     toast('WARNING', t('content-time-less-than-success-time'))
     unLoadComponent(idx)
     return
   }
-  myFormAddContentDoc.value.validate().then(async (success: any) => {
+  myFormAddContent.value.validate().then(async (success: any) => {
     if (success.valid) {
-      documentData.value.courseId = Number(route.params.id)
-      documentData.value.archiveTypeId = 6
+      contentData.value.courseId = Number(route.params.id)
+      contentData.value.archiveTypeId = 6
 
-      documentData.value.url = documentFile.value.fileFolder
+      contentData.value.url = contentFile.value.fileFolder
       handleUpdateContent(idx, isUpdate)
     }
     else {
@@ -317,7 +339,7 @@ if (route.params && route.params.contentId) {
   contentId.value = id
   fetchContent(id).then(() => {
     getDetailDocContent()
-    vSelectOwner.value.currentUserIds = documentData.value.ownerId
+    vSelectOwner.value.currentUserIds = contentData.value.ownerId
     getTeacherOwnerCourse()
   })
 }
@@ -326,14 +348,14 @@ else {
 }
 
 onUnmounted(() => {
-  resetDataDoc()
+  resetData()
 })
 </script>
 
 <template>
   <div class="mt-6">
     <Form
-      ref="myFormAddContentDoc"
+      ref="myFormAddContent"
       :validation-schema="schema"
       @submit.prevent="submitForm"
     >
@@ -345,7 +367,7 @@ onUnmounted(() => {
         >
           <Field
             v-slot="{ field, errors }"
-            v-model="documentData.name"
+            v-model="contentData.name"
             name="name"
             type="text"
           >
@@ -364,11 +386,11 @@ onUnmounted(() => {
         >
           <Field
             v-slot="{ field, errors }"
-            v-model="documentData.themeticId"
+            v-model="contentData.themeticId"
             name="categoryTitleId"
           >
             <CmSelect
-              :model-value="documentData.themeticId"
+              :model-value="contentData.themeticId"
               :field="field"
               :errors="errors"
               :items="comboboxThemetic"
@@ -385,7 +407,7 @@ onUnmounted(() => {
           sm="6"
         >
           <CmSelect
-            v-model="documentData.ownerId"
+            v-model="contentData.ownerId"
             :text="LABEL.TITLE3"
             :placeholder="LABEL.TITLE3"
             :items="vSelectOwner.listCombobox"
@@ -412,7 +434,7 @@ onUnmounted(() => {
             {{ t('setting') }}
           </div>
           <CmCheckBox
-            v-model:model-value="documentData.isApprove"
+            v-model:model-value="contentData.isApprove"
             :label="LABEL.TITLE4"
           />
         </VCol>
@@ -425,56 +447,136 @@ onUnmounted(() => {
             {{ t('duration-time') }}
           </div>
           <div class="d-flex align-center">
-            <div class="d-flex align-center mr-4">
-              <div>{{ t('duration-time') }}</div>
-            </div>
             <div>
-              <div class="d-flex">
-                <Field
-                  v-slot="{ field, errors }"
-                  v-model="time.selfMinute"
-                  name="selfMinute"
-                  type="number"
-                >
-                  <div class="mr-3">
-                    <div class="d-flex align-center">
-                      <div class="mr-3 conditon-input">
-                        <CmTextField
-                          :field="field"
-                          type="number"
-                          :min="0"
-                          :max="59"
-                        />
+              <div class="d-flex align-center mb-6">
+                <div class="d-flex align-center mr-4">
+                  <CmRadio
+                    v-model="contentData.timeTypeId"
+                    name="time"
+                    :type="1"
+                    :value="timeType[0]"
+                    @update:model-value="getDurationContent"
+                  />
+                </div>
+                <div class="d-flex align-center mr-4">
+                  <div>{{ t('auto-setting-content') }}</div>
+                </div>
+                <div v-if="contentData.timeTypeId === 1">
+                  <div class="d-flex">
+                    <Field
+                      v-slot="{ field, errors }"
+                      v-model="time.contentMinute"
+                      name="contentMinute"
+                      type="number"
+                    >
+                      <div class="mr-3">
+                        <div class="d-flex align-center">
+                          <div class="mr-3 conditon-input">
+                            <CmTextField
+                              :field="field"
+                              type="number"
+                              :model-value="time.contentMinute"
+                              disabled
+                              :min="0"
+                              :max="59"
+                            />
+                          </div>
+                          <span class="text-regular-md">{{ t('minutes').toLowerCase() }}</span>
+                        </div>
+                        <div class="styleError text-errors">
+                          {{ errors[0] }}
+                        </div>
                       </div>
-                      <span class="text-regular-md">{{ t('minutes').toLowerCase() }}</span>
-                    </div>
-                    <div class="styleError text-errors">
-                      {{ errors[0] }}
-                    </div>
-                  </div>
-                </Field>
-                <Field
-                  v-slot="{ field, errors }"
-                  v-model="time.selfSecond"
-                  name="selfSecond"
-                >
-                  <div class="mr-3">
-                    <div class="d-flex align-center">
-                      <div class="mr-3 conditon-input">
-                        <CmTextField
-                          :field="field"
-                          type="number"
-                          :min="0"
-                          :max="59"
-                        />
+                    </Field>
+                    <Field
+                      v-slot="{ field, errors }"
+                      v-model="time.contentSecond"
+                      name="contentSecond"
+                      type="number"
+                    >
+                      <div class="mr-3">
+                        <div class="d-flex align-center">
+                          <div class="mr-3 conditon-input">
+                            <CmTextField
+                              :field="field"
+                              disabled
+                              :model-value="time.contentSecond"
+                              type="number"
+                              :min="0"
+                              :max="59"
+                            />
+                          </div>
+                          <span class="text-regular-md">{{ t('seconds').toLowerCase() }}</span>
+                        </div>
+                        <div class="styleError text-errors">
+                          {{ errors[0] }}
+                        </div>
                       </div>
-                      <span class="text-regular-md">{{ t('seconds').toLowerCase() }}</span>
-                    </div>
-                    <div class="styleError text-errors">
-                      {{ errors[0] }}
-                    </div>
+                    </Field>
                   </div>
-                </Field>
+                </div>
+              </div>
+              <div class="d-flex align-center">
+                <div class="d-flex align-center mr-4">
+                  <CmRadio
+                    v-model="contentData.timeTypeId"
+                    name="time"
+                    :type="1"
+                    :value="timeType[1]"
+                  />
+                </div>
+                <div class="d-flex align-center mr-4">
+                  <div>{{ t('auto-setting') }}</div>
+                </div>
+                <div v-if="contentData.timeTypeId === 2">
+                  <div class="d-flex">
+                    <Field
+                      v-slot="{ field, errors }"
+                      v-model="time.selfMinute"
+                      name="selfMinute"
+                      type="number"
+                    >
+                      <div class="mr-3">
+                        <div class="d-flex align-center">
+                          <div class="mr-3 conditon-input">
+                            <CmTextField
+                              :field="field"
+                              type="number"
+                              :min="0"
+                              :max="59"
+                            />
+                          </div>
+                          <span class="text-regular-md">{{ t('minutes').toLowerCase() }}</span>
+                        </div>
+                        <div class="styleError text-errors">
+                          {{ errors[0] }}
+                        </div>
+                      </div>
+                    </Field>
+                    <Field
+                      v-slot="{ field, errors }"
+                      v-model="time.selfSecond"
+                      name="selfSecond"
+                    >
+                      <div class="mr-3">
+                        <div class="d-flex align-center">
+                          <div class="mr-3 conditon-input">
+                            <CmTextField
+                              :field="field"
+                              type="number"
+                              :min="0"
+                              :max="59"
+                            />
+                          </div>
+                          <span class="text-regular-md">{{ t('seconds').toLowerCase() }}</span>
+                        </div>
+                        <div class="styleError text-errors">
+                          {{ errors[0] }}
+                        </div>
+                      </div>
+                    </Field>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -485,7 +587,7 @@ onUnmounted(() => {
           cols="12"
         >
           <CmCheckBox
-            v-model:model-value="documentData.isCustomTime"
+            v-model:model-value="contentData.isCustomTime"
             :label="LABEL.TITLE5"
           />
         </VCol>
@@ -498,21 +600,21 @@ onUnmounted(() => {
             sm="6"
           >
             <div class="mb-1">
-              {{ t('choose-file-doc') }}*
+              {{ t('choose-file-audio') }}*
             </div>
             <div class="d-flex">
               <Field
-                v-model="documentFile.localDocFileName"
+                v-model="contentFile.localDocFileName"
                 name="url"
                 type="text"
               >
                 <CpInputFile
-                  v-model="documentFile.file"
+                  v-model="contentFile.file"
                   v-model:accept-download="acceptDownload"
                   class="w-100"
                   :disabled="isViewDetail"
-                  :file-name="documentFile.localDocFileName"
-                  :accept="Globals.documentExtention"
+                  :file-name="contentFile.localDocFileName"
+                  :accept="Globals.audioExtention"
                   :is-btn-download="false"
                   is-request-file-install
                   :errors="errorsInputFile"
@@ -523,7 +625,7 @@ onUnmounted(() => {
             </div>
           </VCol>
         </VRow>
-        <VRow v-if="documentFile.haveDocument">
+        <VRow v-if="contentFile.haveDocument">
           <VCol
             cols="12"
             class="d-flex"
@@ -535,7 +637,7 @@ onUnmounted(() => {
             </CmChip>
           </VCol>
         </VRow>
-        <VRow v-if="documentFile.haveDocument">
+        <VRow v-if="contentFile.haveDocument">
           <VCol
             v-if="isLoadingFile"
             cols="12"
@@ -549,22 +651,19 @@ onUnmounted(() => {
             </div>
           </VCol>
         </VRow>
-        <VRow v-if="documentFile.haveDocument">
+        <VRow v-if="contentFile.haveDocument">
           <VCol
             id="video-preview"
             cols="12"
             sm="6"
-            offset="3"
           >
-            <CmPreviewFile
+            <CmAudio
               width="100"
-              :src="documentFile?.filePath"
-              :file-folder="documentFile?.fileFolder"
-              :is-loading-file="isLoadingFile"
+              :src="contentFile?.filePath"
             />
           </VCol>
         </VRow>
-        <VRow v-if="!isLoadingFile && documentFile.haveDocument">
+        <VRow v-if="!isLoadingFile && contentFile.haveDocument">
           <VCol
             cols="12"
             sm="6"
@@ -581,7 +680,7 @@ onUnmounted(() => {
                 @click="downloadFile"
               />
               <CmButton
-                v-if="!isViewDetail && documentFile.urlDownload"
+                v-if="!isViewDetail && contentFile.urlDownload"
                 is-load
                 icon="tabler:trash"
                 variant="outlined"
@@ -597,7 +696,7 @@ onUnmounted(() => {
         <CpActionFooterEdit
           is-cancel
           is-save
-          :is-save-and-update="!documentData.courseContentId || documentData.courseContentId === null"
+          :is-save-and-update="!contentData.courseContentId || contentData.courseContentId === null"
           :title-cancel="t('come-back')"
           :title-save="t('save')"
           :title-save-and-update="t('save-and-update')"

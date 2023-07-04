@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { contentDocTypeManagerStore } from '@/stores/admin/course/type/contentDocumentTypeModify'
+import { contentTypeManagerStore } from '@/stores/admin/course/type/contentContentTypeModify'
 
 const CmTab = defineAsyncComponent(() => import('@/components/common/CmTab.vue'))
-const CpTabInforDocument = defineAsyncComponent(() => import('@/components/page/Admin/course/modify/content/type/document/CpTabInforDocument.vue'))
+const CpTabInforAudio = defineAsyncComponent(() => import('@/components/page/Admin/course/modify/content/type/audio/CpTabInforAudio.vue'))
 const CpConditionVideo = defineAsyncComponent(() => import('@/components/page/Admin/course/modify/content/type/video/CpConditionVideo.vue'))
 const CpConditionCompletedVideo = defineAsyncComponent(() => import('@/components/page/Admin/course/modify/content/type/video/CpConditionCompletedVideo.vue'))
 
 const route = useRoute()
-const storeContentDocTypeManager = contentDocTypeManagerStore()
+const storeContentTypeManager = contentTypeManagerStore()
 
 /**
  *
@@ -17,7 +17,7 @@ const listTab = [
   {
     key: 'infor',
     title: 'content',
-    component: CpTabInforDocument,
+    component: CpTabInforAudio,
     isRendered: true,
   },
 
@@ -38,11 +38,11 @@ const listTab = [
 ]
 
 onBeforeUnmount(() => {
-  storeContentDocTypeManager.$dispose()
+  storeContentTypeManager.$dispose()
 })
 
 onDeactivated(() => {
-  storeContentDocTypeManager.$dispose()
+  storeContentTypeManager.$dispose()
 })
 </script>
 

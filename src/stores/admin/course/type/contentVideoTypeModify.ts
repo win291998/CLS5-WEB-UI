@@ -5,7 +5,7 @@ import CourseService from '@/api/course/index'
 import { load } from '@/stores/loadComponent.js'
 import toast from '@/plugins/toast'
 
-export const contentTypeManagerStore = defineStore('contentTypeManager', () => {
+export const contentTypeManagerStore = defineStore('contentVideoTypeManager', () => {
   /** lib ****************************************************************/
   const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
   const router = useRouter()

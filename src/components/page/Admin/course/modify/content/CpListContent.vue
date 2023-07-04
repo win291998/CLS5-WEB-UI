@@ -103,6 +103,21 @@ const actionUpdate = [
       })
     },
   },
+  {
+    title: t('audio'),
+    icon: 'tabler:volume',
+    action: () => {
+      router.push({
+        name: 'content-add',
+        params: {
+          id: Number(route.params.id),
+          tab: route.params.tab,
+          type: 'audio-content',
+          contentTab: 'infor',
+        },
+      })
+    },
+  },
 
 ]
 const actionApprove = [
