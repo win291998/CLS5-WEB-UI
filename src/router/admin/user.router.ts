@@ -135,7 +135,7 @@ export default [
               breadcrumb: [
                 {
                   title: 'user-list',
-                  to: { name: 'admin-organization-users' },
+                  to: { name: 'user' },
                 },
                 {
                   title: 'common.add',
@@ -159,7 +159,7 @@ export default [
               breadcrumb: [
                 {
                   title: 'user-list',
-                  to: { name: 'admin-organization-users' },
+                  to: { name: 'user' },
                 },
                 {
                   title: 'add',
@@ -295,7 +295,7 @@ export default [
               ],
             },
             name: 'admin-organization-user-groups-add',
-            component: () => import('@/pages/admin/organization/user-groups/edit/EditUserGroup.vue'),
+            component: () => import('@/pages/admin/organization/user-groups/Edit/EditUserGroup.vue'),
           },
           {
             path: ':tab/edit/:id',
@@ -316,7 +316,7 @@ export default [
               ],
             },
             name: 'admin-organization-user-groups-edit',
-            component: () => import('@/pages/admin/organization/user-groups/edit/EditUserGroup.vue'),
+            component: () => import('@/pages/admin/organization/user-groups/Edit/EditUserGroup.vue'),
           },
           {
             path: 'import-file',
