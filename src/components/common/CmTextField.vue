@@ -36,6 +36,7 @@ interface Props {
 interface Emit {
   (e: 'update:modelValue', value: any): void
   (e: 'change', value: any): void
+  (e: 'focused'): void
 }
 
 const formModelValue = ref<any>(null)
@@ -62,6 +63,10 @@ const messageError = computed(() => {
 
   return ''
 })
+function focusInput(params: boolean) {
+  if (params)
+    emit('focused')
+}
 </script>
 
 <template>
@@ -95,6 +100,7 @@ const messageError = computed(() => {
         class="text-regular-md"
         @change="handleChangeText"
         @update:modelValue="handleUpdateText"
+        @update:focused="focusInput"
       />
     </div>
     <div
