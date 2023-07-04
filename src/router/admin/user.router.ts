@@ -1,5 +1,15 @@
 export default [
   {
+    path: 'dashboard',
+    name: 'dashboard-admin',
+    component: () => import('@/pages/guilde/tree-select.vue'),
+  },
+  {
+    path: 'dashboard-lecturers',
+    name: 'dashboard-lecturers',
+    component: () => import('@/pages/guilde/tree-select.vue'),
+  },
+  {
     path: 'guilde/tree-select',
     name: 'guilde-tree-select',
     component: () => import('@/pages/guilde/tree-select.vue'),
@@ -32,6 +42,7 @@ export default [
     name: 'guilde-demo',
     component: () => import('@/pages/guilde/demo.vue'),
   },
+
   {
     path: '/guilde/calender',
     meta: {
@@ -50,11 +61,11 @@ export default [
   {
     path: 'organization',
     name: 'admin-organization',
-    redirect: { name: 'admin-organization-permission' },
+    redirect: { name: 'user-type-list' },
     children: [
       {
         path: 'permission',
-        name: 'admin-organization-permission',
+        name: 'user-type-list',
         requireAuth: {
           permissionKey: 'UserTypeManaging',
           permissionValue: 1,
@@ -106,7 +117,7 @@ export default [
             permissionValue: 1,
           },
         },
-        name: 'admin-organization-users',
+        name: 'user',
         component: () => import('@/pages/admin/organization/users/Index.vue'),
         redirect: { name: 'admin-organization-users-manager' },
         children: [
@@ -251,7 +262,7 @@ export default [
       },
       {
         path: 'user-groups',
-        name: 'admin-organization-user-groups',
+        name: 'user-group-list',
         redirect: { name: 'admin-organization-user-groups-list' },
         meta: {
           requireAuth: {
@@ -275,7 +286,7 @@ export default [
               breadcrumb: [
                 {
                   title: 'list-group-user',
-                  to: { name: 'admin-organization-user-groups' },
+                  to: { name: 'user-group-list' },
                 },
                 {
                   title: 'common.add',
@@ -296,7 +307,7 @@ export default [
               breadcrumb: [
                 {
                   title: 'list-group-user',
-                  to: { name: 'admin-organization-user-groups' },
+                  to: { name: 'user-group-list' },
                 },
                 {
                   title: 'QuestionService.ActionEdit',
@@ -317,7 +328,7 @@ export default [
               breadcrumb: [
                 {
                   title: 'list-group-user',
-                  to: { name: 'admin-organization-user-groups' },
+                  to: { name: 'user-group-list' },
                 },
                 {
                   title: 'title-import-file',
@@ -338,7 +349,7 @@ export default [
               breadcrumb: [
                 {
                   title: 'list-group-user',
-                  to: { name: 'admin-organization-user-groups' },
+                  to: { name: 'user-group-list' },
                 },
                 {
                   title: 'title-import-file',
@@ -354,7 +365,7 @@ export default [
       },
       {
         path: 'org-struct',
-        name: 'admin-organization-org-struct',
+        name: 'organizational-structure-list',
         redirect: { name: 'admin-organization-org-struct-list' },
         meta: {
           requireAuth: {
@@ -411,13 +422,16 @@ export default [
       },
       {
         path: 'position-title',
-        name: 'admin-organization-position-title',
+        name: 'user-title',
         component: () => import('@/pages/admin/organization/position-title/PositionTitle.vue'),
       },
-
+      {
+        path: 'branch-list',
+        name: 'branch-list',
+      },
       {
         path: 'capacity',
-        name: 'admin-organization-capacity',
+        name: 'proficiency-management',
         component: () => import('@/pages/admin/organization/capacity/Capacity.vue'),
         redirect: { name: 'admin-organization-capacity-tab', params: { tab: 'group-capacity' } },
         children: [
