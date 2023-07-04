@@ -148,7 +148,7 @@ defineExpose({
 </template>
 
 <style lang="scss">
-@use "/src/styles/style-global" as *;
+@use "@/styles/style-global" as *;
 
 .text-style-btn {
   border-radius: 8px;

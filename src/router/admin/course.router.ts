@@ -1,8 +1,17 @@
 export default [
   {
+    path: 'manage-training-plan',
+    name: 'manage-training-plan',
+  },
+  {
+    path: 'list-roadmap',
+    name: 'list-roadmap',
+  },
+
+  {
     path: 'course',
-    name: 'admin-course',
-    redirect: { name: 'course-list' },
+    name: 'course-list',
+    redirect: { name: 'course' },
     component: () => import('@/pages/admin/course/Index.vue'),
 
     // requireAuth: {
@@ -11,8 +20,8 @@ export default [
     // },
     children: [
       {
-        path: 'course-list',
-        name: 'course-list',
+        path: '',
+        name: 'course',
         component: () => import('@/pages/admin/course/Course.vue'),
       },
       {
