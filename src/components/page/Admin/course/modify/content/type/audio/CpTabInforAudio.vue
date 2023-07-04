@@ -178,19 +178,7 @@ async function getDurationContent() {
   //   await getCdnVideoTime()
   // }
 }
-async function getDocLocalInfo(folder: any, getFileSize?: any) {
-  await MethodsUtil.requestApiCustom(`${SERVERFILE}${ServerFileService.GetInforFile}${folder}`, TYPE_REQUEST.GET).then((data: any) => {
-    contentFile.value.localDocFileName = data.fileName
-    contentFile.value = {
-      ...contentFile.value,
-      ...data,
-    }
-    console.log(data)
 
-    if (data.isProcessing)
-      isLoadingFile.value = false
-  })
-}
 async function getDocLocalInfoFileDown(folder: any, getFileSize?: any) {
   return await MethodsUtil.requestApiCustom(`${SERVERFILE}${ServerFileService.GetInforFile}${folder}`, TYPE_REQUEST.GET).then((data: any) => data.filePath)
 }
@@ -260,43 +248,6 @@ function handleDeleteDoc(type: any, idx: any) {
   unLoadComponent(idx)
 }
 
-async function upFileServerAcceptDownload(file: any) {
-  const model = {
-    files: file,
-    isSecure: true,
-  }
-  const data = await MethodsUtil.uploadFile(model)
-  contentFile.value.fileFolder = data.fileFolder
-  getDocLocalInfo(data.filePath, true)
-  clearTimeout(uploadFile.value.timer)
-}
-function uploadDocLocal(data: any, file: any) {
-  fileUpload.value[0].size = data.size
-  fileUpload.value[0].name = data.name
-  contentFile.value.fileFolder = data.fileFolder
-  contentFile.value.urlDownload = data.filePath
-  contentData.value.urlFileName = data.fileFolder
-
-  if (contentData.value.name === null || contentData.value.name.length === 0)
-    contentData.value.name = data.name
-  contentData.value.acceptDownload = acceptDownload.value
-  contentFile.value.haveDocument = true
-
-  isLoadingFile.value = true
-
-  if (acceptDownload.value) {
-    uploadFile.value.timer = setTimeout(() => {
-    // Delay 500ms để bắt sự kiện khi cổng hết dung lượng sẽ k upload lần 2
-      if (acceptDownload.value && !uploadFile.value.errUploadFile)
-        upFileServerAcceptDownload(file)
-    }, 500)
-  }
-  else {
-    isLoadingFile.value = false
-    getDocLocalInfo(data.filePath, true)
-  }
-}
-
 function handleCancle() {
   router.push({ name: 'course-edit', params: { tab: 'content', id: Number(route.params.id) } })
 }
@@ -333,6 +284,76 @@ function saveAndUpdate(idx: any, isUpdate: boolean) {
   })
 }
 
+/** ** upload file*********************** */
+async function getDocLocalInfo(folder: any, getFileSize?: any) {
+  await MethodsUtil.requestApiCustom(`${SERVERFILE}${ServerFileService.GetInforFile}${folder}`, TYPE_REQUEST.GET).then((data: any) => {
+    contentFile.value.localDocFileName = data.fileName
+    contentFile.value = {
+      ...contentFile.value,
+      ...data,
+    }
+    console.log(data)
+
+    if (data.isProcessing)
+      isLoadingFile.value = false
+  })
+}
+
+// lấy thông tin server file từ file folder
+async function upFileServerPreivew(file: any) {
+  const model = {
+    files: file,
+    isSecure: true,
+  }
+  const data = await MethodsUtil.uploadFile(model)
+  contentFile.value.fileFolder = data.fileFolder
+  getDocLocalInfo(data.filePath, true)
+  clearTimeout(uploadFile.value.timer)
+}
+async function getInfor(folder: any) {
+  return await MethodsUtil.requestApiCustom(`${SERVERFILE}${ServerFileService.GetInforFile}${folder}`, TYPE_REQUEST.GET)
+}
+
+async function uploadFileLocal(data: any, file: any) {
+  fileUpload.value[0].size = data.size
+  fileUpload.value[0].name = data.name
+
+  if (acceptDownload.value) {
+    contentData.value.url = data.filePath
+    contentFile.value.urlDownload = data.filePath
+  }
+  else if (data?.fileFolder) {
+    await getInfor(data?.fileFolder).then((value: any) => {
+      if (value?.filePath) {
+        contentData.value.url = value.filePath
+        contentData.value.urlFileName = data.fileFolder
+      }
+    })
+  }
+
+  contentFile.value.fileFolder = data.fileFolder
+
+  if (contentData.value.name === null || contentData.value.name.length === 0)
+    contentData.value.name = data.name
+  contentData.value.acceptDownload = acceptDownload.value
+  contentFile.value.haveDocument = true
+
+  isLoadingFile.value = true
+
+  if (acceptDownload.value) {
+    uploadFile.value.timer = setTimeout(() => {
+    // Delay 500ms để bắt sự kiện khi cổng hết dung lượng sẽ k upload lần 2
+      if (acceptDownload.value && !uploadFile.value.errUploadFile)
+        upFileServerPreivew(file)
+    }, 500)
+  }
+  else {
+    isLoadingFile.value = false
+    getDocLocalInfo(data.filePath, true)
+  }
+}
+
+/** ******************************** */
 getListThematicContent()
 if (route.params && route.params.contentId) {
   const id = Number(route.params.contentId)
@@ -619,7 +640,7 @@ onUnmounted(() => {
                   is-request-file-install
                   :errors="errorsInputFile"
                   :is-secure="!acceptDownload"
-                  @change="uploadDocLocal"
+                  @change="uploadFileLocal"
                 />
               </Field>
             </div>
@@ -659,7 +680,7 @@ onUnmounted(() => {
           >
             <CmAudio
               width="100"
-              :src="contentFile?.filePath"
+              :src="contentData?.url"
             />
           </VCol>
         </VRow>

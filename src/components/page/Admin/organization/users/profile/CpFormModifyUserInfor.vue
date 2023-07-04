@@ -54,8 +54,8 @@ function handleFormValue(value: any) {
  * Lấy dữ liệu compobox
  */
 const optionGender = reactive([
-  { label: 'nam', value: false },
-  { label: 'nữ', value: true },
+  { label: 'Nam', value: false },
+  { label: 'Nữ', value: true },
 ])
 
 if (window._.isEmpty(statusesCombobox.value))
@@ -100,7 +100,6 @@ window.hideAllPageLoading()
               v-model:src="valuesComponent.avatar"
               is-avatar
               is-badge
-              is-rounded
               :tooltip="t('system-management.100x100')"
             />
           </VCol>

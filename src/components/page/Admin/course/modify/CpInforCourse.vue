@@ -39,7 +39,7 @@ const LABEL = Object.freeze({
   TITLE2: t('course-code'),
   TITLE3: `${t('topic')}*`,
   TITLE3_PHD: t('choose-topic'),
-  TITLE4: t('training-type'),
+  TITLE4: `${t('training-type')}*`,
   TITLE4_PHD: t('choose-formId'),
   TITLE5: t('number-credit'),
 })
@@ -51,17 +51,18 @@ const myFormAddCourse = ref()
 const schema = yup.object({
   name: schemaOption.defaultString,
   topicCourseId: schemaOption.defaultSelectSingle,
+  formOfStudy: schemaOption.defaultSelectSingle,
 })
 function onCancel() {
   router.push({ name: 'course-list' })
 }
-async function handleSave(isUpdate: boolean) {
+async function handleSave(idx: any, isUpdate: boolean) {
   myFormAddCourse.value.validate().then(async (success: any) => {
     if (success.valid)
-      await addInforCourse(isUpdate)
+      await addInforCourse(idx, isUpdate)
   })
 }
-function handleSaveUpdate(isUpdate: boolean) {
+function handleSaveUpdate(idx: any, isUpdate: boolean) {
   myFormAddCourse.value.validate().then(async (success: any) => {
   })
 }
@@ -202,7 +203,7 @@ if (formOfStudyCombobox.value)
             <Field
               v-slot="{ field, errors }"
               v-model="courseData.formOfStudy"
-              name="categoryTitleId"
+              name="formOfStudy"
             >
               <CmSelect
                 :model-value="courseData.formOfStudy"
@@ -264,8 +265,8 @@ if (formOfStudyCombobox.value)
         :title-save="t('save')"
         :title-save-and-update="t('save-and-update')"
         @onCancel="onCancel"
-        @onSave="handleSave(false)"
-        @onSaveUpdate="handleSaveUpdate(true)"
+        @onSave="(idx: any) => handleSave(idx, false)"
+        @onSaveUpdate="(idx: any) => handleSaveUpdate(idx, true)"
       />
     </div>
   </div>

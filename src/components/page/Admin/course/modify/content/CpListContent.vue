@@ -149,7 +149,7 @@ async function approveMultiContent() {
 }
 
 function onCancel() {
-  router.replace({ name: 'admin-course' })
+  router.replace({ name: 'course' })
 }
 
 // hàm trả về các loại action từ header filter
