@@ -6,6 +6,7 @@ import { contentTypeManagerStore } from '@/stores/admin/course/type/contentVideo
 
 const CpVideoContent = defineAsyncComponent(() => import('@/components/page/Admin/course/modify/content/type/video/CpVideoContent.vue'))
 const CpDocumentContent = defineAsyncComponent(() => import('@/components/page/Admin/course/modify/content/type/document/CpDocumentContent.vue'))
+const CpAudioContent = defineAsyncComponent(() => import('@/components/page/Admin/course/modify/content/type/audio/CpAudioContent.vue'))
 const CpContent = defineAsyncComponent(() => import('@/components/page/Admin/course/modify/content/type/CpContent.vue'))
 
 const component = ref(CpContent)
@@ -36,6 +37,9 @@ onMounted(() => {
       break
     case 'document-content':
       component.value = CpDocumentContent
+      break
+    case 'audio-content':
+      component.value = CpAudioContent
       break
 
     default:
