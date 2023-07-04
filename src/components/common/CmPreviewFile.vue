@@ -30,6 +30,7 @@ const pdfSource = computed(() => `${SERVERFILE}${props.src}`)
 const showAllPages = ref(false)
 const pdfRef = ref()
 console.log(pdfRef)
+const numberInput = ref<any>(1)
 
 function handlePasswordRequest(callback: any) {
   callback(options.value.password)
@@ -47,13 +48,13 @@ function rotationPage() {
     rotation.value += 90
 }
 function changePage(val: any) {
-  console.log(val)
-
-  if (page.value > 0) {
+  if (Number(val.target.value) > 0) {
     console.log(val.target.value)
     page.value = Number(val.target.value)
   }
   else {
+    console.log(Number(val.target.value))
+    numberInput.value = 1
     page.value = 1
   }
 }
@@ -92,9 +93,12 @@ watch(() => props.password, val => {
                   >❮</button>
                   <span>
                     <input
-                      :value="page"
+                      :id="page"
+                      v-model="numberInput"
                       type="number"
                       class="input-page"
+                      :min="1"
+                      :max="pageCount"
                       @change="changePage"
                     >
                   </span>
@@ -103,6 +107,8 @@ watch(() => props.password, val => {
                     <input
                       v-model="pageCount"
                       disabled
+                      :min="1"
+                      :max="pageCount"
                       class="input-page"
                     >
                   </span>

@@ -220,7 +220,7 @@ onMounted(() => {
   nextTick(() => {
     console.timeEnd('mout')
 
-    // isLoading.value = false
+    isLoading.value = false
   })
 })
 

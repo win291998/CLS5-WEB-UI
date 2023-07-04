@@ -95,12 +95,14 @@ export const contentManagerStore = defineStore('contentManager', () => {
           })
         }
         else {
+          console.log(type[1].contentArchiveTypeId)
+
           router.push({
             name: 'content-edit',
             params: {
               id: Number(route.params.id),
               tab: 'content',
-              type: 'video',
+              type: MethodsUtil.getTypeContent(type[1].contentArchiveTypeId),
               contentTab: 'infor',
               contentId: type[1]?.courseContentId,
             },
@@ -520,6 +522,7 @@ export const contentManagerStore = defineStore('contentManager', () => {
     courseId: route.params.id,
     archiveTypeId: 0,
     description: '',
+    urlFileName: null,
     name: null,
     url: null,
     dateTimeStart: null,
@@ -536,7 +539,23 @@ export const contentManagerStore = defineStore('contentManager', () => {
     deleteIds: [], // list id các row table muốn xóa
     selectedRowsIds: [], // list id các row table được chọn
   })
+  const dataSelectRef = ref<any>()
   const disabledDeleteRefer = computed(() => !dataRefer.selectedRowsIds.length)
+
+  function resetRefer() {
+    contentRefer.value = {
+      courseId: route.params.id,
+      archiveTypeId: 0,
+      description: '',
+      urlFileName: null,
+      name: null,
+      url: null,
+      dateTimeStart: null,
+      dateTimeEnd: null,
+      isRewind: false,
+      isPdf: false,
+    }
+  }
 
   // Xóa từng item
   function deleteItemRefer(id: number) {
@@ -575,6 +594,13 @@ export const contentManagerStore = defineStore('contentManager', () => {
       case 'ActionDelete':
         deleteItemRefer(type[1].courseContentId)
         break
+      case 'ActionEdit':
+        console.log(type)
+
+        dataSelectRef.value = type[1]
+        getDataContentRefer(type[1].courseContentId)
+
+        break
 
       default:
         break
@@ -587,7 +613,7 @@ export const contentManagerStore = defineStore('contentManager', () => {
     dataRow = ArraysUtil.formatTreeTable(dataRow, customIdRefer.value)
     dataRow.forEach((element: any) => {
       element.actions = [
-        MethodsUtil.checkActionType({ id: 2 }, actionItemRefer),
+        MethodsUtil.checkActionType({ id: 2 }),
       ]
     })
     itemsRefer.value = dataRow
@@ -602,9 +628,18 @@ export const contentManagerStore = defineStore('contentManager', () => {
         let dataRow = ArraysUtil.unFlatMapTree(value.data)
         dataRow = ArraysUtil.formatTreeTable(dataRow, customIdRefer.value)
         dataRow.forEach((element: any) => {
-          element.actions = [
-            MethodsUtil.checkActionType({ id: 2 }, actionItemRefer),
-          ]
+          console.log(element.parent?.id)
+          if (element?.parent?.id === 0) {
+            element.actions = [
+              MethodsUtil.checkActionType({ id: 1 }),
+              MethodsUtil.checkActionType({ id: 2 }),
+            ]
+          }
+          if (element?.parent?.id === 1) {
+            element.actions = [
+              MethodsUtil.checkActionType({ id: 2 }),
+            ]
+          }
         })
         itemsRefer.value = dataRow
       })
@@ -617,6 +652,18 @@ export const contentManagerStore = defineStore('contentManager', () => {
     await MethodsUtil.requestApiCustom(CourseService.PostSaveRefContent, TYPE_REQUEST.POST, params).then((value: any) => {
       toast('SUCCESS', t(value?.message))
       getListReferContentCourse(Number(route?.params?.id))
+    })
+      .catch((error: any) => {
+        toast('ERROR', t(error.response.data.message))
+      })
+  }
+  async function getDataContentRefer(contentId: any) {
+    const params = {
+      id: Number(contentId),
+    }
+    return await MethodsUtil.requestApiCustom(CourseService.GetInforContentById, TYPE_REQUEST.GET, params).then((value: any) => {
+      contentRefer.value = value?.data
+      viewModeRefer.value = 'file'
     })
       .catch((error: any) => {
         toast('ERROR', t(error.response.data.message))
@@ -703,6 +750,7 @@ export const contentManagerStore = defineStore('contentManager', () => {
     isShowDialogNotiDeleteRefer,
     disabledDeleteRefer,
     isShowModalAddRefStock,
+    dataSelectRef,
     confirmDialogDeleteRefer,
     getListReferContentCourse,
     selectedRowsRefer,
@@ -710,6 +758,7 @@ export const contentManagerStore = defineStore('contentManager', () => {
     handleSearchRefer,
     handleAddRefContentStock,
     actionItemRefer,
+    resetRefer,
 
     /** Stock content */
     dataStock,

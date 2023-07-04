@@ -61,9 +61,8 @@ const LABEL = Object.freeze({
   TITLE7: t('permistion-fringed'),
 })
 const comboboxThemetic = ref([])
-const myFormAddContentVideo = ref()
+const myFormAddContentDoc = ref()
 const errorsInputFile = ref<any>([])
-const sizeFile = ref(0)
 const vSelectOwner = ref<any>({
   listCombobox: [],
   totalRecord: 0,
@@ -76,7 +75,6 @@ const vSelectOwner = ref<any>({
 })
 const time = ref({ selfMinute: 0, selfSecond: 0, contentMinute: 0, contentSecond: 0 })
 const acceptDownload = ref<any>(false)
-
 const documentFile = ref({
   alterPath: '',
   name: '',
@@ -90,7 +88,7 @@ const documentFile = ref({
   fileFolder: '',
   haveDocument: false,
   file: [] as any[],
-  localDocFileName: null,
+  localDocFileName: null as any,
   localUrl: '',
   urlDownload: '',
 })
@@ -161,7 +159,6 @@ async function getTeacherOwnerCourse(loadMore?: any) {
 async function getDocLocalInfo(folder: any, getFileSize?: any) {
   await MethodsUtil.requestApiCustom(`${SERVERFILE}${ServerFileService.GetInforFile}${folder}`, TYPE_REQUEST.GET).then((data: any) => {
     documentFile.value.localDocFileName = data.fileName
-    documentData.value.urlFileName = data.fileName
     documentFile.value = {
       ...documentFile.value,
       ...data,
@@ -172,13 +169,18 @@ async function getDocLocalInfo(folder: any, getFileSize?: any) {
       isLoadingFile.value = false
   })
 }
+async function getDocLocalInfoFileDown(folder: any, getFileSize?: any) {
+  return await MethodsUtil.requestApiCustom(`${SERVERFILE}${ServerFileService.GetInforFile}${folder}`, TYPE_REQUEST.GET).then((data: any) => data.filePath)
+}
 
 // cập nhật dữ liệu chỉnh sửa
-function getDetailVideoContent() {
+function getDetailDocContent() {
   if (documentData.value.url && documentData.value.url !== null) {
     documentFile.value.localUrl = documentData.value.url
     documentFile.value.haveDocument = true
-    getDocLocalInfo(documentData.value.acceptDownload ? documentData.value.urlFileName : documentData.value.url)
+    documentFile.value.fileFolder = documentData.value.url
+
+    getDocLocalInfo(documentData.value.url)
     if (documentData.value.timeTypeId === 2) {
       time.value.selfMinute = Math.floor(documentData.value.time / 60)
       time.value.selfSecond = Math.floor(documentData.value.time % 60)
@@ -191,19 +193,21 @@ function getDetailVideoContent() {
   else { documentData.value.timeTypeId = 1 }
 }
 async function downloadFile(idx: any) {
-  MethodsUtil.dowloadSampleFile(`${SERVERFILE}${documentFile.value.urlDownload}`,
-    TYPE_REQUEST.GET, documentFile.value.localDocFileName || ' local').then((data: any) => {
-    unLoadComponent(idx)
-    if (data.status === 200) {
-      //
-    }
-    else {
-      toast('WARNING', t('download-file-failed'))
-    }
-  })
-    .catch(() => {
+  await getDocLocalInfoFileDown(documentData.value.urlFileName).then(value => {
+    MethodsUtil.dowloadSampleFile(`${SERVERFILE}${value}`,
+      TYPE_REQUEST.GET, documentFile.value.fileName || ' local').then((data: any) => {
       unLoadComponent(idx)
+      if (data.status === 200)
+        return true
+
+      else
+        toast('WARNING', t('download-file-failed'))
     })
+      .catch(() => {
+        unLoadComponent(idx)
+      })
+    unLoadComponent(idx)
+  })
 }
 function handleDeleteDoc(type: any, idx: any) {
   switch (type) {
@@ -249,6 +253,8 @@ function uploadDocLocal(data: any, file: any) {
   fileUpload.value[0].name = data.name
   documentFile.value.fileFolder = data.fileFolder
   documentFile.value.urlDownload = data.filePath
+  documentData.value.urlFileName = data.fileFolder
+
   if (documentData.value.name === null || documentData.value.name.length === 0)
     documentData.value.name = data.name
   documentData.value.acceptDownload = acceptDownload.value
@@ -316,10 +322,10 @@ function saveAndUpdate(idx: any, isUpdate: boolean) {
     unLoadComponent(idx)
     return
   }
-  myFormAddContentVideo.value.validate().then(async (success: any) => {
+  myFormAddContentDoc.value.validate().then(async (success: any) => {
     if (success.valid) {
       documentData.value.courseId = Number(route.params.id)
-      documentData.value.archiveTypeId = 4
+      documentData.value.archiveTypeId = 6
 
       documentData.value.url = documentFile.value.fileFolder
       handleUpdateContent(idx, isUpdate)
@@ -335,7 +341,7 @@ if (route.params && route.params.contentId) {
   const id = Number(route.params.contentId)
   contentId.value = id
   fetchContent(id).then(() => {
-    getDetailVideoContent()
+    getDetailDocContent()
     vSelectOwner.value.currentUserIds = documentData.value.ownerId
     getTeacherOwnerCourse()
   })
@@ -352,7 +358,7 @@ onUnmounted(() => {
 <template>
   <div class="mt-6">
     <Form
-      ref="myFormAddContentVideo"
+      ref="myFormAddContentDoc"
       :validation-schema="schema"
       @submit.prevent="submitForm"
     >
@@ -530,7 +536,7 @@ onUnmounted(() => {
                   v-model:accept-download="acceptDownload"
                   class="w-100"
                   :disabled="isViewDetail"
-                  :file-name="documentData.urlFileName"
+                  :file-name="documentFile.localDocFileName"
                   :accept="Globals.documentExtention"
                   :is-btn-download="false"
                   is-request-file-install
@@ -570,7 +576,6 @@ onUnmounted(() => {
         </VRow>
         <VRow v-if="documentFile.haveDocument">
           <VCol
-            v-if="!isLoadingFile"
             id="video-preview"
             cols="12"
             sm="6"
@@ -580,6 +585,7 @@ onUnmounted(() => {
               width="100"
               :src="documentFile?.filePath"
               :file-folder="documentFile?.fileFolder"
+              :is-loading-file="isLoadingFile"
             />
           </VCol>
         </VRow>

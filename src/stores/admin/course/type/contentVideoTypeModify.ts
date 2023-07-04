@@ -126,39 +126,7 @@ export const contentTypeManagerStore = defineStore('contentTypeManager', () => {
   const dataInitVideo = ref(window._.cloneDeep(videoData.value))
 
   /** method */
-  // lấy loại nội dung
-  function getTypeContent(value: number) {
-    switch (value) {
-      case 1:
-        return 'text-content'
-      case 2:
-        return 'web-content'
-      case 3:
-        return 'online-content'
-      case 4:
-        return 'video-content'
-      case 5:
-        return 'audio-content'
-      case 6:
-        return 'document-content'
-      case 7:
-        return 'scorm-content'
-      case 8:
-        return 'flash-content'
-      case 9:
-        return 'iframe-content'
-      case 10:
-        return 'test-content'
-      case 11:
-        return 'survey-content'
-      case 12:
-        return 'essay-content'
-      case 16:
-        return 'offline-content'
-      default:
-        return 'text-content'
-    }
-  }
+
   function getErrorsMessage(errorsMess: Array<any>) {
     let str = ''
     errorsMess.forEach(element => {
@@ -201,7 +169,7 @@ export const contentTypeManagerStore = defineStore('contentTypeManager', () => {
           params: {
             id: Number(route.params.id),
             tab: route.params.tab,
-            type: 'video',
+            type: 'video-content',
             contentTab: 'infor',
             contentId: contentId.value,
           },
@@ -271,7 +239,7 @@ export const contentTypeManagerStore = defineStore('contentTypeManager', () => {
       if (videoData.value.archiveTypeId !== 10 && videoData.value.archiveTypeId !== 11 && videoData.value.archiveTypeId !== 12)
         await fetchConditionComplete(videoData.value.courseContentId)
       isUpdate.value = true
-      typeContent.value = getTypeContent(videoData.value.archiveTypeId)
+      typeContent.value = MethodsUtil.getTypeContent(videoData.value.archiveTypeId)
     })
   }
   function changeType(val: any, type: string) {

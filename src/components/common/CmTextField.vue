@@ -87,7 +87,6 @@ const messageError = computed(() => {
         :bg-color="bgColor"
         :placeholder="placeholder"
         :error="errors?.length > 0 ?? false"
-        :error-messages="messageError"
         :type="type"
         :min="min"
         :max="max"
@@ -97,6 +96,12 @@ const messageError = computed(() => {
         @change="handleChangeText"
         @update:modelValue="handleUpdateText"
       />
+    </div>
+    <div
+      v-if="errors?.length > 0"
+      class="styleError text-errors"
+    >
+      {{ errors[0] }}
     </div>
   </div>
 </template>
