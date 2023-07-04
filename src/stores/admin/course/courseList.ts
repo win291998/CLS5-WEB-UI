@@ -39,7 +39,7 @@ export const courseListManagerStore = defineStore('courseListManager', () => {
     pageNumber: 1,
     pageSize: 10,
     topicIds: [],
-    formOfStudy: null,
+    formOfStudy: undefined,
     isDisplayHome: null,
     statusId: null,
     ownerId: null,
@@ -75,6 +75,7 @@ export const courseListManagerStore = defineStore('courseListManager', () => {
   function handlerActionHeader(type: any) {
     switch (type) {
       case 'handlerAddButton':
+        console.log(123)
 
         router.push({ name: 'course-add', params: { tab: 'infor' } })
         break

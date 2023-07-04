@@ -1,6 +1,6 @@
 <script setup lang="ts">
 interface Props {
-  src?: string
+  src?: any
   fileFolder?: string
   serverCode?: any
   width?: number | string

@@ -144,6 +144,14 @@ function updateFetchData(data: any) {
     listTypePeriorCurrent.value.push(item.typeId)
   })
 }
+
+onBeforeUnmount(() => {
+  storeCourseInforManager.$dispose()
+})
+
+onDeactivated(() => {
+  storeCourseInforManager.$dispose()
+})
 </script>
 
 <template>

@@ -63,7 +63,7 @@ function handleClickRow(e: any) {
 }
 
 function onCancel() {
-  router.replace({ name: 'admin-course' })
+  router.replace({ name: 'course' })
 }
 function addSuccessFile() {
   getListReferContentCourse(courseId)
