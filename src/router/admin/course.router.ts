@@ -11,7 +11,7 @@ export default [
   {
     path: 'course',
     name: 'course-list',
-    redirect: { name: 'course-list' },
+    redirect: { name: 'course' },
     component: () => import('@/pages/admin/course/Index.vue'),
 
     // requireAuth: {
@@ -21,7 +21,7 @@ export default [
     children: [
       {
         path: '',
-        name: 'course-list',
+        name: 'course',
         component: () => import('@/pages/admin/course/Course.vue'),
       },
       {
