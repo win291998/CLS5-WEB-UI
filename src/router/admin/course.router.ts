@@ -1,7 +1,16 @@
 export default [
   {
+    path: 'manage-training-plan',
+    name: 'manage-training-plan',
+  },
+  {
+    path: 'list-roadmap',
+    name: 'list-roadmap',
+  },
+
+  {
     path: 'course',
-    name: 'admin-course',
+    name: 'course-list',
     redirect: { name: 'course-list' },
     component: () => import('@/pages/admin/course/Index.vue'),
 
@@ -11,7 +20,7 @@ export default [
     // },
     children: [
       {
-        path: 'course-list',
+        path: '',
         name: 'course-list',
         component: () => import('@/pages/admin/course/Course.vue'),
       },

@@ -100,6 +100,7 @@ window.hideAllPageLoading()
               v-model:src="valuesComponent.avatar"
               is-avatar
               is-badge
+              is-rounded
               :tooltip="t('system-management.100x100')"
             />
           </VCol>
