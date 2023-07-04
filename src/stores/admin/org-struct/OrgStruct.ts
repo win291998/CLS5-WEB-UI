@@ -110,6 +110,8 @@ export const orgStructManagerStore = defineStore('orgStructManager', () => {
       console.time('start')
       const result: any = {}
       console.log('start')
+      console.log(ArraysUtil.formatSelectTree(value.data, 'parentId', 'id'))
+
       ArraysUtil.convertTreeView(ArraysUtil.formatSelectTree(value.data, 'parentId', 'id'), result, config.value.roots, t, 'children')
 
       nodes.value = reactive(result)

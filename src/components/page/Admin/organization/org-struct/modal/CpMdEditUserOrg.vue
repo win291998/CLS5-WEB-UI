@@ -243,7 +243,7 @@ watch(() => props.isDialogVisible, isShow => {
               :items="listTitles"
               custom-key="name"
               item-value="id"
-              :append-to-body="isEditUser"
+              append-to-body
               :placeholder="LABEL.TITLE1"
               @update:modelValue="changeCellvalue($event, context)"
             />

@@ -28,13 +28,13 @@ getDetailCourse()
 
 onMounted(() => {
   switch (route.params?.type) {
-    case 'content':
+    case 'text-content':
       component.value = CpContent
       break
-    case 'video':
+    case 'video-content':
       component.value = CpVideoContent
       break
-    case 'document':
+    case 'document-content':
       component.value = CpDocumentContent
       break
 

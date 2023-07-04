@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const CmTab = defineAsyncComponent(() => import('@/components/common/CmTab.vue'))
-const CpTabInforVideo = defineAsyncComponent(() => import('@/components/page/Admin/course/modify/content/type/video/CpTabInforVideo.vue'))
+const CpTabInforDocument = defineAsyncComponent(() => import('@/components/page/Admin/course/modify/content/type/document/CpTabInforDocument.vue'))
 const CpConditionVideo = defineAsyncComponent(() => import('@/components/page/Admin/course/modify/content/type/video/CpConditionVideo.vue'))
 const CpConditionCompletedVideo = defineAsyncComponent(() => import('@/components/page/Admin/course/modify/content/type/video/CpConditionCompletedVideo.vue'))
 
@@ -14,7 +14,7 @@ const listTab = [
   {
     key: 'infor',
     title: 'content',
-    component: CpTabInforVideo,
+    component: CpTabInforDocument,
     isRendered: true,
   },
   {

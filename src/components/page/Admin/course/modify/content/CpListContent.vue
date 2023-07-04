@@ -82,7 +82,7 @@ const actionUpdate = [
         params: {
           id: Number(route.params.id),
           tab: route.params.tab,
-          type: 'video',
+          type: 'video-content',
           contentTab: 'infor',
         },
       })
@@ -97,7 +97,7 @@ const actionUpdate = [
         params: {
           id: Number(route.params.id),
           tab: route.params.tab,
-          type: 'document',
+          type: 'document-content',
           contentTab: 'infor',
         },
       })
