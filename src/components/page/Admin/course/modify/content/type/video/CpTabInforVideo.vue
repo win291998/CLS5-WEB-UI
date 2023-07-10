@@ -2,7 +2,7 @@
 import axios from 'axios'
 import moment from 'moment'
 import { validatorStore } from '@/stores/validatator'
-import { contentTypeManagerStore } from '@/stores/admin/course/type/contentVideoTypeModify'
+import { contentTypeVideoManagerStore } from '@/stores/admin/course/type/contentVideoTypeModify'
 import { TYPE_REQUEST } from '@/typescript/enums/enums'
 import MethodsUtil from '@/utils/MethodsUtil'
 import CourseService from '@/api/course/index'
@@ -32,7 +32,7 @@ const { schemaOption, Field, Form, useForm, yup } = storeValidate
 const { submitForm } = useForm()
 const route = useRoute()
 const router = useRouter()
-const storeContentVideoTypeModifyManager = contentTypeManagerStore()
+const storeContentVideoTypeModifyManager = contentTypeVideoManagerStore()
 const { videoData, timeComplete, contentId, isViewDetail } = storeToRefs(storeContentVideoTypeModifyManager)
 const {
   handleUpdateContent, fetchContent, resetDataVideo,
