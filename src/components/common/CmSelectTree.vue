@@ -2,7 +2,7 @@
 import Treeselect from 'vue3-treeselect'
 import 'vue3-treeselect/dist/vue3-treeselect.css'
 import { defaultSetting } from '@/constant/data/settingDefault.json'
-import Globals from '@/constant/Globals'
+import { MAX_ITEM_SELECT_MULT } from '@/constant/Globals'
 
 /** ** Interface */
 interface Options {
@@ -71,7 +71,7 @@ const props = withDefaults(defineProps<Props>(), ({
   searchNested: true,
   customLable: false,
   valueConsistsOf: 'ALL',
-  maxItem: Globals.MAX_ITEM_SELECT_MULT,
+  maxItem: MAX_ITEM_SELECT_MULT,
   maxHeight: undefined,
   isError: false,
   normalizerCustomType: () => ['id', 'label', 'children'],

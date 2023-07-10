@@ -6,24 +6,21 @@ import MethodsUtil from '@/utils/MethodsUtil'
 import CourseService from '@/api/course/index'
 import UserService from '@/api/user/index'
 import toast from '@/plugins/toast'
-import { audioExtention } from '@/constant/Globals'
+import { scormExtention } from '@/constant/Globals'
 import ServerFileService from '@/api/server-file/index'
 import { load } from '@/stores/loadComponent.js'
-import CmAudio from '@/components/common/CmAudio.vue'
+import { ContentType } from '@/constant/data/contentCourseType.json'
 
 const CpInputFile = defineAsyncComponent(() => import('@/components/page/gereral/CpInputFile.vue'))
 const SkUser = defineAsyncComponent(() => import('@/components/page/gereral/skeleton/SkUser.vue'))
 const CmCheckBox = defineAsyncComponent(() => import('@/components/common/CmCheckBox.vue'))
 const CmTextField = defineAsyncComponent(() => import('@/components/common/CmTextField.vue'))
 const CmSelect = defineAsyncComponent(() => import('@/components/common/CmSelect.vue'))
-const CmRadio = defineAsyncComponent(() => import('@/components/common/CmRadio.vue'))
 const CmButton = defineAsyncComponent(() => import('@/components/common/CmButton.vue'))
 const CmItemFileUpload = defineAsyncComponent(() => import('@/components/common/CmItemFileUpload.vue'))
-const CmPreviewFile = defineAsyncComponent(() => import('@/components/common/CmPreviewFile.vue'))
-const CmChip = defineAsyncComponent(() => import('@/components/common/CmChip.vue'))
 const CpActionFooterEdit = defineAsyncComponent(() => import('@/components/page/gereral/CpActionFooterEdit.vue'))
-const CpMdProcessing = defineAsyncComponent(() => import('@/components/page/gereral/modal/CpMdProcessing.vue'))
 
+/** ********************************************Thông tin chung******************************************************************** */
 /** store */
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 const storeValidate = validatorStore()
@@ -34,10 +31,23 @@ const router = useRouter()
 const storeContentTypeModifyManager = contentTypeManagerStore()
 const { contentData, timeComplete, contentId, isViewDetail } = storeToRefs(storeContentTypeModifyManager)
 const {
-  handleUpdateContent, fetchContent, resetData,
+  handleUpdateContent, fetchContent, resetData, $reset,
 } = storeContentTypeModifyManager
 const store = load()
 const { unLoadComponent } = store
+
+// end store
+/** state */
+const LABEL = Object.freeze({
+  TITLE1: `${t('KW_Lesson_Name')}*`,
+  TITLE2: t('thematics'),
+  TITLE3: t('Teacher'),
+  TITLE4: t('auto-approve'),
+  TITLE5: t('get-study-time-by-duration'),
+  TITLE6: t('setting-speed-video'),
+  TITLE7: t('permistion-fringed'),
+})
+
 const schemaInit = reactive({
   name: schemaOption.defaultString,
   url: schemaOption.defaultString,
@@ -51,19 +61,7 @@ const schema = computed(() => ({
   ...(contentData.value.timeTypeId === 2 ? schemaTime : {}),
 }))
 
-/** state */
-const LABEL = Object.freeze({
-  TITLE1: `${t('KW_Lesson_Name')}*`,
-  TITLE2: t('thematics'),
-  TITLE3: t('Teacher'),
-  TITLE4: t('auto-approve'),
-  TITLE5: t('get-study-time-by-duration'),
-  TITLE6: t('setting-speed-video'),
-  TITLE7: t('permistion-fringed'),
-})
-const comboboxThemetic = ref([])
-const myFormAddContent = ref()
-const errorsInputFile = ref<any>([])
+// get list teacher
 const vSelectOwner = ref<any>({
   listCombobox: [],
   totalRecord: 0,
@@ -74,47 +72,11 @@ const vSelectOwner = ref<any>({
   currentUserIds: [],
   itemSelected: {} as any,
 })
-const timeType = ref([1, 2]) // thể loại thời lượng
-const time = ref({ selfMinute: 0, selfSecond: 0, contentMinute: 0, contentSecond: 0 })
-const timeDuration = ref<any>()
-const acceptDownload = ref<any>(false)
-const contentFile = ref({
-  alterPath: '',
-  name: '',
-  size: 0,
-  processing: 0,
-  fileName: '',
-  fileType: null,
-  fileExtension: '',
-  filePath: '',
-  fileOrigin: '',
-  fileFolder: '',
-  haveDocument: false,
-  file: [] as any[],
-  localFileName: null as any,
-  localUrl: '',
-})
-
-const fileUpload = ref([{ name: 'Real-Time', icon: 'tabler:file', size: 0, processing: 95 }])
-const SERVERFILE = process.env.VUE_APP_BASE_SERVER_FILE
-const isLoadingFile = ref(true)
-
-/** method */
-async function getListThematicContent() {
-  const params = {
-    courseId: Number(route.params.id),
-  }
-
-  await MethodsUtil.requestApiCustom(CourseService.GetListThematicContent, TYPE_REQUEST.GET, params).then((value: any) => {
-    comboboxThemetic.value = value.data
-  })
-}
 async function isIntersecting() {
   vSelectOwner.value.pageNumber += 1
   getTeacherOwnerCourse(true)
 }
 
-// get list teacher
 async function getTeacherOwnerCourse(loadMore?: any) {
   // loadMore dùng khi infinity scroll
   const params = {
@@ -152,73 +114,45 @@ async function getTeacherOwnerCourse(loadMore?: any) {
   })
 }
 
-// cập nhật dữ liệu chỉnh sửa
-function getDetailDocContent() {
-  if (contentData.value.url && contentData.value.url !== null) {
-    acceptDownload.value = contentData.value?.acceptDownload
-    contentFile.value.localUrl = contentData.value.url
-    contentFile.value.haveDocument = true
-    contentFile.value.fileFolder = contentData.value.url
-
-    getDocLocalInfo(contentData.value.urlFileName)
-    if (contentData.value.timeTypeId === 2) {
-      time.value.selfMinute = Math.floor(contentData.value.time / 60)
-      time.value.selfSecond = Math.floor(contentData.value.time % 60)
-    }
-    else {
-      time.value.contentMinute = Math.floor(contentData.value.time / 60)
-      time.value.contentSecond = Math.floor(contentData.value.time % 60)
-    }
+// get list chuyên đề
+const comboboxThemetic = ref([])
+async function getListThematicContent() {
+  const params = {
+    courseId: Number(route.params.id),
   }
-  else { contentData.value.timeTypeId = 1 }
-}
-async function downloadFile(idx: any) {
-  MethodsUtil.dowloadSampleFile(`${SERVERFILE}${contentData.value.url}`,
-    TYPE_REQUEST.GET, contentFile.value.localFileName || ' local').then((data: any) => {
-    unLoadComponent(idx)
-    if (data.status === 200)
-      return true
 
-    else
-      toast('WARNING', t('download-file-failed'))
+  await MethodsUtil.requestApiCustom(CourseService.GetListThematicContent, TYPE_REQUEST.GET, params).then((value: any) => {
+    comboboxThemetic.value = value.data
   })
-    .catch(() => {
-      unLoadComponent(idx)
-    })
-  unLoadComponent(idx)
-}
-function handleDeleteContent(type: any, idx: any) {
-  switch (type) {
-    case 'local':
-      contentFile.value = {
-        alterPath: '',
-        name: '',
-        size: 0,
-        processing: 0,
-        fileName: '',
-        fileType: null,
-        fileExtension: '',
-        filePath: '',
-        fileOrigin: '',
-        fileFolder: '',
-        haveDocument: false,
-        file: [] as any[],
-        localFileName: null,
-        localUrl: '',
-      }
-      contentData.value.urlFileName = ''
-      contentData.value.url = ''
-      break
-
-    default:
-      break
-  }
-  unLoadComponent(idx)
 }
 
-function handleCancle() {
-  router.push({ name: 'course-edit', params: { tab: 'content', id: Number(route.params.id) } })
-}
+/** ****upload file */
+const myFormAddContent = ref()
+const errorsInputFile = ref<any>([])
+const contentFile = ref({
+  alterPath: '',
+  name: '',
+  size: 0,
+  processing: 0,
+  fileName: '',
+  fileType: null,
+  fileExtension: '',
+  filePath: '',
+  fileOrigin: '',
+  fileFolder: '',
+  haveContent: false,
+  file: [] as any[],
+  localFileName: null as any, // dùng trong hiện thị tên trong input file và tên file tải xuống
+  dataPreview: '',
+})
+
+const SERVERFILE = process.env.VUE_APP_BASE_SERVER_FILE
+const serverCode = ref()
+const isLoadingFile = ref(true)
+const fileUpload = ref([{ name: 'Real-Time', icon: MethodsUtil.checkType(`${route.params.type}`, ContentType, 'name')?.icon, size: 0, processing: 95 }])
+const time = ref({ selfMinute: 5, selfSecond: 0, contentMinute: 0, contentSecond: 0 })
+
+/** method */
 
 // lưu
 function saveAndUpdate(idx: any, isUpdate: boolean) {
@@ -226,11 +160,6 @@ function saveAndUpdate(idx: any, isUpdate: boolean) {
     isUpdate = false
   contentData.value.timeVideoOrSound = Number(time.value.contentMinute) * 60 + Number(time.value.contentSecond)
   contentData.value.time = Number(time.value.selfMinute) * 60 + Number(time.value.selfSecond)
-  if (contentData.value.timeTypeId === 1)
-    contentData.value.time = Number(time.value.contentMinute) * 60 + Number(time.value.contentSecond)
-
-  else
-    contentData.value.time = Number(time.value.selfMinute) * 60 + Number(time.value.selfSecond)
 
   if (contentData.value.time === 0) {
     toast('WARNING', t('time-min-0'))
@@ -248,7 +177,7 @@ function saveAndUpdate(idx: any, isUpdate: boolean) {
 
     if (success.valid) {
       contentData.value.courseId = Number(route.params.id)
-      contentData.value.archiveTypeId = 5
+      contentData.value.archiveTypeId = MethodsUtil.checkType(`${route.params.type}`, ContentType, 'name')?.value
       handleUpdateContent(idx, isUpdate)
     }
     else {
@@ -263,79 +192,107 @@ function saveAndUpdate(idx: any, isUpdate: boolean) {
   })
 }
 
-/** ** upload file*********************** */
-async function getDocLocalInfo(folder: any, getFileSize?: any) {
-  await MethodsUtil.requestApiCustom(`${SERVERFILE}${ServerFileService.GetInforFile}${folder}`, TYPE_REQUEST.GET).then((data: any) => {
-    contentFile.value.localFileName = data.fileName
-    contentFile.value = {
-      ...contentFile.value,
-      ...data,
+// cập nhật dữ liệu chỉnh sửa
+async function getDetailDocContent() {
+  if (contentData.value.url && contentData.value.url !== null) {
+    contentFile.value.dataPreview = contentData.value.url.replace('loadScorm', 'previewScorm')
+    contentFile.value.haveContent = true
+    if (contentData.value.time) {
+      time.value.selfMinute = Math.floor(contentData.value.time / 60)
+      time.value.selfSecond = Math.floor(contentData.value.time % 60)
     }
-    console.log(data)
-
-    if (data.isProcessing)
-      isLoadingFile.value = false
-  })
+    await getInfor(contentData.value.url.replace('/loadScorm?fileFolder=', '')).then((value: any) => {
+      console.log(value)
+      contentFile.value.localFileName = value.fileName
+      if (value?.filePath) {
+        serverCode.value = value.serverCode
+        contentFile.value.dataPreview = serverCode.value ? `/${serverCode.value}${contentFile.value.dataPreview}` : `/sfv4${contentFile.value.dataPreview}`
+        contentFile.value.haveContent = true
+      }
+      if (value.isProcessing)
+        isLoadingFile.value = false
+    })
+  }
+  else { time.value.selfMinute = 5 }
 }
 
+/** ** Xử lý file sau khi upload từ input file*********************** */
+/// lấy thông tin file
 async function getInfor(folder: any) {
   return await MethodsUtil.requestApiCustom(`${SERVERFILE}${ServerFileService.GetInforFile}${folder}`, TYPE_REQUEST.GET)
 }
-function getDuration(file: any) {
-  const video = document.createElement('video')
-  contentFile.value.file = [file]
-  video.preload = 'metadata'
-  video.src = URL.createObjectURL(file)
 
-  video.onloadedmetadata = function () {
-    window.URL.revokeObjectURL(video.src)
-    const { duration } = video
-    if (duration) {
-      time.value.contentMinute = Math.floor(duration / 60)
-      time.value.contentSecond = Math.floor(duration % 60)
-      console.log(duration, Math.floor(duration % 60))
-    }
-  }
-}
+// khi lấy file local lên
 async function uploadFileLocal(data: any, file: any) {
   isLoadingFile.value = true
+
+  // gắn thông tin vào progess đang xử lý
   fileUpload.value[0].size = data.size
   fileUpload.value[0].name = data.name
+
+  // gắn name file
   contentFile.value.localFileName = data.name
+
+  // clear log error input file
   if (data.filePath)
     errorsInputFile.value = []
 
-  if (acceptDownload.value) {
-    contentData.value.url = data.filePath
-    contentData.value.urlFileName = data.fileFolder
-  }
-  else if (data?.fileFolder) {
+  if (data?.fileFolder) {
+    // kiểm tra đối với file không cho phép dowload
     await getInfor(data?.fileFolder).then((value: any) => {
+      console.log(value)
+      contentFile.value.localFileName = value.fileName
       if (value?.filePath) {
-        contentData.value.url = value.filePath
-        contentData.value.urlFileName = data.fileFolder
+        serverCode.value = value.serverCode
+        contentData.value.url = `/loadScorm?fileFolder=${data.filePath}`
+        contentFile.value.dataPreview = serverCode.value ? `/${serverCode.value}/previewScorm?fileFolder=${data.filePath}` : `/sfv4/previewScorm?fileFolder=${data.filePath}`
       }
     })
   }
 
+  // lưu trữ fileFolder sau khi lấy thông tin infor
   contentFile.value.fileFolder = data.fileFolder
+  contentFile.value.haveContent = true
 
+  // kiểm tra nếu name trống sẽ lấy tên file làm tên nội dung
   if (contentData.value.name === null || contentData.value.name.length === 0)
     contentData.value.name = data.name
-  contentData.value.acceptDownload = acceptDownload.value
-  contentFile.value.haveDocument = true
 
   isLoadingFile.value = false
 }
-function changeTimeType() {
-  console.log(timeDuration.value, Math.floor(timeDuration.value % 60))
-  if (timeDuration.value) {
-    time.value.contentMinute = Math.floor(timeDuration.value / 60)
-    time.value.contentSecond = Math.floor(timeDuration.value % 60)
+function handleDeleteContent(type: any, idx: any) {
+  switch (type) {
+    case 'local':
+      contentFile.value = {
+        alterPath: '',
+        name: '',
+        size: 0,
+        processing: 0,
+        fileName: '',
+        fileType: null,
+        fileExtension: '',
+        filePath: '',
+        fileOrigin: '',
+        fileFolder: '',
+        haveContent: false,
+        file: [] as any[],
+        localFileName: null,
+        dataPreview: '',
+      }
+      contentData.value.urlFileName = ''
+      contentData.value.url = ''
+      break
+
+    default:
+      break
   }
+  unLoadComponent(idx)
+}
+function handleCancle() {
+  router.push({ name: 'course-edit', params: { tab: 'content', id: Number(route.params.id) } })
 }
 
-/** ******************************** */
+/** ******************Thực thi created************** */
 getListThematicContent()
 if (route.params && route.params.contentId) {
   const id = Number(route.params.contentId)
@@ -451,87 +408,11 @@ onUnmounted(() => {
           </div>
           <div class="d-flex align-center">
             <div>
-              <div class="d-flex align-center mb-6">
-                <div class="d-flex align-center mr-4">
-                  <CmRadio
-                    v-model="contentData.timeTypeId"
-                    name="time"
-                    :type="1"
-                    :value="timeType[0]"
-                    @update:model-value="changeTimeType"
-                  />
-                </div>
-                <div class="d-flex align-center mr-4">
-                  <div>{{ t('auto-setting-content') }}</div>
-                </div>
-                <div v-if="contentData.timeTypeId === 1">
-                  <div class="d-flex">
-                    <Field
-                      v-slot="{ field, errors }"
-                      v-model="time.contentMinute"
-                      name="contentMinute"
-                      type="number"
-                    >
-                      <div class="mr-3">
-                        <div class="d-flex align-center">
-                          <div class="mr-3 conditon-input">
-                            <CmTextField
-                              :field="field"
-                              type="number"
-                              :model-value="time.contentMinute"
-                              disabled
-                              :min="0"
-                              :max="59"
-                            />
-                          </div>
-                          <span class="text-regular-md">{{ t('minutes').toLowerCase() }}</span>
-                        </div>
-                        <div class="styleError text-errors">
-                          {{ errors[0] }}
-                        </div>
-                      </div>
-                    </Field>
-                    <Field
-                      v-slot="{ field, errors }"
-                      v-model="time.contentSecond"
-                      name="contentSecond"
-                      type="number"
-                    >
-                      <div class="mr-3">
-                        <div class="d-flex align-center">
-                          <div class="mr-3 conditon-input">
-                            <CmTextField
-                              :field="field"
-                              disabled
-                              :model-value="time.contentSecond"
-                              type="number"
-                              :min="0"
-                              :max="59"
-                            />
-                          </div>
-                          <span class="text-regular-md">{{ t('seconds').toLowerCase() }}</span>
-                        </div>
-                        <div class="styleError text-errors">
-                          {{ errors[0] }}
-                        </div>
-                      </div>
-                    </Field>
-                  </div>
-                </div>
-              </div>
               <div class="d-flex align-center">
                 <div class="d-flex align-center mr-4">
-                  <CmRadio
-                    v-model="contentData.timeTypeId"
-                    name="time"
-                    :type="1"
-                    :value="timeType[1]"
-                  />
+                  <div>{{ t('duration-time') }}</div>
                 </div>
-                <div class="d-flex align-center mr-4">
-                  <div>{{ t('auto-setting') }}</div>
-                </div>
-                <div v-if="contentData.timeTypeId === 2">
+                <div>
                   <div class="d-flex">
                     <Field
                       v-slot="{ field, errors }"
@@ -603,7 +484,7 @@ onUnmounted(() => {
             sm="6"
           >
             <div class="mb-1">
-              {{ t('choose-file-audio') }}*
+              {{ t('choose-file-scorm') }}*
             </div>
             <div class="d-flex">
               <Field
@@ -613,35 +494,21 @@ onUnmounted(() => {
               >
                 <CpInputFile
                   v-model="contentFile.file"
-                  v-model:accept-download="acceptDownload"
                   class="w-100"
+                  file-type="Scorm"
                   :disabled="isViewDetail"
                   :file-name="contentFile.localFileName"
-                  :accept="audioExtention"
+                  :accept="scormExtention"
                   :is-btn-download="false"
-                  is-request-file-install
                   :errors="errorsInputFile"
-                  :is-secure="!acceptDownload"
+                  :icon="MethodsUtil.checkType(`${route.params.type}`, ContentType, 'name')?.icon"
                   @change="uploadFileLocal"
-                  @onChangeFile="getDuration"
                 />
               </Field>
             </div>
           </VCol>
         </VRow>
-        <VRow v-if="contentFile.haveDocument">
-          <VCol
-            cols="12"
-            class="d-flex"
-          >
-            <CmChip
-              :color="acceptDownload ? 'primary' : 'error'"
-            >
-              <span class="text-medium-xs">{{ acceptDownload ? t("Cho phép tải") : t("Không cho phép tải") }}</span>
-            </CmChip>
-          </VCol>
-        </VRow>
-        <VRow v-if="contentFile.haveDocument">
+        <VRow v-if="contentFile.haveContent">
           <VCol
             v-if="isLoadingFile"
             cols="12"
@@ -655,34 +522,25 @@ onUnmounted(() => {
             </div>
           </VCol>
         </VRow>
-        <VRow v-if="contentFile.haveDocument">
+        <VRow v-if="contentFile.haveContent">
           <VCol
             id="video-preview"
             cols="12"
-            sm="6"
           >
-            <CmAudio
-              v-model:time="timeDuration"
-              width="100"
-              :src="contentData?.url"
-            />
+            <div
+              class="embed-responsive"
+            >
+              <embed
+                :src="`${SERVERFILE}${contentFile.dataPreview}`"
+              >
+            </div>
           </VCol>
         </VRow>
-        <VRow v-if="!isLoadingFile && contentFile.haveDocument">
+        <VRow v-if="!isLoadingFile && contentFile.haveContent">
           <VCol
             cols="12"
-            sm="6"
           >
             <div class=" d-flex justify-center">
-              <CmButton
-                v-if="!isViewDetail && acceptDownload"
-                class="mr-2"
-                variant="outlined"
-                is-load
-                icon="tabler:download"
-                :size-icon="18"
-                @click="downloadFile"
-              />
               <CmButton
                 v-if="!isViewDetail"
                 is-load

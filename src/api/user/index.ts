@@ -30,6 +30,7 @@ const UserService = {
   GetMenu: '/menu/get-menu-by-role',
   GetListIdStructureUser: '/user/get-list-id-from-structure-by-user',
   GetOrganizationalStructure: '/organizationalstructure/get-all',
+  GetOrganizationalTreeStructure: '/organizationalstructure/get-tree',
   GetListCustomerRequest: '/Customer/get-list',
   GetRegisterConfig: '/RegistryConfiguration/get',
   GetOrgById: '/organizationalstructure/get-by-id',

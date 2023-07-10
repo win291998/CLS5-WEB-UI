@@ -8,7 +8,7 @@ import MethodsUtil from '@/utils/MethodsUtil'
 import CourseService from '@/api/course/index'
 import UserService from '@/api/user/index'
 import toast from '@/plugins/toast'
-import Globals from '@/constant/Globals'
+import { videoExtention } from '@/constant/Globals'
 import ServerFileService from '@/api/server-file/index'
 import { load } from '@/stores/loadComponent.js'
 
@@ -261,6 +261,7 @@ async function getVideoLocalInfo(folder: any, getFileSize?: any) {
 
 // cập nhật dữ liệu chỉnh sửa
 function getDetailVideoContent() {
+  acceptDownload.value = videoData.value?.acceptDownload
   if (videoData.value.url && videoData.value.url !== null) {
     if (videoData.value.urlCdn) {
       videoType.value = 'cdn'
@@ -290,7 +291,9 @@ function getDetailVideoContent() {
       time.value.contentSecond = Math.floor(videoData.value.time % 60)
     }
   }
-  else { videoData.value.timeTypeId = 1 }
+  else {
+    videoData.value.timeTypeId = 1
+  }
 }
 async function downloadFile(idx: any) {
   MethodsUtil.dowloadSampleFile(`${SERVERFILE}${localFile.value.localUrl}`,
@@ -476,7 +479,12 @@ function saveAndUpdate(idx: any, isUpdate: boolean) {
         videoData.value.urlCdn = ''
       }
       else { videoData.value.url = cdn.cdnUrl }
-
+      if (!videoData.value.url) {
+        errorsInputFile.value = [t('please-choose-files')]
+        toast('ERROR', t('please-choose-files'))
+        unLoadComponent(idx)
+        return
+      }
       handleUpdateContent(idx, isUpdate)
     }
     else {
@@ -866,7 +874,7 @@ onUnmounted(() => {
                   class="w-100"
                   :disabled="isViewDetail"
                   :file-name="videoData.urlFileName"
-                  :accept="acceptDownload ? '.mp4' : Globals.videoExtention"
+                  :accept="acceptDownload ? '.mp4' : videoExtention"
                   :is-btn-download="false"
                   is-request-file-install
                   :is-background="true"
@@ -887,7 +895,7 @@ onUnmounted(() => {
             <CmChip
               :color="acceptDownload ? 'primary' : 'error'"
             >
-              <span>{{ acceptDownload ? t("Cho phép tải") : t("Không cho phép tải") }}</span>
+              <span class="text-medium-xs">{{ acceptDownload ? t("Cho phép tải") : t("Không cho phép tải") }}</span>
             </CmChip>
           </VCol>
         </VRow>

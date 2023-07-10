@@ -325,4 +325,25 @@ export default class MethodsUtil {
         return 'text-content'
     }
   }
+
+  static registerState(listState: any, stateInit: any) {
+    listState.forEach((item: any) => {
+      console.log(item)
+
+      const key = Object.keys(item)?.[0]
+
+      stateInit.value[key] = window._.cloneDeep(item[key].value)
+    })
+    console.log(stateInit.value)
+  }
+
+  static $reset(stateInit: any) {
+    return (listState: any) => {
+      if (!window._.isEmpty(listState)) {
+        window._.forEach(listState, (value, key) => {
+          listState[key] = window._.cloneDeep(stateInit.value[key])
+        })
+      }
+    }
+  }
 }

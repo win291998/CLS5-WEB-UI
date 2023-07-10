@@ -64,7 +64,7 @@ watch(showAllPages, val => {
 })
 watch(() => props.password, val => {
   console.log(pdfRef.value)
-})
+}, { deep: true, immediate: true })
 </script>
 
 <template>

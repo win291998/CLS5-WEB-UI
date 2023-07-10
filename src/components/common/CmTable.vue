@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import type { ClickRowArgument, Header, Item } from 'vue3-easy-data-table'
 import CmPagination from './CmPagination.vue'
-import Globals from '@/constant/Globals'
+import {
+  MAX_ITEM_ACTION,
+  MAX_ITEM_SELECT_MULT,
+  PAGINATION_PAGE_SIZE_DEFAULT,
+} from '@/constant/Globals'
 import ArrayUtil from '@/utils/ArrayUtil'
 import MethodsUtil from '@/utils/MethodsUtil'
 import { tableStore } from '@/stores/table'
@@ -25,7 +29,7 @@ const props = withDefaults(defineProps<Props>(), ({
   returnObject: false,
   isImportFile: false,
   rowClassName: '',
-  pageSize: Globals.PAGINATION_PAGE_SIZE_DEFAULT,
+  pageSize: PAGINATION_PAGE_SIZE_DEFAULT,
   customId: 'id',
   totalRecord: 0,
   minHeight: 300,
@@ -353,7 +357,7 @@ watch(() => props.items, (val: Item[]) => {
           >
             <div
               v-if="checkActionShow(context?.actions) && actionItem.isShow
-                || !checkActionShow(context?.actions) && (context?.actions.length <= 3 || idKey < (Globals.MAX_ITEM_ACTION - 1))"
+                || !checkActionShow(context?.actions) && (context?.actions.length <= 3 || idKey < (MAX_ITEM_ACTION - 1))"
               :key="idKey"
               class="px-2 "
             >
@@ -370,16 +374,16 @@ watch(() => props.items, (val: Item[]) => {
                 activator="parent"
                 location="top"
               >
-                {{ t(actionItem?.name) }}
+                {{ t(MethodsUtil.checkActionType(actionItem)?.name) }}
               </VTooltip>
             </div>
           </template>
           <div
-            v-if="context?.actions?.length > Globals.MAX_ITEM_ACTION"
+            v-if="context?.actions?.length > MAX_ITEM_ACTION"
           >
             <div class="action-more px-2">
               <CmDropDown
-                :list-item="ArrayUtil.sliceArray(context?.actions, Globals.MAX_ITEM_ACTION - 1)"
+                :list-item="ArrayUtil.sliceArray(context?.actions, MAX_ITEM_ACTION - 1)"
                 :data="context"
                 is-action
                 custom-key="name"
@@ -398,7 +402,7 @@ watch(() => props.items, (val: Item[]) => {
         <div v-else-if="isErrorcell(itemsHeader.value, context) && isEditing && itemsHeader?.type === 'combobox'">
           <CmSelect
             v-model="context[itemsHeader.value]"
-            :max-item="Globals.MAX_ITEM_SELECT_MULT"
+            :max-item="MAX_ITEM_SELECT_MULT"
             :items="itemsHeader?.combobox.type === 'function'
               ? itemsHeader?.combobox?.data(context[itemsHeader?.combobox.params])
               : itemsHeader?.combobox?.data"

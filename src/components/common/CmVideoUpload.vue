@@ -4,7 +4,7 @@ import toast from '@/plugins/toast'
 import MethodsUtil from '@/utils/MethodsUtil'
 import ServerFileService from '@/api/server-file/index'
 import { TYPE_REQUEST } from '@/typescript/enums/enums'
-import Globals from '@/constant/Globals'
+import { avatar } from '@/constant/Globals'
 
 interface Props {
   disabled?: boolean
@@ -18,7 +18,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), ({
   disabled: false,
-  size: Globals.avatar.size,
+  size: avatar.size,
   isRounded: false,
   isClassicBorder: true,
   icon: '',

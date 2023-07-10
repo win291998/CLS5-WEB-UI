@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { contentTypeManagerStore } from '@/stores/admin/course/type/contentVideoTypeModify'
+import { contentTypeVideoManagerStore } from '@/stores/admin/course/type/contentVideoTypeModify'
 import { validatorStore } from '@/stores/validatator'
 import { configStore } from '@/stores/index'
 
@@ -7,7 +7,7 @@ const CmTextField = defineAsyncComponent(() => import('@/components/common/CmTex
 const CmCheckBox = defineAsyncComponent(() => import('@/components/common/CmCheckBox.vue'))
 const CmRadio = defineAsyncComponent(() => import('@/components/common/CmRadio.vue'))
 
-const storeContentVideoTypeModifyManager = contentTypeManagerStore()
+const storeContentVideoTypeModifyManager = contentTypeVideoManagerStore()
 const {
   isViewDetail, testConfig,
   isNumberPerPage, isShowRandom, isTimeOfWork, isAutoLog, isAllowRetake, minuteWork, secondWork,

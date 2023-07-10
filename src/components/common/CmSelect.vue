@@ -2,13 +2,13 @@
 import ISelect from 'vue-select'
 import Fuse from 'fuse.js'
 import { createPopper } from '@popperjs/core'
-import Globals from '@/constant/Globals'
+import { MAX_ITEM_SELECT_MULT } from '@/constant/Globals'
 import StringUtil from '@/utils/StringUtil'
 
 /** ** Khởi tạo prop emit */
 const props = withDefaults(defineProps<Props>(), ({
   items: () => ([]),
-  maxItem: Globals.MAX_ITEM_SELECT_MULT,
+  maxItem: MAX_ITEM_SELECT_MULT,
   multiple: false,
   returnObject: false,
   appendToBody: false,

@@ -171,6 +171,7 @@ function handleClickItemList(item: any) {
             <VIcon
               v-if="item?.icon || MethodsUtil.checlActionKey(item)[0]?.icon"
               :icon="item?.icon || MethodsUtil.checlActionKey(item)[0]?.icon"
+              :color="item?.color"
               :size="18"
               class="mr-2"
               :class="[item.colorClass, MethodsUtil.checlActionKey(item)[0]?.color]"
