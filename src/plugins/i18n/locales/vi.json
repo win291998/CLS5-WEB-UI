@@ -460,7 +460,10 @@
   "image-library": "Ảnh thư viện",
   "list-library": "Danh sách thư viện",
   "library-detail": "Chi tiết thư viện",
-  "video-content": "Nội dung video",
+  "video-content": "Video",
+  "essay-content": "Bài tiểu luận",
+  "offline-content": "Nội dung offline",
+  "essay-content-name": "Tên bài tiểu luận",
   "license-info": "Tất cả bản quyền từ năm {year} thuộc về",
   "list-author": "Danh sách tác giả",
   "list-roadmap": "Danh sách lộ trình",
@@ -3471,5 +3474,6 @@
   "Sa": "T7",
   "Su": "CN",
   "today": "Hôm nay",
-  "please-select-day": "Vui lòng chọn thời gian!"
+  "please-select-day": "Vui lòng chọn thời gian!",
+  "text-content": "Nội dung"
 }

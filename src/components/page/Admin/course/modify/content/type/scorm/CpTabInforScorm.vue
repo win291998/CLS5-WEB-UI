@@ -28,11 +28,11 @@ const { schemaOption, Field, Form, useForm, yup } = storeValidate
 const { submitForm } = useForm()
 const route = useRoute()
 const router = useRouter()
-const storeContentTypeModifyManager = contentTypeManagerStore()
-const { contentData, timeComplete, contentId, isViewDetail } = storeToRefs(storeContentTypeModifyManager)
+const storeContentTypeManager = contentTypeManagerStore()
+const { contentData, timeComplete, contentId, isViewDetail } = storeToRefs(storeContentTypeManager)
 const {
   handleUpdateContent, fetchContent, resetData, $reset,
-} = storeContentTypeModifyManager
+} = storeContentTypeManager
 const store = load()
 const { unLoadComponent } = store
 

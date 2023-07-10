@@ -170,7 +170,7 @@ export const contentTypeManagerStore = defineStore('contentTypeManager', () => {
           params: {
             id: Number(route.params.id),
             tab: route.params.tab,
-            type: 'audio-content',
+            type: route.params.type,
             contentTab: 'infor',
             contentId: contentId.value,
           },

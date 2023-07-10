@@ -75,6 +75,22 @@ const actionUpdate = [
     },
   },
   {
+    title: t('text-content'),
+    icon: MethodsUtil.checkType('text-content', ContentType, 'name')?.icon,
+    underline: true,
+    action: () => {
+      router.push({
+        name: 'content-add',
+        params: {
+          id: Number(route.params.id),
+          tab: route.params.tab,
+          type: 'text-content',
+          contentTab: 'infor',
+        },
+      })
+    },
+  },
+  {
     title: t('video-content'),
     icon: MethodsUtil.checkType('video-content', ContentType, 'name')?.icon,
     action: () => {
@@ -107,6 +123,7 @@ const actionUpdate = [
   {
     title: t('audio'),
     icon: MethodsUtil.checkType('audio-content', ContentType, 'name')?.icon,
+    underline: true,
     action: () => {
       router.push({
         name: 'content-add',
@@ -137,6 +154,7 @@ const actionUpdate = [
   {
     title: t('Iframe'),
     icon: MethodsUtil.checkType('iframe-content', ContentType, 'name')?.icon,
+    underline: true,
     action: () => {
       router.push({
         name: 'content-add',
@@ -144,6 +162,37 @@ const actionUpdate = [
           id: Number(route.params.id),
           tab: route.params.tab,
           type: 'iframe-content',
+          contentTab: 'infor',
+        },
+      })
+    },
+  },
+  {
+    title: t('essay-content'),
+    icon: MethodsUtil.checkType('essay-content', ContentType, 'name')?.icon,
+    underline: true,
+    action: () => {
+      router.push({
+        name: 'content-add',
+        params: {
+          id: Number(route.params.id),
+          tab: route.params.tab,
+          type: 'essay-content',
+          contentTab: 'infor',
+        },
+      })
+    },
+  },
+  {
+    title: t('offline-content'),
+    icon: MethodsUtil.checkType('offline-content', ContentType, 'name')?.icon,
+    action: () => {
+      router.push({
+        name: 'content-add',
+        params: {
+          id: Number(route.params.id),
+          tab: route.params.tab,
+          type: 'offline-content',
           contentTab: 'infor',
         },
       })

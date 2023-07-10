@@ -6,11 +6,10 @@ import MethodsUtil from '@/utils/MethodsUtil'
 import CourseService from '@/api/course/index'
 import UserService from '@/api/user/index'
 import toast from '@/plugins/toast'
-import ServerFileService from '@/api/server-file/index'
 import { load } from '@/stores/loadComponent.js'
 import { ContentType } from '@/constant/data/contentCourseType.json'
 
-const CpInputFile = defineAsyncComponent(() => import('@/components/page/gereral/CpInputFile.vue'))
+const CmInputEditor = defineAsyncComponent(() => import('@/components/common/CmInputEditor.vue'))
 const SkUser = defineAsyncComponent(() => import('@/components/page/gereral/skeleton/SkUser.vue'))
 const CmCheckBox = defineAsyncComponent(() => import('@/components/common/CmCheckBox.vue'))
 const CmTextField = defineAsyncComponent(() => import('@/components/common/CmTextField.vue'))
@@ -38,7 +37,7 @@ const { unLoadComponent } = store
 // end store
 /** state */
 const LABEL = Object.freeze({
-  TITLE1: `${t('KW_Lesson_Name')}*`,
+  TITLE1: `${t('essay-content-name')}*`,
   TITLE2: t('thematics'),
   TITLE3: t('Teacher'),
   TITLE4: t('auto-approve'),
@@ -49,7 +48,6 @@ const LABEL = Object.freeze({
 
 const schemaInit = reactive({
   name: schemaOption.defaultString,
-  url: schemaOption.defaultString,
 })
 const schemaTime = reactive({
   selfMinute: schemaOption.defaultNumberTime,
@@ -127,28 +125,8 @@ async function getListThematicContent() {
 
 /** ****upload file */
 const myFormAddContent = ref()
-const errorsInputFile = ref<any>([])
-const contentFile = ref({
-  alterPath: '',
-  name: '',
-  size: 0,
-  processing: 0,
-  fileName: '',
-  fileType: null,
-  fileExtension: '',
-  filePath: '',
-  fileOrigin: '',
-  fileFolder: '',
-  haveContent: false,
-  file: [] as any[],
-  localFileName: null as any, // dùng trong hiện thị tên trong input file và tên file tải xuống
-  dataPreview: '',
-})
 
-const SERVERFILE = process.env.VUE_APP_BASE_SERVER_FILE
-const serverCode = ref()
 const isLoadingFile = ref(true)
-const fileUpload = ref([{ name: 'Real-Time', icon: MethodsUtil.checkType(`${route.params.type}`, ContentType, 'name')?.icon, size: 0, processing: 95 }])
 const time = ref({ selfMinute: 5, selfSecond: 0, contentMinute: 0, contentSecond: 0 })
 
 /** method */
@@ -180,12 +158,6 @@ function saveAndUpdate(idx: any, isUpdate: boolean) {
       handleUpdateContent(idx, isUpdate)
     }
     else {
-      if (!contentData.value.url) {
-        errorsInputFile.value = [t('please-choose-files')]
-        toast('ERROR', t('please-choose-files'))
-        unLoadComponent(idx)
-        return
-      }
       unLoadComponent(idx)
     }
   })
@@ -194,7 +166,6 @@ function saveAndUpdate(idx: any, isUpdate: boolean) {
 // cập nhật dữ liệu chỉnh sửa
 async function getDetailDocContent() {
   if (contentData.value.url && contentData.value.url !== null) {
-    contentFile.value.haveContent = true
     console.log(123)
 
     if (contentData.value.time) {
@@ -206,55 +177,6 @@ async function getDetailDocContent() {
   else { time.value.selfMinute = 5 }
 }
 
-/** ** Xử lý file sau khi upload từ input file*********************** */
-/// lấy thông tin file
-async function getInfor(folder: any) {
-  return await MethodsUtil.requestApiCustom(`${SERVERFILE}${ServerFileService.GetInforFile}${folder}`, TYPE_REQUEST.GET)
-}
-function isUrlValid(userInput: any) {
-  const res = userInput.match(/(http(s)?:\/\/.)(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g)
-  return res != null
-}
-function search() {
-  if (isUrlValid(contentData.value.url) === true) {
-    contentFile.value.haveContent = true
-    isLoadingFile.value = false
-  }
-  else {
-    toast('ERROR', t('url-invalid'))
-    contentFile.value.haveContent = false
-    isLoadingFile.value = false
-  }
-}
-
-function handleDeleteContent(type: any, idx: any) {
-  switch (type) {
-    case 'local':
-      contentFile.value = {
-        alterPath: '',
-        name: '',
-        size: 0,
-        processing: 0,
-        fileName: '',
-        fileType: null,
-        fileExtension: '',
-        filePath: '',
-        fileOrigin: '',
-        fileFolder: '',
-        haveContent: false,
-        file: [] as any[],
-        localFileName: null,
-        dataPreview: '',
-      }
-      contentData.value.urlFileName = ''
-      contentData.value.url = ''
-      break
-
-    default:
-      break
-  }
-  unLoadComponent(idx)
-}
 function handleCancle() {
   router.push({ name: 'course-edit', params: { tab: 'content', id: Number(route.params.id) } })
 }
@@ -276,6 +198,15 @@ else {
 
 onUnmounted(() => {
   resetData()
+})
+onBeforeUnmount(() => {
+  $reset(storeContentTypeManager.$state)
+  storeContentTypeManager.$dispose()
+})
+
+onDeactivated(() => {
+  $reset(storeContentTypeManager.$state)
+  storeContentTypeManager.$dispose()
 })
 </script>
 
@@ -433,7 +364,7 @@ onUnmounted(() => {
           </div>
         </VCol>
       </VRow>
-      <VRow class="mb-4">
+      <VRow>
         <VCol
           cols="12"
         >
@@ -443,100 +374,33 @@ onUnmounted(() => {
           />
         </VCol>
       </VRow>
-
-      <div>
-        <VRow>
-          <VCol
-            cols="12"
-            sm="6"
-          >
-            <div class="mb-1">
-              {{ t('choose-file-iframe') }}*
-            </div>
-            <div class="d-flex">
-              <Field
-                v-slot="{ field, errors }"
-                v-model="contentData.url"
-                name="url"
-                type="text"
-              >
-                <CmTextField
-                  :field="field"
-                  :errors="errors"
-                  :disabled="isViewDetail"
-                  :placeholder="t('enter-link')"
-                  class="mr-3 w-100"
-                />
-              </Field>
-              <CmButton
-                v-if="isViewDetail !== true"
-                :disabled="!contentData.url"
-                @click="search"
-              >
-                {{ t("search") }}
-              </CmButton>
-            </div>
-          </VCol>
-        </VRow>
-        <VRow v-if="contentFile.haveContent">
-          <VCol
-            v-if="isLoadingFile"
-            cols="12"
-            sm="6"
-          >
-            <div>
-              <CmItemFileUpload
-                :icon-status="false"
-                :files="fileUpload"
-              />
-            </div>
-          </VCol>
-        </VRow>
-        <VRow v-if="contentFile.haveContent">
-          <VCol
-            id="video-preview"
-            cols="12"
-          >
-            <div
-              class="embed-responsive"
-            >
-              <embed
-                :src="contentData.url || ''"
-              >
-            </div>
-          </VCol>
-        </VRow>
-        <VRow v-if="!isLoadingFile && contentFile.haveContent">
-          <VCol
-            cols="12"
-          >
-            <div class=" d-flex justify-center">
-              <CmButton
-                v-if="!isViewDetail"
-                is-load
-                icon="tabler:trash"
-                variant="outlined"
-                color="error"
-                :size-icon="18"
-                @click="((idx: any) => handleDeleteContent('local', idx))"
-              />
-            </div>
-          </VCol>
-        </VRow>
-      </div>
-      <div>
-        <CpActionFooterEdit
-          is-cancel
-          is-save
-          :is-save-and-update="!contentData.courseContentId || contentData.courseContentId === null"
-          :title-cancel="t('come-back')"
-          :title-save="t('save')"
-          :title-save-and-update="t('save-and-update')"
-          @on-save="(idx: any) => saveAndUpdate(idx, false)"
-          @on-save-update="(idx: any) => saveAndUpdate(idx, true)"
-          @on-cancel="handleCancle"
-        />
-      </div>
+      <VRow>
+        <VCol
+          cols="12"
+        >
+          <div>
+            <CmInputEditor
+              v-model="contentData.description"
+              :text="t('content')"
+            />
+          </div>
+        </VCol>
+      </VRow>
+      <VRow>
+        <VCol cols="12">
+          <CpActionFooterEdit
+            is-cancel
+            is-save
+            :is-save-and-update="!contentData.courseContentId || contentData.courseContentId === null"
+            :title-cancel="t('come-back')"
+            :title-save="t('save')"
+            :title-save-and-update="t('save-and-update')"
+            @on-save="(idx: any) => saveAndUpdate(idx, false)"
+            @on-save-update="(idx: any) => saveAndUpdate(idx, true)"
+            @on-cancel="handleCancle"
+          />
+        </VCol>
+      </VRow>
     </Form>
   </div>
 </template>

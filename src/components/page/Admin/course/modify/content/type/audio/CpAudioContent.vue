@@ -8,6 +8,7 @@ const CpConditionCompletedVideo = defineAsyncComponent(() => import('@/component
 
 const route = useRoute()
 const storeContentTypeManager = contentTypeManagerStore()
+const { $reset } = storeContentTypeManager
 
 /**
  *
@@ -38,10 +39,12 @@ const listTab = [
 ]
 
 onBeforeUnmount(() => {
+  $reset(storeContentTypeManager.$state)
   storeContentTypeManager.$dispose()
 })
 
 onDeactivated(() => {
+  $reset(storeContentTypeManager.$state)
   storeContentTypeManager.$dispose()
 })
 </script>
