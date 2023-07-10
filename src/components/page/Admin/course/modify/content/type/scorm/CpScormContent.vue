@@ -40,14 +40,12 @@ const listTab = [
 
 onBeforeUnmount(() => {
   $reset(storeContentTypeManager.$state)
-
-  // storeContentTypeManager.$dispose()
+  storeContentTypeManager.$dispose()
 })
 
 onDeactivated(() => {
   $reset(storeContentTypeManager.$state)
-
-  // storeContentTypeManager.$dispose()
+  storeContentTypeManager.$dispose()
 })
 </script>
 

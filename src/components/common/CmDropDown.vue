@@ -116,12 +116,12 @@ function handleClickItemList(item: any) {
       @update:model-value="handleChange"
     >
       <template #activator="{ props }">
-        <div v-bind="props">
+        <div>
           <CmButton
             v-if="type === 2"
             :class="[`${prefixColor}-${color}`, bgColor, className, textButton]"
             :variant="variant"
-            v-bind="props"
+            :props-blind="props"
           >
             <div class="d-flex">
               <div class="text-button-dropdown">
@@ -148,7 +148,7 @@ function handleClickItemList(item: any) {
         <VListItem
           v-for="(item, i) in propsValue.listItem"
           :key="i"
-          class="cursor-pointer"
+          class="cursor-pointer mx-0"
           :class="{ 'border-bottom-item': item.underline }"
           :value="item"
           :disabled="item?.disabled"
@@ -211,6 +211,5 @@ function handleClickItemList(item: any) {
 .border-bottom-item {
     border-radius: 0 !important;
     border-block-end: 1px solid $color-gray-100;
-    margin-inline: 0 !important;
   }
 </style>

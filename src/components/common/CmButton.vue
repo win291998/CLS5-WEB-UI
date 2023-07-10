@@ -30,6 +30,7 @@ interface Props {
   positionIcon?: string
   colorIcon?: string
   sizeIcon?: number
+  propsBlind?: any
 }
 
 const props = withDefaults(defineProps<Props>(), ({
@@ -104,6 +105,7 @@ defineExpose({
     :variant="variant"
     :color="color"
     :rounded="rounded"
+    v-bind="propsBlind"
     class="text-style-btn"
     :class="[color, outlined, className, color === 'white' ? 'border-button' : '']"
     @click="handleClick"

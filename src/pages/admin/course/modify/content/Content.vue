@@ -9,7 +9,8 @@ const CpDocumentContent = defineAsyncComponent(() => import('@/components/page/A
 const CpAudioContent = defineAsyncComponent(() => import('@/components/page/Admin/course/modify/content/type/audio/CpAudioContent.vue'))
 const CpScormContent = defineAsyncComponent(() => import('@/components/page/Admin/course/modify/content/type/scorm/CpScormContent.vue'))
 const CpIframeContent = defineAsyncComponent(() => import('@/components/page/Admin/course/modify/content/type/iframe/CpIframeContent.vue'))
-const CpContent = defineAsyncComponent(() => import('@/components/page/Admin/course/modify/content/type/CpContent.vue'))
+const CpContent = defineAsyncComponent(() => import('@/components/page/Admin/course/modify/content/type/content/CpContent.vue'))
+const CpEssayContent = defineAsyncComponent(() => import('@/components/page/Admin/course/modify/content/type/essay/CpEssayContent.vue'))
 
 const component = ref(CpContent)
 const route = useRoute()
@@ -48,6 +49,9 @@ onMounted(() => {
       break
     case 'iframe-content':
       component.value = CpIframeContent
+      break
+    case 'essay-content':
+      component.value = CpEssayContent
       break
 
     default:
