@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { contentTypeManagerStore } from '@/stores/admin/course/type/contentVideoTypeModify'
+import { contentTypeVideoManagerStore } from '@/stores/admin/course/type/contentVideoTypeModify'
 import { validatorStore } from '@/stores/validatator'
 import toast from '@/plugins/toast'
 import CourseService from '@/api/course/index'
@@ -28,7 +28,7 @@ const { unLoadComponent } = store
 const storeValidate = validatorStore()
 const { schemaOption, Field, Form, useForm, yup } = storeValidate
 const { submitForm } = useForm()
-const storeContentVideoTypeModifyManager = contentTypeManagerStore()
+const storeContentVideoTypeModifyManager = contentTypeVideoManagerStore()
 const { videoData, conditionAttend, courseData } = storeToRefs(storeContentVideoTypeModifyManager)
 
 /** state */
@@ -235,7 +235,10 @@ watch(conditionAttend, () => {
           </div>
         </VCol>
       </VRow>
-      <div class="mb-6">
+      <div
+        v-if="courseData.studyMode === 3"
+        class="mb-6"
+      >
         <div class="text-medium-lg mb-6">
           {{ t('list-content-req') }}
         </div>

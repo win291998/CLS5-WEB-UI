@@ -7,7 +7,7 @@ import { contentManagerStore } from '@/stores/admin/course/content'
 import toast from '@/plugins/toast'
 import CmVideoUpload from '@/components/common/CmVideoUpload.vue'
 import { load } from '@/stores/loadComponent.js'
-import Globals from '@/constant/Globals'
+import { documentExtention } from '@/constant/Globals'
 import ServerFileService from '@/api/server-file/index'
 
 const emit = defineEmits<Emit>()
@@ -182,7 +182,7 @@ function handleChangeFile(data: any, fileUp: any) {
 
   else
     errorsInputFile.value = []
-  if (Globals.documentExtention.includes(data.fileExtension))
+  if (documentExtention.includes(data.fileExtension))
     upFileServerPreview(fileUp)
 
   else

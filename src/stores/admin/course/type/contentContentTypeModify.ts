@@ -123,7 +123,7 @@ export const contentTypeManagerStore = defineStore('contentTypeManager', () => {
   const isViewDetail = ref(false)
   const isUpdate = ref(false)
   const timeComplete = ref(0)
-  const dataInitVideo = ref(window._.cloneDeep(contentData.value))
+  const dataInitContent = ref(window._.cloneDeep(contentData.value))
 
   /** method */
   function getErrorsMessage(errorsMess: Array<any>) {
@@ -136,7 +136,7 @@ export const contentTypeManagerStore = defineStore('contentTypeManager', () => {
     return str
   }
   function resetData() {
-    contentData.value = dataInitVideo.value
+    contentData.value = dataInitContent.value
   }
   async function handleUpdateContent(idx: any, isSaveAndUpdate: boolean) {
     let response = null
@@ -159,7 +159,7 @@ export const contentTypeManagerStore = defineStore('contentTypeManager', () => {
     let variant = true
     let message = response?.message
     if (response.code === 200) {
-      contentData.value = dataInitVideo.value
+      contentData.value = dataInitContent.value
       if (isSaveAndUpdate === true) {
         contentId.value = response.data
         unLoadComponent(idx)
@@ -170,7 +170,7 @@ export const contentTypeManagerStore = defineStore('contentTypeManager', () => {
           params: {
             id: Number(route.params.id),
             tab: route.params.tab,
-            type: 'video-content',
+            type: 'audio-content',
             contentTab: 'infor',
             contentId: contentId.value,
           },
@@ -259,9 +259,29 @@ export const contentTypeManagerStore = defineStore('contentTypeManager', () => {
   // youtobe
   // local
   // cdn
-
+  // đăng ký state
+  const stateInit = ref<any>({})
+  const $reset = (listState: any) => MethodsUtil.$reset(stateInit)(listState)
   onMounted(() => {
-    //
+    MethodsUtil.registerState([
+      { courseData },
+      { contentData },
+      { timeComplete },
+      { isUpdate },
+      { contentId },
+      { isViewDetail },
+      { conditionAttend },
+      { conditionComplete },
+      { testConfig },
+      { myFormSettingConditions },
+      { isNumberPerPage },
+      { isShowRandom },
+      { isTimeOfWork },
+      { isAutoLog },
+      { isAllowRetake },
+      { minuteWork },
+      { secondWork },
+    ], stateInit)
   })
   onBeforeUnmount(() => {
     //
@@ -292,5 +312,6 @@ export const contentTypeManagerStore = defineStore('contentTypeManager', () => {
     fetchConditionAttend,
     changeType,
     getQuestionsData,
+    $reset,
   }
 })

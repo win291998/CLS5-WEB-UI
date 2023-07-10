@@ -107,10 +107,10 @@
     },
     {
       "id": 16,
-      "name": "DownloadContentCourse",
-      "icon": "tabler:download",
+      "name": "AddOrStructure",
+      "icon": "tabler:circle-plus",
       "color": "color-orange",
-      "note": "Tải nội dung khóa học"
+      "note": "Thêm cơ cấu tổ chức"
     },
     {
       "id": 17,

@@ -3,6 +3,7 @@ import { contentManagerStore } from '@/stores/admin/course/content'
 import { courseApproveManagerStore } from '@/stores/admin/course/approve'
 import MethodsUtil from '@/utils/MethodsUtil'
 import { StatusTypeCourse } from '@/constant/data/status.json'
+import { ContentType } from '@/constant/data/contentCourseType.json'
 import DateUtil from '@/utils/DateUtil'
 import CmTableGroup from '@/components/common/CmTableGroup.vue'
 import CpActionHeaderPage from '@/components/page/gereral/CpActionHeaderPage.vue'
@@ -74,8 +75,8 @@ const actionUpdate = [
     },
   },
   {
-    title: t('video'),
-    icon: 'solar:video-frame-play-vertical-linear',
+    title: t('video-content'),
+    icon: MethodsUtil.checkType('video-content', ContentType, 'name')?.icon,
     action: () => {
       router.push({
         name: 'content-add',
@@ -90,7 +91,7 @@ const actionUpdate = [
   },
   {
     title: t('document-course'),
-    icon: 'tabler:file-description',
+    icon: MethodsUtil.checkType('document-content', ContentType, 'name')?.icon,
     action: () => {
       router.push({
         name: 'content-add',
@@ -105,7 +106,7 @@ const actionUpdate = [
   },
   {
     title: t('audio'),
-    icon: 'tabler:volume',
+    icon: MethodsUtil.checkType('audio-content', ContentType, 'name')?.icon,
     action: () => {
       router.push({
         name: 'content-add',
@@ -113,6 +114,36 @@ const actionUpdate = [
           id: Number(route.params.id),
           tab: route.params.tab,
           type: 'audio-content',
+          contentTab: 'infor',
+        },
+      })
+    },
+  },
+  {
+    title: t('scorm'),
+    icon: MethodsUtil.checkType('scorm-content', ContentType, 'name')?.icon,
+    action: () => {
+      router.push({
+        name: 'content-add',
+        params: {
+          id: Number(route.params.id),
+          tab: route.params.tab,
+          type: 'scorm-content',
+          contentTab: 'infor',
+        },
+      })
+    },
+  },
+  {
+    title: t('Iframe'),
+    icon: MethodsUtil.checkType('iframe-content', ContentType, 'name')?.icon,
+    action: () => {
+      router.push({
+        name: 'content-add',
+        params: {
+          id: Number(route.params.id),
+          tab: route.params.tab,
+          type: 'iframe-content',
           contentTab: 'infor',
         },
       })

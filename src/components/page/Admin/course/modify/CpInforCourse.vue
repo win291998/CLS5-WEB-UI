@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { courseInforManagerStore } from '@/stores/admin/course/infor'
 import { validatorStore } from '@/stores/validatator'
-import Globals from '@/constant/Globals'
-import CmTag from '@/components/common/CmTag.vue'
+import { avatar } from '@/constant/Globals'
 import CmInputEditor from '@/components/common/CmInputEditor.vue'
 import { comboboxStore } from '@/stores/combobox'
 import constant from '@/constant/constant'
@@ -44,7 +43,7 @@ const LABEL = Object.freeze({
   TITLE5: t('number-credit'),
 })
 
-const sizeAvatar = Globals.avatar.size
+const sizeAvatar = avatar.size
 const isShowButton = ref(true)
 const isLoadingVideo = ref()
 const myFormAddCourse = ref()
@@ -96,10 +95,11 @@ if (formOfStudyCombobox.value)
               <div class="input-avatar">
                 <CmImgUpload
                   v-model:src="courseData.thumbnail"
+                  color="primary"
                   is-size-full
                   :is-rounded="true"
                   :is-icon-text="false"
-                  icon="tabler:camera"
+                  icon="tabler:square-rounded-plus-filled"
                   :tooltip="t('system-management.100x100')"
                 />
               </div>
@@ -116,7 +116,7 @@ if (formOfStudyCombobox.value)
               md="3"
               class="text-medium-sm color-dark"
             >
-              {{ t('image-course') }}
+              {{ t('video-course') }}
             </VCol>
             <VCol
               cols="12"
@@ -127,7 +127,7 @@ if (formOfStudyCombobox.value)
                 <CmVideoUpload
                   v-model="courseData.videoUrl"
                   is-size-full
-                  icon="tabler:video"
+                  icon="tabler:square-rounded-plus-filled"
                   :is-rounded="true"
                   @update:processing="isLoadingVideo"
                 />
@@ -239,11 +239,13 @@ if (formOfStudyCombobox.value)
           </VCol>
         </VRow>
       </Form>
-      <VRow>
+      <!--
+        <VRow>
         <VCol>
-          <CmTag />
+        <CmTag />
         </VCol>
-      </VRow>
+        </VRow>
+      -->
       <VRow>
         <VCol>
           <CmInputEditor

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import Globals from '@/constant/Globals'
+import { SIZE_AVATAR_DEFAULT, VARIANT_DEFAULT } from '@/constant/Globals'
 import type { typeVariant } from '@/typescript/enums/enums'
 
 interface Props {
@@ -20,8 +20,8 @@ interface Props {
 /** ** Khởi tạo prop emit */
 const props = withDefaults(defineProps<Props>(), ({
   color: 'primary',
-  variant: Globals.VARIANT_DEFAULT,
-  size: Globals.SIZE_AVATAR_DEFAULT,
+  variant: VARIANT_DEFAULT,
+  size: SIZE_AVATAR_DEFAULT,
   isClassicBorder: false,
   isAvatar: false,
   isText: false,
@@ -75,6 +75,7 @@ function getAvatarName(data: any) {
 <template>
   <VAvatar
     class="cursor-pointer"
+    :color="color"
     :class="[className, isClassicBorder ? 'border-avatar' : '', prefixColor]"
     :variant="variant"
     :rounded="rounded"

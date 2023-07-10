@@ -1,7 +1,7 @@
 <!-- eslint-disable indent -->
 <script setup lang="ts">
 import CpQuestionCondition from './CpQuestionCondition.vue'
-import { contentTypeManagerStore } from '@/stores/admin/course/type/contentVideoTypeModify'
+import { contentTypeVideoManagerStore } from '@/stores/admin/course/type/contentVideoTypeModify'
 import { validatorStore } from '@/stores/validatator'
 import CourseService from '@/api/course/index'
 import { TYPE_REQUEST } from '@/typescript/enums/enums'
@@ -26,7 +26,7 @@ const { unLoadComponent } = store
 const storeValidate = validatorStore()
 const { schemaOption, Field, Form, useForm, yup } = storeValidate
 const { submitForm } = useForm()
-const storeContentVideoTypeModifyManager = contentTypeManagerStore()
+const storeContentVideoTypeModifyManager = contentTypeVideoManagerStore()
 const { conditionComplete, testConfig, timeComplete, isViewDetail, myFormSettingConditions, isNumberPerPage, isShowRandom, isTimeOfWork, isAutoLog, isAllowRetake, minuteWork, secondWork } = storeToRefs(storeContentVideoTypeModifyManager)
 const { changeType, getQuestionsData } = storeContentVideoTypeModifyManager
 

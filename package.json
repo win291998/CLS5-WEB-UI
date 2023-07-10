@@ -62,6 +62,7 @@
     "vue-prism-component": "^2.0.0",
     "vue-router": "^4.2.1",
     "vue-select": "^4.0.0-beta.6",
+    "vue-slider-component": "^4.1.0-beta.7",
     "vue-toastification": "^2.0.0-rc.5",
     "vue3-apexcharts": "^1.4.1",
     "vue3-easy-data-table": "^1.5.42",
