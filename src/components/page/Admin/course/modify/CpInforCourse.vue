@@ -61,10 +61,7 @@ async function handleSave(idx: any, isUpdate: boolean) {
       await addInforCourse(idx, isUpdate)
   })
 }
-function handleSaveUpdate(idx: any, isUpdate: boolean) {
-  myFormAddCourse.value.validate().then(async (success: any) => {
-  })
-}
+
 if (topicCombobox.value)
   getComboboxTopic(2)
 if (formOfStudyCombobox.value)
@@ -270,7 +267,7 @@ if (formOfStudyCombobox.value)
         :title-save-and-update="t('save-and-update')"
         @onCancel="onCancel"
         @onSave="(idx: any) => handleSave(idx, false)"
-        @onSaveUpdate="(idx: any) => handleSaveUpdate(idx, true)"
+        @onSaveUpdate="(idx: any) => handleSave(idx, true)"
       />
     </div>
   </div>

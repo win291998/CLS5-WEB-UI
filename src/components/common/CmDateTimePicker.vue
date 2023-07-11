@@ -26,6 +26,7 @@ interface Props {
   fromDate?: any
   toDate?: any
   text?: string
+  placeholder?: string
 }
 interface Emit {
   (e: 'update:modelValue', data: any): void
@@ -126,7 +127,6 @@ function updateInput(val: any, isUpdate: any) {
 }
 
 function updateDate(val: string) {
-  debugger
   if (props.range && val.search(' - ') > 0) {
     const arrayDate = val.split(' - ')
     const start = arrayDate[0].split('/').reverse().join('-')
@@ -268,6 +268,7 @@ watchEffect(() => {
       <CmTextField
         class="input-date-time"
         :model-value="temp"
+        :placeholder="placeholder"
         @focused="show"
         @update:model-value="updateDate"
       />
