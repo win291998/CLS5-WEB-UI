@@ -13,6 +13,7 @@ import CpMdAddSemester from '@/components/page/Admin/course/modal/CpMdAddSemeste
 import { StatusTypeCourse } from '@/constant/data/status.json'
 import CpAsginUser from '@/components/page/Admin/course/modify/asign-user/CpAsginUser.vue'
 import CpContentCourse from '@/components/page/Admin/course/modify/content/CpContentCourse.vue'
+import CpSettingCourse from '@/components/page/Admin/course/modify/CpSettingCourse.vue'
 
 /** lib */
 const route = useRoute()
@@ -80,7 +81,6 @@ const listtab = ref([
     title: 'cost-management',
     component: CpCostCourse,
     isDisabled: viewAdd.value,
-
   },
 
   {
@@ -88,7 +88,6 @@ const listtab = ref([
     title: 'survey-course',
     component: CpCourseSurveyEvaluation,
     isDisabled: viewAdd.value,
-
   },
   {
     key: 'semester',
@@ -148,7 +147,12 @@ const listtab = ref([
       isShowExportExcel: false,
     },
   },
-
+  {
+    key: 'setting-option',
+    title: 'setting-option',
+    component: CpSettingCourse,
+    isDisabled: viewAdd.value,
+  },
 ])
 function updateFetchData(data: any) {
   isDisabledAdd.value = data.length >= 2

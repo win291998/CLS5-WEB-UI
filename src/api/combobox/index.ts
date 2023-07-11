@@ -32,6 +32,7 @@ const ComboboxService = {
   GetComboboxAuthor: '/exam/combobox-author',
   GetComboboxContentType: '/contentarchivetype/get-combobox',
   GetComboboxAuthorContent: '/contentArchive/get-author',
+  GetComboboxCertificate: '/CertificationTemplate/get-combobox',
 }
 
 export default ComboboxService

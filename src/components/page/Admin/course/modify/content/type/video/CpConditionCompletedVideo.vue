@@ -39,15 +39,6 @@ const { settingDefaults } = storeToRefs(configControl)
 function handleCancle() {
   router.push({ name: 'course-edit', params: { tab: 'content', id: Number(route.params.id) } })
 }
-function getErrorsMessage(errorsMess: Array<any>) {
-  let str = ''
-  errorsMess.forEach(element => {
-    str += `${t(element.message, element.params)}`
-    str += '. '
-  })
-
-  return str
-}
 
 /** state */
 const LABEL = Object.freeze({

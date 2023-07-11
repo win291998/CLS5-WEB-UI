@@ -39,10 +39,10 @@ export default class MethodsUtil {
    * @param str
    * @return {string}
    */
-  static getErrorsMessage = (errors: Array<any>) => {
+  static getErrorsMessage(errorsMess: Array<any>, t: any) {
     let str = ''
-    errors.forEach(element => {
-      // str += `${i18n.t(element.message, element.params)}`
+    errorsMess.forEach(element => {
+      str += `${t(element.message, element.params)}`
       str += '. '
     })
 
