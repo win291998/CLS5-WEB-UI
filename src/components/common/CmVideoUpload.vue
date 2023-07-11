@@ -39,8 +39,11 @@ const SERVERFILE = process.env.VUE_APP_BASE_SERVER_FILE
 /** method  */
 async function getFileInfo(folder: any) {
   const data = await MethodsUtil.requestApiCustom(`${SERVERFILE}${ServerFileService.GetInforFile}${folder}`, TYPE_REQUEST.GET)
+  console.log(data)
+
   if (data.isProcessing) {
     videoUrl.value = data.filePath
+
     isLoadingVideo.value = false
     if (videoUrl.value)
       emit('update:modelValue', videoUrl.value)
@@ -74,20 +77,26 @@ async function uploadFileToServerfile(file: any) {
   if (data?.fileFolder)
     waitingForVideoLoaded(data.fileFolder)
 }
+function reloadVideo() {
+  videoUrl.value = ''
+}
 function addVideoFromFile(event: any) {
   const tmpFiles = event.target.files || event.dataTransfer.files
   if (tmpFiles?.length > 0) {
     const file = tmpFiles[0]
     if (file.size > 5 * 1024 ** 2)
       toast('WARNING', t('confirm-waiting-file-upload'))
-
+    reloadVideo()
     uploadFileToServerfile(file)
   }
-
-  // reloadVideo()
 }
 function hanleClickAvatar() {
   videoInput.value?.click()
+}
+function removeUpload() {
+  console.log('removeUpload')
+  isLoadingVideo.value = false
+  videoUrl.value = ''
 }
 watch(isLoadingVideo, (val: any) => {
   emit('update:processing', val)
@@ -95,29 +104,42 @@ watch(isLoadingVideo, (val: any) => {
 </script>
 
 <template>
-  <div :class="{ 'w-100 h-100': isSizeFull }">
+  <div
+    class="cm-video-upload"
+    :class="{ 'w-100 h-100': isSizeFull }"
+  >
+    <VIcon
+      v-if="isLoadingVideo"
+      class="icon-close"
+      icon="material-symbols:close"
+      :size="36"
+      @click="removeUpload"
+    />
     <CmAvatar
-      v-if="!videoUrl"
-      :color="isLoadingVideo ? 'infor' : 'primary'"
+      v-show="!videoUrl"
+      :is-loading="isLoadingVideo"
+      :color="isLoadingVideo ? 'white' : 'primary'"
       :size="size"
       :icon="icon"
       :is-classic-border="isClassicBorder"
       :rounded="isRounded"
       :is-text="isLoadingVideo"
-      :text="isLoadingVideo ? t('video-processing') : ''"
       :class="{ 'w-100 h-100': isSizeFull }"
+      class="cm-video-input"
       @click="hanleClickAvatar"
     />
     <video
-      v-if="videoUrl"
+      v-if="videoUrl && !isLoadingVideo"
       controls
       :class="{ 'w-100 h-100': isSizeFull, 'border-avatar': isClassicBorder }"
+      class="cusor-pointer"
       style="
         height: 100%;
         max-width: 100%;
         width: 100%;
         object-fit: fill;
       "
+      @click="hanleClickAvatar"
     >
       <source
         :src="SERVERFILE + videoUrl"
@@ -142,5 +164,25 @@ watch(isLoadingVideo, (val: any) => {
   border: 4px solid $color-white;
   box-shadow: $box-shadow-lg;
   border-radius: 8px;
+}
+.cm-video-upload{
+  position: relative;
+  .cm-video-input{
+   position: absolute;
+  }
+
+}
+.cm-video-upload:hover{
+  .cm-video-input{
+   display: flex !important;
+  }
+}
+.icon-close{
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: 8px;
+  z-index: 999;
+  cursor: pointer;
 }
 </style>

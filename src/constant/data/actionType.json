@@ -107,10 +107,10 @@
     },
     {
       "id": 16,
-      "name": "AddOrStructure",
-      "icon": "tabler:circle-plus",
+      "name": "DownloadContentCourse",
+      "icon": "tabler:download",
       "color": "color-orange",
-      "note": "Thêm cơ cấu tổ chức"
+      "note": "Tải nội dung khóa học"
     },
     {
       "id": 17,
@@ -150,6 +150,13 @@
       "icon": "tabler:corner-right-down",
       "color": "color-purple",
       "note": "Di chuyển lên trên"
+    },
+    {
+      "id": 22,
+      "name": "AddOrStructure",
+      "icon": "tabler:circle-plus",
+      "color": "color-orange",
+      "note": "Thêm cơ cấu tổ chức"
     },
     {
       "id": 23,

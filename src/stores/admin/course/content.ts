@@ -85,6 +85,8 @@ export const contentManagerStore = defineStore('contentManager', () => {
     })
   }
   async function actionItemUserReg(type: any) {
+    console.log(type)
+
     switch (type[0]?.name) {
       case 'ActionEdit':
         if (type[1]?.contentArchiveTypeId === 13) {
@@ -138,6 +140,30 @@ export const contentManagerStore = defineStore('contentManager', () => {
           getListContentCourse()
         })
         break
+      case 'ActionViewDetail':
+        if (type[1]?.contentArchiveTypeId === 13) {
+          getInforContent(type[1]?.courseContentId)
+          courseContentId.value = type[1]?.courseContentId
+          nextTick(() => {
+            isShowModalUpdateThematic.value = true
+          })
+        }
+        else {
+          console.log(type[1].contentArchiveTypeId)
+
+          router.push({
+            name: 'content-view',
+            params: {
+              id: Number(route.params.id),
+              tab: 'content',
+              type: MethodsUtil.getTypeContent(type[1].contentArchiveTypeId),
+              contentTab: 'infor',
+              contentId: type[1]?.courseContentId,
+            },
+          })
+        }
+        break
+        break
       default:
         break
     }
@@ -184,19 +210,6 @@ export const contentManagerStore = defineStore('contentManager', () => {
     paramsContent.value.search = val
     const result: any[] = []
     convertNoneLv(updateStatusListCourse(cloneData.value, val), result, 0)
-
-    // result.forEach((element: any) => {
-    //   element.actions = [
-    //     MethodsUtil.checkActionType({ id: 1 }),
-    //     MethodsUtil.checkActionType({ id: 2 }),
-    //     MethodsUtil.checkActionType({ id: 3 }),
-    //     MethodsUtil.checkActionType({ id: 5 }),
-    //     MethodsUtil.checkActionType({ id: 6 }),
-    //     MethodsUtil.checkActionType({ id: 7 }),
-    //     MethodsUtil.checkActionType({ id: 9 }),
-    //     MethodsUtil.checkActionType({ id: 19 }),
-    //   ]
-    // })
     items.value = result
   }
   function handlerActionHeader(type: any) {
@@ -308,19 +321,6 @@ export const contentManagerStore = defineStore('contentManager', () => {
   function formatDataTableTree(dataFormat: any) {
     const result: any[] = []
     convertNoneLv(dataFormat, result, 0)
-
-    // result.forEach((element: any) => {
-    //   element.actions = [
-    //     MethodsUtil.checkActionType({ id: 1 }),
-    //     MethodsUtil.checkActionType({ id: 2 }),
-    //     MethodsUtil.checkActionType({ id: 3 }),
-    //     MethodsUtil.checkActionType({ id: 5 }),
-    //     MethodsUtil.checkActionType({ id: 6 }),
-    //     MethodsUtil.checkActionType({ id: 7 }),
-    //     MethodsUtil.checkActionType({ id: 9 }),
-    //     MethodsUtil.checkActionType({ id: 19 }),
-    //   ]
-    // })
     return result
   }
 
@@ -489,19 +489,6 @@ export const contentManagerStore = defineStore('contentManager', () => {
 
       cloneData.value = window._.cloneDeep(value.data)
       convertNoneLv(value.data, result, 0)
-
-      // result.forEach((element: any) => {
-      //   element.actions = [
-      //     MethodsUtil.checkActionType({ id: 1 }),
-      //     MethodsUtil.checkActionType({ id: 2 }),
-      //     MethodsUtil.checkActionType({ id: 3 }),
-      //     MethodsUtil.checkActionType({ id: 5 }),
-      //     MethodsUtil.checkActionType({ id: 6 }),
-      //     MethodsUtil.checkActionType({ id: 7 }),
-      //     MethodsUtil.checkActionType({ id: 9 }),
-      //     MethodsUtil.checkActionType({ id: 19 }),
-      //   ]
-      // })
       items.value = result
 
       // updatePosition()

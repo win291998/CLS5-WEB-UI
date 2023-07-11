@@ -2,7 +2,7 @@
 import { contentTypeManagerStore } from '@/stores/admin/course/type/contentContentTypeModify'
 
 const CmTab = defineAsyncComponent(() => import('@/components/common/CmTab.vue'))
-const CpTabInforContent = defineAsyncComponent(() => import('@/components/page/Admin/course/modify/content/type/content/CpTabInforContent.vue'))
+const CpTabInforOffline = defineAsyncComponent(() => import('@/components/page/Admin/course/modify/content/type/offline/CpTabInforOffline.vue'))
 const CpConditionVideo = defineAsyncComponent(() => import('@/components/page/Admin/course/modify/content/type/video/CpConditionVideo.vue'))
 const CpConditionCompletedVideo = defineAsyncComponent(() => import('@/components/page/Admin/course/modify/content/type/video/CpConditionCompletedVideo.vue'))
 
@@ -18,7 +18,7 @@ const listTab = [
   {
     key: 'infor',
     title: 'content',
-    component: CpTabInforContent,
+    component: CpTabInforOffline,
     isRendered: true,
   },
 

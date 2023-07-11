@@ -66,11 +66,11 @@ export const courseInforManagerStore = defineStore('courseInforManager', () => {
   const tableAddTeacher = ref()
 
   /** variable ********************************************************************************/
+  const isShowDialogNotiDelete = ref(false)
   const disabledDelete = computed(() => !data.selectedRowsIds.length)
   function selectedRows(e: any) {
     data.selectedRowsIds = e
   }
-  const isShowDialogNotiDelete = ref(false)
 
   // search ở fillter header
   async function handleSearchTeacher(value: any) {
@@ -288,6 +288,24 @@ export const courseInforManagerStore = defineStore('courseInforManager', () => {
     })
   }
 
+  // đăng ký state
+  const stateInit = ref<any>({})
+  const $reset = (listState: any) => MethodsUtil.$reset(stateInit)(listState)
+  onMounted(() => {
+    MethodsUtil.registerState([
+      { courseData },
+      { isViewDetail },
+      { idCourse },
+      { data },
+      { queryParams },
+      { isViewDetail },
+      { totalRecord },
+      { isOwner },
+      { isSaving },
+      { tableAddTeacher },
+      { isShowDialogNotiDelete },
+    ], stateInit)
+  })
   onMounted(() => {
     //
   })
@@ -306,6 +324,7 @@ export const courseInforManagerStore = defineStore('courseInforManager', () => {
     data,
     isOwner,
     idCourse,
+    isViewDetail,
 
     // method
     addOrginAuthor,
@@ -319,5 +338,6 @@ export const courseInforManagerStore = defineStore('courseInforManager', () => {
     handleSaveUpdate,
     getDetailCourse,
     fetchAuthor,
+    $reset,
   }
 })

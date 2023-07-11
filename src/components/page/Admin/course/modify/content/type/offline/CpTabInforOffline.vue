@@ -37,7 +37,7 @@ const { unLoadComponent } = store
 // end store
 /** state */
 const LABEL = Object.freeze({
-  TITLE1: `${t('KW_Lesson_Name')}*`,
+  TITLE1: `${t('offline-content-name')}*`,
   TITLE2: t('thematics'),
   TITLE3: t('Teacher'),
   TITLE4: t('auto-approve'),
@@ -372,7 +372,7 @@ onUnmounted(() => {
           <div>
             <CmInputEditor
               v-model="contentData.description"
-              :text="t('content')"
+              :text="t('offline-content')"
             />
           </div>
         </VCol>

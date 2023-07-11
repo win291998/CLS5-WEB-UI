@@ -23,6 +23,7 @@ interface Props {
   size?: number // kích thước theo cài đặt
   isSizeFull?: boolean // kích thước full cha
   isBadge?: boolean
+  disabled?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), ({
@@ -47,14 +48,15 @@ interface Emit {
 }
 const inputImage = ref<HTMLInputElement | null>(null)
 const isLoading = ref(false)
-const disabled = ref(false)
 const serverfile = window.SERVER_FILE || ''
+const isLoadingImg = ref(false)
 
 function hanleClickAvatar() {
   inputImage.value?.click()
 }
 
 async function uploadFile(model: any) {
+  isLoadingImg.value = true
   const formData = new FormData()
 
   formData.append('IsSecure', model.isSecure)
@@ -73,6 +75,7 @@ async function uploadFile(model: any) {
     if (res.filePath)
       toast('SUCCESS', t('common.upload-file-success'))
 
+    isLoadingImg.value = false
     return res
   }
   catch (err: any) {
@@ -124,7 +127,7 @@ const urlImageFile = computed(() => {
         @click="hanleClickAvatar"
       >
         <CmAvatar
-          :color="color"
+          :color="isLoadingImg ? 'white' : color"
           :src="urlImageFile"
           is-classic-border
           :size="size"
@@ -139,7 +142,8 @@ const urlImageFile = computed(() => {
       </CmBadge>
       <CmAvatar
         v-else
-        :color="color"
+        :is-loading="isLoadingImg"
+        :color="isLoadingImg ? 'white' : color"
         :src="urlImageFile"
         v-bind="propsValue.props"
         :variant="variant"
@@ -148,6 +152,7 @@ const urlImageFile = computed(() => {
         :rounded="isRounded"
         :is-avatar="isAvatar"
         :icon="icon"
+        :is-text="isLoadingImg"
         :class="{ 'w-100 h-100': isSizeFull }"
         @click="hanleClickAvatar"
       >
@@ -155,6 +160,7 @@ const urlImageFile = computed(() => {
       </CmAvatar>
       <VFileInput
         ref="inputImage"
+        :disabled="disabled"
         class="d-none"
         label="Select a file"
         outlined
