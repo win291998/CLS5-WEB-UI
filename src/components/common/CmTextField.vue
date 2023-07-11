@@ -38,7 +38,7 @@ interface Emit {
   (e: 'change', value: any): void
   (e: 'focused'): void
 }
-
+const isFocus = ref(false)
 const formModelValue = ref<any>(null)
 watch(() => props.modelValue, (val: any) => {
   formModelValue.value = props.modelValue
@@ -64,6 +64,8 @@ const messageError = computed(() => {
   return ''
 })
 function focusInput(params: boolean) {
+  console.log(params)
+  isFocus.value = params
   if (params)
     emit('focused')
 }
@@ -98,6 +100,7 @@ function focusInput(params: boolean) {
         :maxlength="maxlength"
         hide-details="auto"
         class="text-regular-md"
+        :class="{ focus: isFocus }"
         @change="handleChangeText"
         @update:modelValue="handleUpdateText"
         @update:focused="focusInput"
@@ -153,8 +156,17 @@ function focusInput(params: boolean) {
 .cm-input-field-error .v-field__input{
   border: 1px solid red;
 }
+.cm-input-field .v-field__input:focus{
+  border: 1px solid rgb(var(--v-primary-300));
+  border-radius: 8px;
+}
 .cm-input-field .v-field__outline{
   z-index: -1 !important;
+}
+.cm-input-field .focus .v-field__outline{
+  border-radius:8px;
+  border: 1px solid rgb(var(--v-primary-300));
+  box-shadow: 0px 0px 0px 4px rgb(var(--v-primary-100)), 0px 1px 2px 0px rgb(var(--v-primary-300));
 }
 .cm-input-field .v-field--variant-outlined .v-field__outline__start {
     border: none

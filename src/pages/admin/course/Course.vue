@@ -88,7 +88,12 @@ const dataFeedBack = ref<any>()
 
 // hàm trả về các loại action khi click
 function actionItem(type: any) {
+  console.log(type)
+
   switch (type[0]?.name) {
+    case 'ActionViewDetail':
+      router.push({ name: 'course-view', params: { tab: 'infor', id: type[1].id } })
+      break
     case 'ActionDelete':
       deleteItem(type[1].id)
       break

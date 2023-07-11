@@ -22,7 +22,7 @@ const router = useRouter()
  * Store
  */
 const storeCourseInforManager = courseInforManagerStore()
-const { courseData } = storeToRefs(storeCourseInforManager)
+const { courseData, isViewDetail } = storeToRefs(storeCourseInforManager)
 
 const { addInforCourse } = storeCourseInforManager
 const storeValidate = validatorStore()
@@ -95,6 +95,7 @@ if (formOfStudyCombobox.value)
               <div class="input-avatar">
                 <CmImgUpload
                   v-model:src="courseData.thumbnail"
+                  :disabled="isViewDetail"
                   color="primary"
                   is-size-full
                   :is-rounded="true"
@@ -126,6 +127,7 @@ if (formOfStudyCombobox.value)
               <div class="input-avatar">
                 <CmVideoUpload
                   v-model="courseData.videoUrl"
+                  :disabled="isViewDetail"
                   is-size-full
                   icon="tabler:square-rounded-plus-filled"
                   :is-rounded="true"
@@ -192,7 +194,7 @@ if (formOfStudyCombobox.value)
                 :text="LABEL.TITLE3"
                 :options="topicCombobox"
                 :normalizer-custom-type="['id', 'name', 'children']"
-                :placeholder="LABEL.TITLE3"
+                :placeholder="LABEL.TITLE3_PHD"
               />
             </Field>
           </VCol>

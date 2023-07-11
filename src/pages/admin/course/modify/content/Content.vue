@@ -11,6 +11,7 @@ const CpScormContent = defineAsyncComponent(() => import('@/components/page/Admi
 const CpIframeContent = defineAsyncComponent(() => import('@/components/page/Admin/course/modify/content/type/iframe/CpIframeContent.vue'))
 const CpContent = defineAsyncComponent(() => import('@/components/page/Admin/course/modify/content/type/content/CpContent.vue'))
 const CpEssayContent = defineAsyncComponent(() => import('@/components/page/Admin/course/modify/content/type/essay/CpEssayContent.vue'))
+const CpOfflineContent = defineAsyncComponent(() => import('@/components/page/Admin/course/modify/content/type/offline/CpOfflineContent.vue'))
 
 const component = ref(CpContent)
 const route = useRoute()
@@ -52,6 +53,9 @@ onMounted(() => {
       break
     case 'essay-content':
       component.value = CpEssayContent
+      break
+    case 'offline-content':
+      component.value = CpOfflineContent
       break
 
     default:

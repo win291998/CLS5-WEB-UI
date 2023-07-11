@@ -78,6 +78,23 @@ export default [
         component: () => import('@/pages/admin/course/modify/ModifyCourse.vue'),
       },
       {
+        path: ':id/view/:tab',
+        name: 'course-view',
+        meta: {
+          breadcrumb: [
+            {
+              title: 'list-course',
+              to: { name: 'course-list' },
+            },
+            {
+              title: 'view-detail',
+              active: true,
+            },
+          ],
+        },
+        component: () => import('@/pages/admin/course/modify/ModifyCourse.vue'),
+      },
+      {
         path: ':id/edit/:tab/add-content/:type/:contentTab',
         name: 'content-add',
         meta: {
@@ -105,6 +122,23 @@ export default [
             },
             {
               title: 'add-content',
+              active: true,
+            },
+          ],
+        },
+        component: () => import('@/pages/admin/course/modify/content/Content.vue'),
+      },
+      {
+        path: ':id/view/:tab/edit-content/:contentId/:type/:contentTab',
+        name: 'content-view',
+        meta: {
+          breadcrumb: [
+            {
+              title: 'course-view',
+              to: { name: 'course-view' },
+            },
+            {
+              title: 'view-detail',
               active: true,
             },
           ],

@@ -22,12 +22,13 @@ const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
  * Store
  */
 const storeCourseInforManager = courseInforManagerStore()
-const { idCourse } = storeToRefs(storeCourseInforManager)
-const { getDetailCourse } = storeCourseInforManager
+const { idCourse, isViewDetail } = storeToRefs(storeCourseInforManager)
+const { getDetailCourse, $reset } = storeCourseInforManager
 
 if (route?.params?.id) {
   idCourse.value = Number(route?.params.id)
   getDetailCourse()
+  isViewDetail.value = route?.name === 'course-view'
 }
 const semesterCb = [
   { name: t('middle-perior'), id: 1 },
@@ -37,6 +38,7 @@ const semesterCb = [
 const isDisabledAdd = ref(false)
 const excludeIds = ref<any>([])
 const listTypePeriorCurrent = ref<any>([])
+const viewAdd = ref(route.name === 'course-add')
 const listtab = ref([
   {
     key: 'infor',
@@ -47,39 +49,52 @@ const listtab = ref([
     key: 'content',
     title: 'content-course',
     component: CpContentCourse,
+    isDisabled: viewAdd.value,
+
   },
   {
     key: 'user',
     title: 'asign-user',
     component: CpAsginUser,
+    isDisabled: viewAdd.value,
+
   },
   {
     key: 'participation',
     title: 'course-attend-dk',
     component: CpCondParticipation,
+    isDisabled: viewAdd.value,
+
   },
 
   {
     key: 'completion',
     title: 'conditions-completion',
     component: CpConditionsCompletion,
+    isDisabled: viewAdd.value,
+
   },
 
   {
     key: 'cost',
     title: 'cost-management',
     component: CpCostCourse,
+    isDisabled: viewAdd.value,
+
   },
 
   {
     key: 'survey-course',
     title: 'survey-course',
     component: CpCourseSurveyEvaluation,
+    isDisabled: viewAdd.value,
+
   },
   {
     key: 'semester',
     title: 'semester',
     component: CpManaging,
+    isDisabled: viewAdd.value,
     dataTab: {
       titlePage: t('semester'),
       header: [
@@ -146,6 +161,9 @@ function updateFetchData(data: any) {
 }
 
 onBeforeUnmount(() => {
+  console.log(storeCourseInforManager.$state)
+
+  $reset(storeCourseInforManager.$state)
   storeCourseInforManager.$dispose()
 })
 
