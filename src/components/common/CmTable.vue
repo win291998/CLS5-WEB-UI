@@ -5,6 +5,7 @@ import {
   MAX_ITEM_ACTION,
   MAX_ITEM_SELECT_MULT,
   PAGINATION_PAGE_SIZE_DEFAULT,
+  PAGINATION_SIZE_UNLIMIT_DEFAULT,
 } from '@/constant/Globals'
 import ArrayUtil from '@/utils/ArrayUtil'
 import MethodsUtil from '@/utils/MethodsUtil'
@@ -257,7 +258,7 @@ watch(() => props.items, (val: Item[]) => {
       :table-class-name="`customize-table ${isExpand ? 'table-expand' : ''}`"
       :headers="headers"
       :items="items"
-      :rows-per-page="pageSize"
+      :rows-per-page="!disiablePagination ? pageSize : PAGINATION_SIZE_UNLIMIT_DEFAULT"
       theme-color="#1849a9"
       :table-min-height="minHeight"
       :item-key="keyid"

@@ -28,7 +28,7 @@ const comboboxCertificate = ref([])
 function getComboboxCertificate() {
   const params = { type: 1 }
   window.requestApiCustom(ComboboxService.GetComboboxCertificate, TYPE_REQUEST.GET, params).then((value: any) => {
-    console.log(value)
+    comboboxCertificate.value = value?.data || []
   })
 }
 
@@ -153,16 +153,12 @@ getComboboxCertificate()
         md="4"
         sm="6"
       >
-        <CmDateTimePicker
-          v-model="settingData.registrationEndDate"
-          :text="`${t('to-day')}*`"
-          :placeholder="t('to-day')"
-        />
+        <div class="d-flex align-center">
+          <div>
+            {{ t('time-use') }}
+          </div>
+        </div>
       </VCol>
     </VRow>
   </div>
 </template>
-
-<style scoped>
-
-</style>

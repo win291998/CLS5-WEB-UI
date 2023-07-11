@@ -1,5 +1,6 @@
 export const Date_FORMAT = 'YYY-MM-DD'
 export const PAGINATION_PAGE_SIZE_DEFAULT = 10// Số lượng mặt định của một page table
+export const PAGINATION_SIZE_UNLIMIT_DEFAULT = 10000// Số lượng mặt định của một page table
 export const PAGINATION_PAGE_SIZE_DEFAULT_OPTION = [5, 10, 20, 50, 100, 200] // Các option lựa chọn số lượng một page table mặc định
 export const PAGINATION_PAGE_SIZE_LARGE_OPTION = [10, 20, 50, 100, 200, 500, 1000, 2000, 4000] // Các option lựa chọn số lượng một page table lớn
 export const PAGINATION_TOTAL_VISIABLE = 6

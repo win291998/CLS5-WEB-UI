@@ -2,7 +2,7 @@
 import { computed, ref } from 'vue'
 import type { ClickRowArgument, Header, Item } from 'vue3-easy-data-table'
 import CmPagination from './CmPagination.vue'
-import { MAX_ITEM_ACTION, PAGINATION_CURRENT_PAGE, PAGINATION_PAGE_SIZE_DEFAULT } from '@/constant/Globals'
+import { MAX_ITEM_ACTION, PAGINATION_CURRENT_PAGE, PAGINATION_PAGE_SIZE_DEFAULT, PAGINATION_SIZE_UNLIMIT_DEFAULT } from '@/constant/Globals'
 import SkTable from '@/components/page/gereral/skeleton/SkTable.vue'
 import { tableStore } from '@/stores/table'
 import MethodsUtil from '@/utils/MethodsUtil'
@@ -239,7 +239,7 @@ console.time('update')
       ref="dataTable"
       :headers="headers"
       :items="items"
-      :rows-per-page="!disiablePagination ? pageSize : 100000"
+      :rows-per-page="!disiablePagination ? pageSize : PAGINATION_SIZE_UNLIMIT_DEFAULT"
       :table-min-height="minHeight"
       :item-key="props.customId"
       alternating
