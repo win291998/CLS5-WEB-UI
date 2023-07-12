@@ -25,6 +25,7 @@ interface Props {
   text?: string
   bgColor?: string
   errors?: any
+  isErrors?: boolean
   field?: any
   placeholder?: any
   type?: string
@@ -36,7 +37,7 @@ interface Props {
 interface Emit {
   (e: 'update:modelValue', value: any): void
   (e: 'change', value: any): void
-  (e: 'focused'): void
+  (e: 'focused', value: any): void
 }
 const isFocus = ref(false)
 const formModelValue = ref<any>(null)
@@ -66,8 +67,7 @@ const messageError = computed(() => {
 function focusInput(params: boolean) {
   console.log(params)
   isFocus.value = params
-  if (params)
-    emit('focused')
+  emit('focused', params)
 }
 </script>
 
@@ -83,7 +83,7 @@ function focusInput(params: boolean) {
     </div>
     <div
       class="vTextField cm-input-field"
-      :class="{ 'cm-input-field-error': errors?.length > 0 ?? false }"
+      :class="{ 'cm-input-field-error': (errors?.length > 0 || isErrors) ?? false }"
     >
       <VTextField
         v-model="formModelValue"
@@ -93,7 +93,7 @@ function focusInput(params: boolean) {
         :label="props.label"
         :bg-color="bgColor"
         :placeholder="placeholder"
-        :error="errors?.length > 0 ?? false"
+        :error="(errors?.length > 0 || isErrors) ?? false"
         :type="type"
         :min="min"
         :max="max"
@@ -117,7 +117,10 @@ function focusInput(params: boolean) {
 
 <style lang="scss">
 @use "@/styles/style-global.scss" as *;
-
+.cm-input-field {
+  height: 44px;
+  padding: 4px;
+}
 .vTextField .v-field__input{
   color: $color-gray-900 !important;
   /* Text md/Regular */
@@ -163,11 +166,23 @@ function focusInput(params: boolean) {
 .cm-input-field .v-field__outline{
   z-index: -1 !important;
 }
+.cm-input-field-error.cm-input-field .focus .v-field__outline{
+  border-radius:8px;
+  border: 1px solid rgb(var(--v-error-300)) !important;
+  box-shadow: 0px 0px 0px 4px rgb(var(--v-error-100)), 0px 1px 2px 0px rgb(var(--v-gray-900)) !important;
+}
+.cm-input-field-error.cm-input-field .focus .v-field__input:focus{
+  border-radius:8px;
+  border: 1px solid rgb(var(--v-error-300)) !important;
+  box-shadow: 0px 0px 0px 4px rgb(var(--v-error-100)), 0px 1px 2px 0px rgb(var(--v-gray-900)) !important;
+}
+
 .cm-input-field .focus .v-field__outline{
   border-radius:8px;
-  border: 1px solid rgb(var(--v-primary-300));
+  border: 1px solid rgb(var(--v-primary-300)) !important;
   box-shadow: 0px 0px 0px 4px rgb(var(--v-primary-100)), 0px 1px 2px 0px rgb(var(--v-primary-300));
 }
+
 .cm-input-field .v-field--variant-outlined .v-field__outline__start {
     border: none
   }

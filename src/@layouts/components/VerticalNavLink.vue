@@ -33,7 +33,10 @@ const hideTitleAndBadge = isVerticalNavMini(windowWidth)
         class="nav-item-icon"
         />
       -->
-      <div class="w-100 h-100 d-flex align-center">
+      <div
+        class="w-100 h-100 d-flex align-center"
+        style="margin-left: 12px;"
+      >
         <div class="dot-menu nav-item-icon" />
         <TransitionGroup name="transition-slide-x">
           <!-- 👉 Title -->

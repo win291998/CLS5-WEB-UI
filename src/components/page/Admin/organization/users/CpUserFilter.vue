@@ -2,9 +2,9 @@
 import CmSelect from '@/components/common/CmSelect.vue'
 import CpOrganizationSelect from '@/components/page/gereral/CpOrganizationSelect.vue'
 import { comboboxStore } from '@/stores/combobox'
+import CmDateTimePicker from '@/components/common/CmDateTimePicker.vue'
 
 const emit = defineEmits<Emit>()
-const CmDateTimePicker = defineAsyncComponent(() => import('@/components/common/CmDateTimePicker.vue'))
 
 /** ** Interface */
 interface Emit {

@@ -82,7 +82,7 @@ const sizeModal = computed(() => {
     case 'lg':
       return '800'
     case 'xl':
-      return '1200'
+      return '1162px'
     default:
       break
   }

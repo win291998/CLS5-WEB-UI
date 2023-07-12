@@ -43,7 +43,7 @@ export default [
         component: () => import('@/pages/admin/course/approve/Approve.vue'),
       },
       {
-        path: 'add/:tab',
+        path: 'add',
         name: 'course-add',
         meta: {
           breadcrumb: [
@@ -61,7 +61,7 @@ export default [
         component: () => import('@/pages/admin/course/modify/ModifyCourse.vue'),
       },
       {
-        path: ':id/edit/:tab',
+        path: ':id/edit',
         name: 'course-edit',
         meta: {
           breadcrumb: [

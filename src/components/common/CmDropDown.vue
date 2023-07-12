@@ -13,7 +13,9 @@ const propsValue = withDefaults(defineProps<Props>(), ({
   customKey: 'title',
   dataResend: null,
   type: undefined,
+  disabled: false,
   data: undefined,
+  color: 'primary',
   index: 0,
   variant: 'outlined',
   isAction: false,
@@ -41,6 +43,7 @@ interface Props {
   icon?: string
   data?: any
   multiple?: boolean
+  disabled?: boolean
   isAction?: boolean
   customKey: string
   dataResend?: any
@@ -113,13 +116,16 @@ function handleClickItemList(item: any) {
   <div class="text-center cm-drop-down">
     <VMenu
       class="cursor-pointer"
+      :disabled="disabled"
       @update:model-value="handleChange"
     >
       <template #activator="{ props }">
         <div>
           <CmButton
             v-if="type === 2"
+            :disabled="disabled"
             :class="[`${prefixColor}-${color}`, bgColor, className, textButton]"
+            :color="color"
             :variant="variant"
             :props-blind="props"
           >

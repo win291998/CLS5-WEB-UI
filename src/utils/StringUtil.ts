@@ -6,7 +6,7 @@ export default class StringUtil {
    * @param str
    * @return {string}
    */
-  static removeAccents = (str: string) => {
+  static removeAccents = (str: string): string => {
     const AccentsMap = RegExps['lang-vi']
 
     for (let i = 0; i < AccentsMap.length; i += 1) {

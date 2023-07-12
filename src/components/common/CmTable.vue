@@ -363,7 +363,7 @@ watch(() => props.items, (val: Item[]) => {
               class="px-2 "
             >
               <VIcon
-                v-if="MethodsUtil.checkActionType(actionItem).icon"
+                v-if="MethodsUtil.checkActionType(actionItem)?.icon"
                 :icon="MethodsUtil.checkActionType(actionItem).icon"
                 :size="18"
                 class="align-middle"
