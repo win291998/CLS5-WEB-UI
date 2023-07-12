@@ -169,7 +169,7 @@ watch(() => route.query[props.label], val => {
 
   // kiểu underline tab
   .underline-tabs {
-    border-block-end: 1px solid $color-gray-200;
+    border-block-end: 1px solid $color-gray-200 ;
 
     .active {
       color: $color-primary-700 !important;
@@ -187,6 +187,9 @@ watch(() => route.query[props.label], val => {
   .v-slide-group__content {
    display: flex;
    flex-wrap: wrap !important;
+  }
+  .v-tab__slider{
+    height: 3px !important;
   }
 }
 </style>
