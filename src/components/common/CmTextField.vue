@@ -11,6 +11,7 @@ const props = withDefaults(defineProps<Props>(), ({
   type: 'text',
   maxlength: constant.MAX_LENGTH_TEXT_FIELD,
   disabled: false,
+
 }))
 
 const emit = defineEmits<Emit>()
@@ -41,30 +42,37 @@ interface Emit {
 const isFocus = ref(false)
 const formModelValue = ref<any>(null)
 watch(() => props.modelValue, (val: any) => {
+  console.log(val)
+
   formModelValue.value = props.modelValue
 }, { immediate: true })
 
 /** Method */
 function handleChangeText() {
   formModelValue.value = props.type === 'number' ? Number(formModelValue.value || 0) : formModelValue.value
-  emit('change', props.type === 'number' ? Number(formModelValue.value) : formModelValue.value)
-
-  // emit('update:modelValue', props.type === 'number' ? Number(formModelValue.value || 0) : formModelValue.value)
+  if (props.type === 'number') {
+    if (props.max && formModelValue.value > props.max)
+      formModelValue.value = props.max
+    if (props.min && formModelValue.value < props.min)
+      formModelValue.value = props.min
+  }
+  emit('change', formModelValue.value)
+  emit('update:modelValue', formModelValue.value)
 }
 
 function handleUpdateText() {
   formModelValue.value = props.type === 'number' ? Number(formModelValue.value || 0) : formModelValue.value
-  emit('update:modelValue', props.type === 'number' ? Number(formModelValue.value || 0) : formModelValue.value)
+  emit('update:modelValue', formModelValue.value)
+}
+function keydown(e: any) {
+  if (props.type === 'number') {
+    const sel = window.getSelection()?.toString()
+    if (['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].includes(e.key) && e.target.value.length === props.maxlength && !sel)
+      e.preventDefault()
+  }
 }
 
-const messageError = computed(() => {
-  if (props.errors?.length)
-    return t(props.errors[0])
-
-  return ''
-})
 function focusInput(params: boolean) {
-  console.log(params)
   isFocus.value = params
   if (params)
     emit('focused')
@@ -104,6 +112,7 @@ function focusInput(params: boolean) {
         @change="handleChangeText"
         @update:modelValue="handleUpdateText"
         @update:focused="focusInput"
+        @keydown="keydown"
       />
     </div>
     <div
