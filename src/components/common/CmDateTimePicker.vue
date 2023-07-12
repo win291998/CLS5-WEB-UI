@@ -27,6 +27,8 @@ interface Props {
   toDate?: any
   text?: string
   placeholder?: string
+  errors?: any
+  field?: any
 }
 interface Emit {
   (e: 'update:modelValue', data: any): void
@@ -92,9 +94,12 @@ function showPreview(val: any) {
 }
 
 const datepicker = ref()
+const isFocus = ref(false)
+function show(val: boolean) {
+  if (val)
+    datepicker.value.openMenu()
 
-function show() {
-  datepicker.value.openMenu()
+  isFocus.value = val
 }
 const placeholder = computed(() => {
   if (props.range)
@@ -130,29 +135,24 @@ function updateDate(val: string) {
   if (props.range && val.search(' - ') > 0) {
     const arrayDate = val.split(' - ')
     const start = arrayDate[0].split('/').reverse().join('-')
-    const end = arrayDate[1].split('/').reverse().join('-')
+    const end = arrayDate[1]?.split('/')?.reverse()?.join('-')
     date.value = [new Date(start), end ? new Date(end) : null]
   }
-  else if (val) {
-    date.value = new Date(val.split('/').reverse().join('-'))
+  else if (!props.range && val) {
+    const tempe = val.split('/')
+    if (tempe.length > 2)
+      date.value = `${tempe[1]}/${tempe[0]}/${tempe[2]}`
   }
 }
 watch(() => props.modalValue, (val: any) => {
   date.value = val
 }, { immediate: true })
-watch(date, (val: any) => {
-  updateInput(val, false)
-})
 
-// watch(() => props.fromDate, val => {
-//   date.value = [val, (date.value && date.value.length) ? date.value[1] : null]
-// }, { immediate: true })
-// watch(() => props.toDate, val => {
-//   date.value = [date.value[0], val]
-// }, { immediate: true })
 watchEffect(() => {
-  if (props.fromDate || props.toDate)
+  if (props.fromDate || props.toDate) {
     date.value = [props.fromDate, props.toDate]
+    temp.value = `${props.fromDate ? moment(props.fromDate).format('DD/MM/YYYY hh:mm a') : ''} - ${props.toDate ? moment(props.toDate).format('DD/MM/YYYY hh:mm a') : ''}`
+  }
 })
 </script>
 
@@ -162,15 +162,20 @@ watchEffect(() => {
       <label class="text-medium-sm color-dark"> {{ text }}</label>
     </div>
     <div style="position: relative;">
+      <!-- v-bind="LABEL" -->
       <VueDatePicker
         ref="datepicker"
         :model-value="date"
         time-picker-inline
-        v-bind="LABEL"
         locale="vi"
+        v-bind="field"
+        :teleport="true"
+        :cancel-text="LABEL.cancelText"
+        :select-text="LABEL.selectText"
         text-input
         :multi-calendars-solo="multiCalendars"
         class="rounded-lg date-picker"
+        :class="{ errors: errors?.length, focus: isFocus }"
         :multi-calendars="multiCalendars"
         :time-picker="timePicker"
         :range="props.range"
@@ -178,7 +183,7 @@ watchEffect(() => {
         @range-start="val => formatPreview(val, false)"
         @range-end="val => formatPreview(val, true)"
         @update:model-value="updateInput($event, true)"
-        @cleared="() => { date = null }"
+        @cleared="() => { date = null, temp = null }"
       >
         <template #calendar-header="{ index }">
           <div>
@@ -273,6 +278,12 @@ watchEffect(() => {
         @update:model-value="updateDate"
       />
     </div>
+    <div
+      v-if="errors?.length > 0"
+      class="styleError text-errors"
+    >
+      {{ errors[0] }}
+    </div>
   </div>
 </template>
 
@@ -281,9 +292,8 @@ watchEffect(() => {
 :root {
   --dp-primary-color: rgb(var(--v-primary-600))
   --dp-border-radius: $border-radius-xs
+  --height-top-month: v-bind(marginHeader)
 }
-.cm-date-time-picker {
-  position: relative;
   .dp__main {
     height: 40px;
     .dp__input_icon_pad {
@@ -292,22 +302,55 @@ watchEffect(() => {
       border-radius: $border-radius-xs;
     }
   }
+  .errors.dp__main {
+    .dp__input_icon_pad {
+      border: 1px solid $color-error-300;
+      border-radius: $border-radius-xs;
+    }
+  }
+  .focus.dp__main {
+    .dp__input_icon_pad {
+      border: 1px solid $color-primary-300;
+      box-shadow: 0px 0px 0px 4px $color-primary-100, 0px 1px 2px 0px $color-gray-900;
+    }
+  }
+  .errors.focus.dp__main {
+    .dp__input_icon_pad {
+      border: 1px solid $color-error-300;
+      box-shadow: 0px 0px 0px 4px $color-error-100, 0px 1px 2px 0px $color-gray-900;
+    }
+  }
   .input-date-time {
     position: absolute;
-    top: 1px;
+    top: -2px;
     right: 28px;
     width: calc(100% - 56px);
     height: inherit;
     .v-field__field {
       height: 36px;
     }
+
     .v-field__input {
-        border: unset !important;
-        border-radius: $border-radius-xs;
+      border: unset !important;
+      border-radius: $border-radius-xs;
+      padding-inline-end: unset;
+      padding-inline-start: 10px;
+      box-shadow: unset !important;
+      &::placeholder {
+        font-size: 14px;
+        width: 95px;
       }
+    }
+    .focus {
       .v-field__outline {
-        --v-field-border-width: 0
+        box-shadow: unset !important;
+        border: unset !important;
       }
+
+    }
+    .v-field__outline {
+      --v-field-border-width: 0
+    }
   }
   .dp__menu_inner {
     width: auto;
@@ -497,7 +540,7 @@ watchEffect(() => {
 }
   .dp__action_extra {
     width: 100%;
-    position: absolute;
+    // position: absolute;
     top: 39px;
     .action-extra {
       display: flex;
@@ -510,5 +553,7 @@ watchEffect(() => {
       height: 40px;
     }
   }
+.dp__month_year_row {
+  margin-bottom: var(--height-top-month) !important;
 }
 </style>

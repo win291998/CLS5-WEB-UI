@@ -19,6 +19,7 @@ interface Emit {
   (e: 'addHandler'): void
   (e: 'back'): void
   (e: 'update:keyword', type: any): void
+  (e: 'update:showFilter', type: any): void
 }
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 const CmButton = defineAsyncComponent(
@@ -44,14 +45,16 @@ interface Props {
   addButtonName?: string
   disabledFillter?: boolean
   keyword?: string
+  showFilter?: boolean
 }
 
-const isShowFilter = ref(props.isFillter)
+const isShowFilter = ref(props.showFilter)
 
 function handleClickBtn(type: string) {
   switch (type) {
     case 'fillter':
       isShowFilter.value = !isShowFilter.value
+      emit('update:showFilter', isShowFilter.value)
       break
     case 'delete':
       emit('deleteMultiple')

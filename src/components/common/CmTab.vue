@@ -53,18 +53,20 @@ interface Emit {
 const tabActive = ref<string>('')
 const dataTab = ref<any>(null)
 function getTabActive() {
-  if (route.params[props.label] && !dataTab.value) {
-    dataTab.value = props.listTab.find(e => e.key === route.params[props.label]) as object
-
-    tabActive.value = dataTab.value?.key
-  }
+  dataTab.value = props.listTab.find(e => e.key === route.query[props.label]) as object
+  tabActive.value = dataTab.value?.key
 }
 getTabActive()
 function activeTab(value: any) {
   // value.isRendered = true
   dataTab.value = props.listTab.find(x => x.key === value) as tab
   dataTab.value.isRendered = true
-  router.push({ name: props.routeName || undefined, params: { [props.label]: value } })
+  router.push({
+    query: {
+      ...route.query,
+      [props.label]: value,
+    },
+  })
   emit('activeTab', tabActive.value)
 }
 
@@ -72,10 +74,9 @@ function useEmitter() {
   const emitEvent = (event: any, data: any) => {
     emit(event, data)
   }
-
   return { emitEvent }
 }
-watch(() => route.params[props.label], val => {
+watch(() => route.query[props.label], val => {
   getTabActive()
 })
 </script>
@@ -87,7 +88,6 @@ watch(() => route.params[props.label], val => {
         v-if="!hide"
         v-model="tabActive"
         class="cm-tabs"
-        :hide-slider="type === 'button'"
         show-arrows
         @update:modelValue="activeTab"
       >
@@ -116,7 +116,7 @@ watch(() => route.params[props.label], val => {
       >
         <div
           v-if="item.isRendered"
-          v-show="item.key === route.params[props.label]"
+          v-show="item.key === route.query[props.label]"
         >
           <Component
             :is="item?.component"
@@ -141,44 +141,44 @@ watch(() => route.params[props.label], val => {
 
 <style lang="scss" scoped>
 @use "/src/styles/style-global" as *;
-
-.cm-tabs {
+.tabs {
+  .cm-tabs {
+    border-block-end: 1px solid $color-gray-200 !important;
   // background-color: $color-white;
   color: $color-gray-500;
   inline-size: fit-content;
   text-transform: capitalize !important;
-
   .v-slide-group__content {
     border-block-end: 1px red solid;
   }
-
   .item-tab {
     border-radius: 6px !important;
     text-transform: capitalize !important;
     box-shadow: unset !important;
   }
+
 }
 
-// kiểu button tab
-.button-tabs {
-  .active {
-    background-color: $color-primary-50 !important;
-    color: $color-primary-700 !important;
+ // kiểu button tab
+ .button-tabs {
+    .active {
+      background-color: $color-primary-50 !important;
+      color: $color-primary-700 !important;
+    }
   }
-}
 
-// kiểu underline tab
-.underline-tabs {
-  border-block-end: 1px solid $color-gray-200;
+  // kiểu underline tab
+  .underline-tabs {
+    border-block-end: 1px solid $color-gray-200;
 
-  .active {
-    color: $color-primary-700 !important;
+    .active {
+      color: $color-primary-700 !important;
+    }
   }
-}
-
 .content-tab {
   inline-size: 100%;
   margin-block-start: 5px;
+}
 }
 </style>
 

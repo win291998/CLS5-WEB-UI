@@ -48,11 +48,6 @@ function showModalAdd() {
 }
 
 onBeforeUnmount(() => {
-  store.$reset()
-  store.$dispose()
-})
-
-onDeactivated(() => {
   store.$dispose()
 })
 

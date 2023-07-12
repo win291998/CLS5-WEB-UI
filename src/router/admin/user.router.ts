@@ -5,6 +5,11 @@ export default [
     component: () => import('@/pages/guilde/tree-select.vue'),
   },
   {
+    path: 'hello',
+    name: 'hello',
+    component: () => import('@/pages/guilde/test.vue'),
+  },
+  {
     path: 'dashboard-lecturers',
     name: 'dashboard-lecturers',
     component: () => import('@/pages/guilde/tree-select.vue'),
@@ -54,6 +59,11 @@ export default [
   {
     path: '/guilde/demo/:tabActive',
     name: 'guilde-demo-tab',
+    component: () => import('@/pages/guilde/demo.vue'),
+  },
+  {
+    path: '/guilde/demo/:tabActive/:tab',
+    name: 'guilde-demo-tab-tab',
     component: () => import('@/pages/guilde/demo.vue'),
   },
 
@@ -127,7 +137,7 @@ export default [
             component: () => import('@/pages/admin/organization/users/Users.vue'),
           },
           {
-            path: 'profile/:tab',
+            path: 'profile',
             name: 'admin-organization-users-profile-add',
             meta: {
               parent: 'users',
