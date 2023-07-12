@@ -102,7 +102,7 @@ const optionsModel = computed(() => {
 const hasNextPage = computed(() => {
   return optionsModel.value.length < props.totalRecord
 })
-function open(e: any) {
+function open() {
   if (!props.multiple) {
     stackValue.value = window._.clone(valueCurrent.value)
     valueCurrent.value = null

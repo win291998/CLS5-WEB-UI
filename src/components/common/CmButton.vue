@@ -161,6 +161,7 @@ defineExpose({
   padding: 10px 16px;
   text-transform: inherit;
   font-family: inherit;
+  letter-spacing: normal;
 }
 // .text-button {
 //   box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05);
