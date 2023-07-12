@@ -143,7 +143,7 @@ watch(() => route.query[props.label], val => {
 @use "/src/styles/style-global" as *;
 .tabs {
   .cm-tabs {
-    border-block-end: 1px solid $color-gray-200 !important;
+    border-bottom: 1px solid $color-gray-200 !important;
   // background-color: $color-white;
   color: $color-gray-500;
   inline-size: fit-content;

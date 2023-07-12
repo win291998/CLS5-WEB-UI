@@ -42,7 +42,7 @@ interface Emit {
 const propsValue = withDefaults(defineProps<Props>(), ({
   modelValue: false,
   color: 'primary',
-  colorInterminate: 'primary',
+  colorInterminate: 'infor',
   disabled: false,
   indeterminate: false,
   error: false,
