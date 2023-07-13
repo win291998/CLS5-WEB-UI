@@ -95,7 +95,7 @@ export default [
         component: () => import('@/pages/admin/course/modify/ModifyCourse.vue'),
       },
       {
-        path: ':id/edit/:tab/add-content/:type/:contentTab',
+        path: ':id/edit/add-content/:type',
         name: 'content-add',
         meta: {
           breadcrumb: [
@@ -112,7 +112,7 @@ export default [
         component: () => import('@/pages/admin/course/modify/content/Content.vue'),
       },
       {
-        path: ':id/edit/:tab/edit-content/:contentId/:type/:contentTab',
+        path: ':id/edit/edit-content/:contentId/:type',
         name: 'content-edit',
         meta: {
           breadcrumb: [
@@ -129,7 +129,7 @@ export default [
         component: () => import('@/pages/admin/course/modify/content/Content.vue'),
       },
       {
-        path: ':id/view/:tab/edit-content/:contentId/:type/:contentTab',
+        path: ':id/view/view-content/:contentId/:type',
         name: 'content-view',
         meta: {
           breadcrumb: [

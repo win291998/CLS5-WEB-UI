@@ -29,6 +29,8 @@ interface Props {
   placeholder?: string
   errors?: any
   field?: any
+  minDate?: any
+  maxDate?: any
 }
 interface Emit {
   (e: 'update:modelValue', data: any): void
@@ -180,6 +182,8 @@ watchEffect(() => {
         :time-picker="timePicker"
         :range="props.range"
         :placeholder="placeholder"
+        :min-date="minDate"
+        :max-date="maxDate"
         @range-start="val => formatPreview(val, false)"
         @range-end="val => formatPreview(val, true)"
         @update:model-value="updateInput($event, true)"

@@ -168,10 +168,12 @@ export const contentTypeVideoManagerStore = defineStore('contentVideoTypeManager
           name: 'content-edit',
           params: {
             id: Number(route.params.id),
-            tab: route.params.tab,
-            type: 'video-content',
-            contentTab: 'infor',
+            type: route.params.type,
             contentId: contentId.value,
+          },
+          query: {
+            contentTab: 'infor',
+            tab: route.params.tab,
           },
         })
       }

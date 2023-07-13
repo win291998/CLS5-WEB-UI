@@ -437,7 +437,7 @@ function cancelProcessing(index: any) {
   }
 }
 function handleCancle() {
-  router.push({ name: 'course-edit', params: { tab: 'content', id: Number(route.params.id) } })
+  router.push({ name: 'course-edit', params: { id: Number(route.params.id) }, query: { tab: 'content' } })
 }
 
 // lưu

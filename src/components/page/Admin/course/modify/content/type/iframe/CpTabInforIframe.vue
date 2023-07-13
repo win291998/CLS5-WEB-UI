@@ -256,7 +256,7 @@ function handleDeleteContent(type: any, idx: any) {
   unLoadComponent(idx)
 }
 function handleCancle() {
-  router.push({ name: 'course-edit', params: { tab: 'content', id: Number(route.params.id) } })
+  router.push({ name: 'course-edit', params: { id: Number(route.params.id) }, query: { tab: 'content' } })
 }
 
 /** ******************Thực thi created************** */
