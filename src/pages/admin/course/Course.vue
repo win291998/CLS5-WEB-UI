@@ -107,7 +107,7 @@ function actionItem(type: any) {
       handleViewFeedBack(type[1].id)
       break
     case 'ActionEdit':
-      router.push({ name: 'course-edit', params: { tab: 'infor', id: type[1].id } })
+      router.push({ name: 'course-edit', params: { id: Number(type[1].id) } })
       break
     case 'CopyCourse':
       isShowModalCoppyCourse.value = true

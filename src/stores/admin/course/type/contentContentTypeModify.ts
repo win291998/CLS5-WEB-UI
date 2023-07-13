@@ -169,16 +169,18 @@ export const contentTypeManagerStore = defineStore('contentTypeManager', () => {
           name: 'content-edit',
           params: {
             id: Number(route.params.id),
-            tab: route.params.tab,
             type: route.params.type,
-            contentTab: 'infor',
             contentId: contentId.value,
+          },
+          query: {
+            contentTab: 'infor',
+            tab: route.params.tab,
           },
         })
       }
       else {
         unLoadComponent(idx)
-        router.push({ name: 'course-edit', params: { tab: 'content', id: Number(route.params.id) } })
+        router.push({ name: 'course-edit', params: { id: Number(route.params.id) }, query: { tab: 'content' } })
       }
     }
     else {

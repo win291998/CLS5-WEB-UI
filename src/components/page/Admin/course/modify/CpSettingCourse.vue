@@ -22,6 +22,8 @@ const { schemaOption, Field, Form, useForm, yup } = storeValidate
 const store = load()
 const { unLoadComponent } = store
 const settingData = reactive({
+  courseStartDate: '',
+  courseEndDate: '',
   registrationStartDate: '',
   registrationEndDate: '',
   isReviewExpired: false,
@@ -52,6 +54,7 @@ const optionData = reactive({
 
 const schema = computed(() => ({
   ...(optionData.isRegisterTime ? { isStartTime: schemaOption.defaultString, isEndTime: schemaOption.defaultString } : {}),
+  ...(optionData.isTimeAttend ? { courseStartDate: schemaOption.defaultString, courseEndDate: schemaOption.defaultString } : {}),
 }))
 const comboboxCertificate = ref([])
 const comboboxRatingScale = ref([])
@@ -96,7 +99,7 @@ async function saveSetting(idx: number) {
   })
 }
 function handleCancle() {
-  router.push({ name: 'course-edit', params: { tab: 'content', id: Number(route.params.id) } })
+  router.push({ name: 'course' })
 }
 </script>
 
@@ -140,6 +143,7 @@ function handleCancle() {
           >
             <CmDateTimePicker
               :model-value="settingData.registrationStartDate"
+              :max-date="settingData.registrationEndDate"
               :field="field"
               :errors="errors"
               :text="`${t('start-day')}*`"
@@ -160,6 +164,7 @@ function handleCancle() {
           >
             <CmDateTimePicker
               v-model="settingData.registrationEndDate"
+              :min-date="settingData.registrationStartDate"
               :field="field"
               :errors="errors"
               :text="`${t('to-day')}*`"
@@ -186,22 +191,42 @@ function handleCancle() {
           md="4"
           sm="6"
         >
-          <CmDateTimePicker
-            v-model="settingData.registrationStartDate"
-            :text="`${t('start-day')}*`"
-            :placeholder="t('start-day')"
-          />
+          <Field
+            v-slot="{ field, errors }"
+            :model-value="settingData.courseStartDate"
+            name="courseStartDate"
+            type="text"
+          >
+            <CmDateTimePicker
+              v-model="settingData.courseStartDate"
+              :max-date="settingData.courseEndDate"
+              :field="field"
+              :errors="errors"
+              :text="`${t('start-day')}*`"
+              :placeholder="t('start-day')"
+            />
+          </Field>
         </VCol>
         <VCol
           cols="12"
           md="4"
           sm="6"
         >
-          <CmDateTimePicker
-            v-model="settingData.registrationEndDate"
-            :text="`${t('to-day')}*`"
-            :placeholder="t('to-day')"
-          />
+          <Field
+            v-slot="{ field, errors }"
+            :model-value="settingData.courseEndDate"
+            name="courseEndDate"
+            type="text"
+          >
+            <CmDateTimePicker
+              v-model="settingData.courseEndDate"
+              :min-date="settingData.courseStartDate"
+              :field="field"
+              :errors="errors"
+              :text="`${t('to-day')}*`"
+              :placeholder="t('to-day')"
+            />
+          </Field>
         </VCol>
       </VRow>
       <!-- Không cho phép học viên xem lại khóa học khi hết hạn -->

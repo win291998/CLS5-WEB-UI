@@ -103,10 +103,11 @@ export const contentManagerStore = defineStore('contentManager', () => {
             name: 'content-edit',
             params: {
               id: Number(route.params.id),
-              tab: 'content',
               type: MethodsUtil.getTypeContent(type[1].contentArchiveTypeId),
-              contentTab: 'infor',
               contentId: type[1]?.courseContentId,
+            },
+            query: {
+              contentTab: 'infor',
             },
           })
         }
@@ -150,15 +151,15 @@ export const contentManagerStore = defineStore('contentManager', () => {
         }
         else {
           console.log(type[1].contentArchiveTypeId)
-
           router.push({
             name: 'content-view',
             params: {
               id: Number(route.params.id),
-              tab: 'content',
               type: MethodsUtil.getTypeContent(type[1].contentArchiveTypeId),
-              contentTab: 'infor',
               contentId: type[1]?.courseContentId,
+            },
+            query: {
+              contentTab: 'infor',
             },
           })
         }
