@@ -29,6 +29,7 @@ interface propertyGlobal {
   showAllPageLoading?: any,
   hideAllPageLoading?: any,
   TYPE_REQUEST?: any,
+  formatFullName?: any,
   SERVER_FILE?: string,
 }
 
@@ -73,9 +74,11 @@ const windowDefineReactiveProperty = (app: any)=> {
     reactive1: 555, // biến không phản ứng
     reactive2: ref('react'), // khai báo ref để biến có thể phản ứng
     token: ref(''), 
+    TYPE_REQUEST: TYPE_REQUEST,
+
+    // method global
     requestApiCustom: MethodsUtil.requestApiCustom,
     getErrorsMessage: MethodsUtil.getErrorsMessage,
-    TYPE_REQUEST: TYPE_REQUEST
   }
   defineProperty(global, 'react')
 }

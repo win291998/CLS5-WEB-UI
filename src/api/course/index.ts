@@ -84,6 +84,7 @@ const CourseService = {
   PostuUpdateTestConfig: '/coursecontenttest/update',
   PostuCreateTestConfig: '/coursecontenttest/create',
   PostuUpdateQuestionTest: '/CourseContentTest/update-question', // cập nhật danh sách câu hỏi cho bài kiểm tra
+  PostDelCheckinCourse: (id: number | string) => `/course/${id}/checkin/delete`, // Lấy danh sách điểm danh khóa học
 
   /** Delete */
   DeleteUserReg: 'courseuser/delete-register',

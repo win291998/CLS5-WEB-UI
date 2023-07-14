@@ -93,7 +93,7 @@ async function getComboboxRatingScale() {
     })
   }
 }
-async function changeCheckBoxTimeLearning(state) {
+async function changeCheckBoxTimeLearning(state: any) {
   if (state) {
     settingData.value.studyTimeType = 1
     settingData.value.studyTime = 0
