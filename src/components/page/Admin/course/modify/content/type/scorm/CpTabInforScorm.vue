@@ -173,8 +173,6 @@ function saveAndUpdate(idx: any, isUpdate: boolean) {
     return
   }
   myFormAddContent.value.validate().then(async (success: any) => {
-    console.log(success)
-
     if (success.valid) {
       contentData.value.courseId = Number(route.params.id)
       contentData.value.archiveTypeId = MethodsUtil.checkType(`${route.params.type}`, ContentType, 'name')?.value
@@ -202,7 +200,6 @@ async function getDetailDocContent() {
       time.value.selfSecond = Math.floor(contentData.value.time % 60)
     }
     await getInfor(contentData.value.url.replace('/loadScorm?fileFolder=', '')).then((value: any) => {
-      console.log(value)
       contentFile.value.localFileName = value.fileName
       if (value?.filePath) {
         serverCode.value = value.serverCode
@@ -240,7 +237,6 @@ async function uploadFileLocal(data: any, file: any) {
   if (data?.fileFolder) {
     // kiểm tra đối với file không cho phép dowload
     await getInfor(data?.fileFolder).then((value: any) => {
-      console.log(value)
       contentFile.value.localFileName = value.fileName
       if (value?.filePath) {
         serverCode.value = value.serverCode

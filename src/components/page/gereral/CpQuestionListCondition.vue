@@ -124,11 +124,6 @@ const getRows = computed(() => {
           qts.push(element)
       }
       else if (element?.listQuestions && element.listQuestions.length > 0) {
-        console.log(element.listQuestions[0].contentBasic?.toLowerCase())
-        console.log(StringUtil.removeAccents(
-          element.listQuestions[0].contentBasic?.toLowerCase(),
-        ))
-
         if (
           StringUtil.removeAccents(
             element.listQuestions[0].contentBasic?.toLowerCase(),

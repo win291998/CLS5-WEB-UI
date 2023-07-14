@@ -165,8 +165,6 @@ function updateFetchData(data: any) {
 }
 
 onBeforeUnmount(() => {
-  console.log(storeCourseInforManager.$state)
-
   $reset(storeCourseInforManager.$state)
   storeCourseInforManager.$dispose()
 })

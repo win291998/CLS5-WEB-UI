@@ -145,7 +145,6 @@ export const contentTypeManagerStore = defineStore('contentTypeManager', () => {
 
     if (contentData.value.acceptDownload === null)
       contentData.value.acceptDownload = false
-    console.log(contentData)
 
     if (isUpdates) {
       response = await MethodsUtil.requestApiCustom(CourseService.PostUpdateContent, TYPE_REQUEST.POST, contentData.value)

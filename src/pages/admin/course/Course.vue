@@ -113,6 +113,10 @@ function actionItem(type: any) {
       isShowModalCoppyCourse.value = true
       coppyData.value.id = type[1].id
       break
+    case 'ActionRollCallOffline':
+      router.push({ name: 'course-attendance', params: { id: Number(type[1].id) } })
+      break
+
     default:
       break
   }
@@ -293,7 +297,6 @@ window.hideAllPageLoading()
           </div>
           <div v-if="col === 'formStudy'">
             <CmChip
-              class="ma-2"
               :color="MethodsUtil.checkType(context.formOfStudyName, StatusTypeFormStudy, 'name')?.color"
             >
               <VIcon

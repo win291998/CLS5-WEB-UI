@@ -75,8 +75,6 @@ export const courseListManagerStore = defineStore('courseListManager', () => {
   function handlerActionHeader(type: any) {
     switch (type) {
       case 'handlerAddButton':
-        console.log(123)
-
         router.push({ name: 'course-add', params: { tab: 'infor' } })
         break
       case 'handlerCustomButton':

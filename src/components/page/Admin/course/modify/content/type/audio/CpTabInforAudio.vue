@@ -244,8 +244,6 @@ function saveAndUpdate(idx: any, isUpdate: boolean) {
     return
   }
   myFormAddContent.value.validate().then(async (success: any) => {
-    console.log(success)
-
     if (success.valid) {
       contentData.value.courseId = Number(route.params.id)
       contentData.value.archiveTypeId = 5
@@ -271,7 +269,6 @@ async function getDocLocalInfo(folder: any, getFileSize?: any) {
       ...contentFile.value,
       ...data,
     }
-    console.log(data)
 
     if (data.isProcessing)
       isLoadingFile.value = false
@@ -293,7 +290,6 @@ function getDuration(file: any) {
     if (duration) {
       time.value.contentMinute = Math.floor(duration / 60)
       time.value.contentSecond = Math.floor(duration % 60)
-      console.log(duration, Math.floor(duration % 60))
     }
   }
 }
@@ -328,7 +324,6 @@ async function uploadFileLocal(data: any, file: any) {
   isLoadingFile.value = false
 }
 function changeTimeType() {
-  console.log(timeDuration.value, Math.floor(timeDuration.value % 60))
   if (timeDuration.value) {
     time.value.contentMinute = Math.floor(timeDuration.value / 60)
     time.value.contentSecond = Math.floor(timeDuration.value % 60)

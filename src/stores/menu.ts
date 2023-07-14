@@ -75,8 +75,6 @@ export const useStoreMenu = defineStore('useStoreMenu', () => {
           src: setImageDefault(e.title),
           title: t(`${e.title}`),
         }
-        console.log(item)
-
         data.push(item)
       })
     })
@@ -85,7 +83,6 @@ export const useStoreMenu = defineStore('useStoreMenu', () => {
 
   const role = ref<Role | null>(null)
   const userData = ref(JSON.parse(localStorage.getItem('userData') || '{}'))
-  console.log()
 
   const roleDefault = localStorage.getItem('role')
   const userRoles = ref<Role[]>(userData.value.roles || [])

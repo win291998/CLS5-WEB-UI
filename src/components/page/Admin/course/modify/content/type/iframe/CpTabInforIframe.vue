@@ -172,8 +172,6 @@ function saveAndUpdate(idx: any, isUpdate: boolean) {
     return
   }
   myFormAddContent.value.validate().then(async (success: any) => {
-    console.log(success)
-
     if (success.valid) {
       contentData.value.courseId = Number(route.params.id)
       contentData.value.archiveTypeId = MethodsUtil.checkType(`${route.params.type}`, ContentType, 'name')?.value
@@ -195,8 +193,6 @@ function saveAndUpdate(idx: any, isUpdate: boolean) {
 async function getDetailDocContent() {
   if (contentData.value.url && contentData.value.url !== null) {
     contentFile.value.haveContent = true
-    console.log(123)
-
     if (contentData.value.time) {
       time.value.selfMinute = Math.floor(contentData.value.time / 60)
       time.value.selfSecond = Math.floor(contentData.value.time % 60)

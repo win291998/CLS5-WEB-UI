@@ -81,7 +81,7 @@ watch(() => props.isShowModal, isShow => {
       @confirm="onConfirm"
     >
       <template #title>
-        <div>
+        <div class="pt-2">
           <div class="mb-3">
             <CmIconNoti
               :type="2"

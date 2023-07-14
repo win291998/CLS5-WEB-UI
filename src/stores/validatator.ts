@@ -141,8 +141,6 @@ export const validatorStore = defineStore('validator', () => {
     defaultNumberYub: yup.number(),
     defaultNumberNoReqPosNoNull: yup.number().typeError(ruleMessage.typeNumber).test('positive', ruleMessage.positive, (value: any) => value >= 0).max(CONFIG.DEFAULT_NUMBER.MAX_VALUE, ruleMessage.maxValue(CONFIG.DEFAULT_NUMBER.MAX_VALUE)),
     defaultNumberNoReqPosNoNulls: (val: any) => {
-      console.log(val)
-
       return yup.number().typeError(ruleMessage.typeNumber).test('positive', ruleMessage.positive, (value: any) => value >= 0).max(val, ruleMessage.maxValue(val))
     },
     defaultNumberNoReqPosNoNullNot0: yup.number().typeError(ruleMessage.typeNumber).test('positive', ruleMessage.numberMin, (value: any) => value > 0).max(CONFIG.DEFAULT_NUMBER.MAX_VALUE, ruleMessage.maxValue(CONFIG.DEFAULT_NUMBER.MAX_VALUE)),

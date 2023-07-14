@@ -85,8 +85,6 @@ export const contentManagerStore = defineStore('contentManager', () => {
     })
   }
   async function actionItemUserReg(type: any) {
-    console.log(type)
-
     switch (type[0]?.name) {
       case 'ActionEdit':
         if (type[1]?.contentArchiveTypeId === 13) {
@@ -97,8 +95,6 @@ export const contentManagerStore = defineStore('contentManager', () => {
           })
         }
         else {
-          console.log(type[1].contentArchiveTypeId)
-
           router.push({
             name: 'content-edit',
             params: {
@@ -150,7 +146,6 @@ export const contentManagerStore = defineStore('contentManager', () => {
           })
         }
         else {
-          console.log(type[1].contentArchiveTypeId)
           router.push({
             name: 'content-view',
             params: {
@@ -583,8 +578,6 @@ export const contentManagerStore = defineStore('contentManager', () => {
         deleteItemRefer(type[1].courseContentId)
         break
       case 'ActionEdit':
-        console.log(type)
-
         dataSelectRef.value = type[1]
         getDataContentRefer(type[1].courseContentId)
 
@@ -616,7 +609,6 @@ export const contentManagerStore = defineStore('contentManager', () => {
         let dataRow = ArraysUtil.unFlatMapTree(value.data)
         dataRow = ArraysUtil.formatTreeTable(dataRow, customIdRefer.value)
         dataRow.forEach((element: any) => {
-          console.log(element.parent?.id)
           if (element?.parent?.id === 0) {
             element.actions = [
               MethodsUtil.checkActionType({ id: 1 }),

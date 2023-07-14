@@ -78,7 +78,7 @@ export default [
         component: () => import('@/pages/admin/course/modify/ModifyCourse.vue'),
       },
       {
-        path: ':id/view/:tab',
+        path: ':id/view',
         name: 'course-view',
         meta: {
           breadcrumb: [
@@ -129,21 +129,40 @@ export default [
         component: () => import('@/pages/admin/course/modify/content/Content.vue'),
       },
       {
-        path: ':id/view/view-content/:contentId/:type',
+        path: ':id/edit/view-content/:contentId/:type',
         name: 'content-view',
         meta: {
           breadcrumb: [
             {
-              title: 'course-view',
+              title: 'course-edit',
               to: { name: 'course-view' },
             },
             {
-              title: 'view-detail',
+              title: 'add-content',
               active: true,
             },
           ],
         },
         component: () => import('@/pages/admin/course/modify/content/Content.vue'),
+      },
+
+      // điểm danh
+      {
+        path: ':id/attendance',
+        name: 'course-attendance',
+        meta: {
+          breadcrumb: [
+            {
+              title: 'list-course',
+              to: { name: 'course-list' },
+            },
+            {
+              title: 'attendance',
+              active: true,
+            },
+          ],
+        },
+        component: () => import('@/pages/admin/course/attendance/Attendance.vue'),
       },
     ],
   },

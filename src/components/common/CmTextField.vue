@@ -43,8 +43,6 @@ interface Emit {
 const isFocus = ref(false)
 const formModelValue = ref<any>(null)
 watch(() => props.modelValue, (val: any) => {
-  console.log(val)
-
   formModelValue.value = props.modelValue
 }, { immediate: true })
 
