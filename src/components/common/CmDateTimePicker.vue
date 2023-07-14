@@ -8,7 +8,7 @@ const props = withDefaults(defineProps<Props>(), {
   range: false,
   multiCalendars: false,
   timePicker: false,
-  modalValue: null,
+  modelValue: null,
   fromDate: null,
   toDate: null,
 })
@@ -22,7 +22,7 @@ interface Props {
   range?: boolean
   multiCalendars?: boolean
   timePicker?: boolean
-  modalValue?: any
+  modelValue?: any
   fromDate?: any
   toDate?: any
   text?: string
@@ -127,10 +127,10 @@ function updateInput(val: any, isUpdate: any) {
   }
   date.value = val
   if (props.range) {
-    temp.value = `${moment(val[0]).format('DD/MM/YYYY hh:mm a')} - ${moment(val[1]).format('DD/MM/YYYY hh:mm a')}`
+    temp.value = `${moment(val[0]).format('DD/MM/YYYY HH:mm')} - ${moment(val[1]).format('DD/MM/YYYY HH:mm')}`
     return
   }
-  temp.value = moment(val).format('DD/MM/YYYY hh:mm a')
+  temp.value = moment(val).format('DD/MM/YYYY HH:mm')
 }
 
 function updateDate(val: string) {
@@ -146,14 +146,17 @@ function updateDate(val: string) {
       date.value = `${tempe[1]}/${tempe[0]}/${tempe[2]}`
   }
 }
-watch(() => props.modalValue, (val: any) => {
-  date.value = val
+watch(() => props.modelValue, (val: any) => {
+  if (val && !props.range) {
+    date.value = new Date(val)
+    temp.value = moment(date.value).format('DD/MM/YYYY HH:mm')
+  }
 }, { immediate: true })
 
 watchEffect(() => {
   if (props.fromDate || props.toDate) {
     date.value = [props.fromDate, props.toDate]
-    temp.value = `${props.fromDate ? moment(props.fromDate).format('DD/MM/YYYY hh:mm a') : ''} - ${props.toDate ? moment(props.toDate).format('DD/MM/YYYY hh:mm a') : ''}`
+    temp.value = `${props.fromDate ? moment(props.fromDate).format('DD/MM/YYYY HH:mm') : ''} - ${props.toDate ? moment(props.toDate).format('DD/MM/YYYY HH:mm') : ''}`
   }
 })
 </script>

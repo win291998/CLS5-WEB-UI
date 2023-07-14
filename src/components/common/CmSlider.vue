@@ -44,11 +44,9 @@ const progressValue = ref(props.modelValue)
 
 // slider profress
 function startSLider(value: any) {
-  console.log(value)
   emit('dragStart', value)
 }
 function endSLider(value: any) {
-  console.log(value)
   emit('dragEnd', value)
 }
 function valueChange(value: any) {

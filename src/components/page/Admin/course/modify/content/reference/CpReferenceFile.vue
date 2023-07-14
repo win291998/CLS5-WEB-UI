@@ -79,8 +79,6 @@ function resetData() {
 
 async function handleSave(idx: any) {
   myFormAddRefer.value.validate().then(async (success: any) => {
-    console.log(success)
-
     if (!contentRefer.value.url) {
       errorsInputFile.value = [t('please-choose-files')]
       toast('ERROR', t('please-choose-files'))
@@ -115,8 +113,6 @@ async function handleSave(idx: any) {
 /** *****************************Preiview file********************************************** */
 // cập nhật dữ liệu chỉnh sửa
 function getDetailDocContent() {
-  console.log(contentRefer.value)
-
   if (contentRefer.value.url && contentRefer.value.url !== null) {
     files.value.fileFolder = contentRefer.value.url
     getLocalInfo(contentRefer.value.url)
@@ -141,7 +137,6 @@ async function getLocalInfo(folder: any, getFileSize?: any) {
       files.value.type = 'mp4'
       files.value.filePath = data.filePath
     }
-    console.log(data)
     files.value.haveDocument = true
     isLoadingFile.value = false
   })
@@ -157,7 +152,6 @@ async function upFileServerPreview(fileUp: any) {
   files.value.fileFolder = data.fileFolder
   contentRefer.value.url = data?.fileFolder
   getLocalInfo(data.filePath)
-  console.log(data)
 }
 
 // thay đổi dữ liệu từ input file

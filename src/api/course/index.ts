@@ -29,6 +29,8 @@ const CourseService = {
   GetConfiguration: '/coursecontenttest/get-configuration', // Lấy thông tin tùy chỉnh bài kiểm tra
   GetListQuestionContentSurvey: '/surveytestcode/get-list-question', // Lấy danh sách câu hỏi khảo sát
   GetListQuestionContentTest: '/course/get-course-content-test-list-question', // Lấy danh sách câu hỏi
+  GetSettingCourse: '/course/get-setting', // Lấy thông tin setting khóa học
+  GetListCheckinCourse: (id: number | string) => `/course/${id}/checkin`, // Lấy danh sách điểm danh khóa học
 
   /** Post */
   PostAddCourseOrg: '/course/add-course-to-organizational-structures',

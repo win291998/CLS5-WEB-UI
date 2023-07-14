@@ -328,8 +328,6 @@ export default class MethodsUtil {
 
   static registerState(listState: any, stateInit: any) {
     listState.forEach((item: any) => {
-      console.log(item)
-
       const key = Object.keys(item)?.[0]
 
       stateInit.value[key] = window._.cloneDeep(item[key].value)

@@ -162,7 +162,6 @@ async function getDocLocalInfo(folder: any, getFileSize?: any) {
       ...documentFile.value,
       ...data,
     }
-    console.log(data)
     documentFile.value.haveDocument = true
     if (data.isProcessing)
       isLoadingFile.value = false

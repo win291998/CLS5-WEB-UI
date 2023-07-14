@@ -39,8 +39,6 @@ const SERVERFILE = process.env.VUE_APP_BASE_SERVER_FILE
 /** method  */
 async function getFileInfo(folder: any) {
   const data = await MethodsUtil.requestApiCustom(`${SERVERFILE}${ServerFileService.GetInforFile}${folder}`, TYPE_REQUEST.GET)
-  console.log(data)
-
   if (data.isProcessing) {
     videoUrl.value = data.filePath
 
@@ -94,7 +92,6 @@ function hanleClickAvatar() {
   videoInput.value?.click()
 }
 function removeUpload() {
-  console.log('removeUpload')
   isLoadingVideo.value = false
   videoUrl.value = ''
 }

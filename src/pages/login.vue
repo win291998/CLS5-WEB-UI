@@ -3,7 +3,7 @@ import AuthProvider from '@/views/pages/authentication/AuthProvider.vue'
 import { useGenerateImageVariant } from '@core/composable/useGenerateImageVariant'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 import { themeConfig } from '@themeConfig'
-import { emailValidator, requiredValidator } from '@validators'
+import { requiredValidator } from '@validators'
 import jwtDefaultConfig from '@/auth/jwtDefaultConfig'
 import { getHomeRouteForLoggedInUser } from '@/auth/utils'
 import systemService from '@/api/system-service/index'
@@ -31,7 +31,7 @@ const rememberMe = ref(false)
 const captcha = ref({})
 const a = 1
 
-const handleLogin = () => {
+function handleLogin() {
   const userData = {
     email: email.value,
     password: password.value,
@@ -54,7 +54,6 @@ const handleLogin = () => {
     })
 }
 
-// eslint-disable-next-line sonarjs/cognitive-complexity
 function handleAfterLogin(response: any) {
   // this.$hideLoading()
   if (response?.code === 200) {
@@ -339,4 +338,3 @@ function handleAfterLogin(response: any) {
 <style lang="scss">
 @use "@core/scss/template/pages/page-auth.scss";
 </style>
-

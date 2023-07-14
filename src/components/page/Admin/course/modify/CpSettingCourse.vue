@@ -10,6 +10,8 @@ import CmSelect from '@/components/common/CmSelect.vue'
 import CmTextField from '@/components/common/CmTextField.vue'
 import CmRadio from '@/components/common/CmRadio.vue'
 import CpActionFooterEdit from '@/components/page/gereral/CpActionFooterEdit.vue'
+import toast from '@/plugins/toast'
+import CourseService from '@/api/course/index'
 
 /** LIB */
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
@@ -21,25 +23,28 @@ const storeValidate = validatorStore()
 const { schemaOption, Field, Form, useForm, yup } = storeValidate
 const store = load()
 const { unLoadComponent } = store
-const settingData = reactive({
-  courseStartDate: '',
-  courseEndDate: '',
-  registrationStartDate: '',
-  registrationEndDate: '',
+const settingData = ref({
+  courseStartDate: null as null | string,
+  courseEndDate: null as null | string,
+  registrationStartDate: null as null | string,
+  registrationEndDate: null as null | string,
   isReviewExpired: false,
   isDisplayHome: false,
   certificationTemplateId: null,
   certificationDurationMonth: null,
   ratingScaleId: null,
   displayId: null,
-  numberOfRemindDay: null,
-  timesOfRemind: null,
-  timeSpanByMinute: null,
+  numberOfRemindDay: 0,
+  timesOfRemind: 0,
+  timeSpanByMinute: 0,
   studyTimeType: 1,
-  studyTime: null,
+  studyTime: 0,
   point: null,
   formOfRegistration: 1,
   studyMode: 1,
+  certificationId: null,
+  courseId: 3589,
+  organizationalStructureIds: [],
 })
 const optionData = reactive({
   isRegisterTime: false,
@@ -55,6 +60,11 @@ const optionData = reactive({
 const schema = computed(() => ({
   ...(optionData.isRegisterTime ? { isStartTime: schemaOption.defaultString, isEndTime: schemaOption.defaultString } : {}),
   ...(optionData.isTimeAttend ? { courseStartDate: schemaOption.defaultString, courseEndDate: schemaOption.defaultString } : {}),
+  ...(optionData.isTimeLearning ? { studyTime: schemaOption.defaultNumberNoReqPosNoNull } : {}),
+  ...(optionData.isRemind ? { numberOfRemindDay: schemaOption.defaultNumberNoReqPosNoNull } : {}),
+  ...((optionData.isRemind && optionData.isAmountRemind) ? { timesOfRemind: schemaOption.defaultNumber, timeSpanByMinute: schemaOption.defaultNumber } : {}),
+  ...(optionData.isCertification ? { certificationDurationMonth: schemaOption.defaultNumber } : {}),
+  ...(optionData.experiencePoint ? { point: schemaOption.defaultNumber } : {}),
 }))
 const comboboxCertificate = ref([])
 const comboboxRatingScale = ref([])
@@ -83,17 +93,136 @@ async function getComboboxRatingScale() {
     })
   }
 }
+async function changeCheckBoxTimeLearning(state) {
+  if (state) {
+    settingData.value.studyTimeType = 1
+    settingData.value.studyTime = 0
+  }
+  else {
+    settingData.value.studyTime = 0
+    settingData.value.studyTimeType = 0
+  }
+}
+async function getSettingCourse() {
+  const params = {
+    id: route.params.id,
+  }
+  await window.requestApiCustom(CourseService.GetSettingCourse, TYPE_REQUEST.GET, params).then((value: any) => {
+    settingData.value = value?.data
+  })
+  if (settingData.value.registrationStartDate !== null)
+    optionData.isRegisterTime = true
+  if (settingData.value.courseStartDate !== null)
+    optionData.isTimeAttend = true
+  if (settingData.value.studyTime !== null && settingData.value.studyTime > 0)
+    optionData.isTimeLearning = true
+  if (settingData.value.timesOfRemind !== null && settingData.value.timesOfRemind > 0)
+    optionData.isRemind = true
+  if (settingData.value.numberOfRemindDay !== null && settingData.value.numberOfRemindDay > 0)
+    optionData.isRemind = true
+  if (settingData.value.timesOfRemind !== null && settingData.value.timesOfRemind > 0)
+    optionData.isAmountRemind = true
+  if (settingData.value.ratingScaleId !== null) {
+    getComboboxRatingScale()
+    optionData.isRatingScale = true
+  }
+  if (settingData.value.certificationTemplateId && settingData.value.certificationTemplateId !== null && settingData.value.certificationTemplateId !== 0) {
+    optionData.isCertification = true
+    getComboboxCertificate()
+  }
+  if (!settingData.value.studyTimeType && optionData.isTimeLearning)
+    settingData.value.studyTimeType = 1
+  if (settingData.value?.point === 0 || settingData.value?.point)
+    optionData.experiencePoint = true
+}
 
 /** *************main */
 const myFormSettingCourse = ref()
 async function saveSetting(idx: number) {
-  await myFormSettingCourse.value.validate().then((successSetting: any) => {
-    console.log(successSetting)
-
+  await myFormSettingCourse.value.validate().then(async (successSetting: any) => {
     if (successSetting.valid) {
-      console.log(idx)
+      // nếu không chọn thời gian đăng kí
+      if (optionData.isRegisterTime === false) {
+        settingData.value.registrationStartDate = null
+        settingData.value.registrationEndDate = null
+      }
+      else {
+        const registrationStartDate = new Date(settingData.value.registrationStartDate || '')
+        const registrationEndDate = new Date(settingData.value.registrationEndDate || '')
+        if (registrationEndDate <= registrationStartDate) {
+          toast('WARNING', t('time-register-invalid'))
+          return
+        }
+        const courseEndDate = new Date(settingData.value.courseEndDate || '')
+        if (settingData.value?.courseEndDate && registrationEndDate > courseEndDate) {
+          toast('WARNING', t('time-register-invalid-end'))
+          return
+        }
+      }
 
-      unLoadComponent(idx)
+      // không lựa chọn thời gian tham gia học
+      if (optionData.isTimeAttend === false) {
+        settingData.value.courseStartDate = null
+        settingData.value.courseEndDate = null
+      }
+      else { // lựa chọn thời gian tham gia học
+        const courseStartDate: any = new Date(settingData.value.courseStartDate || '')
+        const courseEndDate: any = new Date(settingData.value.courseEndDate || '')
+        if (courseEndDate <= courseStartDate) {
+          toast('WARNING', t('time-learn-invalid'))
+          return
+        }
+        if (optionData.isTimeLearning === true) {
+          const timeAttent = parseInt(settingData.value.studyTime.toString(), 10)
+
+          // Nếu thời gian học lớn hơn thời gian diễn ra khóa học
+          if (!isNaN(timeAttent) && ((courseEndDate - courseStartDate) < timeAttent * 24 * 3600 * 1000)) {
+            toast('WARNING', t('time-study-invalid'))
+            return
+          }
+        }
+      }
+
+      // không lựa chọn thời gian học
+      if (optionData.isTimeLearning !== true) {
+        settingData.value.studyTime = 0
+        settingData.value.studyTimeType = 0
+      }
+
+      // không lựa chọn Nhắc nhở trước khi hết hạn
+      if (optionData.isRemind !== true) {
+        settingData.value.numberOfRemindDay = 0
+        settingData.value.timesOfRemind = 0
+        settingData.value.timeSpanByMinute = 0
+      }
+      if (optionData.isAmountRemind !== true) {
+        settingData.value.numberOfRemindDay = 0
+        settingData.value.certificationDurationMonth = null
+      }
+
+      // không lựa chọn Cấp chứng nhận
+      if (optionData.isCertification !== true)
+        settingData.value.certificationTemplateId = null
+
+      // không lựa chọn thang đánh giá
+      if (optionData.isRatingScale !== true)
+        settingData.value.ratingScaleId = null
+
+      // không lựa chọn điểm kinh nghiệm
+      if (!optionData.experiencePoint)
+        settingData.value.point = null
+
+      const response = await window.requestApiCustom(CourseService.PostUpdateSettingCourse, TYPE_REQUEST.POST, settingData.value)
+
+      if (response?.code === 200) {
+        toast('SUCCESS', t(response?.message))
+        unLoadComponent(idx)
+      }
+      else {
+        if (response.errors.length > 0)
+          toast('ERROR', t(window.getErrorsMessage(response.errors, t)))
+        unLoadComponent(idx)
+      }
     }
     else { unLoadComponent(idx) }
   })
@@ -101,6 +230,8 @@ async function saveSetting(idx: number) {
 function handleCancle() {
   router.push({ name: 'course' })
 }
+
+getSettingCourse()
 </script>
 
 <template>
@@ -158,13 +289,12 @@ function handleCancle() {
         >
           <Field
             v-slot="{ field, errors }"
-            :model-value="settingData.registrationEndDate"
+            v-model="settingData.registrationEndDate"
             name="isEndTime"
             type="text"
           >
             <CmDateTimePicker
-              v-model="settingData.registrationEndDate"
-              :min-date="settingData.registrationStartDate"
+              :model-value="settingData.registrationEndDate"
               :field="field"
               :errors="errors"
               :text="`${t('to-day')}*`"
@@ -178,7 +308,7 @@ function handleCancle() {
         <VCol>
           <CmCheckBox
             v-model:model-value="optionData.isTimeAttend"
-            :label="t('time-register')"
+            :label="t('time-attend-course')"
           />
         </VCol>
       </VRow>
@@ -245,6 +375,7 @@ function handleCancle() {
             <CmCheckBox
               v-model:model-value="optionData.isTimeLearning"
               :label="t('learning-time')"
+              @change="changeCheckBoxTimeLearning"
             />
             <div
               v-if="optionData.isTimeLearning"
@@ -253,7 +384,7 @@ function handleCancle() {
               <Field
                 v-slot="{ field, errors }"
                 :model-value="settingData.studyTime"
-                name="totalQuestionDisplayInPage"
+                name="studyTime"
                 type="number"
               >
                 <div class="mr-6">
@@ -300,7 +431,7 @@ function handleCancle() {
                 :value="1"
               />
             </div>
-            <div class="d-flex align-center mr-4">
+            <div class="d-flex align-center mr-4 text-medium-md">
               <div>{{ t('from-student-start') }}</div>
             </div>
           </div>
@@ -323,7 +454,7 @@ function handleCancle() {
                 :value="2"
               />
             </div>
-            <div class="d-flex align-center mr-4">
+            <div class="d-flex align-center text-medium-md mr-4">
               <div>{{ t('from-course-release') }}</div>
             </div>
           </div>
@@ -346,7 +477,7 @@ function handleCancle() {
                 :value="3"
               />
             </div>
-            <div class="d-flex align-center mr-4">
+            <div class="d-flex align-center text-medium-md mr-4">
               <div>{{ t('from-register') }}</div>
             </div>
           </div>
@@ -355,16 +486,19 @@ function handleCancle() {
       <!-- Nhắc nhở trước khi hết hạn -->
       <VRow class="pb-2">
         <VCol class="p-0">
-          <div class="d-flex">
+          <div class="d-flex algin-center">
             <CmCheckBox
               v-model:model-value="optionData.isRemind"
               :label="t('remind-before-expiration')"
             />
-            <div class="ml-4">
+            <div
+              v-if="optionData.isRemind"
+              class="ml-4"
+            >
               <Field
                 v-slot="{ field, errors }"
                 :model-value="settingData.numberOfRemindDay"
-                name="totalQuestionDisplayInPage"
+                name="numberOfRemindDay"
                 type="number"
               >
                 <div class="mr-6">
@@ -395,6 +529,7 @@ function handleCancle() {
         </VCol>
       </VRow>
       <VRow
+        v-if="optionData.isRemind"
         class="ml-7"
       >
         <VCol
@@ -406,67 +541,76 @@ function handleCancle() {
               v-model:model-value="optionData.isAmountRemind"
               :label="t('times-remind')"
             />
-            <div class="ml-3">
-              <Field
-                v-slot="{ field, errors }"
-                :model-value="settingData.timesOfRemind"
-                name="totalQuestionDisplayInPage"
-                type="number"
+            <div
+              v-if="optionData.isAmountRemind"
+              class="d-flex"
+            >
+              <div
+                class="ml-3"
               >
-                <div>
-                  <div class="d-flex align-center">
-                    <div class="mr-3 conditon-input">
-                      <CmTextField
-                        v-model="settingData.timesOfRemind"
-                        :field="field"
-                        type="number"
-                        :min="constant.MIN_NUMBER"
-                        :max="constant.MAX_NUMBER"
-                        :maxlength="constant.MAX_NUMBER.toString().length"
-                        counter
-                      />
+                <Field
+                  v-slot="{ field, errors }"
+                  :model-value="settingData.timeSpanByMinute"
+                  name="timeSpanByMinute"
+                  type="number"
+                >
+                  <div>
+                    <div class="d-flex align-center">
+                      <div class="mr-3 conditon-input">
+                        <CmTextField
+                          v-model="settingData.timeSpanByMinute"
+                          :field="field"
+                          type="number"
+                          :min="constant.MIN_NUMBER"
+                          :max="constant.MAX_NUMBER"
+                          :maxlength="constant.MAX_NUMBER.toString().length"
+                          counter
+                        />
+                      </div>
+                      <span class="text-regular-md text-lowercase">{{ t('separate') }}</span>
                     </div>
-                    <span class="text-regular-md text-lowercase">{{ t('minutes') }}</span>
+                    <div
+                      v-if="errors[0]"
+                      class="styleError text-errors"
+                    >
+                      {{ errors[0] }}
+                    </div>
                   </div>
-                  <div
-                    v-if="errors[0]"
-                    class="styleError text-errors"
-                  >
-                    {{ errors[0] }}
-                  </div>
-                </div>
-              </Field>
-            </div>
-            <div class="ml-3">
-              <Field
-                v-slot="{ field, errors }"
-                :model-value="settingData.timeSpanByMinute"
-                name="totalQuestionDisplayInPage"
-                type="number"
+                </Field>
+              </div>
+              <div
+                class="ml-3"
               >
-                <div>
-                  <div class="d-flex align-center">
-                    <div class="mr-3 conditon-input">
-                      <CmTextField
-                        v-model="settingData.timeSpanByMinute"
-                        :field="field"
-                        type="number"
-                        :min="constant.MIN_NUMBER"
-                        :max="constant.MAX_NUMBER"
-                        :maxlength="constant.MAX_NUMBER.toString().length"
-                        counter
-                      />
+                <Field
+                  v-slot="{ field, errors }"
+                  v-model="settingData.timesOfRemind"
+                  name="timesOfRemind"
+                  type="number"
+                >
+                  <div>
+                    <div class="d-flex align-center">
+                      <div class="mr-3 conditon-input">
+                        <CmTextField
+                          :model-value="settingData.timesOfRemind"
+                          :field="field"
+                          type="number"
+                          :min="constant.MIN_NUMBER"
+                          :max="constant.MAX_NUMBER"
+                          :maxlength="constant.MAX_NUMBER.toString().length"
+                          counter
+                        />
+                      </div>
+                      <span class="text-regular-md text-lowercase">{{ t('minutes') }}</span>
                     </div>
-                    <span class="text-regular-md text-lowercase">{{ t('separate') }}</span>
+                    <div
+                      v-if="errors[0]"
+                      class="styleError text-errors"
+                    >
+                      {{ errors[0] }}
+                    </div>
                   </div>
-                  <div
-                    v-if="errors[0]"
-                    class="styleError text-errors"
-                  >
-                    {{ errors[0] }}
-                  </div>
-                </div>
-              </Field>
+                </Field>
+              </div>
             </div>
           </div>
         </VCol>
@@ -480,12 +624,16 @@ function handleCancle() {
           />
         </VCol>
       </VRow>
-      <VRow class="ml-8">
-        <div class="mbn-2">
+      <VRow
+        v-if="optionData.isCertification"
+        class="ml-8"
+      >
+        <div class="mbn-2 text-medium-sm">
           {{ t('certification-template') }}
         </div>
       </VRow>
       <VRow
+        v-if="optionData.isCertification"
         class="ml-7"
       >
         <VCol
@@ -517,7 +665,7 @@ function handleCancle() {
               <Field
                 v-slot="{ field, errors }"
                 :model-value="settingData.certificationDurationMonth"
-                name="totalQuestionDisplayInPage"
+                name="certificationDurationMonth"
                 type="number"
               >
                 <div class="mr-6">
@@ -556,12 +704,16 @@ function handleCancle() {
           />
         </VCol>
       </VRow>
-      <VRow class="ml-8">
+      <VRow
+        v-if="optionData.isRatingScale"
+        class="ml-8"
+      >
         <div class="mbn-2">
           {{ t('rating-scale') }}
         </div>
       </VRow>
       <VRow
+        v-if="optionData.isRatingScale"
         class="ml-7"
       >
         <VCol
@@ -589,12 +741,16 @@ function handleCancle() {
           />
         </VCol>
       </VRow>
-      <VRow class="ml-8">
+      <VRow
+        v-if="settingData.isDisplayHome"
+        class="ml-8"
+      >
         <div class="mbn-2">
           {{ t('type-display') }}
         </div>
       </VRow>
       <VRow
+        v-if="settingData.isDisplayHome"
         class="ml-7"
       >
         <VCol
@@ -620,11 +776,14 @@ function handleCancle() {
               v-model:model-value="optionData.experiencePoint"
               :label="t('calculating-experience-points')"
             />
-            <div class="ml-4">
+            <div
+              v-if="optionData.experiencePoint"
+              class="ml-4"
+            >
               <Field
                 v-slot="{ field, errors }"
                 :model-value="settingData.point"
-                name="totalQuestionDisplayInPage"
+                name="point"
                 type="number"
               >
                 <div class="mr-6">

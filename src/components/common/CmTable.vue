@@ -472,7 +472,6 @@ watch(() => props.items, (val: Item[]) => {
 <style lang="scss" scoped>
 @use "@/styles/variables/common/table.cm" as *;
 @use "@/styles/style-global.scss" as *;
-
 // *****************************emplement**********************************************************//
 .customize-table {
   /** css custom */
@@ -480,6 +479,7 @@ watch(() => props.items, (val: Item[]) => {
   --easy-table-border: #{$table-border};   // màu viền table
   // phần header
   --easy-table-header-font-size: #{$table-header-font-size};  // kích thước chữ header
+  --easy-table-header-font-weight: #{$table-header-font-weight};  // Độ đậm chữ header
   --easy-table-header-height: #{$table-header-height};     // chiều cao header
   --easy-table-header-font-color: #{$table-header-font-color};  // màu chữ header
   --easy-table-header-background-color: #{$table-header-background-color};  // màu nền header
@@ -568,6 +568,8 @@ watch(() => props.items, (val: Item[]) => {
 </style>
 
 <style lang="scss">
+@use "@/styles/style-global.scss" as *;
+
 .vue3-easy-data-table{
 
   .can-expand{
@@ -586,7 +588,14 @@ watch(() => props.items, (val: Item[]) => {
   td.can-expand.shadow::after{
     width: 0px !important;
   }
-
+  th .header-text{
+    font-family: Inter;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 18px;
+    color: #{$color-gray-700} !important;
+  }
   .vue3-easy-data-table__body tr{
     cursor: pointer;
   }

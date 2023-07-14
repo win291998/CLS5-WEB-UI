@@ -34,8 +34,6 @@ const listTab = ref([
   },
 ])
 watch(() => route.params.contentId, (val: any) => {
-  console.log(val)
-
   if (val)
     listTab.value.map((item: any) => item.isDisabled = false)
 }, { deep: true, immediate: true })

@@ -445,7 +445,6 @@ watch(() => props.conditionCompleteData, (val: any) => {
   conditionComplete.value = { ...val }
 
   // loadDataEdit()
-  console.log('chil', val)
 })
 </script>
 

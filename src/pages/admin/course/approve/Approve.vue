@@ -178,8 +178,6 @@ async function getListAprove() {
   await MethodsUtil.requestApiCustom(CourseService.GetPagingAgreeCourse, TYPE_REQUEST.GET, queryParams).then(async (value: any) => {
     if (value?.data) {
       await getAuthorName(value?.data?.pageLists)
-      console.log(value?.data?.pageLists)
-
       items.value = value?.data?.pageLists
       totalRecord.value = value?.data?.totalRecord
     }

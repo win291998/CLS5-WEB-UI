@@ -46,29 +46,23 @@ function pauseAudio() {
   audioPlayer.value.pause()
 }
 function updateProgress(value?: any) {
-  console.log(audioPlayer.value.currentTime, audioPlayer.value.duration)
-
   progressValue.value = (audioPlayer.value.currentTime / audioPlayer.value.duration) * 100
   timeCurrent.value = audioPlayer.value.currentTime
   time.value = audioPlayer.value.duration
   emit('update:timeCurrent', timeCurrent.value)
   emit('update:time', audioPlayer.value.duration)
   emit('update:progressValue', progressValue.value)
-  console.log(timeCurrent.value, progressValue.value)
 }
 function ended(value: any) {
   isPause.value = true
   emit('end', value)
 }
 function pause(value: any) {
-  console.log(value)
   isPause.value = true
   emit('pause', value)
   emit('update:pause', value)
 }
 function play(value: any) {
-  console.log(value)
-
   isPause.value = false
   emit('play', value)
   emit('update:pause', value)
@@ -76,10 +70,10 @@ function play(value: any) {
 
 // slider profress
 function startSLider(value: any) {
-  console.log(value)
+  // console.log(value)
 }
 function endSLider(value: any) {
-  console.log(value)
+  // console.log(value)
 }
 function valueChange(value: any) {
   timeCurrent.value = (value / 100) * time.value
