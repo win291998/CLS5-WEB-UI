@@ -22,13 +22,14 @@ const listTab = [
     isRendered: true,
   },
 
-  // {
-  //   key: 'condition',
-  //   title: 'condition-content',
-  //   component: CpConditionVideo,
-  //   isRendered: true,
-  //   isDisabled: computed(() => !route.params.contentId).value,
-  // },
+  {
+    key: 'condition',
+    title: 'condition-content',
+    component: CpConditionVideo,
+    isRendered: true,
+    isDisabled: computed(() => !route.params.contentId).value,
+  },
+
   // {
   //   key: 'condition-complete',
   //   title: 'condition-completed-content',

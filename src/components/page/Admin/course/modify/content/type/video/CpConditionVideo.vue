@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { contentTypeVideoManagerStore } from '@/stores/admin/course/type/contentVideoTypeModify'
-import { validatorStore } from '@/stores/validatator'
 import toast from '@/plugins/toast'
 import CourseService from '@/api/course/index'
 import { TYPE_REQUEST } from '@/typescript/enums/enums'
@@ -25,11 +24,15 @@ const route = useRoute()
 /** store */
 const store = load()
 const { unLoadComponent } = store
-const storeValidate = validatorStore()
-const { schemaOption, Field, Form, useForm, yup } = storeValidate
-const { submitForm } = useForm()
+
 const storeContentVideoTypeModifyManager = contentTypeVideoManagerStore()
-const { videoData, conditionAttend, courseData } = storeToRefs(storeContentVideoTypeModifyManager)
+const { conditionAttend, courseData } = storeToRefs(storeContentVideoTypeModifyManager)
+const { fetchConditionAttend } = storeContentVideoTypeModifyManager
+
+onMounted(() => {
+  if (!window._.isEmpty(conditionAttend))
+    fetchConditionAttend(Number(route.params.contentId) || null)
+})
 
 /** state */
 const isStartTime = ref(false)
@@ -109,6 +112,7 @@ async function saveDataCondition(idx: any) {
     if (success.valid) {
       if (!isStartTime.value)
         conditionAttend.value.dateTimeStart = null
+
       if (!isEndTime.value)
         conditionAttend.value.dateTimeEnd = null
       if (isStartTime.value && isEndTime.value) {
@@ -116,6 +120,7 @@ async function saveDataCondition(idx: any) {
         const end = new Date(conditionAttend.value.dateTimeEnd || '')
         if (end < start) {
           toast('WARNING', t('time-end-invalid'))
+          unLoadComponent(idx)
           return
         }
       }
