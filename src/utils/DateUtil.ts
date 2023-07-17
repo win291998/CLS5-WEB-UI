@@ -42,6 +42,13 @@ export default class DateUtil {
     return moment(String(value)).format('DD/MM/YYYY')
   }
 
+  static formatTimeToHHmm = (value: any) => {
+    if (value)
+      return moment(String(value)).format('HH:mm')
+
+    return '-'
+  }
+
   static formatSecond = (seconds: any) => {
     seconds = Math.round(seconds)
     if (seconds === null || seconds === undefined)

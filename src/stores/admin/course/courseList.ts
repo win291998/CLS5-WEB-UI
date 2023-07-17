@@ -10,7 +10,6 @@ import CourseService from '@/api/course/index'
 import UserService from '@/api/user/index'
 import { TYPE_REQUEST } from '@/typescript/enums/enums'
 
-// import { TYPE_REQUEST } from '@/typescript/enums/enums'
 import toast from '@/plugins/toast'
 
 /** end call api */

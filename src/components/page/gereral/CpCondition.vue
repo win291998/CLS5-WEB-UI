@@ -176,6 +176,7 @@ defineExpose({
           {{ t('list-content-req') }}
         </div>
         <CmTable
+          is-update-row-force
           :selected="selected"
           :headers="headers"
           :items="items"

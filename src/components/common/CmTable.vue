@@ -38,6 +38,7 @@ const props = withDefaults(defineProps<Props>(), ({
   typePagination: 1,
   disiablePagination: false,
   isUpdateRowForce: false,
+  isLocalTable: false,
 }))
 const emit = defineEmits<Emit>()
 
@@ -77,6 +78,9 @@ interface Props {
   typePagination?: number
   disiablePagination?: boolean
   isUpdateRowForce?: boolean
+  isLocalTable?: boolean
+  searchField?: any
+  searchValue?: any
 }
 interface Emit {
   (e: 'handleClickRow', dataRow: object, index: number): void
@@ -88,6 +92,7 @@ interface Emit {
   (e: 'update:pageNumber', page: number): void
   (e: 'update:pageSize', size: number): void
   (e: 'update:selected', data: Item): void
+  (e: 'update:totalItems', value: any): void
 }
 
 const storeTable = tableStore()
@@ -108,6 +113,7 @@ const indeterminate = computed(() => {
         && selectedRows.value.length < props.items.length
   )
 })
+const totalPaginationLocal = computed(() => dataTable.value?.clientItemsLength)
 const keyid = computed(() => {
   return props?.isImportFile ? 'key' : props.customId
 })
@@ -185,6 +191,8 @@ function pageSizeChange(page: number, size: number) {
   emit('update:pageNumber', page)
   emit('update:pageSize', size)
   emit('handlePageClick', page, size)
+  if (props?.isLocalTable)
+    updatePage(page)
 
   updateRowsPerPageSelect(size)
 
@@ -244,6 +252,12 @@ watch(() => props.items, (val: Item[]) => {
       selectedRows.value.push(element[keyid.value])
   })
 }, { immediate: true })
+
+watch(totalPaginationLocal, val => {
+  console.log(val)
+  if (props?.isLocalTable)
+    emit('update:totalItems', val)
+})
 </script>
 
 <template>
@@ -265,26 +279,10 @@ watch(() => props.items, (val: Item[]) => {
       :click-row-to-expand="isExpand"
       hide-footer
       :body-row-class-name="rowClassName"
+      :search-field="searchField"
+      :search-value="searchValue"
       @click-row="showRow"
     >
-      <template
-        #header-checkbox="header"
-      >
-        <div
-          class="customize-header"
-        >
-          <VCheckbox
-            v-model="selectedAll"
-            color="primary"
-            :indeterminate="indeterminate"
-            :label="header.text"
-            ripple
-            :class="{ indeterminate }"
-            @change="checkedAll(selectedAll)"
-          />
-        </div>
-      </template>
-
       <template #header-select />
       <template
         v-if="isExpand"
@@ -306,6 +304,40 @@ watch(() => props.items, (val: Item[]) => {
           </div>
         </div>
       </template>
+
+      <template
+        v-for="(itemsHeader, id) in headers"
+        #[`header-${itemsHeader.value}`]="context"
+        :key="`header${id}`"
+      >
+        <div
+          v-if="itemsHeader.value === 'checkbox'"
+          class="customize-header"
+        >
+          <VCheckbox
+            v-model="selectedAll"
+            color="primary"
+            :indeterminate="indeterminate"
+            :label="context.text"
+            ripple
+            :class="{ indeterminate }"
+            @change="checkedAll(selectedAll)"
+          />
+        </div>
+        <div v-else-if="itemsHeader?.header === 'custom'" />
+        <span
+          v-else
+        >
+          {{ context.text }}
+        </span>
+        <slot
+          name="headerItem"
+          :col="itemsHeader.value"
+          :context="context"
+          :data-col="itemsHeader"
+        />
+      </template>
+
       <!--
         header => nội dung cột
         context  => nội dung hàng
@@ -461,7 +493,7 @@ watch(() => props.items, (val: Item[]) => {
     >
       <CmPagination
         :type="typePagination"
-        :total-items="totalRecord || items.length"
+        :total-items="isLocalTable ? totalPaginationLocal : totalRecord || items.length"
         :current-page="props.pageNumber"
         @pageClick="pageSizeChange"
       />

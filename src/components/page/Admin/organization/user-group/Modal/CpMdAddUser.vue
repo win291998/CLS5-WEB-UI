@@ -75,6 +75,7 @@ function clearStore() {
     <CmTable
       v-model:page-number="store.queryParams.pageNumber"
       v-model:selected="listItem"
+      is-update-row-force
       :headers="headers"
       :items="listUser"
       :return-object="true"

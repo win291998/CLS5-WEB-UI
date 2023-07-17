@@ -31,6 +31,8 @@ const CourseService = {
   GetListQuestionContentTest: '/course/get-course-content-test-list-question', // Lấy danh sách câu hỏi
   GetSettingCourse: '/course/get-setting', // Lấy thông tin setting khóa học
   GetListCheckinCourse: (id: number | string) => `/course/${id}/checkin`, // Lấy danh sách điểm danh khóa học
+  GetListCheckinStudentCourse: (id: number | string) => `/course/${id}/checkin/learners`, // Lấy danh sách học viên điểm danh khóa học
+  GetQrCode: 'qrcode/get-qrcode', // Lấy thông tin QR khóa học
 
   /** Post */
   PostAddCourseOrg: '/course/add-course-to-organizational-structures',
@@ -82,8 +84,12 @@ const CourseService = {
   PostSaveRequireParticipate: '/coursecontent/save-require-participate', // điều kiện tham gia khóa học
   PostSaveRequireFinish: '/coursecontent/save-require-finish',
   PostuUpdateTestConfig: '/coursecontenttest/update',
+  PostCreateTestConfig: '/coursecontenttest/create',
+  PostCreateQr: '/qrcode/create',
+  PostUpdateQuestionTest: '/CourseContentTest/update-question', // cập nhật danh sách câu hỏi cho bài kiểm tra
   PostuCreateTestConfig: '/coursecontenttest/create',
   PostuUpdateQuestionTest: '/CourseContentTest/update-question', // cập nhật danh sách câu hỏi cho bài kiểm tra
+  PostDelCheckinCourse: (id: number | string) => `/course/${id}/checkin/delete`, // Lấy danh sách điểm danh khóa học
 
   /** Delete */
   DeleteUserReg: 'courseuser/delete-register',
