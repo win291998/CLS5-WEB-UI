@@ -293,5 +293,6 @@ export const contentTypeVideoManagerStore = defineStore('contentVideoTypeManager
     fetchConditionAttend,
     changeType,
     getQuestionsData,
+    fetchConditionComplete,
   }
 })

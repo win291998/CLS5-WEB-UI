@@ -286,9 +286,13 @@ async function saveDataCondition(idx: any) {
         toast('WARNING', t('condition-complete-invalid'))
         return
       }
+      console.log(conditionComplete.value.isAfterTime, 'conditionComplete.value.isAfterTime')
+      console.log('time.value.minuteTime', time.value.minuteTime)
+      console.log('time.value.secondTime', time.value.secondTime)
 
       if (conditionComplete.value.isAfterTime === true && time.value.minuteTime !== null && time.value.secondTime !== null) {
         conditionComplete.value.timeFinish = Number(time.value.minuteTime) * 60 + Number(time.value.secondTime)
+
         emit('update:conditionCompleteData',
           conditionComplete.value,
         )
@@ -443,25 +447,27 @@ const queryParams = ref({
 
 function getListQuestionCodition() {
   MethodsUtil.requestApiCustom(CourseService.GetListQuestionContentTest, TYPE_REQUEST.GET, queryParams.value).then((res: Any) => {
-    const listId = MethodsUtil.getPropertyByArray(res?.data?.pageLists, 'id')
-    MethodsUtil.requestApiCustom(CourseService.GetListQuestionDetailContentTest, TYPE_REQUEST.GET, { listId }).then((response: Any) => {
-      response?.data.forEach((element: any) => {
-        // câu hỏi chùm
-        element.id = (element.id && element.id !== null) ? element.id : 0
-        if (element.isQuestionGroup === true) {
-          if (!element.questionGroupContent)
-            element.questionGroupContent = element.content
+    if (res?.data?.pageLists.length) {
+      const listId = MethodsUtil.getPropertyByArray(res?.data?.pageLists, 'id')
+      MethodsUtil.requestApiCustom(CourseService.GetListQuestionDetailContentTest, TYPE_REQUEST.GET, { listId }).then((response: Any) => {
+        response?.data.forEach((element: any) => {
+          // câu hỏi chùm
+          element.id = (element.id && element.id !== null) ? element.id : 0
+          if (element.isQuestionGroup === true) {
+            if (!element.questionGroupContent)
+              element.questionGroupContent = element.content
 
-          if (!element.questionGroupContentBasic)
-            element.questionGroupContentBasic = element.contentBasic
-        }
+            if (!element.questionGroupContentBasic)
+              element.questionGroupContentBasic = element.contentBasic
+          }
 
-        element.listQuestions.forEach((question: any) => {
-          question.id = (question.id && question.id !== null) ? question.id : 0
+          element.listQuestions.forEach((question: any) => {
+            question.id = (question.id && question.id !== null) ? question.id : 0
+          })
         })
+        listQuestions.value = response?.data
       })
-      listQuestions.value = response?.data
-    })
+    }
   })
 }
 
@@ -498,6 +504,7 @@ onMounted(async () => {
 
 watch(() => props.conditionCompleteData, (val: any) => {
   conditionComplete.value = { ...val }
+  loadDataEdit()
 }, { immediate: true })
 
 const listTab = [
@@ -590,7 +597,7 @@ function handleCancle() {
                 </Field>
                 <Field
                   v-slot="{ field, errors }"
-                  :model-value="time.secondTime"
+                  v-model:model-value="time.secondTime"
                   name="secondTime"
                   type="number"
                 >
@@ -629,7 +636,7 @@ function handleCancle() {
                 <div class="d-flex">
                   <Field
                     v-slot="{ field, errors }"
-                    :model-value="time.noActiveMinute"
+                    v-model:model-value="time.noActiveMinute"
                     name="noActiveMinute"
                     type="number"
                   >
@@ -654,7 +661,7 @@ function handleCancle() {
                   </Field>
                   <Field
                     v-slot="{ field, errors }"
-                    :model-value="time.noActiveSecond"
+                    v-model:model-value="time.noActiveSecond"
                     name="noActiveSecond"
                     type="number"
                   >

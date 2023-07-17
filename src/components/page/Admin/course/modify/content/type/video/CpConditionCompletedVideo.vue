@@ -23,8 +23,8 @@ const storeValidate = validatorStore()
 const { schemaOption, Field, Form, useForm, yup } = storeValidate
 const { submitForm } = useForm()
 const storeContentVideoTypeModifyManager = contentTypeVideoManagerStore()
-const { conditionComplete, testConfig, timeComplete, isViewDetail, myFormSettingConditions, isNumberPerPage, isShowRandom, isTimeOfWork, isAutoLog, isAllowRetake, minuteWork, secondWork } = storeToRefs(storeContentVideoTypeModifyManager)
-const { changeType, getQuestionsData } = storeContentVideoTypeModifyManager
+const { conditionComplete, testConfig, timeComplete, isViewDetail, isNumberPerPage, isShowRandom, isTimeOfWork, isAutoLog, isAllowRetake, minuteWork, secondWork } = storeToRefs(storeContentVideoTypeModifyManager)
+const { fetchConditionComplete } = storeContentVideoTypeModifyManager
 
 const configControl = configStore()
 const { settingDefaults } = storeToRefs(configControl)
@@ -32,9 +32,12 @@ const { settingDefaults } = storeToRefs(configControl)
 /** state */
 
 /** method */
-function handleCancle() {
-  router.push({ name: 'course-edit', params: { id: Number(route.params.id) }, query: { tab: 'content' } })
-}
+onMounted(async () => {
+  if (!window._.isEmpty(conditionComplete))
+    await fetchConditionComplete(Number(route.params.contentId))
+
+  await console.log(conditionComplete.value)
+})
 
 /** state */
 const LABEL = Object.freeze({

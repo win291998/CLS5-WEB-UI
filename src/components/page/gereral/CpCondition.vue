@@ -37,11 +37,10 @@ const { schemaOption, Field, Form, useForm } = storeValidate
 const { submitForm } = useForm()
 
 /** state */
-const schema = reactive({
-  isStartTime: schemaOption.defaultString,
-  isEndTime: schemaOption.defaultString,
-})
-
+const schema = computed(() => ({
+  ...(props.isStartTime ? { isStartTime: schemaOption.defaultString } : {}),
+  ...(props.isEndTime ? { isEndTime: schemaOption.defaultString } : {}),
+}))
 interface Emit {
   (e: 'update:isStartTime', status: boolean): void
   (e: 'update:isEndTime', status: boolean): void
@@ -191,12 +190,11 @@ defineExpose({
           {{ t('list-content-req') }}
         </div>
         <CmTable
+          is-local-table
           is-update-row-force
           :selected="selected"
           :headers="headers"
           :items="items"
-          disiable-pagination
-          is-update-row-force
           custom-id="courseContentId"
           :return-object="returnObject"
           @update:selected="selectedRows"
