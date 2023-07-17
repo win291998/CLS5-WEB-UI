@@ -286,6 +286,7 @@ function exportExcel() {
   />
   <CmTable
     v-model:selected="listId"
+    is-update-row-force
     :headers="header"
     :items="items"
     :total-record="totalRecord"

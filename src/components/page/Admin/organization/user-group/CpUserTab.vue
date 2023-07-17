@@ -110,6 +110,7 @@ function handleDeleteMultiple() {
   <CmTable
     v-model:page-number="store.queryParams.pageNumber"
     v-model:selected="listSelected"
+    is-update-row-force
     :headers="headers"
     :items="listUserInGroup"
     :total-record="totalRecord"

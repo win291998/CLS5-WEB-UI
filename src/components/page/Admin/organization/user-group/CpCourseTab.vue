@@ -83,6 +83,7 @@ function deleteCourse(val: boolean) {
 
     v-model:page-number="store.queryParams.pageNumber"
     v-model:selected="store.dataCourse.courseModel"
+    is-update-row-force
     :headers="headers"
     :items="listUserInGroup"
     :total-record="totalRecord"

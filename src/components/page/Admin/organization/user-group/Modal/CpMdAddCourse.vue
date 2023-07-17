@@ -88,6 +88,7 @@ async function confirm() {
     <CmTable
       v-model:page-number="store.queryParams.pageNumber"
       v-model:selected="store.dataCourse.courseModel"
+      is-update-row-force
       :headers="headers"
       :total-record="totalRecord"
       :items="listCourse"

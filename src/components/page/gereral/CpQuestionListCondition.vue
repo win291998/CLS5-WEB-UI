@@ -186,6 +186,7 @@ function updatePoint(val: number, row: Any) {
     <div>
       <CmTable
         v-model:selected="selected"
+        is-update-row-force
         :headers="headers"
         :items="getRows"
         disiable-pagination

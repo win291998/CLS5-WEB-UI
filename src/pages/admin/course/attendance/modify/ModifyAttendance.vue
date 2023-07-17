@@ -32,6 +32,7 @@ const dataInput = reactive({
   endDateTime: null as null | string,
   contentId: null as null | string | number,
   qrCodeId: null as null | string | number,
+  contentId: null as null | string | number,
 })
 const courseId = route.params.id
 const comboboxContent = ref([])

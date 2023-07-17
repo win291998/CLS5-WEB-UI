@@ -64,6 +64,7 @@ getListQuestionContentCourse()
   <div class="mt-6">
     <CmTable
       :selected="dataTable?.selectedRowsIds"
+      is-update-row-force
       :headers="headers"
       :items="items"
       disiable-pagination

@@ -244,6 +244,7 @@ watch(conditionAttend, () => {
         </div>
         <CmTable
           :selected="dataTable?.selectedRowsIds"
+          is-update-row-force
           :headers="headers"
           :items="items"
           disiable-pagination

@@ -158,6 +158,7 @@ getListAttendance()
       <CpHeaderAction
         is-delete
         :is-fillter="false"
+        is-approve
         is-add
         :add-button-name="t('Add-new')"
         :disabled-delete="disabledDelete"
