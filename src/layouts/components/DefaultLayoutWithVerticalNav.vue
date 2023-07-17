@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-// Composable
 import { useSkins } from '@core/composable/useSkins'
 import { useThemeConfig } from '@core/composable/useThemeConfig'
 
@@ -81,13 +80,13 @@ onMounted(async () => {
     </template>
 
     <!-- 👉 Pages -->
-    <RouterView v-slot="{ Component }">
+    <RouterView v-slot="{ Component, route }">
+      <CmBreadcrumb />
       <Transition
-        :name="appRouteTransition"
+        name="fade"
         mode="out-in"
       >
-        <div>
-          <CmBreadcrumb />
+        <div :key="route.name || ''">
           <Component :is="Component" />
         </div>
       </Transition>
@@ -102,3 +101,15 @@ onMounted(async () => {
     <!-- <TheCustomizer /> -->
   </VerticalNavLayout>
 </template>
+
+<style lang="scss">
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>

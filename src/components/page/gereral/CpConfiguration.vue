@@ -24,6 +24,12 @@ const LABEL = Object.freeze({
 interface Props {
   testConfigModel: TestConfig
   totalQuestion: number
+  isNumberPerPageModel: boolean
+  isShowRandomModel: boolean
+  isTimeOfWorkModel: boolean
+  isAutoLogModel: boolean
+  isAllowRetakeModel: boolean
+  isViewDetailModel: boolean
 }
 
 interface TestConfig {
@@ -42,7 +48,7 @@ interface TestConfig {
   isDisplayPoint: boolean
   isDisplayResult: boolean
   isCorrectAnswer: boolean
-  timeFinish: 0
+  timeFinish: number
   isPreserveTime: boolean
   isReviewTheTest: boolean
   isMaintainStatus: boolean
@@ -76,12 +82,18 @@ const testConfig = ref<TestConfig>({
 })
 interface Emit {
   (e: 'update:testConfigModel', data: any): void
+  (e: 'update:isNumberPerPageModel', data: any): void
+  (e: 'update:isShowRandomModel', data: any): void
+  (e: 'update:isTimeOfWorkModel', data: any): void
+  (e: 'update:isAutoLogModel', data: any): void
+  (e: 'update:isAllowRetakeModel', data: any): void
 }
 watch(() => props.testConfigModel, val => {
   testConfig.value = {
     ...val,
   }
-})
+  loadDataEdit()
+}, { immediate: true })
 
 const isNumberPerPage = ref(false)
 const isShowRandom = ref(false)
@@ -92,6 +104,15 @@ const isAllowRetake = ref(false)
 const minuteWork = ref<any>(null)
 const myFormConditions = ref()
 const secondWork = ref<any>(null)
+
+watchEffect(() => {
+  isNumberPerPage.value = props.isNumberPerPageModel
+  isShowRandom.value = props.isShowRandomModel
+  isTimeOfWork.value = props.isTimeOfWorkModel
+  isAutoLog.value = props.isAutoLogModel
+  isAllowRetake.value = props.isAllowRetakeModel
+  isViewDetail.value = props.isViewDetailModel
+})
 const count = ref(2)
 const schema = computed(() => ({
   pointRatio: schemaOption.defaultNumber100YubNoRequire,
@@ -116,19 +137,30 @@ function loadDataEdit() {
     secondWork.value = (testConfig.value.minuteOfWork % 60) || 0
     isTimeOfWork.value = true
   }
-  if (testConfig.value.totalQuestionDisplayInPage > 0)
+  if (testConfig.value.totalQuestionDisplayInPage > 0) {
     isNumberPerPage.value = true
-  if (testConfig.value.randomQuestion > 0)
+    emit('update:isNumberPerPageModel', isNumberPerPage.value)
+  }
+
+  if (testConfig.value.randomQuestion > 0) {
     isShowRandom.value = true
-  if (testConfig.value.writeLogMinute > 0)
+    emit('update:isShowRandomModel', isShowRandom.value)
+  }
+  if (testConfig.value.writeLogMinute > 0) {
     isAutoLog.value = true
-  if (testConfig.value.numberOfRetake > 0)
+    emit('update:isAutoLogModel', isAutoLog.value)
+  }
+  if (testConfig.value.numberOfRetake > 0) {
     isAllowRetake.value = true
+    emit('update:isAllowRetakeModel', isAllowRetake.value)
+  }
 }
 
 // thời gian làm bài thay đổi
 function timeOfWorkChange() {
   testConfig.value.minuteOfWork = Number(minuteWork.value) * 60 + secondWork.value
+  console.log(testConfig.value.minuteOfWork)
+
   if (isTimeOfWork.value && minuteWork.value !== null && secondWork.value !== null) {
     if (!(Number(minuteWork.value) * 60 + Number(secondWork.value) > 0))
       testConfig.value.isPreserveTime = false
@@ -137,10 +169,12 @@ function timeOfWorkChange() {
     testConfig.value.isPreserveTime = false
   }
   emit('update:testConfigModel', testConfig.value)
+  console.log(testConfig.value)
 }
 
 // cho phép làm lại thay đổi
-function allowRetakeChange() {
+function allowRetakeChange(val: boolean) {
+  emit('update:isAllowRetakeModel', val)
   if (testConfig.value.retakeResultType === 0) {
     testConfig.value.retakeResultType = 1
     emit('update:testConfigModel', testConfig.value)
@@ -174,6 +208,10 @@ function updateValue(val: any, text: string) {
 loadDataEdit()
 if (!route.params.contentId)
   getDefaultSetting()
+
+defineExpose({
+  myFormConditions,
+})
 </script>
 
 <template>
@@ -262,6 +300,7 @@ if (!route.params.contentId)
             <CmCheckBox
               v-model:model-value="isNumberPerPage"
               :disabled="isViewDetail"
+              @update:model-value=" emit('update:isNumberPerPageModel', $event)"
             >
               <div class="ml-2 mr-4 text-medium-md">
                 {{ t('number-pages') }}
@@ -313,6 +352,7 @@ if (!route.params.contentId)
           <CmCheckBox
             v-model:model-value="isShowRandom"
             :disabled="isViewDetail"
+            @update:model-value=" emit('update:isShowRandomModel', $event)"
           >
             <div class="d-flex align-center">
               <div class="ml-2 mr-4 text-medium-md">
@@ -365,6 +405,7 @@ if (!route.params.contentId)
           <CmCheckBox
             v-model:model-value="isTimeOfWork"
             :disabled="isViewDetail"
+            @update:model-value=" emit('update:isTimeOfWorkModel', $event)"
           >
             <div class="ml-2 mr-4 text-medium-md">
               {{ t('time-doing') }}
@@ -446,6 +487,7 @@ if (!route.params.contentId)
           <CmCheckBox
             v-model:model-value="isAutoLog"
             :disabled="isViewDetail"
+            @update:model-value=" emit('update:isAutoLogModel', $event)"
           >
             <div class="ml-2 mr-4 text-medium-md">
               {{ t('auto-log') }}
@@ -492,51 +534,54 @@ if (!route.params.contentId)
       </VRow>
       <VRow>
         <VCol>
-          <CmCheckBox
-            v-model:model-value="isAllowRetake"
-            :disabled="isViewDetail"
-            @change="allowRetakeChange"
-          >
-            <div class="d-flex align-center">
-              <div class="ml-2 mr-4 text-medium-md">
-                {{ t('rework-is-allowed') }}
-              </div>
-              <div
-                v-if="isAllowRetake"
-                class="d-flex align-center"
-              >
-                <div class="mr-3">
-                  <Field
-                    v-slot="{ field, errors }"
-                    :model-value="testConfig.numberOfRetake"
-                    :disabled="isViewDetail"
-                    name="numberOfRetake"
-                    type="number"
-                  >
-                    <div class="mr-3">
-                      <div class="d-flex align-center">
-                        <div class="mr-3 conditon-input">
-                          <CmTextField
-                            v-model="testConfig.numberOfRetake"
-                            :field="field"
-                            type="number"
-                            :disabled="isViewDetail"
-                            :min="0"
-                            :max="59"
-                            @update:model-value="updateValue($event, 'numberOfRetake')"
-                          />
-                        </div>
-                        <span class="text-regular-md">{{ t('turns').toLowerCase() }}</span>
-                      </div>
-                      <div class="styleError text-errors">
-                        {{ errors[0] }}
-                      </div>
-                    </div>
-                  </Field>
+          <div class="d-flex align-center">
+            <CmCheckBox
+              v-model:model-value="isAllowRetake"
+              :disabled="isViewDetail"
+              @change="allowRetakeChange"
+            >
+              <div class="d-flex align-center">
+                <div class="ml-2 mr-4 text-medium-md">
+                  {{ t('rework-is-allowed') }}
                 </div>
               </div>
+            </CmCheckBox>
+            <div
+              v-if="isAllowRetake"
+              class="d-flex align-center"
+            >
+              <div class="mr-3">
+                <Field
+                  v-slot="{ field, errors }"
+                  :model-value="testConfig.numberOfRetake"
+                  :disabled="isViewDetail"
+                  name="numberOfRetake"
+                  type="number"
+                >
+                  <div class="mr-3">
+                    <div class="d-flex align-center">
+                      <div class="mr-3 conditon-input">
+                        <CmTextField
+                          v-model="testConfig.numberOfRetake"
+                          :field="field"
+                          type="number"
+                          :disabled="isViewDetail"
+                          :min="0"
+                          :max="59"
+                          @update:model-value="updateValue($event, 'numberOfRetake')"
+                        />
+                      </div>
+                      <span class="text-regular-md">{{ t('turns').toLowerCase() }}</span>
+                    </div>
+                    <div class="styleError text-errors">
+                      {{ errors[0] }}
+                    </div>
+                  </div>
+                </Field>
+              </div>
             </div>
-          </CmCheckBox>
+          </div>
+
           <div
             v-if="isAllowRetake"
             class="ml-9 mt-3 d-flex align-center"
@@ -548,6 +593,7 @@ if (!route.params.contentId)
                 name="retakeResultType"
                 :type="1"
                 :value="1"
+                @update:model-value="updateValue($event, 'retakeResultType')"
               />
             </div>
             <div class="d-flex align-center mr-4 text-medium-md">

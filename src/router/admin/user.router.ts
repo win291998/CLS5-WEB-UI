@@ -285,9 +285,10 @@ export default [
             path: '',
             name: 'admin-organization-user-groups-list',
             component: () => import('@/pages/admin/organization/user-groups/UserGroups.vue'),
+
           },
           {
-            path: ':tab/add',
+            path: 'add',
             meta: {
               requireAuth: {
                 permissionKey: 'UserGroupManaging',
@@ -305,10 +306,10 @@ export default [
               ],
             },
             name: 'admin-organization-user-groups-add',
-            component: () => import('@/pages/admin/organization/user-groups/Edit/EditUserGroup.vue'),
+            component: () => import('@/pages/admin/organization/user-groups/edit/EditUserGroup.vue'),
           },
           {
-            path: ':tab/edit/:id',
+            path: 'edit/:id',
             meta: {
               requireAuth: {
                 permissionKey: 'UserGroupManaging',
@@ -326,7 +327,7 @@ export default [
               ],
             },
             name: 'admin-organization-user-groups-edit',
-            component: () => import('@/pages/admin/organization/user-groups/Edit/EditUserGroup.vue'),
+            component: () => import('@/pages/admin/organization/user-groups/edit/EditUserGroup.vue'),
           },
           {
             path: 'import-file',

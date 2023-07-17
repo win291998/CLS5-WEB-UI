@@ -117,6 +117,8 @@ const UserService = {
   GetPagingByUser: '/usergroup/get-paging-by-user', // GetPagingByUser
   DeleteGroupWithUser: '/usergroup/delete-group-with-user', // GetPagingByUser
   /** POST */
+  PostExportExcelGroupUser: 'usergroup/export-excel-group-users',
+  PostUpdateInforGroupUser: '/usergroup/update',
   PostAddGroupUser: 'usergroup/add-group-with-user',
   PostCreateTitle: 'title/create',
   PostUpdateTitle: 'title/update',

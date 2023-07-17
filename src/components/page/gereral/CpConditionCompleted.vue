@@ -1,6 +1,7 @@
 <!-- eslint-disable indent -->
 <script setup lang="ts">
-import CpQuestionCondition from '../Admin/course/modify/content/type/video/CpQuestionCondition.vue'
+import CpQuestionListCondition from './CpQuestionListCondition.vue'
+import CpConfiguration from './CpConfiguration.vue'
 import { validatorStore } from '@/stores/validatator'
 import CourseService from '@/api/course/index'
 import { TYPE_REQUEST } from '@/typescript/enums/enums'
@@ -8,6 +9,8 @@ import MethodsUtil from '@/utils/MethodsUtil'
 import { load } from '@/stores/loadComponent.js'
 import { configStore } from '@/stores/index'
 import toast from '@/plugins/toast'
+
+import CmTab from '@/components/common/CmTab.vue'
 
 import CmCheckBox from '@/components/common/CmCheckBox.vue'
 import CpActionFooterEdit from '@/components/page/gereral/CpActionFooterEdit.vue'
@@ -29,7 +32,7 @@ const props = withDefaults(defineProps<Props>(), {
     timeFinish: 0,
     timeTypeId: 0,
   }),
-  testConfig: () => ({
+  testConfigModel: () => ({
     courseContentId: null,
     isCompleteEnoughPoints: false,
     isCorrectAnswer: false,
@@ -51,6 +54,7 @@ const props = withDefaults(defineProps<Props>(), {
     timeFinish: 0,
     totalQuestionDisplayInPage: 0,
     writeLogMinute: 0,
+    minuteWork: 0,
   }),
   timeComplete: 0,
   secondWork: 0,
@@ -66,6 +70,36 @@ const props = withDefaults(defineProps<Props>(), {
 
 // Khởi tạo biến đa ngôn ngữ
 const emit = defineEmits<Emit>()
+
+const testConfig = ref<TestConfig>({
+  courseContentId: null,
+  isCompleteEnoughPoints: false,
+  isCorrectAnswer: false,
+  isDisplayFalseAnswer: false,
+  isDisplayPoint: false,
+  isDisplayResult: false,
+  isMaintainStatus: false,
+  isPreserveTime: false,
+  isRequiredRetest: false,
+  isReviewTheTest: false,
+  isShuffleQuestion: false,
+  minuteOfWork: 0,
+  numberOfRetake: 0,
+  pointRatio: 0,
+  randomQuestion: 0,
+  requiredPointRatio: 80,
+  retakeResultType: 0,
+  reviewId: undefined,
+  timeFinish: 0,
+  totalQuestionDisplayInPage: 0,
+  writeLogMinute: 0,
+  minuteWork: 0,
+  id: null,
+})
+watch(() => props.testConfigModel, val => {
+  testConfig.value = val
+})
+
 const { t } = window.i18n()
 const router = useRouter()
 const route = useRoute()
@@ -141,23 +175,20 @@ interface ConditionComplete {
   [e: string]: any
 }
 interface Props {
-  timeComplete: any
-  conditionCompleteData: ConditionComplete
-  timeData: Time
-  isAllowRetake: boolean
-  isAutoLog: boolean
-  isHaveConfig: boolean
-  isNumberPerPage: boolean
-  isShowRandom: boolean
-  isTimeOfWork: boolean
-  isViewDetail: boolean
-  minuteWork: number
-  testConfig: TestConfig
-  secondWork: any
-  listQuestions: Any[]
+  timeComplete?: any
+  conditionCompleteData?: ConditionComplete
+  timeData?: Time
+  isHaveConfig?: boolean
+  isViewDetail?: boolean
+  minuteWork?: number
+  testConfigModel?: TestConfig
+  secondWork?: any
+  routeBack?: string
+  paramsRoute?: any
 }
 
 interface TestConfig {
+  id?: number | null
   courseContentId: any
   isCompleteEnoughPoints: boolean
   isCorrectAnswer: boolean
@@ -179,19 +210,16 @@ interface TestConfig {
   timeFinish: number
   totalQuestionDisplayInPage: number
   writeLogMinute: number
+  minuteWork: number
 }
 interface Emit {
   (e: 'update:conditionCompleteData', data: any): void
   (e: 'update:timeData', data: any): void
   (e: 'update:isAllowRetake', data: any): void
-  (e: 'update:isAutoLog', data: any): void
   (e: 'update:isHaveConfig', data: any): void
-  (e: 'update:isNumberPerPage', data: any): void
-  (e: 'update:isShowRandom', data: any): void
-  (e: 'update:isTimeOfWork', data: any): void
   (e: 'update:isViewDetail', data: any): void
   (e: 'update:minuteWork', data: any): void
-  (e: 'update:testConfig', data: any): void
+  (e: 'update:testConfigModel', data: any): void
   (e: 'update:timeComplete', data: any): void
 }
 const time = ref<Time>({
@@ -203,10 +231,11 @@ const time = ref<Time>({
   noticeSecond: 0 as any,
 })
 
+const listQuestions = ref<Any[]>([])
 async function getDefaultSetting() {
   const defaultRatioPoints = settingDefaults.value.find(item => item.typeId === 4)
-  emit('update:testConfig', {
-    ...props.testConfig,
+  emit('update:testConfigModel', {
+    ...testConfig.value,
     isCompleteEnoughPoints: !!defaultRatioPoints?.value,
   })
 }
@@ -231,11 +260,8 @@ async function fetchConfig() {
   const params = { id: Number(route.params.contentId) }
   await MethodsUtil.requestApiCustom(CourseService.GetConfiguration, TYPE_REQUEST.GET, params).then((value: any) => {
     if (value.data !== null) {
-      // isHaveConfig.value = true
       emit('update:isHaveConfig', true)
-      emit('update:testConfig', value.data)
-
-      // testConfig.value = value.data
+      emit('update:testConfigModel', value.data)
     }
   })
 }
@@ -246,10 +272,15 @@ function showNotiError(errorObject: any) {
 }
 const myFormSettingConditions = ref()
 
+const isNumberPerPage = ref(false)
+const isShowRandom = ref(false)
+const isTimeOfWork = ref(false)
+const isAutoLog = ref(false)
+const isAllowRetake = ref(false)
+
 // lưu  dữ liệu
 async function saveDataCondition(idx: any) {
-  myFormAddConditionComplete.value.validate().then(async (success: any) => {
-    unLoadComponent(idx)
+  await myFormAddConditionComplete.value.validate().then(async (success: any) => {
     if (success.valid) {
       if (conditionComplete.value.isComplete === false && conditionComplete.value.isAfterTime === false && conditionComplete.value.isAnswerTheQuestion === false) {
         toast('WARNING', t('condition-complete-invalid'))
@@ -257,23 +288,18 @@ async function saveDataCondition(idx: any) {
       }
 
       if (conditionComplete.value.isAfterTime === true && time.value.minuteTime !== null && time.value.secondTime !== null) {
-        // conditionComplete.value.timeFinish =
-        emit('update:conditionCompleteData', {
-          ...conditionComplete.value,
-          timeFinish: Number(time.value.minuteTime) * 60 + Number(time.value.secondTime),
-        })
+        conditionComplete.value.timeFinish = Number(time.value.minuteTime) * 60 + Number(time.value.secondTime)
+        emit('update:conditionCompleteData',
+          conditionComplete.value,
+        )
         if (time.value.noActiveMinute !== null && time.value.noActiveSecond !== null) {
           conditionComplete.value.noticeTimeAttendance = Number(time.value.noActiveMinute) * 60 + Number(time.value.noActiveSecond)
           emit('update:conditionCompleteData', conditionComplete.value)
         }
 
         else {
-          emit('update:conditionCompleteData', {
-            ...conditionComplete.value,
-            noticeTimeAttendance: 0,
-          })
-
-          // conditionComplete.value.noticeTimeAttendance = 0
+          conditionComplete.value.noticeTimeAttendance = 0
+          emit('update:conditionCompleteData', conditionComplete.value)
         }
         if ((time.value.noticeMinute !== null) && time.value.noticeSecond !== null) {
           conditionComplete.value.numberOfAttendance = Number(time.value.noticeMinute) * 60 + Number(time.value.noticeSecond)
@@ -283,6 +309,7 @@ async function saveDataCondition(idx: any) {
           conditionComplete.value.numberOfAttendance = 0
           emit('update:conditionCompleteData', conditionComplete.value)
         }
+
         if (conditionComplete.value.timeFinish <= conditionComplete.value.noticeTimeAttendance) {
           toast('WARNING', t('notice-time-less-than-success-time'))
           return
@@ -299,53 +326,41 @@ async function saveDataCondition(idx: any) {
       }
       if (conditionComplete.value.isAnswerTheQuestion) {
         // thiết lập các giá trih về mặc định khi ko chọn
-        if (props.isNumberPerPage !== true) {
-          emit('update:testConfig', {
-            ...props.testConfig,
-            totalQuestionDisplayInPage: 0,
-          })
+        if (isNumberPerPage.value !== true) {
+          testConfig.value.totalQuestionDisplayInPage = 0
+          emit('update:testConfigModel', testConfig.value)
         }
-        if (props.isShowRandom !== true) {
-          emit('update:testConfig', {
-            ...props.testConfig,
-            randomQuestion: 0,
-          })
+        if (isShowRandom.value !== true) {
+          testConfig.value.randomQuestion = 0
+          emit('update:testConfigModel', testConfig.value)
         }
-        if (props.isTimeOfWork !== true) {
-          emit('update:testConfig', {
-            ...props.testConfig,
-            minuteWork: 0,
-          })
+        if (isTimeOfWork.value !== true) {
+          testConfig.value.minuteWork = 0
+          emit('update:testConfigModel', testConfig.value)
         }
-        if (props.isAutoLog !== true) {
-          emit('update:testConfig', {
-            ...props.testConfig,
-            writeLogMinute: 0,
-          })
+        if (isAutoLog.value !== true) {
+          testConfig.value.writeLogMinute = 0
+          emit('update:testConfigModel', testConfig.value)
         }
-        if (props.isAllowRetake !== true) {
-          emit('update:testConfig', {
-            ...props.testConfig,
+        if (isAllowRetake.value !== true) {
+          testConfig.value = {
+            ...testConfig.value,
             numberOfRetake: 0,
             retakeResultType: 0,
-          })
+          }
+          emit('update:testConfigModel', testConfig.value)
         }
-        const validateSet = await myFormSettingConditions.value.validate().then(async (successSetting: any) => {
-          if (successSetting.valid) {
-            if (props.isTimeOfWork === true && props.minuteWork !== null && props.secondWork !== null) {
-              emit('update:testConfig', {
-                ...props.testConfig,
-                minuteOfWork: Number(props.minuteWork) * 60 + Number(props.secondWork),
-              })
-            }
 
-            else {
-              emit('update:testConfig', {
-                ...props.testConfig,
+        const validateSet = await myFormSettingConditions.value.myFormConditions.validate().then(async (successSetting: any) => {
+          if (successSetting.valid) {
+            if (!isTimeOfWork.value) {
+              testConfig.value = {
+                ...testConfig.value,
                 minuteOfWork: 0,
-              })
+              }
+              emit('update:testConfigModel', testConfig.value)
             }
-            if (props.isAutoLog === true && props.testConfig.writeLogMinute && props.testConfig.writeLogMinute < 1)
+            if (isAutoLog.value === true && testConfig.value.writeLogMinute && testConfig.value.writeLogMinute < 1)
               return false
             unLoadComponent(idx)
             return true
@@ -359,64 +374,104 @@ async function saveDataCondition(idx: any) {
         if (!validateSet)
           return
       }
-      let response
-      response = await MethodsUtil.requestApiCustom(CourseService.PostSaveRequireFinish, TYPE_REQUEST.POST, conditionComplete.value)
-      if (response.code === 200) {
-        toast('SUCCESS', t(response.message))
+      MethodsUtil.requestApiCustom(CourseService.PostSaveRequireFinish, TYPE_REQUEST.POST, conditionComplete.value).then(async (response: any) => {
+        if (response?.code === 200) {
+          toast('SUCCESS', t(response.message))
+          unLoadComponent(idx)
 
-        // cập nhật config
-        changeTimeComplete()
-        if (conditionComplete.value.isAnswerTheQuestion === true) {
-          emit('update:testConfig', {
-            ...props.testConfig,
-            courseContentId: Number(route.params.contentId),
-          })
-
-          // thêm config
-          if (props.isHaveConfig === true) {
-            await MethodsUtil.requestApiCustom(CourseService.PostuUpdateTestConfig, TYPE_REQUEST.POST, props.testConfig)
-          }
-          else {
-            const res = await MethodsUtil.requestApiCustom(CourseService.PostuCreateTestConfig, TYPE_REQUEST.POST, props.testConfig)
-            if (res.code === 200) {
-              emit('update:testConfig', {
-                ...props.testConfig,
-                id: res.data,
-              })
-              emit('update:isHaveConfig', true)
+          // cập nhật config
+          changeTimeComplete()
+          if (conditionComplete.value.isAnswerTheQuestion === true) {
+            testConfig.value = {
+              ...testConfig.value,
+              courseContentId: Number(route.params.contentId),
             }
-          }
+            emit('update:testConfigModel', testConfig.value)
 
-          // lưu danh sách câu hỏi
-          const model = {
-            courseContentId: Number(route.params.contentId),
-            listData: props.listQuestions || [],
-          }
+            // thêm config
+            if (props.isHaveConfig === true) {
+              await MethodsUtil.requestApiCustom(CourseService.PostuUpdateTestConfig, TYPE_REQUEST.POST, testConfig.value)
+            }
+            else {
+              const res = await MethodsUtil.requestApiCustom(CourseService.PostuCreateTestConfig, TYPE_REQUEST.POST, testConfig.value)
+              if (res.code === 200) {
+                testConfig.value = {
+                  ...testConfig.value,
+                  id: res.data,
+                }
+                emit('update:testConfigModel', testConfig.value)
+                emit('update:isHaveConfig', true)
+              }
+            }
 
-          // Nếu là câu hỏi vừa được tạo thì set id = 0
-          model.listData?.forEach((element: any) => {
-            if (typeof element.id === 'string')
-              element.id = 0
+            // lưu danh sách câu hỏi
+            const model = {
+              courseContentId: Number(route.params.contentId),
+              listData: listQuestions.value || [],
+            }
 
-            element.questionId = element.id === 0 ? 0 : element.questionId
-            element.listQuestions.forEach((item: any) => {
-              item.questionId = item.id === 0 ? 0 : item.questionId
+            // Nếu là câu hỏi vừa được tạo thì set id = 0
+            model.listData?.forEach((element: any) => {
+              if (typeof element.id === 'string')
+                element.id = 0
+
+              element.questionId = element.id === 0 ? 0 : element.questionId
+              element.listQuestions.forEach((item: any) => {
+                item.questionId = item.id === 0 ? 0 : item.questionId
+              })
             })
-          })
-          response = await MethodsUtil.requestApiCustom(CourseService.PostUpdateQuestionTest, TYPE_REQUEST.POST, model)
+            response = await MethodsUtil.requestApiCustom(CourseService.PostuUpdateQuestionTest, TYPE_REQUEST.POST, model)
+            unLoadComponent(idx)
+          }
         }
-      }
-      else {
-        toast('ERROR', t(response.message))
-      }
+      })
+        .catch((error: Any) => {
+          toast('ERROR', t(error.response.data.message))
+        })
     }
   })
+  unLoadComponent(idx)
 }
+
+// GetListQuestionDetailContentTest
+
+const queryParams = ref({
+  pageSize: 1000,
+  pageNumber: 1,
+  courseContentId: route.params.contentId,
+})
+
+function getListQuestionCodition() {
+  MethodsUtil.requestApiCustom(CourseService.GetListQuestionContentTest, TYPE_REQUEST.GET, queryParams.value).then((res: Any) => {
+    const listId = MethodsUtil.getPropertyByArray(res?.data?.pageLists, 'id')
+    MethodsUtil.requestApiCustom(CourseService.GetListQuestionDetailContentTest, TYPE_REQUEST.GET, { listId }).then((response: Any) => {
+      response?.data.forEach((element: any) => {
+        // câu hỏi chùm
+        element.id = (element.id && element.id !== null) ? element.id : 0
+        if (element.isQuestionGroup === true) {
+          if (!element.questionGroupContent)
+            element.questionGroupContent = element.content
+
+          if (!element.questionGroupContentBasic)
+            element.questionGroupContentBasic = element.contentBasic
+        }
+
+        element.listQuestions.forEach((question: any) => {
+          question.id = (question.id && question.id !== null) ? question.id : 0
+        })
+      })
+      listQuestions.value = response?.data
+    })
+  })
+}
+
+onMounted(() => {
+  getListQuestionCodition()
+})
 
 function changeType(val: any, type: string) {
   conditionComplete.value[type] = val
   emit('update:conditionCompleteData', conditionComplete.value)
-
   if (val && type === 'isComplete') {
     conditionComplete.value = {
       ...conditionComplete.value,
@@ -443,9 +498,24 @@ onMounted(async () => {
 
 watch(() => props.conditionCompleteData, (val: any) => {
   conditionComplete.value = { ...val }
+}, { immediate: true })
 
-  // loadDataEdit()
-})
+const listTab = [
+  {
+    key: 'question',
+    title: 'questions',
+    isRendered: true,
+  },
+
+  {
+    key: 'configuration',
+    title: 'custom',
+    isRendered: true,
+  },
+]
+function handleCancle() {
+  router.push({ name: props.routeBack, ...props.paramsRoute })
+}
 </script>
 
 <template>
@@ -633,17 +703,42 @@ watch(() => props.conditionCompleteData, (val: any) => {
         <div class="text-medium-lg">
           {{ t('list-content-req') }}
         </div>
-        <CpQuestionCondition ref="myFormSettingConditions" />
+        <div>
+          <CmTab
+            :is-render="true"
+            :list-tab="listTab"
+            type="underline"
+            label="tabCondition"
+          />
+          <CpQuestionListCondition
+            v-show="route.query.tabCondition === 'question'"
+            v-model:items="listQuestions"
+          />
+
+          <CpConfiguration
+            v-show="route.query.tabCondition === 'configuration'"
+            ref="myFormSettingConditions"
+            v-model:isNumberPerPageModel="isNumberPerPage"
+            v-model:isShowRandomModel="isShowRandom"
+            v-model:isTimeOfWorkModel="isTimeOfWork"
+            v-model:isAutoLogModel="isAutoLog"
+            v-model:isAllowRetakeModel="isAllowRetake"
+            v-model:test-config-model="testConfig"
+            :is-view-detail-model="false"
+            :total-question="12"
+          />
+        </div>
       </div>
       <div>
         <CpActionFooterEdit
+          class="mt-6"
           is-cancel
           is-save
           :title-cancel="t('cancel-title')"
           :title-save="t('save')"
           @on-save="saveDataCondition"
+          @on-cancel="handleCancle"
         />
-        <!-- @on-cancel="handleCancle" -->
       </div>
     </Form>
   </div>

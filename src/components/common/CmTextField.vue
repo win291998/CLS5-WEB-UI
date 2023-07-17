@@ -126,7 +126,7 @@ function focusInput(params: boolean) {
 @use "@/styles/style-global.scss" as *;
 .cm-input-field {
   height: 44px;
-  padding: 4px;
+  padding: 4px 0;
 }
 .vTextField .v-field__input{
   color: $color-gray-900 !important;

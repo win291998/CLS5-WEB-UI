@@ -150,7 +150,7 @@ export const contentManagerStore = defineStore('contentManager', () => {
             name: 'content-view',
             params: {
               id: Number(route.params.id),
-              type: MethodsUtil.getTypeContent(type[1].contentArchiveTypeId),
+              type: 'video-content',
               contentId: type[1]?.courseContentId,
             },
             query: {

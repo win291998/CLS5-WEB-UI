@@ -3489,6 +3489,7 @@
   "choose-file-iframe": "Địa chỉ Web(URL)",
   "time-min-0": "Thời lượng phải lớn hơn 0",
   "content-time-less-than-success-time": "Thời lượng nội dung phải lớn hơn thời gian hoàn thành",
+  "ACT_EndDateMustBeInCourseTime": "Thời gian kết thúc của nội dung phải nằm trong thời gian diễn ra khóa  học",
   "choose-file-cdn": "Chọn đường dẫn cdn",
   "coppy-course": "Sao chép khóa học",
   "condition-content": "Điều kiện tham gia bài học",
@@ -3520,5 +3521,7 @@
   "QuestionService.AddQuestionContent": "Thêm vào ngân hàng câu hỏi",
   "text-content": "Nội dung",
   "taken-from-another": "Lấy từ nguồn khác",
-  "add-from-question-bank": "Thêm từ ngân hàng câu hỏi"
+  "add-from-question-bank": "Thêm từ ngân hàng câu hỏi",
+  "move-user-success": "Chuyển người dùng thành công!",
+  "check-info": "Vui lòng kiểm tra lại thông tin!"
 }
