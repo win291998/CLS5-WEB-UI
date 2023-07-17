@@ -32,6 +32,7 @@ interface Props {/** ** Interface */
   colorInterminate?: string
   field?: any
   value?: any
+  className?: any
 }
 interface Emit {
   (e: 'update:modelValue', value: any): void
@@ -113,6 +114,7 @@ watch(() => propsValue.modelValue, value => {
       :true-icon="propsValue.trueIcon"
       :true-value="propsValue.trueValue"
       :value="value"
+      :class="className"
       @update:modelValue="onChangeChecked($event)"
     >
       <template

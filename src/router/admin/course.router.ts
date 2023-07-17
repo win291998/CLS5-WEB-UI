@@ -164,6 +164,23 @@ export default [
         },
         component: () => import('@/pages/admin/course/attendance/Attendance.vue'),
       },
+      {
+        path: ':id/attendance/add',
+        name: 'attendance-add',
+        meta: {
+          breadcrumb: [
+            {
+              title: 'attendance',
+              to: { name: 'course-attendance' },
+            },
+            {
+              title: 'add-attendance',
+              active: true,
+            },
+          ],
+        },
+        component: () => import('@/pages/admin/course/attendance/modify/ModifyAttendance.vue'),
+      },
     ],
   },
 ]

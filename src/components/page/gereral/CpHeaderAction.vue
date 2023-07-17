@@ -42,6 +42,7 @@ interface Props {
   disabledApprove?: boolean
   isFillter?: boolean
   isAdd?: boolean
+  disabledAdd?: boolean
   addButtonName?: string
   disabledFillter?: boolean
   keyword?: string
@@ -127,6 +128,7 @@ const handleSearch = window._.debounce((value: any) => {
         <CmButton
           v-if="isAdd"
           class="ml-3"
+          :disabled="disabledAdd"
           color="primary"
           @click="handleClickBtn('addHandler')"
         >

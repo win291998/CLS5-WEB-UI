@@ -93,7 +93,7 @@ async function getComboboxRatingScale() {
     })
   }
 }
-async function changeCheckBoxTimeLearning(state) {
+async function changeCheckBoxTimeLearning(state: any) {
   if (state) {
     settingData.value.studyTimeType = 1
     settingData.value.studyTime = 0
@@ -212,17 +212,13 @@ async function saveSetting(idx: number) {
       if (!optionData.experiencePoint)
         settingData.value.point = null
 
-      const response = await window.requestApiCustom(CourseService.PostUpdateSettingCourse, TYPE_REQUEST.POST, settingData.value)
-
-      if (response?.code === 200) {
-        toast('SUCCESS', t(response?.message))
+      await window.requestApiCustom(CourseService.PostUpdateSettingCourse, TYPE_REQUEST.POST, settingData.value).then((value: any) => {
+        toast('SUCCESS', t(value?.message))
         unLoadComponent(idx)
-      }
-      else {
-        if (response.errors.length > 0)
-          toast('ERROR', t(window.getErrorsMessage(response.errors, t)))
-        unLoadComponent(idx)
-      }
+      }).catch((error: any) => {
+        if (error?.response?.data?.errors?.length > 0)
+          toast('ERROR', t(window.getErrorsMessage(error?.response?.data?.errors, t)))
+      })
     }
     else { unLoadComponent(idx) }
   })

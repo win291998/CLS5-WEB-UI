@@ -403,7 +403,7 @@ async function saveDataCondition(idx: any) {
               item.questionId = item.id === 0 ? 0 : item.questionId
             })
           })
-          response = await MethodsUtil.requestApiCustom(CourseService.PostuUpdateQuestionTest, TYPE_REQUEST.POST, model)
+          response = await MethodsUtil.requestApiCustom(CourseService.PostUpdateQuestionTest, TYPE_REQUEST.POST, model)
         }
       }
       else {

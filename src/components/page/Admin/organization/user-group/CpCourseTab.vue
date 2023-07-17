@@ -41,7 +41,7 @@ const { listUserInGroup, totalRecord, queryParams, dataCourse } = storeToRefs<an
 const { deleteItem, getListCourse } = store
 
 // Tìm kiếm người dùng
-const handleSearch = (val: string) => {
+function handleSearch(val: string) {
   store.queryParams.search = val
   store.queryParams.pageNumber = 1
 }
@@ -50,19 +50,19 @@ watch(queryParams.value, val => {
 })
 
 const isShow = ref(false)
-const showModalAdd = () => {
+function showModalAdd() {
   isShow.value = true
 }
 
 // Xử lý xóa khóa học
 const isShowModalDelete = ref<boolean>(false)
-const showModalConfirmDelete = (val: any) => {
+function showModalConfirmDelete(val: any) {
   isShowModalDelete.value = true
   if (val)
     dataCourse.value.courseModel = [val.id]
 }
 
-const deleteCourse = (val: boolean) => {
+function deleteCourse(val: boolean) {
   if (val)
     deleteItem()
 }
@@ -127,4 +127,3 @@ const deleteCourse = (val: boolean) => {
     @confirm="deleteCourse"
   />
 </template>
-

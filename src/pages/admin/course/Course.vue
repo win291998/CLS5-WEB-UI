@@ -76,11 +76,11 @@ const queryParamsInit = {
 const headers = reactive([
   { text: '', value: 'checkbox', width: 50 },
   { text: t('name-course'), value: 'name', type: 'custom' },
-  { text: t('topic'), value: 'topicCourseName' },
+  { text: t('topic'), value: 'topicCourse' },
   { text: t('author-name'), value: 'fullname', type: 'custom' },
   { text: t('form-study'), value: 'formStudy', type: 'custom' },
   { text: t('duration-time'), value: 'time', type: 'custom' },
-  { text: t('date-update'), value: 'modifiedDateString' },
+  { text: t('date-update'), value: 'modifiedDate', type: 'custom' },
   { text: '', value: 'actions', width: 150, type: 'custom' },
 ])
 const isShowModalFeedBack = ref(false)
@@ -309,6 +309,9 @@ window.hideAllPageLoading()
           </div>
           <div v-if="col === 'time'">
             {{ DateUtil.formatSecond(context.time) }}
+          </div>
+          <div v-if="col === 'modifiedDate'">
+            <span>{{ DateUtil.formatDateToDDMM(context[col]) }}</span>
           </div>
         </template>
       </CmTable>

@@ -26,11 +26,12 @@ interface Props {
   appendToBody?: boolean
   isDivSpace?: boolean
   isOk?: boolean
+  isThemeCustom?: boolean
 }
 
 interface Emit {
   (e: 'cancel', type?: string): void
-  (e: 'confirm', type?: string): void
+  (e: 'confirm', idx?: any): void
   (e: 'show'): void
   (e: 'hide'): void
 }
@@ -58,8 +59,8 @@ function onCancel() {
   emit('cancel')
 }
 
-function onConfirmation() {
-  emit('confirm')
+function onConfirmation(idx: any) {
+  emit('confirm', idx)
 }
 
 function onDialogShown(e: any) {
@@ -105,7 +106,11 @@ const sizeModal = computed(() => {
       @update:model-value="onCancel"
       @before-enter="onDialogShown"
     >
+      <div v-if="isThemeCustom">
+        <slot name="isTheme" />
+      </div>
       <CmCard
+        v-else
         :class="{ 'modal-custom-divspace': isDivSpace }"
         backgroud="bg-white"
       >
@@ -155,7 +160,8 @@ const sizeModal = computed(() => {
               variant="elevated"
               :disabled="disabledOk"
               :color="color"
-              @click="onConfirmation"
+              is-load
+              @click="(idx: any) => onConfirmation(idx)"
             >
               {{ t(buttonOkName) }}
             </CmButton>
