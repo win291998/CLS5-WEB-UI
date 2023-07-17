@@ -3,7 +3,7 @@
     {
       "id": 1,
       "name": "ActionEdit",
-      "icon": "mdi-pencil",
+      "icon": "fe:edit",
       "color": "color-primary",
       "note": "Chỉnh sửa"
     },

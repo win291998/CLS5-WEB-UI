@@ -47,6 +47,7 @@ function showModalAdd() {
   isShowAddUser.value = true
 }
 
+console.log(store.$state)
 onBeforeUnmount(() => {
   store.$dispose()
 })
@@ -74,6 +75,7 @@ async function handleSubmit(val: any | null) {
   dataMove.isTotal = !dataMove.userIds.length
   dataMove.newGroup = val
   const isHidden = await moveUser(dataMove)
+  listSelected.value = []
   isShowModalMove.value = isHidden
 }
 function moveMultipleUser() {
@@ -95,6 +97,7 @@ function handleDeleteMultiple() {
 
 <template>
   <CpHeaderAction
+    class="mt-7"
     :button-prepend="TITLE.BUTTON_EXCEL"
     :title-page="TITLE.TITLE_PAGE"
     :button-add="TITLE.BUTTON_ADD"
@@ -108,6 +111,7 @@ function handleDeleteMultiple() {
     @click-delete="showModalDeleteUser"
   />
   <CmTable
+    v-model:page-size="store.queryParams.pageSize"
     v-model:page-number="store.queryParams.pageNumber"
     v-model:selected="listSelected"
     is-update-row-force

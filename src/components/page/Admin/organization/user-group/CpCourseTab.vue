@@ -70,6 +70,7 @@ function deleteCourse(val: boolean) {
 
 <template>
   <CpHeaderAction
+    class="mt-6"
     :button-prepend="TITLE.BUTTON_EXCEL"
     :title-page="TITLE.TITLE_PAGE"
     :button-add="TITLE.BUTTON_ADD"
@@ -80,7 +81,7 @@ function deleteCourse(val: boolean) {
     @click-delete="showModalConfirmDelete(null)"
   />
   <CmTable
-
+    v-model:page-size="store.queryParams.pageSize"
     v-model:page-number="store.queryParams.pageNumber"
     v-model:selected="store.dataCourse.courseModel"
     is-update-row-force

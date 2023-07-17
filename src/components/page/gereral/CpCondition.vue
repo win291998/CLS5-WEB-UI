@@ -40,7 +40,6 @@ const { submitForm } = useForm()
 const schema = reactive({
   isStartTime: schemaOption.defaultString,
   isEndTime: schemaOption.defaultString,
-  texts: schemaOption.defaultString,
 })
 
 interface Emit {
@@ -64,8 +63,20 @@ function selectedRows(val: Any) {
   emit('update:selected', val)
 }
 const FormCondition = ref()
+const dateTimeStartData = ref<any>(null)
+const dateTimeEndData = ref<any>(null)
+watchEffect(() => {
+  dateTimeStartData.value = props.dateTimeStart
+  dateTimeEndData.value = props.dateTimeEnd
+})
+const isIntersecting = ref<boolean>(false)
+function onIntersect(val: boolean) {
+  isIntersecting.value = val
+}
+
 defineExpose({
   FormCondition,
+  isIntersecting,
 })
 </script>
 
@@ -79,7 +90,9 @@ defineExpose({
       <div class="text-semibold-md color-text-900 mb-4">
         {{ t('setting-time') }}
       </div>
-      <VRow>
+      <VRow
+        v-intersect="onIntersect"
+      >
         <VCol
           cols="12"
         >
@@ -93,7 +106,7 @@ defineExpose({
             <div class="w-100 d-flex flex-column ml-7">
               <Field
                 v-slot="{ field, errors }"
-                :model-value="dateTimeStart"
+                v-model:model-value="dateTimeStartData"
                 name="isStartTime"
               >
                 <div v-if="isStartTime">
@@ -105,7 +118,7 @@ defineExpose({
                       <div class="mr-3">
                         <div class="mr-3 ">
                           <CmDateTimePicker
-                            :modal-value="dateTimeStart"
+                            :model-value="dateTimeStartData"
                             class="w-100"
                             :field="field"
                             :errors="errors"
@@ -123,7 +136,9 @@ defineExpose({
           </div>
         </VCol>
       </VRow>
-      <VRow>
+      <VRow
+        v-intersect="onIntersect"
+      >
         <VCol
           cols="12"
           class="mb-6"
@@ -144,13 +159,13 @@ defineExpose({
                   >
                     <Field
                       v-slot="{ field, errors }"
-                      :model-value="dateTimeEnd"
+                      v-model:model-value="dateTimeEndData"
                       name="isEndTime"
                     >
                       <div class="mr-3">
                         <div class="mr-3 ">
                           <CmDateTimePicker
-                            :model-value="dateTimeEnd"
+                            :model-value="dateTimeEndData"
                             class="w-100"
                             :field="field"
                             :errors="errors"
@@ -181,7 +196,8 @@ defineExpose({
           :headers="headers"
           :items="items"
           disiable-pagination
-          custom-id="id"
+          is-update-row-force
+          custom-id="courseContentId"
           :return-object="returnObject"
           @update:selected="selectedRows"
         >

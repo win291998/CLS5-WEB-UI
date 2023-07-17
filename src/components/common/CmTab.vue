@@ -51,10 +51,15 @@ interface Emit {
   (e: 'activeTab', data: tab): void
 }
 const tabActive = ref<string>('')
-const dataTab = ref<any>(null)
+const dataTab = ref<any>({})
+
 function getTabActive() {
   dataTab.value = props.listTab.find(e => e.key === route.query[props.label]) as object
-  tabActive.value = dataTab.value?.key
+  if (dataTab.value) {
+    tabActive.value = dataTab.value?.key
+    if (route.query[props.label] && props.isRender)
+      dataTab.value.isRendered = true
+  }
 }
 getTabActive()
 function activeTab(value: any) {
@@ -83,11 +88,14 @@ watch(() => route.query[props.label], val => {
 
 <template>
   <div class="tabs w-100">
-    <div :class="`w-100 ${type}-tabs`">
+    <div
+      :class="`w-100 ${type}-tabs`"
+    >
       <VTabs
         v-if="!hide"
         v-model="tabActive"
         class="cm-tabs"
+        style="height: calc(100% + 10px);"
         show-arrows
         @update:modelValue="activeTab"
       >
@@ -143,7 +151,6 @@ watch(() => route.query[props.label], val => {
 @use "/src/styles/style-global" as *;
 .tabs {
   .cm-tabs {
-    border-bottom: 1px solid $color-gray-200 !important;
   // background-color: $color-white;
   color: $color-gray-500;
   inline-size: fit-content;
@@ -152,7 +159,7 @@ watch(() => route.query[props.label], val => {
     border-block-end: 1px red solid;
   }
   .item-tab {
-    border-radius: 6px !important;
+    border-radius: unset !important;
     text-transform: capitalize !important;
     box-shadow: unset !important;
   }
@@ -161,6 +168,7 @@ watch(() => route.query[props.label], val => {
 
  // kiểu button tab
  .button-tabs {
+    border-bottom: 1px solid $color-gray-200 !important;
     .active {
       background-color: $color-primary-50 !important;
       color: $color-primary-700 !important;
@@ -187,9 +195,6 @@ watch(() => route.query[props.label], val => {
   .v-slide-group__content {
    display: flex;
    flex-wrap: wrap !important;
-  }
-  .v-tab__slider{
-    height: 3px !important;
   }
 }
 </style>

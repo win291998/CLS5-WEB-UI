@@ -60,8 +60,8 @@ function actionItem([{ id, name }, content]: [Any, Any]) {
 }
 const listQuestions = ref<Any[]>()
 watch(() => props.items, val => {
-  const temp = val
-  temp.forEach((element: Any) => {
+  const temp = val || []
+  temp?.forEach((element: Any) => {
     element.actions = [
       MethodsUtil.checkActionType({ id: 4 }),
       MethodsUtil.checkActionType({ id: 1 }),
@@ -81,7 +81,6 @@ function deleteItem(val: Any) {
 }
 
 function deleteItems() {
-  const listIdx: number[] = []
   listQuestions.value = listQuestions.value?.filter((value: Any) => {
     return !selected.value.includes(value.id)
   })
@@ -109,6 +108,7 @@ function getListQuestion() {
       ...listQuestions.value as Any[],
       ...data,
     ]
+    emit('update:items', listQuestions.value)
   })
 }
 
@@ -123,13 +123,10 @@ const getRows = computed(() => {
         )
           qts.push(element)
       }
-      else if (element?.listQuestions && element.listQuestions.length > 0) {
-        if (
-          StringUtil.removeAccents(
-            element.listQuestions[0].contentBasic?.toLowerCase(),
-          ).includes(StringUtil.removeAccents(keyword.value.toLowerCase())) === true
-        )
-          qts.push(element)
+      else if (element?.listQuestions && element.listQuestions.length > 0 && StringUtil.removeAccents(
+        element.listQuestions[0].contentBasic?.toLowerCase(),
+      ).includes(StringUtil.removeAccents(keyword.value.toLowerCase())) === true) {
+        qts.push(element)
       }
     })
     return qts

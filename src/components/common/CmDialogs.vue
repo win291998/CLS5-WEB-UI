@@ -79,7 +79,7 @@ watch(() => props.isDialogVisible, val => {
 const sizeModal = computed(() => {
   switch (props.size) {
     case 'sm':
-      return '300'
+      return '500'
     case 'lg':
       return '800'
     case 'xl':
