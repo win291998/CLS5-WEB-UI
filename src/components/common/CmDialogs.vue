@@ -108,6 +108,12 @@ const sizeModal = computed(() => {
     >
       <div v-if="isThemeCustom">
         <slot name="isTheme" />
+        <VIcon
+          class="btn-close-x"
+          @click="onCancel"
+        >
+          mdi-close
+        </VIcon>
       </div>
       <CmCard
         v-else

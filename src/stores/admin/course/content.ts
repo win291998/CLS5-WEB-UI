@@ -85,6 +85,8 @@ export const contentManagerStore = defineStore('contentManager', () => {
     })
   }
   async function actionItemUserReg(type: any) {
+    console.log(type)
+
     switch (type[0]?.name) {
       case 'ActionEdit':
         if (type[1]?.contentArchiveTypeId === 13) {
@@ -135,6 +137,15 @@ export const contentManagerStore = defineStore('contentManager', () => {
       case 'ActionAgree':
         await approveContent([{ id: type[1]?.courseContentId }]).then(() => {
           getListContentCourse()
+        })
+        break
+      case 'ActionUpdatePointOffline':
+        router.push({
+          name: 'update-point-offline',
+          params: {
+            id: Number(route.params.id),
+            contentId: type[1]?.courseContentId,
+          },
         })
         break
       case 'ActionViewDetail':

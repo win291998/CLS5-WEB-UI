@@ -8,6 +8,7 @@ import toast from '@/plugins/toast'
 
 const props = withDefaults(defineProps<Props>(), {
   isShowModal: false,
+  isView: false,
 })
 const emit = defineEmits<Emit>()
 const CmDialogs = defineAsyncComponent(() => import('@/components/common/CmDialogs.vue'))
@@ -16,6 +17,7 @@ const CpMdQrCodeSettime = defineAsyncComponent(() => import('@/components/page/A
 interface Props {
   isShowModal: boolean
   disabled?: boolean
+  isView?: boolean
   content?: any
 }
 interface Emit {
@@ -37,16 +39,17 @@ const dataQr = ref({
   dateRollCall: '',
   teacherName: '',
   name: '',
+  id: 0,
 })
 async function onCancel() {
   emit('update:isShowModal', false)
 }
-const isShowZoomQR = ref(false)
 const isShowMdQrCodeSettime = ref(false)
+const isShowMdQrCodeZoom = ref(false)
 const isQrActive = ref(false)
 const isHaveQrActive = ref(false)
 function handleZoomQR() {
-  isShowZoomQR.value = true
+  isShowMdQrCodeZoom.value = true
 }
 async function getDataQr() {
   const params = {
@@ -54,16 +57,21 @@ async function getDataQr() {
     rollCallId: route.params.idAttendance,
   }
   await window.requestApiCustom(CourseService.GetQrCode, TYPE_REQUEST.GET, params).then((response: any) => {
+    console.log(response)
     emit('update', response?.data)
     const timeOld = new Date(new Date(response?.data.dateRollCall).getFullYear(), new Date(response?.data.dateRollCall).getMonth(), new Date(response?.data.dateRollCall).getDate()).toDateString()
-    const timeNew = new Date(new Date(props.content.dateRollCall).getFullYear(), new Date(props.content.dateRollCall).getMonth(), new Date(content.dateRollCall).getDate()).toDateString()
+    const timeNew = new Date(new Date(props.content.dateRollCall).getFullYear(), new Date(props.content.dateRollCall).getMonth(), new Date(props.content.dateRollCall).getDate()).toDateString()
+    console.log(response)
+
     if (response?.data.qrCode === null) {
       dataQr.value = response?.data
       dataQr.value.qrCode = `data:image/png;base64,${imageQr}`
       isQrActive.value = false
     }
     else if (timeOld !== timeNew) {
-      toast('ERROR', t('noti-error-rollCall-date'))
+      if (route.params.idAttendance)
+        toast('ERROR', t('noti-error-rollCall-date'))
+
       isQrActive.value = false
     }
     else {
@@ -78,11 +86,24 @@ async function getDataQr() {
     })
 }
 function show() {
-  if (route.params.idAttendance && !isHaveQrActive.value)
+  console.log(route.params.idAttendance, isHaveQrActive.value)
+  if (route.params.idAttendance && !isHaveQrActive.value) {
     getDataQr()
+  }
+  else if (!route.params.idAttendance) {
+    console.log(dataQr)
 
-  else
-    isQrActive.value = !!isHaveQrActive.value
+    const timeOld = new Date(new Date(dataQr?.value.dateRollCall).getFullYear(), new Date(dataQr?.value.dateRollCall).getMonth(), new Date(dataQr?.value.dateRollCall).getDate()).toDateString()
+    const timeNew = new Date(new Date(props.content.dateRollCall).getFullYear(), new Date(props.content.dateRollCall).getMonth(), new Date(props.content.dateRollCall).getDate()).toDateString()
+    console.log(timeOld !== timeNew)
+    if (timeOld !== timeNew) {
+      isQrActive.value = false
+      dataQr.value.id = 0
+      emit('update', dataQr.value)
+    }
+    else { isQrActive.value = !!isHaveQrActive.value }
+  }
+  else { isQrActive.value = !!isHaveQrActive.value }
 }
 function handleCreateQrSettime() {
   isShowMdQrCodeSettime.value = true
@@ -94,14 +115,12 @@ async function handleCreateQr(dateTime: any) {
     endDateTime: dateTime.endDateTime,
     dateRollCall: props.content?.dateRollCall,
   }
-  console.log(params)
-  await window.requestApiCustom(CourseService.GetQrCode, TYPE_REQUEST.POST, params).then((response: any) => {
-    console.log(response)
+  await window.requestApiCustom(CourseService.PostCreateQr, TYPE_REQUEST.POST, params).then((response: any) => {
     emit('update', response?.data)
     isShowMdQrCodeSettime.value = false
     if (response?.data.qrCode === null) {
       dataQr.value = response?.data
-      dataQr.value.qrCode = `data:image/png;base64,${this.qrCode}`
+      dataQr.value.qrCode = `data:image/png;base64,${imageQr}`
       isQrActive.value = false
     }
     else {
@@ -116,6 +135,24 @@ async function handleCreateQr(dateTime: any) {
       if (error?.response?.data?.errors?.length > 0)
         toast('ERROR', t(window.getErrorsMessage(error?.response?.data?.errors, t)))
     })
+}
+function downloadQr() {
+  // Tạo tên tệp
+  const filename = 'QR.png'
+
+  // Tải xuống ảnh
+  downloadImage(dataQr.value.qrCode, filename)
+}
+function downloadImage(dataURL: any, filename: any) {
+  // Tạo một thẻ a để tải xuống
+  const link = document.createElement('a')
+  link.href = dataURL
+  link.download = filename
+
+  // Tự động bấm vào liên kết để tải xuống
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
 }
 onMounted(() => {
   getDataQr()
@@ -151,27 +188,49 @@ onMounted(() => {
             >
               {{ dataQr.name || content.name }}
             </div>
-            <div class="box-list">
-              <div class="box-item">
+            <div
+              class="box-list"
+            >
+              <div
+                class="box-item"
+              >
                 <div
                   class="box-item-icon"
                   :title="t('date-start')"
                 >
                   <VIcon icon="line-md:sun-rising-loop" />
                 </div>
-                <div class="d-flex align-center">
-                  {{ DateUtil.formatTimeToHHmm(dataQr.startDateTime) }} {{ DateUtil.formatDateToDDMM(dataQr.startDateTime) }}
+                <div class="d-flex box-content align-center justify-space-between">
+                  <div class="text-semibold-md">
+                    {{ t('date-start') }}:
+                  </div>
+                  <div v-if="dataQr.startDateTime === '0001-01-01T00:00:00' || !dataQr.startDateTime">
+                    -
+                  </div>
+                  <div v-else>
+                    {{ DateUtil.formatTimeToHHmm(dataQr.startDateTime) }} {{ DateUtil.formatDateToDDMM(dataQr.startDateTime) }}
+                  </div>
                 </div>
               </div>
-              <div class="box-item">
+              <div
+                class="box-item"
+              >
                 <div
                   class="box-item-icon"
                   :title="t('expired-date')"
                 >
                   <VIcon icon="line-md:sunny-outline-to-moon-loop-transition" />
                 </div>
-                <div class="d-flex align-center">
-                  {{ DateUtil.formatTimeToHHmm(dataQr.endDateTime) }} {{ DateUtil.formatDateToDDMM(dataQr.endDateTime) }}
+                <div class="d-flex box-content align-center justify-space-between">
+                  <div class="text-semibold-md">
+                    {{ t('expired-date') }}:
+                  </div>
+                  <div v-if="dataQr.endDateTime === '0001-01-01T00:00:00' || !dataQr.endDateTime">
+                    -
+                  </div>
+                  <div v-else>
+                    {{ DateUtil.formatTimeToHHmm(dataQr.endDateTime) }} {{ DateUtil.formatDateToDDMM(dataQr.endDateTime) }}
+                  </div>
                 </div>
               </div>
               <div class="box-item">
@@ -181,8 +240,16 @@ onMounted(() => {
                 >
                   <VIcon icon="ion:shield-checkmark" />
                 </div>
-                <div class="d-flex align-center">
-                  {{ DateUtil.formatTimeToHHmm(dataQr.dateRollCall) }} {{ DateUtil.formatDateToDDMM(dataQr.dateRollCall) }}
+                <div class="d-flex box-content align-center justify-space-between">
+                  <div class="text-semibold-md">
+                    {{ t('date-attendance') }}:
+                  </div>
+                  <div v-if="dataQr.dateRollCall === '0001-01-01T00:00:00' || !dataQr.dateRollCall">
+                    -
+                  </div>
+                  <div v-else>
+                    {{ DateUtil.formatTimeToHHmm(dataQr.dateRollCall) }} {{ DateUtil.formatDateToDDMM(dataQr.dateRollCall) }}
+                  </div>
                 </div>
               </div>
               <div class="box-item">
@@ -192,15 +259,21 @@ onMounted(() => {
                 >
                   <VIcon icon="material-symbols:account-circle" />
                 </div>
-                <div class="d-flex align-center">
-                  {{ dataQr.teacherName || StringUtil.formatFullName(content.firstName, content.lastName) }}
+                <div class="d-flex box-content align-center justify-space-between">
+                  <div class="text-semibold-md">
+                    {{ t('teacher') }}:
+                  </div>
+                  <div>
+                    {{ dataQr.teacherName || StringUtil.formatFullName(content.firstName, content.lastName) }}
+                  </div>
                 </div>
               </div>
             </div>
           </VCol>
           <VCol
             class="box-card-right"
-            cols="6"
+            cols="12"
+            sm="6"
           >
             <div class="box-right-text-header">
               QR
@@ -237,14 +310,17 @@ onMounted(() => {
                   <VIcon
                     class="cursor-pointer"
                     icon="line-md:download-outline-loop"
+                    @click="downloadQr"
                   />
                 </div>
                 <div
+                  v-if="!isView"
                   class="box-icon mr-2"
                 >
                   <VIcon
                     class="cursor-pointer"
                     icon="tabler:refresh"
+                    @click="handleCreateQrSettime"
                   />
                 </div>
                 <div
@@ -259,9 +335,13 @@ onMounted(() => {
         </VRow>
       </template>
     </CmDialogs>
-    <CpMdQrCodeZoom />
+    <CpMdQrCodeZoom
+      v-model:isShowModal="isShowMdQrCodeZoom"
+      :qr-code="dataQr.qrCode"
+    />
     <CpMdQrCodeSettime
       v-model:isShowModal="isShowMdQrCodeSettime"
+      :content="content"
       @confirm="handleCreateQr"
     />
   </div>
@@ -269,9 +349,11 @@ onMounted(() => {
 
 <style lang="scss">
 .box-card{
-  border: 5px #fff solid;
-  height: 450px;
+  border: 10px #fff solid;
   overflow: hidden;
+  .box-content{
+    width: 85%;
+  }
   .box-card-left{
     background-color: #DADDE4;
 
@@ -295,7 +377,7 @@ onMounted(() => {
     .box-item-icon{
       width: 32px;
       height: 32px;
-      background: #DB8948;
+      background: rgba(var(--v-color-text-primary));
       font-size: 14px;
       border-radius: 50%;
       color: #fff;
@@ -316,7 +398,7 @@ onMounted(() => {
         width: 100px;
         height: 100px;
         border-radius: 50%;
-        border: 5px solid #DB8948;
+        border: 5px solid rgba(var(--v-color-text-primary));
         animation-name: boxShadowOver;
         animation-duration: 1s;
         animation-iteration-count: infinite;
@@ -324,7 +406,7 @@ onMounted(() => {
       }
       @keyframes boxShadowOver {
         0% { box-shadow: 0px 0px 0px 0px #f6f6f6;}
-        50% { box-shadow: 0px 0px 11px 0px #e35b0c;}
+        50% { box-shadow: 0px 0px 11px 0px rgba(var(--v-color-text-primary));}
         100% { box-shadow: 0px 0px 11px 0px #f6f6f6;}
       }
 
@@ -333,16 +415,17 @@ onMounted(() => {
   }
   .box-card-right{
     position: relative;
-    background-color: #1A1F29;
+    background-color: rgb(var(--v-primary-900));
     // background-color: #fff;
     .box-right-text-header{
-      color: #977F4F;
+      color: rgba(var(--v-color-text-primary));
       font-size: 2.5rem;
       text-align: center;
+      color: #fff;
     }
     .box-qr{
-      width: 280px;
-      height: 280px;
+      width: 17.5rem;
+      height: 17.5rem;
       position: absolute;
       top: 50%;
       left: 50%;
@@ -383,5 +466,13 @@ onMounted(() => {
   background-color: white;
   opacity: 0.9;
   border-radius: 16px;
+}
+@media only screen and (max-width: 600px) {
+  .box-card-left {
+   display: none;
+  }
+  .box-card{
+    height: 450px;
+  }
 }
 </style>

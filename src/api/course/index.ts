@@ -32,6 +32,7 @@ const CourseService = {
   GetSettingCourse: '/course/get-setting', // Lấy thông tin setting khóa học
   GetListCheckinCourse: (id: number | string) => `/course/${id}/checkin`, // Lấy danh sách điểm danh khóa học
   GetListCheckinStudentCourse: (id: number | string) => `/course/${id}/checkin/learners`, // Lấy danh sách học viên điểm danh khóa học
+  GetInforOfAttendance: (id: number | string, idAttendance: number | string) => `/course/${id}/checkin/${idAttendance}`, // Lấy danh sách thông tin điểm danh khóa học
   GetQrCode: 'qrcode/get-qrcode', // Lấy thông tin QR khóa học
 
   /** Post */
@@ -90,12 +91,14 @@ const CourseService = {
   PostuCreateTestConfig: '/coursecontenttest/create',
   PostuUpdateQuestionTest: '/CourseContentTest/update-question', // cập nhật danh sách câu hỏi cho bài kiểm tra
   PostDelCheckinCourse: (id: number | string) => `/course/${id}/checkin/delete`, // Lấy danh sách điểm danh khóa học
+  PostAddCheckinCourse: (id: number | string) => `/course/${id}/checkin`, // Thêm điểm danh khóa học
 
   /** Delete */
   DeleteUserReg: 'courseuser/delete-register',
 
   /** Put */
   PutAddToContentBank: '/CourseContent/covert-to-content-archive',
+  PutCheckinCourse: (id: number | string) => `/course/${id}/checkin`,
 
   /** Update */
   /** patch */

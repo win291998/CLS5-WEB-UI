@@ -312,16 +312,17 @@ function withPopper(dropdownList: any, component: any, { width }: any) {
   border-radius: $border-radius-xs;
   background: $color-input-default;
 }
+.cm-select .vs--disabled .vs__dropdown-toggle, .vs--disabled .vs__clear, .vs--disabled .vs__search, .vs--disabled .vs__selected, .vs--disabled .vs__open-indicator {
+  background-color: $color-gray-100;
+}
 .vs__dropdown-menu{
   z-index: 9999 !important;
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;
 }
 .vs__selected-options{
-  width: 90% !important;
 }
 .vs__selected{
-  max-width: 94%;
   white-space: nowrap !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;

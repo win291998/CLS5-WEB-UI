@@ -375,6 +375,7 @@ onUnmounted(() => {
         </template>
         <template #actionDrop="{ context }">
           <VListItem
+            class="mx-0"
             :disabled="!checkMove(context, true)"
             @click="actionItemUserReg([{ name: 'MoveUp' }, context])"
           >
@@ -389,6 +390,7 @@ onUnmounted(() => {
             </VListItemTitle>
           </VListItem>
           <VListItem
+            class="mx-0"
             :disabled="!checkMove(context, false)"
             @click="actionItemUserReg([{ name: 'MoveDown' }, context])"
           >

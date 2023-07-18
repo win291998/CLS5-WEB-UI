@@ -88,8 +88,6 @@ const dataFeedBack = ref<any>()
 
 // hàm trả về các loại action khi click
 function actionItem(type: any) {
-  console.log(type)
-
   switch (type[0]?.name) {
     case 'ActionViewDetail':
       router.push({ name: 'course-view', params: { tab: 'infor', id: type[1].id } })
@@ -114,7 +112,7 @@ function actionItem(type: any) {
       coppyData.value.id = type[1].id
       break
     case 'ActionRollCallOffline':
-      router.push({ name: 'course-attendance', params: { id: Number(type[1].id) } })
+      router.push({ name: 'attendance-list', params: { id: Number(type[1].id) } })
       break
 
     default:

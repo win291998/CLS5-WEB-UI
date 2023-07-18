@@ -64,9 +64,7 @@ function resetData() {
 const myFormAddExpAttend = ref()
 async function onConfirm(idx: any) {
   await myFormAddExpAttend.value.validate().then((success: any) => {
-    console.log(success)
     if (success.valid) {
-      console.log(success)
       if (!startDateTime.value || !endDateTime.value) {
         toast('ERROR', t('noti-date-empty-qr'))
         unLoadComponent(idx)
@@ -117,8 +115,8 @@ async function onCancel() {
                 :field="field"
                 :errors="errors"
                 class="pb-2"
-                :max-date="content?.endDateRequire || ''"
-                :min-date="content?.dateRollCall || startDateTime"
+                :max-date="content?.dateRollCall || endDateTime"
+                :min-date="content?.startDateRequire"
                 :text="`${t('start-time')}*`"
                 :placeholder="t('start-time')"
               />
