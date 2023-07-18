@@ -331,7 +331,6 @@ export default class MethodsUtil {
 
       stateInit.value[key] = window._.cloneDeep(item[key].value)
     })
-    console.log(stateInit.value)
   }
 
   static $reset(stateInit: any) {

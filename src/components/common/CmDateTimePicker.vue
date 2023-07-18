@@ -7,6 +7,7 @@ import CmTextField from '@/components/common/CmTextField.vue'
 const props = withDefaults(defineProps<Props>(), {
   range: false,
   multiCalendars: false,
+  disabled: false,
   timePicker: false,
   modelValue: null,
   fromDate: null,
@@ -31,6 +32,7 @@ interface Props {
   field?: any
   minDate?: any
   maxDate?: any
+  disabled?: boolean
 }
 interface Emit {
   (e: 'update:modelValue', data: any): void
@@ -187,6 +189,7 @@ watchEffect(() => {
         :placeholder="placeholder"
         :min-date="minDate"
         :max-date="maxDate"
+        :disabled="disabled"
         @range-start="val => formatPreview(val, false)"
         @range-end="val => formatPreview(val, true)"
         @update:model-value="updateInput($event, true)"
@@ -278,6 +281,7 @@ watchEffect(() => {
       </VueDatePicker>
 
       <CmTextField
+        v-if="!disabled"
         class="input-date-time"
         :model-value="temp"
         :placeholder="placeholder"
@@ -562,5 +566,8 @@ watchEffect(() => {
   }
 .dp__month_year_row {
   margin-bottom: var(--height-top-month) !important;
+}
+.dp__disabled{
+  background: $color-gray-100;
 }
 </style>

@@ -14,6 +14,7 @@ import CmCheckBox from '@/components/common/CmCheckBox.vue'
 import CpActionFooterEdit from '@/components/page/gereral/CpActionFooterEdit.vue'
 import CpMdQrCode from '@/components/page/Admin/course/modal/CpMdQrCode.vue'
 import { load } from '@/stores/loadComponent.js'
+import toast from '@/plugins/toast'
 
 /** lib */
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
@@ -32,11 +33,10 @@ const dataInput = reactive({
   endDateTime: null as null | string,
   contentId: null as null | string | number,
   qrCodeId: null as null | string | number,
-  contentId: null as null | string | number,
 })
 const courseId = route.params.id
 const comboboxContent = ref([])
-const disabled = ref(false)
+
 const qrContent = reactive({
   courseContentId: null as any,
   dateRollCall: '' as any,
@@ -48,11 +48,12 @@ const qrContent = reactive({
   name: '',
   value: '',
 })
-const errorApi = reactive({
+const errorApi = ref({
   location: '',
   message: '',
 })
 const isEdit = ref(false)
+const isView = ref(route.name === 'attendance-view')
 const schema = computed(() => ({
   date: schemaOption.defaultString,
   contentId: schemaOption.defaultSelectSingle,
@@ -119,8 +120,8 @@ function changeCombobox(contentId: number) {
   }
 }
 function changeDateTime() {
-  errorApi.location = ''
-  errorApi.message = ''
+  errorApi.value.location = ''
+  errorApi.value.message = ''
 }
 
 // search ở fillter header
@@ -149,22 +150,20 @@ async function getDataTable(contentId?: any) {
     items.value = value.data.pageLists
   })
 }
-async function getInforOfAttendance(idAttendance) {
-  const params = {
-    id: courseId,
-    idAttendance,
-  }
-
-  // const res = await this.$store.dispatch(`${TEACHER_MODULE_STORE}/getInforOfAttendance`, params)
-  // const data = res?.data.data
-  // if (data) {
-  //   this.dataInput.contentId = 0
-  //   this.dataInput.contentId = data.contentId
-  //   this.dataInput.date = data.date
-  //   this.dataInput.startDateTime = data.startDateTime
-  //   this.dataInput.endDateTime = data.endDateTime
-  //   this.dataInput.qrCodeId = data.qrCodeId
-  // }
+async function getInforOfAttendance(idAttendance: number) {
+  await window.requestApiCustom(CourseService.GetInforOfAttendance(`${courseId}`, idAttendance), TYPE_REQUEST.GET)
+    .then((value: any) => {
+      const dataAttend = value?.data
+      console.log(dataAttend)
+      if (data) {
+        dataInput.contentId = 0
+        dataInput.contentId = dataAttend.contentId
+        dataInput.date = dataAttend.date
+        dataInput.startDateTime = dataAttend.startDateTime
+        dataInput.endDateTime = dataAttend.endDateTime
+        dataInput.qrCodeId = dataAttend.qrCodeId
+      }
+    })
 }
 
 /** computed */
@@ -178,8 +177,6 @@ const indeterminateCheckin = computed(() => {
 })
 
 function checkinAll(val: any) {
-  console.log(val)
-
   const cloneRows = JSON.parse(JSON.stringify(items.value))
   if (indeterminateCheckin.value) {
     cloneRows.forEach((item: any) => item.checkin = true)
@@ -193,8 +190,6 @@ function checkinAll(val: any) {
   items.value = cloneRows
 }
 function onCheckinChange(val: any, index: any) {
-  console.log(index)
-
   const changedElement = items.value[index]
   const cloneRow: any = JSON.parse(JSON.stringify(changedElement))
   cloneRow.checkin = val
@@ -208,11 +203,10 @@ function onAskPermissonChange(event: any, index: any) {
   items.value.splice(index, 1, permissonChange)
 }
 function handleCancle() {
-  router.push({ name: 'course-attendance', params: { id: Number(route.params.id) } })
+  router.push({ name: 'attendance-list', params: { id: Number(route.params.id) } })
 }
 async function handleAttendance(idx: any) {
-  await myFormAddAttendance.value.validate().then((success: any) => {
-    console.log(success)
+  await myFormAddAttendance.value.validate().then(async (success: any) => {
     if (success.valid) {
       const checkinList = ref<any[]>([])
       items.value.forEach((item: any) => {
@@ -223,30 +217,57 @@ async function handleAttendance(idx: any) {
         })
       })
       const params = {
-        id: route.params.id,
-        params: {
-          id: isEdit ? route.params.idAttendance : null,
-          date: dataInput.date,
-          contentId: dataInput.contentId,
-          startDateTime: dataInput.startDateTime === '0001-01-01T00:00:00' ? null : dataInput.startDateTime,
-          endDateTime: dataInput.endDateTime === '0001-01-01T00:00:00' ? null : dataInput.endDateTime,
-          qrCodeId: dataInput.qrCodeId,
-          checkinList: checkinList.value,
-        },
+        id: isEdit ? route.params.idAttendance : null,
+        date: dataInput.date,
+        contentId: dataInput.contentId,
+        startDateTime: dataInput.startDateTime === '0001-01-01T00:00:00' ? null : dataInput.startDateTime,
+        endDateTime: dataInput.endDateTime === '0001-01-01T00:00:00' ? null : dataInput.endDateTime,
+        qrCodeId: dataInput.qrCodeId,
+        checkinList: checkinList.value,
       }
-      console.log(params)
+      errorApi.value.location = ''
+      errorApi.value.message = ''
+      if (isEdit.value) {
+        await window.requestApiCustom(CourseService.PutCheckinCourse(`${courseId}`), TYPE_REQUEST.PUT, params)
+          .then((value: any) => {
+            toast('SUCCESS', t(value.message))
+            router.push({ name: 'attendance-list' })
+          })
+          .catch((error: any) => {
+            if (error?.response?.data?.errors?.length > 0) {
+              toast('ERROR', t(window.getErrorsMessage(error?.response?.data?.errors, t)))
+              console.log(error)
+
+              errorApi.value = error.response.data.errors[0]
+            }
+          })
+      }
+      else {
+        await window.requestApiCustom(CourseService.PostAddCheckinCourse(`${courseId}`), TYPE_REQUEST.POST, params)
+          .then((value: any) => {
+            toast('SUCCESS', t(value.message))
+            router.push({ name: 'attendance-list' })
+          })
+          .catch((error: any) => {
+            if (error?.response?.data?.errors?.length > 0) {
+              toast('ERROR', t(window.getErrorsMessage(error?.response?.data?.errors, t)))
+              console.log(error.response.data.errors)
+
+              errorApi.value = error.response.data.errors[0]
+            }
+          })
+      }
     }
     unLoadComponent(idx)
   })
 }
 function qrUpdate(value: any) {
-  console.log(value)
   dataInput.startDateTime = value.startDateTime
   dataInput.endDateTime = value.endDateTime
   dataInput.qrCodeId = value.id
 }
 const isShowMdQrCode = ref(false)
-function viewQr(contentId: number) {
+function viewQr(contentId: any) {
   const { firstName, lastName }: any = window.userData
 
   const content: any = comboboxContent.value.find((item: any) => item.key === contentId)
@@ -261,12 +282,14 @@ function viewQr(contentId: number) {
 }
 
 if (route.name === 'attendance-view')
-  disabled.value = true
+  isView.value = true
 
 if (Number(route.params.idAttendance) >= 0) {
   isEdit.value = true
   getDataTable(dataInput.contentId)
-  getInforOfAttendance(route.params.idAttendance)
+  console.log(Number(route.params.idAttendance))
+  getComBoBoxContent()
+  getInforOfAttendance(Number(route.params.idAttendance))
 }
 else {
   dataInput.date = moment().locale('vi').format('YYYY-MM-DD HH:mm')
@@ -301,7 +324,7 @@ else {
                 :model-value="dataInput.date"
                 :field="field"
                 :errors="errors"
-                :disabled="disabled"
+                :disabled="isView"
                 :min-date="qrContent.startDateRequire"
                 :max-date="qrContent.endDateRequire"
                 :text="`${t('date-attendance')}*`"
@@ -330,12 +353,12 @@ else {
                 :model-value="dataInput.contentId"
                 :field="field"
                 :errors="errors"
-                :disabled="disabled || isEdit"
+                :disabled="isView || isEdit"
                 append-to-body
                 :items="comboboxContent"
                 item-value="key"
                 custom-key="value"
-                :text="t('name-content')"
+                :text="`${t('name-content')}*`"
                 :placeholder="t('text-content')"
                 class="mb-4"
                 @open="getComBoBoxContent"
@@ -363,6 +386,7 @@ else {
         :headers="headers"
         :items="items"
         :total-record="totalRecord"
+        :is-view="isView"
         is-local-table
         :search-field="searchField"
         :search-value="searchValue"
@@ -370,16 +394,20 @@ else {
         @update:selected="selectedRows"
       >
         <template #headerItem="{ col, context }">
-          <div v-if="col === 'checkin'">
+          <div
+            v-if="col === 'checkin'"
+            class="d-flex align-center"
+          >
             <CmCheckBox
               v-model="isCheckinAll"
               color="primary"
               :indeterminate="indeterminateCheckin"
-              :label="context.text"
               ripple
+              :disabled="isView"
               :class-name="{ indeterminate: indeterminateCheckin }"
               @update:modelValue="checkinAll"
             />
+            <span>{{ context.text }}</span>
           </div>
         </template>
         <template #rowItem="{ col, context }">
@@ -391,6 +419,7 @@ else {
               v-model="context.checkin"
               color="primary"
               :label="context.text"
+              :disabled="isView"
               ripple
               @update:modelValue="onCheckinChange($event, context.originIndex)"
             />
@@ -401,7 +430,7 @@ else {
               color="primary"
               :label="context.text"
               ripple
-              :disabled="context.checkin || disabled"
+              :disabled="context.checkin || isView"
               @update:modelValue="onAskPermissonChange($event, context.originIndex)"
             />
           </div>
@@ -411,7 +440,7 @@ else {
     <div>
       <CpActionFooterEdit
         is-cancel
-        is-save
+        :is-save="!isView"
         :title-cancel="t('come-back')"
         :title-save="t('save')"
         @on-save="(idx: any) => handleAttendance(idx)"
@@ -421,6 +450,7 @@ else {
     <CpMdQrCode
       v-model:isShowModal="isShowMdQrCode"
       :content="qrContent"
+      :is-view="isView"
       @update="qrUpdate"
     />
   </div>

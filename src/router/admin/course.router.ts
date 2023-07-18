@@ -149,7 +149,7 @@ export default [
       // điểm danh
       {
         path: ':id/attendance',
-        name: 'course-attendance',
+        name: 'attendance-list',
         meta: {
           breadcrumb: [
             {
@@ -171,7 +171,7 @@ export default [
           breadcrumb: [
             {
               title: 'attendance',
-              to: { name: 'course-attendance' },
+              to: { name: 'attendance-list' },
             },
             {
               title: 'add-attendance',
@@ -180,6 +180,110 @@ export default [
           ],
         },
         component: () => import('@/pages/admin/course/attendance/modify/ModifyAttendance.vue'),
+      },
+      {
+        path: ':id/attendance/:idAttendance/update',
+        name: 'attendance-update',
+        meta: {
+          breadcrumb: [
+            {
+              title: 'attendance',
+              to: { name: 'attendance-list' },
+            },
+            {
+              title: 'update-attendance',
+              active: true,
+            },
+          ],
+        },
+        component: () => import('@/pages/admin/course/attendance/modify/ModifyAttendance.vue'),
+      },
+      {
+        path: ':id/attendance/:idAttendance/view',
+        name: 'attendance-view',
+        meta: {
+          breadcrumb: [
+            {
+              title: 'attendance',
+              to: { name: 'attendance-list' },
+            },
+            {
+              title: 'view-attendance',
+              active: true,
+            },
+          ],
+        },
+        component: () => import('@/pages/admin/course/attendance/modify/ModifyAttendance.vue'),
+      },
+
+      // cập nhật điểm
+      {
+        path: ':id/attendance',
+        name: 'attendance-list',
+        meta: {
+          breadcrumb: [
+            {
+              title: 'list-course',
+              to: { name: 'course-list' },
+            },
+            {
+              title: 'attendance',
+              active: true,
+            },
+          ],
+        },
+        component: () => import('@/pages/admin/course/attendance/Attendance.vue'),
+      },
+      {
+        path: ':id/attendance/add',
+        name: 'attendance-add',
+        meta: {
+          breadcrumb: [
+            {
+              title: 'attendance',
+              to: { name: 'attendance-list' },
+            },
+            {
+              title: 'add-attendance',
+              active: true,
+            },
+          ],
+        },
+        component: () => import('@/pages/admin/course/attendance/modify/ModifyAttendance.vue'),
+      },
+      {
+        path: ':id/attendance/:idAttendance/update',
+        name: 'attendance-update',
+        meta: {
+          breadcrumb: [
+            {
+              title: 'attendance',
+              to: { name: 'attendance-list' },
+            },
+            {
+              title: 'update-attendance',
+              active: true,
+            },
+          ],
+        },
+        component: () => import('@/pages/admin/course/attendance/modify/ModifyAttendance.vue'),
+      },
+      {
+        path: ':id/edit/content/:contentId/update-point-offline/update',
+        name: 'update-point-offline',
+        meta: {
+          breadcrumb: [
+            {
+              title: 'course-edit',
+              to: { name: 'course-edit' },
+            },
+            {
+              title: 'update-point',
+              active: true,
+            },
+          ],
+        },
+        component: () => import('@/pages/admin/course/update-point/UpdatePoint.vue'),
       },
     ],
   },

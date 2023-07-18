@@ -111,17 +111,21 @@ function handleClickBtn(type: string) {
 
 // hàm trả về các loại action khi click
 function actionItem(type: any) {
-  console.log(type)
-
   switch (type[0]?.name) {
     case 'ActionViewDetail':
-      router.push({ name: 'course-view', params: { tab: 'infor', id: type[1].id } })
+      router.push({
+        name: 'attendance-view',
+        params: { id: Number(route.params.id), idAttendance: Number(type[1].id) },
+      })
       break
     case 'ActionDelete':
       deleteItem(type[1].id)
       break
     case 'ActionEdit':
-      router.push({ name: 'course-edit', params: { id: Number(type[1].id) } })
+      router.push({
+        name: 'attendance-update',
+        params: { id: Number(route.params.id), idAttendance: Number(type[1].id) },
+      })
       break
     default:
       break
@@ -131,7 +135,6 @@ callBackAction.value = actionItem
 async function getListAttendance() {
   await window.requestApiCustom(CourseService.GetListCheckinCourse(Number(route.params.id)), TYPE_REQUEST.GET, queryParams.value).then(async (value: any) => {
     if (value?.data) {
-      console.log(value)
       value.data.pageLists.forEach((element: any) => {
         element.actions = [
           MethodsUtil.checkActionType({ id: 1 }),
@@ -158,7 +161,6 @@ getListAttendance()
       <CpHeaderAction
         is-delete
         :is-fillter="false"
-        is-approve
         is-add
         :add-button-name="t('Add-new')"
         :disabled-delete="disabledDelete"

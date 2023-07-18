@@ -39,6 +39,7 @@ const props = withDefaults(defineProps<Props>(), ({
   disiablePagination: false,
   isUpdateRowForce: false,
   isLocalTable: false,
+  isView: false,
 }))
 const emit = defineEmits<Emit>()
 
@@ -81,6 +82,7 @@ interface Props {
   isLocalTable?: boolean
   searchField?: any
   searchValue?: any
+  isView?: boolean
 }
 interface Emit {
   (e: 'handleClickRow', dataRow: object, index: number): void
@@ -231,6 +233,16 @@ onMounted(() => {
 })
 console.time('mout')
 console.time('update')
+console.log(props.headers)
+const headerValue = computed(() => {
+  if (props.headers[0].value === 'checkbox' && props.headers.length && props.isView) {
+    const headerClone: any = window._.cloneDeep(props.headers)
+    headerClone.shift()
+    console.log(headerClone)
+    return headerClone
+  }
+  return props.headers
+})
 
 // watch
 if (props.isUpdateRowForce) {
@@ -254,7 +266,6 @@ watch(() => props.items, (val: Item[]) => {
 }, { immediate: true })
 
 watch(totalPaginationLocal, val => {
-  console.log(val)
   if (props?.isLocalTable)
     emit('update:totalItems', val)
 })
@@ -270,7 +281,7 @@ watch(totalPaginationLocal, val => {
       ref="dataTable"
       alternating
       :table-class-name="`customize-table ${isExpand ? 'table-expand' : ''}`"
-      :headers="headers"
+      :headers="headerValue"
       :items="items"
       :rows-per-page="!disiablePagination ? pageSize : PAGINATION_SIZE_UNLIMIT_DEFAULT"
       theme-color="#1849a9"
