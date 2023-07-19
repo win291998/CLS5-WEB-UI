@@ -79,7 +79,7 @@ const data = reactive({
   deleteIds: [], // list id các row table muốn xóa
   selectedRowsIds: [], // list id các row table được chọn
 })
-const searchField = ref('info')
+const searchField = ref(['info', 'code'])
 const searchValue = ref()
 const myFormAddAttendance = ref()
 function selectedRows(e: any) {

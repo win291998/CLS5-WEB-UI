@@ -23,7 +23,6 @@ import '@core/scss/template/index.scss'
 import '@vuepic/vue-datepicker/dist/main.css'
 
 // import { createPinia } from 'pinia'
-
 const pinia = createPinia()
 
 loadFonts()
@@ -70,6 +69,7 @@ const options = {
 }
 console.warn = () => {}
 app.use(pinia)
+
 app.provide('globals', globals)
 app.provide('globalsReadOnly', globalsReadOnly)
 app.component(VueFeather.name, VueFeather)
