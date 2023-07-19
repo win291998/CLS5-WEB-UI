@@ -12,6 +12,7 @@ import { TYPE_REQUEST } from '@/typescript/enums/enums'
 import CmCollapse from '@/components/common/CmCollapse.vue'
 import toast from '@/plugins/toast'
 import { tableStore } from '@/stores/table'
+import { ContentType } from '@/constant/data/contentCourseType.json'
 
 window.showAllPageLoading('COMPONENT')
 
@@ -26,6 +27,7 @@ const CpMdApproveCourse = defineAsyncComponent(() => import('@/components/page/A
 const CpMdRatioPointContent = defineAsyncComponent(() => import('@/components/page/Admin/course/modal/CpMdRatioPointContent.vue'))
 const CpMdCoppyCourse = defineAsyncComponent(() => import('@/components/page/Admin/course/modal/CpMdCoppyCourse.vue'))
 const CpMdFeedBack = defineAsyncComponent(() => import('@/components/page/Admin/course/modal/CpMdFeedBack.vue'))
+const CpMdDownloadMul = defineAsyncComponent(() => import('@/components/page/gereral/modal/CpMdDownloadMul.vue'))
 
 /** lib */
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
@@ -84,10 +86,13 @@ const headers = reactive([
   { text: '', value: 'actions', width: 150, type: 'custom' },
 ])
 const isShowModalFeedBack = ref(false)
+const isShowModalDownload = ref(false)
 const dataFeedBack = ref<any>()
 
 // hàm trả về các loại action khi click
 function actionItem(type: any) {
+  console.log(type)
+
   switch (type[0]?.name) {
     case 'ActionViewDetail':
       router.push({ name: 'course-view', params: { tab: 'infor', id: type[1].id } })
@@ -113,6 +118,13 @@ function actionItem(type: any) {
       break
     case 'ActionRollCallOffline':
       router.push({ name: 'attendance-list', params: { id: Number(type[1].id) } })
+      break
+    case 'DownloadContentCourse':
+      getListFilesCourse(type[1].id)
+      nextTick(() => {
+        isShowModalDownload.value = true
+      })
+
       break
 
     default:
@@ -168,6 +180,27 @@ async function handleCoppyCourse() {
       toast('ERROR', t(error.response.data.message))
       window.hideAllPageLoading()
     })
+}
+const listFileDown = ref([])
+async function getListFilesCourse(id) {
+  const params = {
+    courseId: id,
+  }
+  await window.requestApiCustom(CourseService.GetListFilesCourse, TYPE_REQUEST.GET, params).then((value: any) => {
+    console.log(value)
+    if (value.data?.pageLists) {
+      listFileDown.value = value.data?.pageLists
+        .map((item: any) => ({
+          name: item.name,
+          type: t(MethodsUtil.checkType(item?.contentArchiveTypeId, ContentType, 'id')?.name),
+          icon: MethodsUtil.checkType(item?.contentArchiveTypeId, ContentType, 'id')?.icon,
+          size: 0,
+          processing: 0,
+          ...item,
+        }))
+      console.log(listFileDown.value)
+    }
+  })
 }
 
 // Fetch data danh sách khóa học
@@ -339,5 +372,6 @@ window.hideAllPageLoading()
       v-model:is-show-modal-feed-back="isShowModalFeedBack"
       :data-feed-back="dataFeedBack"
     />
+    <CpMdDownloadMul v-model:is-show-modal="isShowModalDownload" />
   </div>
 </template>

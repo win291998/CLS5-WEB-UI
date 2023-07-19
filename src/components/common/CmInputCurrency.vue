@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { JSXComponent } from 'vue'
 import constant from '@/constant/constant'
+import MethodsUtil from '@/utils/MethodsUtil'
 
 type IconValue = string | JSXComponent
 
@@ -36,6 +37,7 @@ interface Props {
   disabled?: boolean
   isNullNumber?: boolean
   isNegative?: boolean
+  isCurrency?: boolean
 }
 interface Emit {
   (e: 'update:modelValue', value: any): void
@@ -44,19 +46,28 @@ interface Emit {
 }
 const isFocus = ref(false)
 const formModelValue = ref<any>(props.modelValue)
+const inputRef = ref()
+const typeCurrency = ref()
+const modelValueCurrency = ref()
 
 /** Method */
 function handleChangeText(val: any) {
-  emit('change', formModelValue.value)
-  emit('update:modelValue', formModelValue.value)
+  console.log(formModelValue.value)
+
+  // emit('change', formModelValue.value)
+  // emit('update:modelValue', formModelValue.value)
 }
 
 function handleUpdateText(val: any) {
+  console.log(props.type)
   if (props.type === 'number') {
-    if (!val && val !== 0)
+    console.log(formModelValue.value)
+    if (!val && val !== 0) {
+      console.log(formModelValue.value)
+
       formModelValue.value = null
-    else
-      formModelValue.value = Number(val || 0)
+    }
+    else { formModelValue.value = Number(val || 0) }
     if (props.max && Number(val || 0) > props.max)
       formModelValue.value = props.max
     if (props.min && Number(val || 0) < props.min)
@@ -64,11 +75,14 @@ function handleUpdateText(val: any) {
   }
   else {
     formModelValue.value = val
+    if (props.isCurrency)
+      modelValueCurrency.value = val
   }
+
   emit('update:modelValue', formModelValue.value)
 }
 function keydown(e: any) {
-  if (props.type === 'number') {
+  if (props.type === 'number' || (props.isCurrency && typeCurrency.value === 'number')) {
     const sel = window.getSelection()?.toString()
     if (['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].includes(e.key)
     && e.target.value.length === props.maxlength && !sel)
@@ -81,6 +95,15 @@ function keydown(e: any) {
 }
 
 function focusInput(params: boolean) {
+  if (props.isCurrency && !params) {
+    modelValueCurrency.value = props.modelValue ? MethodsUtil.formatCurrency(props.modelValue, constant.DECIMAL) : ''
+    typeCurrency.value = 'string'
+  }
+  if (props.isCurrency && params) {
+    modelValueCurrency.value = props.modelValue
+    typeCurrency.value = 'number'
+  }
+
   isFocus.value = params
   emit('focused', params)
 }
@@ -101,15 +124,15 @@ function focusInput(params: boolean) {
       :class="{ 'cm-input-field-error': (errors?.length > 0 || isErrors) ?? false }"
     >
       <VTextField
-        :model-value=" modelValue "
-        v-bind="field"
+        ref="inputRef"
+        :model-value="isCurrency ? modelValueCurrency : modelValue "
         :disabled="disabled"
         :prepend-inner-icon="props.prependInnerIcon"
         :label="props.label"
         :bg-color="bgColor"
         :placeholder="placeholder"
         :error="(errors?.length > 0 || isErrors) ?? false"
-        :type="type"
+        :type="isCurrency ? typeCurrency : type"
         :min="min"
         :max="max"
         :maxlength="maxlength"

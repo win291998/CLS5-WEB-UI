@@ -11,8 +11,6 @@ interface Props {
 }
 
 const handleSearch = window._.debounce((val: any) => {
-  console.log(val)
-
   emit('update:keySearch', val)
 }, 500)
 </script>
