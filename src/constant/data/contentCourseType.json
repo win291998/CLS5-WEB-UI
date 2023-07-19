@@ -19,7 +19,7 @@
         {
             "id": 3,
             "name": "online-content",
-            "icon": "streamline:computer-webcam-video-work-video-meeting-camera-company-conference-office",
+            "icon": "ant-design:video-camera-add-outlined",
             "color": "primary",
             "value": 3,
             "note": "Học trực tuyến"

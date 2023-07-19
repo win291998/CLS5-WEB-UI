@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import CpMdEditMeeting from './type/meeting/CpMdEditMeeting.vue'
 import { contentManagerStore } from '@/stores/admin/course/content'
 import { courseApproveManagerStore } from '@/stores/admin/course/approve'
 import MethodsUtil from '@/utils/MethodsUtil'
@@ -20,6 +21,10 @@ import CpMdMoveThematicContent from '@/components/page/Admin/course/modal/CpMdMo
 import CpMdEditThematic from '@/components/page/Admin/course/modal/CpMdEditThematic.vue'
 import CpMdAddFromStockContent from '@/components/page/Admin/course/modal/CpMdAddFromStockContent.vue'
 import { tableStore } from '@/stores/table'
+import CourseService from '@/api/course'
+import { TYPE_REQUEST } from '@/typescript/enums/enums'
+import type { Any, typeToast } from '@/typescript/interface'
+import toast from '@/plugins/toast'
 
 /**
  * Store
@@ -29,7 +34,7 @@ const storeContentManager = contentManagerStore()
 const {
   items, isShowModelFeedback, feedbackContent, isShowDialogNotiDelete,
   disabledDelete, disabledEdit, data, viewMode, isShowModalMoveThematic,
-  isShowModalUpdateThematic, isShowModalAddStockContent,
+  isShowModalUpdateThematic, isShowModalAddStockContent, isShowModalMeeting, dataDetailMeeting,
 } = storeToRefs(storeContentManager)
 const { getListContentCourse, handleMoveThematic, handleAddContentFromStock, confirmDialogDelete, handlerActionHeader, handleSearch, selectedRows, deleteItems, actionItemUserReg, checkMove, approveContent } = storeContentManager
 const storeCourseApproveManager = courseApproveManagerStore()
@@ -77,7 +82,6 @@ const actionUpdate = [
   {
     title: t('text-content'),
     icon: MethodsUtil.checkType('text-content', ContentType, 'name')?.icon,
-    underline: true,
     action: () => {
       router.push({
         name: 'content-add',
@@ -89,6 +93,14 @@ const actionUpdate = [
         },
       })
     },
+  },
+
+  // Họp trực tuyến
+  {
+    title: t('meeting'),
+    icon: MethodsUtil.checkType('online-content', ContentType, 'name')?.icon,
+    underline: true,
+    action: showModalAddMeeting,
   },
   {
     title: t('video-content'),
@@ -255,6 +267,36 @@ onMounted(() => {
 onUnmounted(() => {
   items.value = []
 })
+
+// Thêm cuộc họ trực tuyến
+// const isShowModalMeeting = ref(false)
+function showModalAddMeeting() {
+  isShowModalMeeting.value = true
+}
+
+async function addOnlineLesson(lessonInfo: Any, unload: any) {
+  let variant: typeToast = 'ERROR'
+  let message = 'add-content-failed'
+  await MethodsUtil.requestApiCustom(CourseService.PostCreateContent, TYPE_REQUEST.POST, lessonInfo).then(() => {
+    variant = 'SUCCESS'
+    message = 'add-content-success'
+    isShowModalMeeting.value = false
+  })
+  unload()
+  toast(variant, t(message))
+}
+
+async function updateOnlineLesson(lessonInfo: Any, unload: any) {
+  let variant: typeToast = 'ERROR'
+  let message = 'system-management.edit-content-failed'
+  await MethodsUtil.requestApiCustom(CourseService.PostUpdateContent, TYPE_REQUEST.POST, lessonInfo).then(result => {
+    variant = 'SUCCESS'
+    message = 'system-management.edit-content-success'
+    isShowModalMeeting.value = false
+  })
+  unload()
+  toast(variant, t(message))
+}
 </script>
 
 <template>
@@ -442,6 +484,18 @@ onUnmounted(() => {
       v-model:isShowModal="isShowModalAddStockContent"
       @saveChange="handleAddContentFromStock"
     />
+    <CpMdEditMeeting
+      v-model:isShow="isShowModalMeeting"
+      :data-detail="dataDetailMeeting"
+      :title="t('meeting  ')"
+      @add="addOnlineLesson"
+      @edit="updateOnlineLesson"
+    />
+    <!--
+      @edit="updateOnlineLesson"
+      @addZoom="addMeetingZoom"
+      @editZoom="updateMeetingZoom"
+    -->
   </div>
   <div
     v-else-if="viewMode === 'approve'"

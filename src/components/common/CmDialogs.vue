@@ -31,7 +31,7 @@ interface Props {
 
 interface Emit {
   (e: 'cancel', type?: string): void
-  (e: 'confirm', idx?: any): void
+  (e: 'confirm', idx?: any, data?: any): void
   (e: 'show'): void
   (e: 'hide'): void
 }
@@ -58,9 +58,9 @@ const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 function onCancel() {
   emit('cancel')
 }
-
+const buttonOk = ref()
 function onConfirmation(idx: any) {
-  emit('confirm', idx)
+  emit('confirm', idx, buttonOk.value.unLoadButton)
 }
 
 function onDialogShown(e: any) {
@@ -163,6 +163,7 @@ const sizeModal = computed(() => {
 
             <CmButton
               v-if="isOk"
+              ref="buttonOk"
               variant="elevated"
               :disabled="disabledOk"
               :color="color"

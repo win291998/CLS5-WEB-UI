@@ -8,6 +8,7 @@ import NavbarThemeSwitcher from '@/layouts/components/NavbarThemeSwitcher.vue'
 import UserProfile from '@/layouts/components/UserProfile.vue'
 import CmBreadcrumb from '@/components/common/CmBreadcrumb.vue'
 import { useStoreMenu } from '@/stores/menu'
+import jwtDefaultConfig from '@/auth/jwtDefaultConfig'
 
 // @layouts plugin
 import { VerticalNavLayout } from '@layouts'
@@ -23,7 +24,7 @@ injectSkinClasses()
 const menuStore = useStoreMenu()
 
 // const { navItems } = storeToRefs(menuStore)
-const { getDataMenu, role } = menuStore
+const { getDataMenu } = menuStore
 const { navItems, userData } = storeToRefs(menuStore)
 
 const items = ref<any>([])
@@ -32,16 +33,16 @@ watch(navItems, val => {
     items.value = navItems.value
 })
 async function getMenu() {
-  if (localStorage.getItem('menuItem')) {
-    items.value = JSON.parse(localStorage.getItem('menuItem') || '')
+  if (!sessionStorage.getItem(jwtDefaultConfig.role))
+    sessionStorage.setItem(jwtDefaultConfig.role, userData.value.roles[0].name)
+  if (sessionStorage.getItem('menuItems')) {
+    items.value = JSON.parse(sessionStorage.getItem('menuItems') || '')
     return
   }
-
   items.value = await getDataMenu(userData.value.roles[0].id)
   if (items.value.length)
-    localStorage.setItem('menuItem', JSON.stringify(items.value))
+    sessionStorage.setItem('menuItems', JSON.stringify(items.value))
 }
-const route = useRoute()
 
 onMounted(async () => {
   getMenu()
@@ -83,7 +84,7 @@ onMounted(async () => {
     <RouterView v-slot="{ Component, route }">
       <CmBreadcrumb />
       <Transition
-        name="fade"
+        :name="appRouteTransition"
         mode="out-in"
       >
         <div :key="route.name || ''">
