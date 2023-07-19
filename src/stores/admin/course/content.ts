@@ -9,6 +9,7 @@ import StringUtil from '@/utils/StringUtil'
 import toast from '@/plugins/toast'
 import { courseApproveManagerStore } from '@/stores/admin/course/approve'
 import { tableStore } from '@/stores/table'
+import type { Any } from '@/typescript/interface'
 
 export const contentManagerStore = defineStore('contentManager', () => {
   /** lib ****************************************************************/
@@ -44,6 +45,7 @@ export const contentManagerStore = defineStore('contentManager', () => {
   const courseContentId = ref<number | null>(null)
   const disabledDelete = computed(() => !data.selectedRowsIds.length)
   const disabledEdit = computed(() => !data.selectedRowsIds.length)
+  const isShowModalMeeting = ref(false)
   const contentDataEdit = ref<any>({
     name: null,
     themeticId: null,
@@ -84,6 +86,15 @@ export const contentManagerStore = defineStore('contentManager', () => {
       contentDataEdit.value = value?.data
     })
   }
+  const dataDetailMeeting = ref<Any>({})
+  function showModalEditMeeting(id: number) {
+    MethodsUtil.requestApiCustom(CourseService.GetInforContentById, TYPE_REQUEST.GET, { id, isView: false }).then((result: Any) => {
+      dataDetailMeeting.value = result?.data
+      isShowModalMeeting.value = true
+    }).catch(() => {
+      //
+    })
+  }
   async function actionItemUserReg(type: any) {
     console.log(type)
 
@@ -95,6 +106,9 @@ export const contentManagerStore = defineStore('contentManager', () => {
           nextTick(() => {
             isShowModalUpdateThematic.value = true
           })
+        }
+        else if (type[1]?.contentArchiveTypeId === 3) {
+          showModalEditMeeting(type[1]?.courseContentId)
         }
         else {
           router.push({
@@ -718,6 +732,8 @@ export const contentManagerStore = defineStore('contentManager', () => {
     isShowDialogNotiDelete,
     isShowModalUpdateThematic,
     isShowModalMoveThematic,
+    isShowModalMeeting,
+    dataDetailMeeting,
     viewMode,
     contentDataEdit,
     courseContentId,

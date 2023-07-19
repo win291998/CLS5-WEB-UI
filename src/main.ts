@@ -67,7 +67,9 @@ const options = {
   //   return toast
   // },
 }
-console.warn = () => {}
+console.warn = () => {
+  //
+}
 app.use(pinia)
 
 app.provide('globals', globals)

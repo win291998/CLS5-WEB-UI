@@ -50,8 +50,9 @@ const props = withDefaults(defineProps<Props>(), ({
 
 const emit = defineEmits<Emit>()
 interface Emit {
-  (e: 'click', idxBtn: number): void
+  (e: 'click', idxBtn: number, fn: any): void
 }
+
 const store = load()
 const indexLoad = ref(0)
 const { addComponent, loadComponent, unLoadComponent } = store
@@ -78,7 +79,7 @@ function handleClick() {
   if (props.isLoad)
     loadComponent(indexLoad.value)
 
-  emit('click', indexLoad.value)
+  emit('click', indexLoad.value, unLoadButton)
 }
 
 const isDisabled = computed(() => {

@@ -255,6 +255,7 @@ watch(() => props.items, (val: Item[]) => {
   selectedRows.value = []
   console.time('mout')
   console.time('update')
+  console.log(123)
 
   props.items?.forEach((element, index) => {
     element.originIndex = index
