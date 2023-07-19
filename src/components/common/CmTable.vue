@@ -338,6 +338,7 @@ watch(totalPaginationLocal, val => {
         <div v-else-if="itemsHeader?.header === 'custom'" />
         <span
           v-else
+          class="text-header"
         >
           {{ context.text }}
         </span>
@@ -659,5 +660,8 @@ watch(totalPaginationLocal, val => {
     position: sticky;
     right: 0;
   }
+}
+.text-header{
+  text-transform: capitalize;
 }
 </style>

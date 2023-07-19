@@ -11,6 +11,7 @@ import CmChip from '@/components/common/CmChip.vue'
 import { TYPE_REQUEST } from '@/typescript/enums/enums'
 import toast from '@/plugins/toast'
 import { tableStore } from '@/stores/table'
+import CpActionFooterEdit from '@/components/page/gereral/CpActionFooterEdit.vue'
 
 /** lib */
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
@@ -108,6 +109,9 @@ function handleClickBtn(type: string) {
       break
   }
 }
+function handleCancle() {
+  router.push({ name: 'course' })
+}
 
 // hàm trả về các loại action khi click
 function actionItem(type: any) {
@@ -169,7 +173,7 @@ getListAttendance()
         @update:keyword="handleSearch"
       />
     </div>
-    <div>
+    <div class="mb-6">
       <!-- ref="refTableCourseList" -->
       <CmTable
         v-model:pageSize="queryParams.pageSize"
@@ -204,6 +208,13 @@ getListAttendance()
           </div>
         </template>
       </CmTable>
+    </div>
+    <div>
+      <CpActionFooterEdit
+        is-cancel
+        :title-cancel="t('come-back')"
+        @on-cancel="handleCancle"
+      />
     </div>
     <CpConfirmDialog
       v-model:is-dialog-visible="isShowDialogNotiDelete"

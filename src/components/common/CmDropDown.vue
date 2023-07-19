@@ -62,6 +62,7 @@ interface item {
   action?: any
   appendItem?: appendItem
   prependItem?: prependItem
+  disabled?: boolean
   [key: string]: any
 }
 interface appendItem {

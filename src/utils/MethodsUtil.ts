@@ -275,6 +275,14 @@ export default class MethodsUtil {
     }
   }
 
+  static formatCurrency(value: number, toFixed = 3) {
+    const currency = Math.floor (value * 10 ** toFixed) / 10 ** toFixed
+    const formatter = new Intl.NumberFormat('en-US', {
+      useGrouping: true,
+    })
+    return formatter.format(currency)
+  }
+
   static formatCapacity(val: any) {
     if (val < 1024)
       return `${val} Byte`

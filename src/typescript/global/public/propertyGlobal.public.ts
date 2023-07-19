@@ -76,7 +76,6 @@ const windowDefineReactiveProperty = (app: any)=> {
     reactive2: ref('react'), // khai báo ref để biến có thể phản ứng
     token: ref(''), 
     TYPE_REQUEST: TYPE_REQUEST,
-    userData: JSON.parse(localStorage.getItem('userData') || ''),
 
     // method global
     requestApiCustom: MethodsUtil.requestApiCustom,

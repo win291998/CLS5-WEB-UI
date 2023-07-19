@@ -285,6 +285,23 @@ export default [
         },
         component: () => import('@/pages/admin/course/update-point/UpdatePoint.vue'),
       },
+      {
+        path: ':id/edit/content/:contentId/update-point-offline/update-from-file',
+        name: 'update-from-file-point-offline',
+        meta: {
+          breadcrumb: [
+            {
+              title: 'course-edit',
+              to: { name: 'course-edit' },
+            },
+            {
+              title: 'update-point',
+              active: true,
+            },
+          ],
+        },
+        component: () => import('@/pages/admin/course/update-point/import-file/UpdatePointFromFile.vue'),
+      },
     ],
   },
 ]
