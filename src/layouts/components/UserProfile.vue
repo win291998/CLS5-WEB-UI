@@ -19,12 +19,16 @@ const { t } = window.i18n()
 const serverFile = window.SERVER_FILE
 const menuStore = useStoreMenu()
 const { userRoles, userData, setDataMenu } = menuStore
+const { navItems } = storeToRefs(menuStore)
 
 const { role } = storeToRefs(menuStore)
 async function setRole(val: any) {
   role.value = val
-  setDataMenu()
+  await setDataMenu()
+  localStorage.setItem('role', val.name)
+  sessionStorage.setItem('role', val.name)
   router.push({ name: role.value?.router })
+  sessionStorage.setItem('menuItems', JSON.stringify(navItems.value))
 }
 </script>
 
@@ -56,11 +60,10 @@ async function setRole(val: any) {
           <VListItem
             v-for="item in userRoles"
             :key="item.name"
+            class="cursor-pointer"
+            @click="setRole(item)"
           >
-            <VListItemTitle
-              class="cursor-pointer"
-              @click="setRole(item)"
-            >
+            <VListItemTitle>
               {{ t(item.name) }}
             </VListItemTitle>
           </VListItem>

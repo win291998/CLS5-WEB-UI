@@ -62,7 +62,7 @@ const dataInput = ref<DataInput>({
   countryId: null,
   districtId: null,
   provinceId: null,
-  email: null,
+  email: '',
   wardId: null,
 })
 
@@ -74,6 +74,8 @@ function cancel() {
 }
 function confirm(idx: number) {
   myEditSchool.value.validate().then((status: any) => {
+    console.log(status)
+
     if (status.valid) {
       if (route.params.id)
         editSchool()
@@ -107,6 +109,10 @@ async function getDataDetail() {
 }
 if (route.params.id)
   getDataDetail()
+
+watch(dataInput.value, val => {
+  console.log(val)
+})
 </script>
 
 <template>
@@ -145,7 +151,7 @@ if (route.params.id)
           <Field
             v-slot="{ field, errors }"
             v-model="dataInput.schoolTypeId"
-            name="schoolType"
+            name="typeSchool"
             type="text"
           >
             <CmSelect
