@@ -133,6 +133,17 @@ async function getListPointStudent() {
         toast('ERROR', t(window.getErrorsMessage(error?.response?.data?.errors, t)))
     })
 }
+async function changeAll(value) {
+  // const listScoreSelected = this.$refs['data-table'].selectedRows
+  const listScoreSelected = await items.value.filter(item => item.isSelected)
+
+  listScoreSelected.forEach(item => {
+    item.scores = value
+  })
+  console.log(listScoreSelected)
+
+  handleUpdatePoint(0, listScoreSelected)
+}
 
 // api cập nhật điểm
 async function handleUpdatePoint(idx: any, listPoint: any[]) {
@@ -226,6 +237,9 @@ getListPointStudent()
         @on-cancel="handleCancle"
       />
     </div>
-    <CpMdUpdatePointAll v-model:isShowModal="isShowMdUpdatePoint" />
+    <CpMdUpdatePointAll
+      v-model:isShowModal="isShowMdUpdatePoint"
+      @update:changeAll="changeAll"
+    />
   </div>
 </template>

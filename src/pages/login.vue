@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Fingerprint2 from 'fingerprintjs2'
 import AuthProvider from '@/views/pages/authentication/AuthProvider.vue'
 import { useGenerateImageVariant } from '@core/composable/useGenerateImageVariant'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
@@ -9,7 +10,6 @@ import { getHomeRouteForLoggedInUser } from '@/auth/utils'
 import systemService from '@/api/system-service/index'
 import MethodsUtil from '@/utils/MethodsUtil'
 import AuthUtil from '@/auth'
-
 import authV2LoginIllustrationBorderedDark from '@/assets/images/pages/auth-v2-login-illustration-bordered-dark.png'
 import authV2LoginIllustrationBorderedLight from '@/assets/images/pages/auth-v2-login-illustration-bordered-light.png'
 import authV2LoginIllustrationDark from '@/assets/images/pages/auth-v2-login-illustration-dark.png'
@@ -29,14 +29,15 @@ const email = ref('sinhtv')
 const password = ref('123123')
 const rememberMe = ref(false)
 const captcha = ref({})
-const a = 1
+const deviceUUID = ref()
 
 function handleLogin() {
   const userData = {
     email: email.value,
     password: password.value,
     captcha: '',
-    remember: rememberMe,
+    remember: rememberMe.value,
+    uuid: deviceUUID.value,
   }
 
   AuthUtil.login(userData)
@@ -188,6 +189,33 @@ function handleAfterLogin(response: any) {
     // })
   }
 }
+
+function getDeviceUUID(): Promise<string> {
+  return new Promise(resolve => {
+    if (window.requestIdleCallback) {
+      requestIdleCallback(() => {
+        Fingerprint2.get(components => {
+          const values = components.map(component => component.value)
+          const fingerprint = Fingerprint2.x64hash128(values.join(''), 31)
+          resolve(fingerprint)
+        })
+      })
+    }
+    else {
+      setTimeout(() => {
+        Fingerprint2.get(components => {
+          const values = components.map(component => component.value)
+          const fingerprint = Fingerprint2.x64hash128(values.join(''), 31)
+          resolve(fingerprint)
+        })
+      }, 500)
+    }
+  })
+}
+getDeviceUUID().then(uuid => {
+  deviceUUID.value = uuid
+  console.log(uuid)
+})
 </script>
 
 <template>

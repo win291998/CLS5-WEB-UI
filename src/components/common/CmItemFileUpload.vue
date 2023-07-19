@@ -49,6 +49,13 @@ async function cancel(index: any) {
               :icon="item.icon"
               :type="3"
             />
+            <VTooltip
+              v-if="item?.type"
+              activator="parent"
+              location="right"
+            >
+              <div v-html="item?.type" />
+            </VTooltip>
           </div>
         </template>
         <template
@@ -56,7 +63,14 @@ async function cancel(index: any) {
           #append
         >
           <VBtn
-            v-if="item.processing === 100"
+            v-if="item.processing === 0"
+            color="infor"
+            icon="tabler:download"
+            variant="text"
+            @click="cancel(i)"
+          />
+          <VBtn
+            v-else-if="item.processing === 100"
             color="primary"
             icon="tabler:circle-check-filled"
             variant="text"
@@ -97,9 +111,13 @@ async function cancel(index: any) {
   border: 1px solid #2E90FA;
   border-radius: 8px;
   padding: 16px !important;
+  margin-bottom: 16px;
 }
 .box-items{
   padding: unset;
   border-radius: 8px;
+  max-height: 546px;
+  overflow: auto;
+  padding: 8px 12px;
 }
 </style>
