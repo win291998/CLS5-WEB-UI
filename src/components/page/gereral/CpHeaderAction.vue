@@ -72,8 +72,11 @@ function handleClickBtn(type: string) {
   }
   emit('click', type)
 }
-
+const keySearch = ref(props.keyword)
 const handleSearch = window._.debounce((value: any) => {
+  keySearch.value = value
+  console.log(value)
+
   emit('update:keyword', value)
 }, 500)
 </script>
@@ -135,7 +138,7 @@ const handleSearch = window._.debounce((value: any) => {
           {{ addButtonName }}
         </CmButton>
         <CmTextField
-          :model-value="keyword"
+          v-model="keySearch"
           class="header-action-field ml-3"
           placeholder="Tìm kiếm"
           prepend-inner-icon="tabler-search"

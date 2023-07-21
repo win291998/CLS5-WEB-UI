@@ -193,6 +193,7 @@
   "confirm-uploading-submit": "Hiện tại có {quantity} tệp tin đang được tải lên.<br/>Bạn có muốn nộp bài không?<br/><small>(Tệp đang tải lêncó thể không được lưu)</small>",
   "confirm-uploading-change-page": "Hiện tại có {quantity} tệp tin đang được tải lên.<br/>Bạn có muốn chuyển sang trang khác không?<br><small>(Tệp đang tải lên có thể không được lưu)</small>",
   "download-all": "Tải xuống tất cả",
+  "not-empty": "Không thể bỏ trống",
   "uploading": "Đang tải lên",
   "training-path": "Lộ trình đào tạo",
   "link-approve-course": "Link duyệt khóa học",

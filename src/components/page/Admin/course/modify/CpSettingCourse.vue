@@ -12,6 +12,7 @@ import CmRadio from '@/components/common/CmRadio.vue'
 import CpActionFooterEdit from '@/components/page/gereral/CpActionFooterEdit.vue'
 import toast from '@/plugins/toast'
 import CourseService from '@/api/course/index'
+import MethodsUtil from '@/utils/MethodsUtil'
 
 /** LIB */
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
@@ -94,6 +95,8 @@ async function getComboboxRatingScale() {
   }
 }
 async function changeCheckBoxTimeLearning(state: any) {
+  console.log(state)
+
   if (state) {
     settingData.value.studyTimeType = 1
     settingData.value.studyTime = 0
@@ -109,6 +112,7 @@ async function getSettingCourse() {
   }
   await window.requestApiCustom(CourseService.GetSettingCourse, TYPE_REQUEST.GET, params).then((value: any) => {
     settingData.value = value?.data
+    console.log(value?.data)
   })
   if (settingData.value.registrationStartDate !== null)
     optionData.isRegisterTime = true
@@ -402,7 +406,7 @@ getSettingCourse()
                     v-if="errors[0]"
                     class="styleError text-errors"
                   >
-                    {{ errors[0] }}
+                    {{ t(MethodsUtil.showErrorsYub(errors)) }}
                   </div>
                 </div>
               </Field>
@@ -516,7 +520,7 @@ getSettingCourse()
                     v-if="errors[0]"
                     class="styleError text-errors"
                   >
-                    {{ errors[0] }}
+                    {{ t(MethodsUtil.showErrorsYub(errors)) }}
                   </div>
                 </div>
               </Field>
@@ -569,7 +573,7 @@ getSettingCourse()
                       v-if="errors[0]"
                       class="styleError text-errors"
                     >
-                      {{ errors[0] }}
+                      {{ t(MethodsUtil.showErrorsYub(errors)) }}
                     </div>
                   </div>
                 </Field>
@@ -602,7 +606,7 @@ getSettingCourse()
                       v-if="errors[0]"
                       class="styleError text-errors"
                     >
-                      {{ errors[0] }}
+                      {{ t(MethodsUtil.showErrorsYub(errors)) }}
                     </div>
                   </div>
                 </Field>
@@ -683,7 +687,7 @@ getSettingCourse()
                     v-if="errors[0]"
                     class="styleError text-errors"
                   >
-                    {{ errors[0] }}
+                    {{ t(MethodsUtil.showErrorsYub(errors)) }}
                   </div>
                 </div>
               </Field>
@@ -801,7 +805,7 @@ getSettingCourse()
                     v-if="errors[0]"
                     class="styleError text-errors"
                   >
-                    {{ errors[0] }}
+                    {{ t(MethodsUtil.showErrorsYub(errors)) }}
                   </div>
                 </div>
               </Field>

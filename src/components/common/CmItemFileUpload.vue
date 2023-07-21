@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 import MethodsUtil from '@/utils/MethodsUtil'
 
 const props = withDefaults(defineProps<Props>(), {
@@ -34,73 +35,78 @@ async function cancel(index: any) {
 
 <template>
   <div>
-    <VList class="box-items">
-      <VListItem
-        v-for="(item, i) in files"
-        :key="i"
-        class="box-process-file"
-        :value="item"
-      >
-        <template
-          #prepend
+    <PerfectScrollbar>
+      <VList class="box-items">
+        <VListItem
+          v-for="(item, i) in files"
+          :key="i"
+          class="box-process-file"
+          :value="item"
         >
-          <div class="d-flex align-start">
-            <CmIconNoti
-              :icon="item.icon"
-              :type="3"
+          <template
+            #prepend
+          >
+            <div class="d-flex align-start">
+              <CmIconNoti
+                :icon="item.icon"
+                :type="3"
+              />
+              <VTooltip
+                v-if="item?.type"
+                activator="parent"
+                location="right"
+              >
+                <div v-html="item?.type" />
+              </VTooltip>
+            </div>
+          </template>
+          <template
+            v-if="iconStatus"
+            #append
+          >
+            <VBtn
+              v-if="item.processing === 0"
+              color="infor"
+              icon="tabler:download"
+              variant="text"
+              @click="cancel(i)"
             />
-            <VTooltip
-              v-if="item?.type"
-              activator="parent"
-              location="right"
-            >
-              <div v-html="item?.type" />
-            </VTooltip>
-          </div>
-        </template>
-        <template
-          v-if="iconStatus"
-          #append
-        >
-          <VBtn
-            v-if="item.processing === 0"
-            color="infor"
-            icon="tabler:download"
-            variant="text"
-            @click="cancel(i)"
-          />
-          <VBtn
-            v-else-if="item.processing === 100"
-            color="primary"
-            icon="tabler:circle-check-filled"
-            variant="text"
-          />
-          <VBtn
-            v-else
-            color="infor"
-            icon="tabler:trash"
-            variant="text"
-            @click="cancel(i)"
-          />
-        </template>
-        <VListItemTitle>
-          <div class="ml-3 text-medium-sm">
-            {{ item.name }}
-          </div>
-          <div class="ml-3 mb-2 text-regular-sm ">
-            {{ item.size ? MethodsUtil.formatCapacity(item.size) : t("undefined") }}
-          </div>
-          <div class="ml-3 text-regular-sm ">
-            <VProgressLinear
-              :model-value="item.processing"
-              striped
+            <VBtn
+              v-else-if="item.processing === 100"
               color="primary"
-              rounded
+              icon="tabler:circle-check-filled"
+              variant="text"
             />
-          </div>
-        </VListItemTitle>
-      </VListItem>
-    </VList>
+            <VBtn
+              v-else
+              color="infor"
+              icon="tabler:trash"
+              variant="text"
+              @click="cancel(i)"
+            />
+          </template>
+          <VListItemTitle>
+            <div
+              class="ml-3 text-medium-sm text-ellipsis"
+              :title="item.name"
+            >
+              {{ item.name }}
+            </div>
+            <div class="ml-3 mb-2 text-regular-sm ">
+              {{ item.size ? MethodsUtil.formatCapacity(item.size) : t("undefined") }}
+            </div>
+            <div class="ml-3 text-regular-sm ">
+              <VProgressLinear
+                :model-value="item.processing"
+                striped
+                color="primary"
+                rounded
+              />
+            </div>
+          </VListItemTitle>
+        </VListItem>
+      </VList>
+    </PerfectScrollbar>
   </div>
 </template>
 
@@ -116,8 +122,11 @@ async function cancel(index: any) {
 .box-items{
   padding: unset;
   border-radius: 8px;
-  max-height: 546px;
-  overflow: auto;
+  // max-height: 546px;
+  // overflow: auto;
   padding: 8px 12px;
+}
+.ps {
+  height: 400px;
 }
 </style>

@@ -88,6 +88,12 @@ const headers = reactive([
 const isShowModalFeedBack = ref(false)
 const isShowModalDownload = ref(false)
 const dataFeedBack = ref<any>()
+const paramsDowloadContent = ref({
+  courseId: '' as any,
+  keyword: '',
+  pageNumber: null,
+  pageSize: null,
+})
 
 // hàm trả về các loại action khi click
 function actionItem(type: any) {
@@ -120,7 +126,8 @@ function actionItem(type: any) {
       router.push({ name: 'attendance-list', params: { id: Number(type[1].id) } })
       break
     case 'DownloadContentCourse':
-      getListFilesCourse(type[1].id)
+      paramsDowloadContent.value.courseId = Number(type[1].id)
+      getListFilesCourse()
       nextTick(() => {
         isShowModalDownload.value = true
       })
@@ -181,12 +188,16 @@ async function handleCoppyCourse() {
       window.hideAllPageLoading()
     })
 }
+
+// tải khóa học
+
 const listFileDown = ref([])
-async function getListFilesCourse(id) {
-  const params = {
-    courseId: id,
-  }
-  await window.requestApiCustom(CourseService.GetListFilesCourse, TYPE_REQUEST.GET, params).then((value: any) => {
+function searchFile(keyword: any) {
+  paramsDowloadContent.value.keyword = keyword
+  getListFilesCourse()
+}
+async function getListFilesCourse() {
+  await window.requestApiCustom(CourseService.GetListFilesCourse, TYPE_REQUEST.GET, paramsDowloadContent.value).then((value: any) => {
     console.log(value)
     if (value.data?.pageLists) {
       listFileDown.value = value.data?.pageLists
@@ -224,6 +235,7 @@ async function fetchListCourse() {
     }
   })
 }
+
 watch(() => route.query, (val: any) => {
   if (Object.keys(val).length > 0) {
     queryParams.value.pageNumber = val.pageNumber ? Number(val.pageNumber) : 1
@@ -328,6 +340,7 @@ window.hideAllPageLoading()
           </div>
           <div v-if="col === 'formStudy'">
             <CmChip
+              v-if="context.formOfStudyName"
               :color="MethodsUtil.checkType(context.formOfStudyName, StatusTypeFormStudy, 'name')?.color"
             >
               <VIcon
@@ -372,6 +385,10 @@ window.hideAllPageLoading()
       v-model:is-show-modal-feed-back="isShowModalFeedBack"
       :data-feed-back="dataFeedBack"
     />
-    <CpMdDownloadMul v-model:is-show-modal="isShowModalDownload" />
+    <CpMdDownloadMul
+      v-model:is-show-modal="isShowModalDownload"
+      :list-item="listFileDown"
+      @search="searchFile"
+    />
   </div>
 </template>

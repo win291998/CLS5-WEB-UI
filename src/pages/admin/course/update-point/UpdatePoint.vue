@@ -133,17 +133,6 @@ async function getListPointStudent() {
         toast('ERROR', t(window.getErrorsMessage(error?.response?.data?.errors, t)))
     })
 }
-async function changeAll(value) {
-  // const listScoreSelected = this.$refs['data-table'].selectedRows
-  const listScoreSelected = await items.value.filter(item => item.isSelected)
-
-  listScoreSelected.forEach(item => {
-    item.scores = value
-  })
-  console.log(listScoreSelected)
-
-  handleUpdatePoint(0, listScoreSelected)
-}
 
 // api cập nhật điểm
 async function handleUpdatePoint(idx: any, listPoint: any[]) {
@@ -162,6 +151,19 @@ async function handleUpdatePoint(idx: any, listPoint: any[]) {
         toast('ERROR', t(window.getErrorsMessage(error?.response?.data?.errors, t)))
       unLoadComponent(idx)
     })
+}
+
+// dowload file
+async function changeAll(value: any) {
+  // const listScoreSelected = this.$refs['data-table'].selectedRows
+  const listScoreSelected = await items.value.filter(item => item.isSelected)
+
+  listScoreSelected.forEach(item => {
+    item.scores = value
+  })
+  console.log(listScoreSelected)
+
+  handleUpdatePoint(0, listScoreSelected)
 }
 
 /** main */

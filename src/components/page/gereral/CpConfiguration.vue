@@ -4,6 +4,7 @@ import { configStore } from '@/stores/index'
 import CmTextField from '@/components/common/CmTextField.vue'
 import CmCheckBox from '@/components/common/CmCheckBox.vue'
 import CmRadio from '@/components/common/CmRadio.vue'
+import MethodsUtil from '@/utils/MethodsUtil'
 
 const props = withDefaults(defineProps<Props>(), {})
 const emit = defineEmits<Emit>()
@@ -256,7 +257,7 @@ defineExpose({
                       <span class="text-regular-md">%</span>
                     </div>
                     <div class="styleError text-errors">
-                      {{ errors[0] }}
+                      {{ t(MethodsUtil.showErrorsYub(errors)) }}
                     </div>
                   </div>
                 </Field>
@@ -339,7 +340,7 @@ defineExpose({
                   v-if="errors.length"
                   class="styleError text-errors"
                 >
-                  {{ errors[0] }}
+                  {{ t(MethodsUtil.showErrorsYub(errors)) }}
                 </div>
               </Field>
             </div>
@@ -391,7 +392,7 @@ defineExpose({
                     v-if="errors.length"
                     class="styleError text-errors"
                   >
-                    {{ errors[0] }}
+                    {{ t(MethodsUtil.showErrorsYub(errors)) }}
                   </div>
                 </div>
               </Field>
@@ -442,7 +443,7 @@ defineExpose({
                     v-if="errors.length"
                     class="styleError text-errors"
                   >
-                    {{ errors[0] }}
+                    {{ t(MethodsUtil.showErrorsYub(errors)) }}
                   </div>
                 </div>
               </Field>
@@ -474,7 +475,7 @@ defineExpose({
                     v-if="errors.length"
                     class="styleError text-errors"
                   >
-                    {{ errors[0] }}
+                    {{ t(MethodsUtil.showErrorsYub(errors)) }}
                   </div>
                 </div>
               </Field>
@@ -524,7 +525,7 @@ defineExpose({
                     v-if="errors.length"
                     class="styleError text-errors"
                   >
-                    {{ errors[0] }}
+                    {{ t(MethodsUtil.showErrorsYub(errors)) }}
                   </div>
                 </div>
               </Field>
@@ -574,7 +575,7 @@ defineExpose({
                       <span class="text-regular-md">{{ t('turns').toLowerCase() }}</span>
                     </div>
                     <div class="styleError text-errors">
-                      {{ errors[0] }}
+                      {{ t(MethodsUtil.showErrorsYub(errors)) }}
                     </div>
                   </div>
                 </Field>

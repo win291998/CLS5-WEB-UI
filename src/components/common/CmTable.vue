@@ -43,7 +43,7 @@ const props = withDefaults(defineProps<Props>(), ({
 }))
 const emit = defineEmits<Emit>()
 
-const isLoading = ref<boolean>(true)
+const isLoading = ref<boolean>(false)
 
 interface HeaderCustom extends Header {
   type?: string
@@ -251,7 +251,6 @@ if (props.isUpdateRowForce) {
   }, { deep: true, immediate: true })
 }
 watch(() => props.items, (val: Item[]) => {
-  isLoading.value = true
   selectedRows.value = []
   console.time('mout')
   console.time('update')
