@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { JSXComponent } from 'vue'
 import constant from '@/constant/constant'
+import MethodsUtil from '@/utils/MethodsUtil'
 
 type IconValue = string | JSXComponent
 
@@ -48,6 +49,10 @@ const formModelValue = ref<any>(props.modelValue)
 /** Method */
 function handleChangeText(val: any) {
   emit('change', formModelValue.value)
+  console.log(formModelValue.value)
+  // eslint-disable-next-line vue/no-mutating-props
+  props.modelValue = formModelValue.value
+
   emit('update:modelValue', formModelValue.value)
 }
 
@@ -84,6 +89,9 @@ function focusInput(params: boolean) {
   isFocus.value = params
   emit('focused', params)
 }
+watch(() => props.modelValue, val => {
+  formModelValue.value = val
+})
 </script>
 
 <template>
@@ -101,7 +109,7 @@ function focusInput(params: boolean) {
       :class="{ 'cm-input-field-error': (errors?.length > 0 || isErrors) ?? false }"
     >
       <VTextField
-        :model-value=" modelValue "
+        :model-value=" formModelValue "
         v-bind="field"
         :disabled="disabled"
         :prepend-inner-icon="props.prependInnerIcon"
@@ -126,7 +134,7 @@ function focusInput(params: boolean) {
       v-if="errors?.length > 0"
       class="styleError text-errors"
     >
-      {{ errors[0] }}
+      {{ t(MethodsUtil.showErrorsYub(errors)) }}
     </div>
   </div>
 </template>
@@ -134,7 +142,7 @@ function focusInput(params: boolean) {
 <style lang="scss">
 @use "@/styles/style-global.scss" as *;
 .cm-input-field {
-  height: 44px;
+  height: auto;
   padding: 4px 0;
 }
 .vTextField .v-field__input{

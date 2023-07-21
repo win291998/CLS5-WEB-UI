@@ -18,6 +18,8 @@ import 'vue3-easy-data-table/dist/style.css'
 import { configStore } from '@/stores/index'
 
 // Import the CSS or use your own!
+
+import 'vue3-perfect-scrollbar/dist/vue3-perfect-scrollbar.css'
 import '@/styles/styles.scss'
 import '@core/scss/template/index.scss'
 import '@vuepic/vue-datepicker/dist/main.css'

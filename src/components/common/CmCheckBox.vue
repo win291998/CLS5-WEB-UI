@@ -74,10 +74,15 @@ const checkbox = ref(propsValue.modelValue)
 function onChangeChecked(val: boolean) {
   emit('update:modelValue', val)
 }
+function change(val: any) {
+  emit('change', checkbox.value)
+}
 
 watch(() => propsValue.modelValue, value => {
   checkbox.value = window._.cloneDeep(propsValue.modelValue)
-  emit('change', value)
+  emit('update:modelValue', value)
+
+  // emit('change', value)
 })
 </script>
 
@@ -116,6 +121,7 @@ watch(() => propsValue.modelValue, value => {
       :value="value"
       :class="className"
       @update:modelValue="onChangeChecked($event)"
+      @change="change"
     >
       <template
         v-if="!label"

@@ -3,6 +3,7 @@ import VueDatePicker from '@vuepic/vue-datepicker'
 import moment from 'moment'
 import CmButton from './CmButton.vue'
 import CmTextField from '@/components/common/CmTextField.vue'
+import MethodsUtil from '@/utils/MethodsUtil'
 
 const props = withDefaults(defineProps<Props>(), {
   range: false,
@@ -293,7 +294,7 @@ watchEffect(() => {
       v-if="errors?.length > 0"
       class="styleError text-errors"
     >
-      {{ errors[0] }}
+      {{ t(MethodsUtil.showErrorsYub(errors)) }}
     </div>
   </div>
 </template>

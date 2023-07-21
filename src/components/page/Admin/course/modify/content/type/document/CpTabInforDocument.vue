@@ -459,7 +459,7 @@ onUnmounted(() => {
                       <span class="text-regular-md">{{ t('minutes').toLowerCase() }}</span>
                     </div>
                     <div class="styleError text-errors">
-                      {{ errors[0] }}
+                      {{ t(MethodsUtil.showErrorsYub(errors)) }}
                     </div>
                   </div>
                 </Field>
@@ -481,7 +481,7 @@ onUnmounted(() => {
                       <span class="text-regular-md">{{ t('seconds').toLowerCase() }}</span>
                     </div>
                     <div class="styleError text-errors">
-                      {{ errors[0] }}
+                      {{ t(MethodsUtil.showErrorsYub(errors)) }}
                     </div>
                   </div>
                 </Field>

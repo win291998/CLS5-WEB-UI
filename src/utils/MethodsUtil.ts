@@ -7,7 +7,6 @@ import { TYPE_REQUEST } from '@/typescript/enums/enums'
 import UserService from '@/api/user/index'
 import ServerFileService from '@/api/server-file/index'
 import axios from '@axios'
-
 import type { Any } from '@/typescript/interface'
 
 const SERVERFILE = process.env.VUE_APP_BASE_SERVER_FILE
@@ -298,6 +297,10 @@ export default class MethodsUtil {
 
   static checkTypeFile(type: string) {
     return (typeFile as any)[type ?? 'default']
+  }
+
+  static showErrorsYub(errors: any) {
+    return errors[0] === 'this cannot be null' ? 'not-empty' : errors[0]
   }
 
   static getTypeContent(value: number) {

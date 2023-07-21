@@ -149,7 +149,7 @@ function focusInput(params: boolean) {
       v-if="errors?.length > 0"
       class="styleError text-errors"
     >
-      {{ errors[0] }}
+      {{ t(MethodsUtil.showErrorsYub(errors)) }}
     </div>
   </div>
 </template>

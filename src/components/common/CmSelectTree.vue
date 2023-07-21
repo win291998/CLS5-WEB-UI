@@ -3,6 +3,7 @@ import Treeselect from 'vue3-treeselect'
 import 'vue3-treeselect/dist/vue3-treeselect.css'
 import { defaultSetting } from '@/constant/data/settingDefault.json'
 import { MAX_ITEM_SELECT_MULT } from '@/constant/Globals'
+import MethodsUtil from '@/utils/MethodsUtil'
 
 /** ** Interface */
 interface Options {
@@ -168,7 +169,7 @@ function limitText(count: any) {
       v-if="errors?.length > 0"
       class="styleError text-errors"
     >
-      {{ errors[0] }}
+      {{ t(MethodsUtil.showErrorsYub(errors)) }}
     </div>
   </div>
 </template>
