@@ -154,7 +154,6 @@ async function getInforOfAttendance(idAttendance: number) {
   await window.requestApiCustom(CourseService.GetInforOfAttendance(`${courseId}`, idAttendance), TYPE_REQUEST.GET)
     .then((value: any) => {
       const dataAttend = value?.data
-      console.log(dataAttend)
       if (data) {
         dataInput.contentId = 0
         dataInput.contentId = dataAttend.contentId
@@ -236,8 +235,6 @@ async function handleAttendance(idx: any) {
           .catch((error: any) => {
             if (error?.response?.data?.errors?.length > 0) {
               toast('ERROR', t(window.getErrorsMessage(error?.response?.data?.errors, t)))
-              console.log(error)
-
               errorApi.value = error.response.data.errors[0]
             }
           })
@@ -251,8 +248,6 @@ async function handleAttendance(idx: any) {
           .catch((error: any) => {
             if (error?.response?.data?.errors?.length > 0) {
               toast('ERROR', t(window.getErrorsMessage(error?.response?.data?.errors, t)))
-              console.log(error.response.data.errors)
-
               errorApi.value = error.response.data.errors[0]
             }
           })
@@ -287,7 +282,6 @@ if (route.name === 'attendance-view')
 if (Number(route.params.idAttendance) >= 0) {
   isEdit.value = true
   getDataTable(dataInput.contentId)
-  console.log(Number(route.params.idAttendance))
   getComBoBoxContent()
   getInforOfAttendance(Number(route.params.idAttendance))
 }

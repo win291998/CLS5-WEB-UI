@@ -133,7 +133,6 @@ async function saveDataCondition(idx: any) {
         unLoadComponent(idx)
       })
         .catch((error: Any) => {
-          console.log(error)
           toast('ERROR', t(getErrorsMessage(error?.response?.data?.errors)))
           unLoadComponent(idx)
         })

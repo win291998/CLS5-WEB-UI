@@ -1,4 +1,5 @@
 import jwt_decode from 'jwt-decode'
+import JSZip from 'jszip'
 import { ActionType } from '@/constant/data/actionType.json'
 import { typeFile } from '@/constant/data/typeFile.json'
 import { StatusTypeUser } from '@/constant/data/status.json'
@@ -303,6 +304,19 @@ export default class MethodsUtil {
     return errors[0] === 'this cannot be null' ? 'not-empty' : errors[0]
   }
 
+  static getFolder(str: string, type: number) {
+    let strs
+    if (type === 7) {
+      strs = str.split('=')
+      return strs[strs.length - 1]
+    }
+    strs = str.split('/')
+    if (strs.length > 2)
+      return strs[strs.length - 2]
+
+    return str
+  }
+
   static getTypeContent(value: number) {
     switch (value) {
       case 1:
@@ -351,6 +365,65 @@ export default class MethodsUtil {
           listState[key] = window._.cloneDeep(stateInit.value[key])
         })
       }
+    }
+  }
+
+  /*
+      hàm ghi lại  file bằng blob
+      fileURL blob sau khi được khởi tạo
+      fileName tên file
+      dirHandle hàm mở system file
+      const dirHandle = await window.showDirectoryPicker()
+      chỉ hỗ trợ IDE và chrome
+    */
+  static async writeFileDownload(fileURL: any, fileName: any, dirHandle: any) {
+    try {
+      const fileHandle = await dirHandle.getFileHandle(fileName, { create: true })
+      const writable = await fileHandle.createWritable()
+      await writable.seek(fileURL)
+      await writable.write(fileURL)
+      await writable.close()
+      return 200
+    }
+    catch (error) {
+      return error
+    }
+  }
+
+  // Nén nhiều file vào file zip bằng blob trả về
+  static async exportBlobZipMulFile(model: any, document: any, window: any) {
+    let status
+    try {
+      const zip = new JSZip()
+      const folder = zip
+      console.log(folder, model)
+      model.blobs?.forEach((item: any, index: any) => {
+        folder.file(`${index + 1} ${model.fileNames[index]}`, item)
+      })
+      console.log(model)
+
+      // document.getElementById('main-loading').style.display = 'block'
+
+      zip.generateAsync({ type: 'blob' }).then(blob => {
+        const fileURL = window.URL.createObjectURL(new Blob([blob]))
+
+        // document.getElementById('main-loading').style.display = 'none'
+        const fileLink = document.createElement('a')
+        fileLink.href = fileURL
+        fileLink.setAttribute('download', model.zipName)
+        document.body.appendChild(fileLink)
+        fileLink.click()
+        document.body.removeChild(fileLink)
+        window.URL.revokeObjectURL(fileURL)
+        status = 200
+      }).catch(error => {
+        // document.getElementById('main-loading').style.display = 'none'
+        status = error
+      })
+      return status
+    }
+    catch (error) {
+      return error
     }
   }
 }

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
+import CmButton from './CmButton.vue'
 import MethodsUtil from '@/utils/MethodsUtil'
 
 const props = withDefaults(defineProps<Props>(), {
@@ -12,7 +13,9 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<Emit>()
 interface Emit {
   (e: 'cancel', value: any): void
+  (e: 'downloadFile', value?: any): void
 }
+
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 
 interface item {
@@ -28,9 +31,19 @@ interface Props {
   files: item[]
 }
 const CmIconNoti = defineAsyncComponent(() => import('@/components/common/CmIconNoti.vue'))
+const listFile = ref(props.files)
+
 async function cancel(index: any) {
   emit('cancel', index)
 }
+async function dowloadItems(item: any) {
+  emit('downloadFile', item)
+}
+
+watch(() => props.files, val => {
+  listFile.value = val
+  console.log(val)
+}, { deep: true })
 </script>
 
 <template>
@@ -38,9 +51,10 @@ async function cancel(index: any) {
     <PerfectScrollbar>
       <VList class="box-items">
         <VListItem
-          v-for="(item, i) in files"
+          v-for="(item, i) in listFile"
           :key="i"
           class="box-process-file"
+          :class="{ 'mb-4': i < listFile.length - 1 }"
           :value="item"
         >
           <template
@@ -56,7 +70,7 @@ async function cancel(index: any) {
                 activator="parent"
                 location="right"
               >
-                <div v-html="item?.type" />
+                <div v-html="t(item?.type)" />
               </VTooltip>
             </div>
           </template>
@@ -64,20 +78,39 @@ async function cancel(index: any) {
             v-if="iconStatus"
             #append
           >
-            <VBtn
-              v-if="item.processing === 0"
+            <CmButton
+              v-if="item.statusDownload === 1"
               color="infor"
               icon="tabler:download"
+              is-rounded
+              :size-icon="20"
               variant="text"
-              @click="cancel(i)"
+              @click="dowloadItems(item)"
             />
-            <VBtn
-              v-else-if="item.processing === 100"
+            <CmButton
+              v-else-if="item.statusDownload === 2 "
               color="primary"
-              icon="tabler:circle-check-filled"
+              is-rounded
+              icon="line-md:uploading-loop"
+              :size-icon="20"
               variant="text"
             />
-            <VBtn
+            <CmButton
+              v-else-if="item.statusDownload === 3"
+              color="success"
+              icon="tabler:circle-check-filled"
+              is-rounded
+              :size-icon="20"
+              variant="text"
+            />
+            <CmButton
+              v-else-if="item.statusDownload === 4"
+              color="error"
+              icon="material-symbols:file-download-off"
+              :size-icon="20"
+              variant="text"
+            />
+            <CmButton
               v-else
               color="infor"
               icon="tabler:trash"
@@ -117,7 +150,6 @@ async function cancel(index: any) {
   border: 1px solid #2E90FA;
   border-radius: 8px;
   padding: 16px !important;
-  margin-bottom: 16px;
 }
 .box-items{
   padding: unset;
@@ -127,6 +159,6 @@ async function cancel(index: any) {
   padding: 8px 12px;
 }
 .ps {
-  height: 400px;
+  max-height: 400px;
 }
 </style>

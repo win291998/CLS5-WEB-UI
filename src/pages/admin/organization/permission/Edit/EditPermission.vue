@@ -103,8 +103,6 @@ function getListFeature() {
 }
 const myForm = ref()
 async function handleEditPer(idx: number) {
-  console.log()
-
   myForm.value.validate.validate().then(async (success: any) => {
     if (success.valid) {
       dataInput.value.listFeature = getListFeature()

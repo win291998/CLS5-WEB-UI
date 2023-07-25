@@ -74,8 +74,6 @@ function cancel() {
 }
 function confirm(idx: number) {
   myEditSchool.value.validate().then((status: any) => {
-    console.log(status)
-
     if (status.valid) {
       if (route.params.id)
         editSchool()

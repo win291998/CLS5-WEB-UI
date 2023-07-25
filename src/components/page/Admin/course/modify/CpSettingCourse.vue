@@ -95,8 +95,6 @@ async function getComboboxRatingScale() {
   }
 }
 async function changeCheckBoxTimeLearning(state: any) {
-  console.log(state)
-
   if (state) {
     settingData.value.studyTimeType = 1
     settingData.value.studyTime = 0
@@ -112,7 +110,6 @@ async function getSettingCourse() {
   }
   await window.requestApiCustom(CourseService.GetSettingCourse, TYPE_REQUEST.GET, params).then((value: any) => {
     settingData.value = value?.data
-    console.log(value?.data)
   })
   if (settingData.value.registrationStartDate !== null)
     optionData.isRegisterTime = true

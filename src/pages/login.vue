@@ -214,7 +214,6 @@ function getDeviceUUID(): Promise<string> {
 }
 getDeviceUUID().then(uuid => {
   deviceUUID.value = uuid
-  console.log(uuid)
 })
 </script>
 

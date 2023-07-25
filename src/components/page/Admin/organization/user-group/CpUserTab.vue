@@ -47,7 +47,6 @@ function showModalAdd() {
   isShowAddUser.value = true
 }
 
-console.log(store.$state)
 onBeforeUnmount(() => {
   store.$dispose()
 })

@@ -96,8 +96,6 @@ export const contentManagerStore = defineStore('contentManager', () => {
     })
   }
   async function actionItemUserReg(type: any) {
-    console.log(type)
-
     switch (type[0]?.name) {
       case 'ActionEdit':
         if (type[1]?.contentArchiveTypeId === 13) {

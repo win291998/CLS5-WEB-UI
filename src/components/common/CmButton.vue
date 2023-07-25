@@ -21,6 +21,7 @@ interface Props {
   color?: string
   bgColor?: string
   rounded?: string | number | boolean
+  isRounded?: boolean
   icon?: string
   variant?: typeof typeVariant[number]
   size?: string
@@ -37,6 +38,7 @@ const props = withDefaults(defineProps<Props>(), ({
   isLoad: false,
   block: false,
   disabled: false,
+  isRounded: false,
   color: 'primary',
   textColor: '',
   bgColor: '',
@@ -105,10 +107,10 @@ defineExpose({
     :size="size"
     :variant="variant"
     :color="color"
-    :rounded="rounded"
+    :rounded="!isRounded ? rounded : ''"
+    :icon="isRounded ? icon : null"
     v-bind="propsBlind"
-    class="text-style-btn"
-    :class="[color, outlined, className, color === 'white' ? 'border-button' : '']"
+    :class="[color, outlined, className, !isRounded ? 'text-style-btn' : '', color === 'white' ? 'border-button' : '']"
     @click="handleClick"
   >
     <!-- :class="[`${prefixColor}-${color}`, bgColor, className]" -->

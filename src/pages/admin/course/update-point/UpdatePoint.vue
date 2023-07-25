@@ -83,7 +83,6 @@ function openModalPointAll(value: any) {
   isShowMdUpdatePoint.value = true
 }
 function valueChange(value: any, dataChange: any) {
-  console.log(value)
   if (value || value === '0')
     items.value[dataChange?.originIndex].scores = StringUtil.decimalToFixed(Number(value), 4)
   else
@@ -161,7 +160,6 @@ async function changeAll(value: any) {
   listScoreSelected.forEach(item => {
     item.scores = value
   })
-  console.log(listScoreSelected)
 
   handleUpdatePoint(0, listScoreSelected)
 }

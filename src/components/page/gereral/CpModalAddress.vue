@@ -63,7 +63,6 @@ function addAddress() {
 }
 
 function onConfirmation() {
-  console.log('dataAddress.value', dataAddress.value)
   addAddress()
 }
 

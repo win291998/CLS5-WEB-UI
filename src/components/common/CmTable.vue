@@ -231,14 +231,10 @@ onMounted(() => {
     console.timeEnd('mout')
   })
 })
-console.time('mout')
-console.time('update')
-console.log(props.headers)
 const headerValue = computed(() => {
   if (props.headers[0].value === 'checkbox' && props.headers.length && props.isView) {
     const headerClone: any = window._.cloneDeep(props.headers)
     headerClone.shift()
-    console.log(headerClone)
     return headerClone
   }
   return props.headers
@@ -252,10 +248,6 @@ if (props.isUpdateRowForce) {
 }
 watch(() => props.items, (val: Item[]) => {
   selectedRows.value = []
-  console.time('mout')
-  console.time('update')
-  console.log(123)
-
   props.items?.forEach((element, index) => {
     element.originIndex = index
     element.isSelected = !!element.isSelected

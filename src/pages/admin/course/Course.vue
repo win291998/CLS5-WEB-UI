@@ -97,8 +97,6 @@ const paramsDowloadContent = ref({
 
 // hàm trả về các loại action khi click
 function actionItem(type: any) {
-  console.log(type)
-
   switch (type[0]?.name) {
     case 'ActionViewDetail':
       router.push({ name: 'course-view', params: { tab: 'infor', id: type[1].id } })
@@ -196,9 +194,19 @@ function searchFile(keyword: any) {
   paramsDowloadContent.value.keyword = keyword
   getListFilesCourse()
 }
+
+const isDowloading = ref(false)
+const itemDownloading = ref<any>({})
+function cancelModal() {
+  console.log(isDowloading.value)
+
+  if (isDowloading.value)
+    toast('WARNING', t('progress-file'))
+  else
+    isShowModalDownload.value = false
+}
 async function getListFilesCourse() {
   await window.requestApiCustom(CourseService.GetListFilesCourse, TYPE_REQUEST.GET, paramsDowloadContent.value).then((value: any) => {
-    console.log(value)
     if (value.data?.pageLists) {
       listFileDown.value = value.data?.pageLists
         .map((item: any) => ({
@@ -207,9 +215,10 @@ async function getListFilesCourse() {
           icon: MethodsUtil.checkType(item?.contentArchiveTypeId, ContentType, 'id')?.icon,
           size: 0,
           processing: 0,
+          folder: MethodsUtil.getFolder(item.urlFile, item.contentArchiveTypeId),
+          statusDownload: (isDowloading.value || (itemDownloading.value && item.id === itemDownloading.value?.id)) ? 2 : 1,
           ...item,
         }))
-      console.log(listFileDown.value)
     }
   })
 }
@@ -387,8 +396,11 @@ window.hideAllPageLoading()
     />
     <CpMdDownloadMul
       v-model:is-show-modal="isShowModalDownload"
+      v-model:dowloading="isDowloading"
+      v-model:item-downloading="itemDownloading"
       :list-item="listFileDown"
       @search="searchFile"
+      @cancel="cancelModal"
     />
   </div>
 </template>

@@ -89,8 +89,6 @@ function addGroupUser(idx: number, isUpdate: boolean) {
   })
 }
 function editGroupUser(idx: number) {
-  console.log(123)
-
   const payload = {
     ...dataInput.value,
     id: route.params.id ? route.params.id : null,
