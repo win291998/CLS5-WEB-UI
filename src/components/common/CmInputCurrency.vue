@@ -52,22 +52,15 @@ const modelValueCurrency = ref()
 
 /** Method */
 function handleChangeText(val: any) {
-  console.log(formModelValue.value)
-
-  // emit('change', formModelValue.value)
-  // emit('update:modelValue', formModelValue.value)
+  emit('change', formModelValue.value)
 }
 
 function handleUpdateText(val: any) {
-  console.log(props.type)
   if (props.type === 'number') {
-    console.log(formModelValue.value)
-    if (!val && val !== 0) {
-      console.log(formModelValue.value)
-
+    if (!val && val !== 0)
       formModelValue.value = null
-    }
-    else { formModelValue.value = Number(val || 0) }
+
+    else formModelValue.value = Number(val || 0)
     if (props.max && Number(val || 0) > props.max)
       formModelValue.value = props.max
     if (props.min && Number(val || 0) < props.min)

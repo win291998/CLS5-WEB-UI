@@ -546,3 +546,15 @@ span {
     margin-left: (-4 * $i) + px;
   }
 }
+// margin inline
+@for $i from 0 through 10 {
+  .mxn-#{$i} {
+    margin-inline: (-4 * $i) + px;
+  }
+}
+// margin block
+@for $i from 0 through 10 {
+  .myn-#{$i} {
+    margin-block: (-4 * $i) + px;
+  }
+}

@@ -75,8 +75,6 @@ function handleClickBtn(type: string) {
 const keySearch = ref(props.keyword)
 const handleSearch = window._.debounce((value: any) => {
   keySearch.value = value
-  console.log(value)
-
   emit('update:keyword', value)
 }, 500)
 </script>

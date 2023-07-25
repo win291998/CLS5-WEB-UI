@@ -160,7 +160,6 @@ function loadDataEdit() {
 // thời gian làm bài thay đổi
 function timeOfWorkChange() {
   testConfig.value.minuteOfWork = Number(minuteWork.value) * 60 + secondWork.value
-  console.log(testConfig.value.minuteOfWork)
 
   if (isTimeOfWork.value && minuteWork.value !== null && secondWork.value !== null) {
     if (!(Number(minuteWork.value) * 60 + Number(secondWork.value) > 0))
@@ -170,7 +169,6 @@ function timeOfWorkChange() {
     testConfig.value.isPreserveTime = false
   }
   emit('update:testConfigModel', testConfig.value)
-  console.log(testConfig.value)
 }
 
 // cho phép làm lại thay đổi

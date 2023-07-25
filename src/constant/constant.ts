@@ -16,5 +16,6 @@ const constant = Object.freeze({
   MAX_NUMBER: 10000,
   MAX_LENGTH_TEXT_FIELD: 256,
   DECIMAL: 2,
+  MAX_CAPACITY_DOWNLOAD_FILE: 10,
 })
 export default constant

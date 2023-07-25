@@ -26,6 +26,7 @@ interface Props {
   appendToBody?: boolean
   isDivSpace?: boolean
   isOk?: boolean
+  isCancle?: boolean
   isThemeCustom?: boolean
 }
 
@@ -47,6 +48,7 @@ const props = withDefaults(defineProps<Props>(), ({
   appendToBody: false,
   isDivSpace: true,
   isOk: true,
+  isCancle: true,
 }))
 
 const emit = defineEmits<Emit>()
@@ -150,9 +152,10 @@ const sizeModal = computed(() => {
           v-if="!isHideFooter"
           #actions
         >
-          <div class="d-flex justify-end my-3 w-100">
+          <div class="d-flex justify-end w-100">
             <slot name="actions" />
             <CmButton
+              v-if="isCancle"
               variant="outlined"
               color="secondary"
               :disabled="disabledCancel"
@@ -183,8 +186,9 @@ const sizeModal = computed(() => {
 @use "@/styles/style-global.scss" as *;
 
 .v-card-actions {
-  padding-block: 12px;
-  padding-inline: 24px;
+  padding-top: 12px;
+  padding-bottom: 24px;
+  padding-inline: 24px !important;
 }
 
 .modal-custom-divspace .v-card-item {

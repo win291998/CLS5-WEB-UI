@@ -57,11 +57,9 @@ async function getDataQr() {
     rollCallId: route.params.idAttendance,
   }
   await window.requestApiCustom(CourseService.GetQrCode, TYPE_REQUEST.GET, params).then((response: any) => {
-    console.log(response)
     emit('update', response?.data)
     const timeOld = new Date(new Date(response?.data.dateRollCall).getFullYear(), new Date(response?.data.dateRollCall).getMonth(), new Date(response?.data.dateRollCall).getDate()).toDateString()
     const timeNew = new Date(new Date(props.content.dateRollCall).getFullYear(), new Date(props.content.dateRollCall).getMonth(), new Date(props.content.dateRollCall).getDate()).toDateString()
-    console.log(response)
 
     if (response?.data.qrCode === null) {
       dataQr.value = response?.data
@@ -86,16 +84,12 @@ async function getDataQr() {
     })
 }
 function show() {
-  console.log(route.params.idAttendance, isHaveQrActive.value)
   if (route.params.idAttendance && !isHaveQrActive.value) {
     getDataQr()
   }
   else if (!route.params.idAttendance) {
-    console.log(dataQr)
-
     const timeOld = new Date(new Date(dataQr?.value.dateRollCall).getFullYear(), new Date(dataQr?.value.dateRollCall).getMonth(), new Date(dataQr?.value.dateRollCall).getDate()).toDateString()
     const timeNew = new Date(new Date(props.content.dateRollCall).getFullYear(), new Date(props.content.dateRollCall).getMonth(), new Date(props.content.dateRollCall).getDate()).toDateString()
-    console.log(timeOld !== timeNew)
     if (timeOld !== timeNew) {
       isQrActive.value = false
       dataQr.value.id = 0

@@ -286,9 +286,6 @@ async function saveDataCondition(idx: any) {
         toast('WARNING', t('condition-complete-invalid'))
         return
       }
-      console.log(conditionComplete.value.isAfterTime, 'conditionComplete.value.isAfterTime')
-      console.log('time.value.minuteTime', time.value.minuteTime)
-      console.log('time.value.secondTime', time.value.secondTime)
 
       if (conditionComplete.value.isAfterTime === true && time.value.minuteTime !== null && time.value.secondTime !== null) {
         conditionComplete.value.timeFinish = Number(time.value.minuteTime) * 60 + Number(time.value.secondTime)

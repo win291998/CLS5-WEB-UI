@@ -36,7 +36,6 @@ async function onCancel() {
   emit('update:isShowModal', false)
 }
 async function onConfirm(idx: any) {
-  console.log(pointSetting.value)
   myFormUpdatePointAll.value.validate().then(async (success: any) => {
     if (success.valid) {
       emit('update:changeAll', pointSetting.value)
@@ -49,7 +48,6 @@ async function onConfirm(idx: any) {
 // thay đổi điểm
 function changePoint(event: any) {
   pointSetting.value = StringUtil.decimalToFixed(Number(event), 4)
-  console.log(pointSetting.value)
 }
 </script>
 
