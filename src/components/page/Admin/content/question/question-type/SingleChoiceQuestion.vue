@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const CmInputEditor = defineAsyncComponent(() => import('@/components/common/CmInputEditor.vue'))
+const CmInputEditor = defineAsyncComponent(() => import('@/components/common/inputEditor/CmInputEditor.vue'))
 </script>
 
 <template>

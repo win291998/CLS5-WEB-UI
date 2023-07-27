@@ -1,27 +1,29 @@
 export default [
   {
     path: 'content',
-    name: 'admin-content',
-    redirect: { name: 'question' },
+    name: 'content',
+    redirect: { name: 'question-list' },
 
-    // meta: {
-    //   requireAuth: {
-    //     permissionKey: 'OrganizationalStructureManaging',
-    //     permissionValue: 1,
-    //   },
-    // },
     children: [
       {
-        path: '/question',
-        name: 'question',
-        component: () => import('@/pages/admin/content/question/Question.vue'),
+        path: 'question',
+        name: 'question-list',
+        redirect: { name: 'question' },
+        component: () => import('@/pages/admin/content/question/Index.vue'),
+        children: [
+          {
+            path: '',
+            name: 'question',
+            component: () => import('@/pages/admin/content/question/Question.vue'),
+          },
+          {
+            path: 'add',
+            name: 'question-add',
+            component: () => import('@/pages/admin/content/question/modification/Modification.vue'),
+          },
+        ],
       },
-      {
-        path: '/question/add',
-        name: 'question-add',
-        component: () => import('@/pages/admin/content/question/modification/Modification.vue'),
-      },
+
     ],
-    component: () => import('@/pages/admin/content/question/Index.vue'),
   },
 ]

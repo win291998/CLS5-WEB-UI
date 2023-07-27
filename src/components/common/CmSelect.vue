@@ -211,7 +211,7 @@ function withPopper(dropdownList: any, component: any, { width }: any) {
         class="text-medium-sm color-dark"
       >{{ props.text }}</label>
     </div>
-    <div class="cm-select">
+    <div class="cm-select py-1">
       <ISelect
         v-model="valueCurrent"
         v-bind="field"
