@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import CmInputEditorMenu from './CmInputEditorMenu.vue'
+import CmInputEditorMenu from '@/components/common/inputEditor/CmInputEditorMenu.vue'
 
 interface Emit {
   (e: 'update:modelValue', value: any): void
@@ -126,6 +126,56 @@ const handleChangeValue = window._.debounce((val: any) => {
   emit('update:modelValue', inputEditor.value.innerHTML)
 }, propsValue?.isDebounce ? 500 : 0)
 
+/** method */
+function applyFormatting(formatType: 'bold' | 'italic' | 'underline', value: any) {
+  document.execCommand(formatType)
+}
+
+function applyAlignment(alignmentType: 'left' | 'center' | 'justify') {
+  document.execCommand(alignmentType)
+
+  // const contentDiv = document.getElementById('myContent')
+
+  // // Kiểm tra xem có phần tử nào đã được chọn không.
+  // const selection: any = window.getSelection()
+
+  // if (selection && selection.rangeCount > 0) {
+  //   const range = selection.getRangeAt(0)
+  //   const parentElement = selection?.anchorNode.parentElement
+  //   const textAlign = parentElement.style.textAlign
+  //   if (textAlign) {
+  //     // Nếu đã có text-align, thay thế nó bằng giá trị mới (ở đây là 'center' cho ví dụ)
+  //     parentElement.style.textAlign = alignmentType
+  //   }
+  //   else {
+  //     // Tạo một phần tử div mới và chèn nội dung đã được chọn vào đó.
+  //     const alignElement = document.createElement('div')
+  //     alignElement.style.textAlign = alignmentType
+  //     console.log(range)
+
+  //     // Tạo một phạm vi rõ ràng để chứa nội dung đã chọn.
+  //     const fragment = range.cloneContents()
+  //     alignElement.appendChild(fragment)
+
+  //     // Xóa bỏ các phần tử div chứa căn chỉnh cũ trong phạm vi đã chọn trước khi chèn phần tử div mới.
+  //     const divsToRemove = alignElement.querySelectorAll('div[style^="text-align"]')
+  //     for (const div of divsToRemove)
+  //       div.outerHTML = div.innerHTML
+
+  //     // Chèn phần tử div mới vào vị trí của phạm vi đã chọn.
+  //     range.deleteContents()
+  //     range.insertNode(alignElement)
+  //   }
+  // }
+}
+
+function applyOrderedList(key: any) {
+  document.execCommand(key)
+}
+function applyColor(key: any, option: any, value: any) {
+  document.execCommand(key, option, value)
+}
+
 onMounted(() => {
   inputEditor.value.innerHTML = propsValue.modelValue
 })
@@ -133,6 +183,59 @@ onMounted(() => {
 watch(() => propsValue.modelValue, (val: any) => {
   inputEditor.value.innerHTML = val
 }, { deep: true })
+
+const statusMenu = reactive({
+  bold: false,
+  underline: false,
+  italic: false,
+  strikeThrough: false,
+  left: false,
+  right: false,
+  center: false,
+  justify: false,
+  insertOrderedList: false,
+  insertUnorderedList: false,
+})
+function click(event: MouseEvent) {
+  const target = event.target as HTMLElement // Lấy phần tử được click
+
+  const selection = window.getSelection()
+  if (selection && selection.rangeCount > 0) {
+    const range = selection.getRangeAt(0)
+
+    // Lấy danh sách các phần tử con trong range
+    // eslint-disable-next-line sonarjs/no-unused-collection
+    const nodes: Node[] = []
+    range.commonAncestorContainer.childNodes.forEach(node => {
+      if (node instanceof HTMLElement)
+        nodes.push(node)
+    })
+
+    // Kiểm tra các thuộc tính CSS của từng phần tử con
+    statusMenu.bold = document.queryCommandState('bold')
+    statusMenu.underline = document.queryCommandState('underline')
+    statusMenu.italic = document.queryCommandState('italic')
+    statusMenu.strikeThrough = document.queryCommandState('strikeThrough')
+    statusMenu.left = ['left', 'start'].includes(window.getComputedStyle(target).textAlign)
+    statusMenu.right = ['right'].includes(window.getComputedStyle(target).textAlign)
+    statusMenu.center = ['center'].includes(window.getComputedStyle(target).textAlign)
+    statusMenu.justify = ['justify'].includes(window.getComputedStyle(target).textAlign)
+    statusMenu.insertOrderedList = document.queryCommandState('insertOrderedList')
+    statusMenu.insertUnorderedList = document.queryCommandState('insertUnorderedList')
+
+    // Hiển thị kết quả
+    console.log('Is Bold:', statusMenu.bold)
+    console.log('Is Italic:', statusMenu.italic)
+    console.log('Is Underline:', statusMenu.underline)
+    console.log('Is strikeThrough:', statusMenu.strikeThrough)
+    console.log('Is Align left:', statusMenu.left)
+    console.log('Is Align right:', statusMenu.right)
+    console.log('Is Align center:', statusMenu.center)
+    console.log('Is Align justify:', statusMenu.justify)
+    console.log('IsinsertOrderedList:', statusMenu.insertOrderedList)
+    console.log('Is insertUnorderedList:', statusMenu.insertUnorderedList)
+  }
+}
 </script>
 
 <template>
@@ -157,7 +260,13 @@ watch(() => propsValue.modelValue, (val: any) => {
       >{{ propsValue.text }}</label>
     </div>
     <div>
-      <CmInputEditorMenu />
+      <CmInputEditorMenu
+        :status-menu="statusMenu"
+        @change="applyFormatting"
+        @changeAlign="applyAlignment"
+        @order="applyOrderedList"
+        @changeColor="applyColor"
+      />
     </div>
     <div
       id="inputEditor"
@@ -165,6 +274,7 @@ watch(() => propsValue.modelValue, (val: any) => {
       contenteditable="true"
       class="input-math border box-textarea p-1"
       @input="handleChangeValue"
+      @click="click"
     />
     <!--
       :style="`textAlign:${textAlign}; color:${generalConfig.textColor};`"
@@ -175,7 +285,7 @@ watch(() => propsValue.modelValue, (val: any) => {
   </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
   .input-math{
     padding: 10px;
     min-height: 200px;
@@ -187,8 +297,32 @@ watch(() => propsValue.modelValue, (val: any) => {
     max-height: 500px;
     overflow: hidden;
     overflow-y: auto;
+    font-size: 14px;
   }
   .input-math:focus{
     outline: unset !important;
   }
+</style>
+
+<style lang="scss">
+ .input-math {
+    ol {
+        display: block;
+        list-style-type: decimal;
+        margin-block-start: 1em;
+        margin-block-end: 1em;
+        margin-inline-start: 0px;
+        margin-inline-end: 0px;
+        padding-inline-start: 40px !important;
+    }
+    ul {
+      display: block;
+      list-style-type: disc;
+      margin-block-start: 1em;
+      margin-block-end: 1em;
+      margin-inline-start: 0px;
+      margin-inline-end: 0px;
+      padding-inline-start: 40px;
+    }
+ }
 </style>

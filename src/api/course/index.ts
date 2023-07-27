@@ -93,7 +93,7 @@ const CourseService = {
   PostCreateQr: '/qrcode/create',
   PostUpdateQuestionTest: '/CourseContentTest/update-question', // cập nhật danh sách câu hỏi cho bài kiểm tra
   PostuCreateTestConfig: '/coursecontenttest/create',
-  PostUpdatePointOff: '/Course/import-excel-update-mark-offline',
+  PostUpdatePointOff: '/Course/import-excel-update-mark-content-offline',
   PostuUpdateQuestionTest: '/CourseContentTest/update-question', // cập nhật danh sách câu hỏi cho bài kiểm tra
   PostDelCheckinCourse: (id: number | string) => `/course/${id}/checkin/delete`, // Lấy danh sách điểm danh khóa học
   PostAddCheckinCourse: (id: number | string) => `/course/${id}/checkin`, // Thêm điểm danh khóa học

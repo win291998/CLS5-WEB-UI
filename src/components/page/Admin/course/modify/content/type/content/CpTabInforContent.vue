@@ -9,7 +9,7 @@ import toast from '@/plugins/toast'
 import { load } from '@/stores/loadComponent.js'
 import { ContentType } from '@/constant/data/contentCourseType.json'
 
-const CmInputEditor = defineAsyncComponent(() => import('@/components/common/CmInputEditor.vue'))
+const CmInputEditor = defineAsyncComponent(() => import('@/components/common/inputEditor/CmInputEditor.vue'))
 const SkUser = defineAsyncComponent(() => import('@/components/page/gereral/skeleton/SkUser.vue'))
 const CmCheckBox = defineAsyncComponent(() => import('@/components/common/CmCheckBox.vue'))
 const CmTextField = defineAsyncComponent(() => import('@/components/common/CmTextField.vue'))

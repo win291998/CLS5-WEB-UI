@@ -2,7 +2,7 @@
 import { courseInforManagerStore } from '@/stores/admin/course/infor'
 import { validatorStore } from '@/stores/validatator'
 import { avatar } from '@/constant/Globals'
-import CmInputEditor from '@/components/common/CmInputEditor.vue'
+import CmInputEditor from '@/components/common/inputEditor/CmInputEditor.vue'
 import { comboboxStore } from '@/stores/combobox'
 import constant from '@/constant/constant'
 
