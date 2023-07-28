@@ -44,7 +44,7 @@
   "Menu_EducationManaging": "học tập",
   "Menu_TrainingScheduleManaging": "Lịch đào tạo",
   "Menu_CostManaging": "chi phí",
-  "Menu_TopicManaging": "chủ đề",
+  "Menu_TopicManaging": "Chủ đề",
   "Menu_TrainingRoadmap": "lộ trình đào tạo",
   "Menu_LearnOnline": "khóa học online",
   "Menu_TestCodeArchiveManaging": "Ngân hàng đề thi",
@@ -2465,7 +2465,7 @@
   "complete-learning-route-step": "Hoàn thành bước học lộ trình",
   "complete-route": "Hoàn thành lộ trình",
   "view-document": "Xem tài liệu",
-  "forum": "diễn dàn",
+  "forum": "Diễn đàn",
   "no-match-app-homepage": "Đường dẫn không được phép trùng với đường dẫn hệ thống",
   "not-allowed-duplicate-had-route": "Đường dẫn không được phép trùng với đường dẫn đã có",
   "set-image-default-for-blank": "Bạn có muốn đặt hình mặc định cho những hình trống không ?",
@@ -3530,5 +3530,7 @@
   "add-from-question-bank": "Thêm từ ngân hàng câu hỏi",
   "move-user-success": "Chuyển người dùng thành công!",
   "check-info": "Vui lòng kiểm tra lại thông tin!",
-  "meeting": "Họp trực tuyến"
+  "meeting": "Họp trực tuyến",
+  "train-route": "Lộ trình đào tạo",
+  "Are-you-delete-survey-topic": "Bạn có muốn xóa chuyên đề khảo sát không?"
 }

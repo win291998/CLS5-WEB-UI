@@ -38,6 +38,7 @@ const CourseService = {
   GetQrCode: 'qrcode/get-qrcode', // Lấy thông tin QR khóa học
   GetSampleFileUpdatePoint: 'Course/template-excel-update-point', // Lấy thông tin file mẫu cập nhật điểm
   GetListFilesCourse: 'contentarchive/get-files-in-course', // Lấy danh sách file tải của khóa học
+  GetListSurvey: '/surveyexam/get-paging',
 
   /** Post */
   PostAddCourseOrg: '/course/add-course-to-organizational-structures',

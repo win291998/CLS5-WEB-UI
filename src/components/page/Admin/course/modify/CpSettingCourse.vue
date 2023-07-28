@@ -14,6 +14,12 @@ import toast from '@/plugins/toast'
 import CourseService from '@/api/course/index'
 import MethodsUtil from '@/utils/MethodsUtil'
 
+interface Props {
+  isView: boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {})
+
 /** LIB */
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 const router = useRouter()
@@ -253,6 +259,7 @@ getSettingCourse()
         <VCol>
           <CmCheckBox
             v-model:model-value="optionData.isRegisterTime"
+            :disabled="isView"
             :label="t('time-register')"
           />
         </VCol>
@@ -275,6 +282,7 @@ getSettingCourse()
             <CmDateTimePicker
               :model-value="settingData.registrationStartDate"
               :max-date="settingData.registrationEndDate"
+              :disabled="isView"
               :field="field"
               :errors="errors"
               :text="`${t('start-day')}*`"
@@ -296,6 +304,7 @@ getSettingCourse()
             <CmDateTimePicker
               :model-value="settingData.registrationEndDate"
               :field="field"
+              :disabled="isView"
               :errors="errors"
               :text="`${t('to-day')}*`"
               :placeholder="t('to-day')"
@@ -308,6 +317,7 @@ getSettingCourse()
         <VCol>
           <CmCheckBox
             v-model:model-value="optionData.isTimeAttend"
+            :disabled="isView"
             :label="t('time-attend-course')"
           />
         </VCol>
@@ -330,6 +340,7 @@ getSettingCourse()
             <CmDateTimePicker
               v-model="settingData.courseStartDate"
               :max-date="settingData.courseEndDate"
+              :disabled="isView"
               :field="field"
               :errors="errors"
               :text="`${t('start-day')}*`"
@@ -351,6 +362,7 @@ getSettingCourse()
             <CmDateTimePicker
               v-model="settingData.courseEndDate"
               :min-date="settingData.courseStartDate"
+              :disabled="isView"
               :field="field"
               :errors="errors"
               :text="`${t('to-day')}*`"
@@ -364,6 +376,7 @@ getSettingCourse()
         <VCol>
           <CmCheckBox
             v-model:model-value="settingData.isReviewExpired"
+            :disabled="isView"
             :label="t('no-preview')"
           />
         </VCol>
@@ -374,6 +387,7 @@ getSettingCourse()
           <div class="d-flex">
             <CmCheckBox
               v-model:model-value="optionData.isTimeLearning"
+              :disabled="isView"
               :label="t('learning-time')"
               @change="changeCheckBoxTimeLearning"
             />
@@ -394,6 +408,7 @@ getSettingCourse()
                         v-model="settingData.studyTime"
                         :field="field"
                         type="number"
+                        :disabled="isView"
                         :min="constant.MIN_NUMBER"
                         :max="constant.MAX_NUMBER"
                         :maxlength="constant.MAX_NUMBER.toString().length"
@@ -427,6 +442,7 @@ getSettingCourse()
               <CmRadio
                 v-model="settingData.studyTimeType"
                 :type="1"
+                :disabled="isView"
                 name="studyTimeType"
                 :value="1"
               />
@@ -449,6 +465,7 @@ getSettingCourse()
             <div class="d-flex align-center mr-4">
               <CmRadio
                 v-model="settingData.studyTimeType"
+                :disabled="isView"
                 :type="1"
                 name="studyTimeType"
                 :value="2"
@@ -472,6 +489,7 @@ getSettingCourse()
             <div class="d-flex align-center mr-4">
               <CmRadio
                 v-model="settingData.studyTimeType"
+                :disabled="isView"
                 :type="1"
                 name="studyTimeType"
                 :value="3"
@@ -489,6 +507,7 @@ getSettingCourse()
           <div class="d-flex algin-center">
             <CmCheckBox
               v-model:model-value="optionData.isRemind"
+              :disabled="isView"
               :label="t('remind-before-expiration')"
             />
             <div
@@ -509,6 +528,7 @@ getSettingCourse()
                         :field="field"
                         type="number"
                         :min="constant.MIN_NUMBER"
+                        :disabled="isView"
                         :max="constant.MAX_NUMBER"
                         :maxlength="constant.MAX_NUMBER.toString().length"
                         counter
@@ -539,6 +559,7 @@ getSettingCourse()
           <div class="d-flex">
             <CmCheckBox
               v-model:model-value="optionData.isAmountRemind"
+              :disabled="isView"
               :label="t('times-remind')"
             />
             <div
@@ -559,6 +580,7 @@ getSettingCourse()
                       <div class="mr-3 conditon-input">
                         <CmTextField
                           v-model="settingData.timeSpanByMinute"
+                          :disabled="isView"
                           :field="field"
                           type="number"
                           :min="constant.MIN_NUMBER"
@@ -592,6 +614,7 @@ getSettingCourse()
                       <div class="mr-3 conditon-input">
                         <CmTextField
                           :model-value="settingData.timesOfRemind"
+                          :disabled="isView"
                           :field="field"
                           type="number"
                           :min="constant.MIN_NUMBER"
@@ -620,6 +643,7 @@ getSettingCourse()
         <VCol class="p-0">
           <CmCheckBox
             v-model:model-value="optionData.isCertification"
+            :disabled="isView"
             :label="t('certifications')"
           />
         </VCol>
@@ -645,6 +669,7 @@ getSettingCourse()
           <CmSelect
             v-model="settingData.certificationTemplateId"
             :items="comboboxCertificate"
+            :disabled="isView"
             item-value="key"
             custom-key="value"
             :placeholder="t('choose-template-cert')"
@@ -676,6 +701,7 @@ getSettingCourse()
                         :field="field"
                         type="number"
                         :min="constant.MIN_NUMBER"
+                        :disabled="isView"
                         :max="constant.MAX_NUMBER"
                         :maxlength="constant.MAX_NUMBER.toString().length"
                         counter
@@ -701,6 +727,7 @@ getSettingCourse()
           <CmCheckBox
             v-model:model-value="optionData.isRatingScale"
             :label="t('rating-scale')"
+            :disabled="isView"
           />
         </VCol>
       </VRow>
@@ -725,6 +752,7 @@ getSettingCourse()
           <CmSelect
             v-model="settingData.ratingScaleId"
             :items="comboboxRatingScale"
+            :disabled="isView"
             item-value="key"
             custom-key="value"
             :placeholder="t('choose-rating-scale')"
@@ -737,6 +765,7 @@ getSettingCourse()
         <VCol class="p-0">
           <CmCheckBox
             v-model:model-value="settingData.isDisplayHome"
+            :disabled="isView"
             :label="t('is-display-home')"
           />
         </VCol>
@@ -763,6 +792,7 @@ getSettingCourse()
             v-model="settingData.displayId"
             :items="displayHomeOption"
             item-value="key"
+            :disabled="isView"
             custom-key="value"
             :placeholder="t('choose-type-display')"
           />
@@ -775,6 +805,7 @@ getSettingCourse()
             <CmCheckBox
               v-model:model-value="optionData.experiencePoint"
               :label="t('calculating-experience-points')"
+              :disabled="isView"
             />
             <div
               v-if="optionData.experiencePoint"
@@ -792,6 +823,7 @@ getSettingCourse()
                       <CmTextField
                         v-model="settingData.point"
                         :field="field"
+                        :disabled="isView"
                         type="number"
                         :min="constant.MIN_NUMBER"
                         :max="constant.MAX_NUMBER"
@@ -834,6 +866,7 @@ getSettingCourse()
                 v-model="settingData.formOfRegistration"
                 :type="1"
                 name="formOfRegistration"
+                :disabled="isView"
                 :value="1"
               />
             </div>
@@ -855,6 +888,7 @@ getSettingCourse()
               <CmRadio
                 v-model="settingData.formOfRegistration"
                 :type="1"
+                :disabled="isView"
                 name="formOfRegistration"
                 :value="2"
               />
@@ -876,6 +910,7 @@ getSettingCourse()
             <div class="d-flex align-center mr-4">
               <CmRadio
                 v-model="settingData.formOfRegistration"
+                :disabled="isView"
                 :type="1"
                 name="formOfRegistration"
                 :value="3"
@@ -906,6 +941,7 @@ getSettingCourse()
             <div class="d-flex align-center mr-4">
               <CmRadio
                 v-model="settingData.studyMode"
+                :disabled="isView"
                 :type="1"
                 name="studyMode"
                 :value="1"
@@ -929,6 +965,7 @@ getSettingCourse()
               <CmRadio
                 v-model="settingData.studyMode"
                 :type="1"
+                :disabled="isView"
                 name="studyMode"
                 :value="2"
               />
@@ -952,6 +989,7 @@ getSettingCourse()
                 v-model="settingData.studyMode"
                 :type="1"
                 name="studyMode"
+                :disabled="isView"
                 :value="3"
               />
             </div>
@@ -964,6 +1002,7 @@ getSettingCourse()
       <VRow>
         <VCol>
           <CpActionFooterEdit
+            v-if="!isView"
             is-cancel
             is-save
             :title-cancel="t('cancel-title')"

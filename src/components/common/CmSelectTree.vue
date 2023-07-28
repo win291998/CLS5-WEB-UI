@@ -132,6 +132,7 @@ function limitText(count: any) {
   >
     <Treeselect
       v-model="modelValue"
+      class="py-1"
       :class="{ styleError: isError || errors?.length > 0 }"
       :value-format="props.valueFormat"
       :options="props.options"
@@ -143,7 +144,7 @@ function limitText(count: any) {
       :open-on-click="props.openOnClick"
       :open-on-focus="props.openOnFocus"
       :clear-on-select="props.clearOnSelect"
-      :close-on-select="props.closeOnSelect"
+      :close-on-select="props.multiple ? props.closeOnSelect : true"
       :always-open="props.alwaysOpen"
       :append-to-body="props.appendToBody"
       :flat="props.flat"
