@@ -501,6 +501,9 @@ span {
 [class*="v-col"] {
   padding: 8px 12px !important;
 }
+[class*="v-row"] {
+  margin: -8px -12px !important;
+}
 .embed-responsive {
   position: relative;
   width: 100%;

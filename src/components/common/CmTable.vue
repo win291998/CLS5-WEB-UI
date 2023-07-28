@@ -232,7 +232,7 @@ onMounted(() => {
   })
 })
 const headerValue = computed(() => {
-  if (props.headers[0].value === 'checkbox' && props.headers.length && props.isView) {
+  if (props?.headers[0]?.value === 'checkbox' && props?.headers?.length && props.isView) {
     const headerClone: any = window._.cloneDeep(props.headers)
     headerClone.shift()
     return headerClone

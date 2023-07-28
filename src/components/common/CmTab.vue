@@ -54,24 +54,38 @@ const tabActive = ref<string>('')
 const dataTab = ref<any>({})
 
 function getTabActive() {
-  dataTab.value = props.listTab.find(e => e.key === route.query[props.label]) as object
-  if (dataTab.value) {
+  if (route.query[props.label]) {
+    dataTab.value = props.listTab.find(e => e.key === route.query[props.label]) as object
+    if (dataTab.value) {
+      tabActive.value = dataTab.value?.key
+      if (route.query[props.label] && props.isRender)
+        dataTab.value.isRendered = true
+    }
+  }
+  else {
+    dataTab.value = props.listTab[0]
     tabActive.value = dataTab.value?.key
-    if (route.query[props.label] && props.isRender)
-      dataTab.value.isRendered = true
   }
 }
-getTabActive()
 function activeTab(value: any) {
-  // value.isRendered = true
   dataTab.value = props.listTab.find(x => x.key === value) as tab
   dataTab.value.isRendered = true
-  router.push({
-    query: {
-      ...route.query,
-      [props.label]: value,
-    },
-  })
+  if (props.type === 'button') {
+    router.push({
+      query: {
+        ...route.query,
+        [props.label]: value,
+      },
+    })
+  }
+  else {
+    router.replace({
+      query: {
+        ...route.query,
+        [props.label]: value,
+      },
+    })
+  }
   emit('activeTab', tabActive.value)
 }
 
@@ -83,7 +97,10 @@ function useEmitter() {
 }
 watch(() => route.query[props.label], val => {
   getTabActive()
-})
+}, { immediate: true })
+watch(tabActive, val => {
+  activeTab(val)
+}, { immediate: true })
 </script>
 
 <template>
@@ -97,7 +114,6 @@ watch(() => route.query[props.label], val => {
         class="cm-tabs"
         style="height: calc(100% + 10px);"
         show-arrows
-        @update:modelValue="activeTab"
       >
         <VTab
           v-for="(item, index) in listTab"

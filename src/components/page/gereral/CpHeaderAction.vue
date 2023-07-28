@@ -19,6 +19,8 @@ interface Emit {
   (e: 'addHandler'): void
   (e: 'back'): void
   (e: 'update:keyword', type: any): void
+  (e: 'update:pageNumber', type: any): void
+  (e: 'update:pageSize', type: any): void
   (e: 'update:showFilter', type: any): void
 }
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
@@ -76,6 +78,8 @@ const keySearch = ref(props.keyword)
 const handleSearch = window._.debounce((value: any) => {
   keySearch.value = value
   emit('update:keyword', value)
+  emit('update:pageNumber', 1)
+  emit('update:pageSize', 10)
 }, 500)
 </script>
 
@@ -86,7 +90,7 @@ const handleSearch = window._.debounce((value: any) => {
       md="3"
       sm="4"
     >
-      <div>
+      <div class="d-flex flex-wrap">
         <CmButton
           v-if="isDelete"
           size="40"
@@ -97,25 +101,30 @@ const handleSearch = window._.debounce((value: any) => {
         >
           <VIcon icon="tabler:trash" />
         </CmButton>
-        <CmButton
-          v-if="isBack"
-          :disabled="disabledBack"
-          size="40"
-          color="error"
-          class="mr-3"
-          @click="handleClickBtn('back')"
-        >
-          <VIcon icon="tabler:corner-down-left" />
-        </CmButton>
-        <CmButton
-          v-if="isApprove"
-          :disabled="disabledApprove"
-          size="40"
-          color="success"
-          @click="handleClickBtn('approve')"
-        >
-          <VIcon icon="mdi-checkbox-marked-circle-outline" />
-        </CmButton>
+        <div :title="t('ActionDeclined')">
+          <CmButton
+            v-if="isBack"
+            :disabled="disabledBack"
+            size="40"
+            color="error"
+            class="mr-3"
+            @click="handleClickBtn('back')"
+          >
+            <VIcon icon="tabler:corner-down-left" />
+          </CmButton>
+        </div>
+
+        <div :title="t('ActionAgree')">
+          <CmButton
+            v-if="isApprove"
+            :disabled="disabledApprove"
+            size="40"
+            color="success"
+            @click="handleClickBtn('approve')"
+          >
+            <VIcon icon="mdi-checkbox-marked-circle-outline" />
+          </CmButton>
+        </div>
         <slot name="actionLeft" />
       </div>
     </VCol>
