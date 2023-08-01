@@ -41,7 +41,6 @@ const formEdit = ref()
 const router = useRouter()
 const route = useRoute()
 async function saveSurvey(unload: any, isUpdate: boolean) {
-  console.log(unload, isUpdate)
   await formEdit.value.validate().then((status: Any) => {
     if (status.valid) {
       if (!route.params.id) {

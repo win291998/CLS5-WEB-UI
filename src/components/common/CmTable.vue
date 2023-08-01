@@ -125,6 +125,7 @@ function checkActionShow(action: Array<any>) {
 
 const pageSize = ref(props.pageSize) // số lượng item trên 1 page
 const serverfile = window.SERVER_FILE || ''
+const isSelectTable = computed(() => !!props.headers?.filter((item: any) => item.value === 'checkbox')?.length)
 
 /** method */
 // cập nhật selectedRows
@@ -272,7 +273,7 @@ watch(totalPaginationLocal, val => {
     <EasyDataTable
       ref="dataTable"
       alternating
-      :table-class-name="`customize-table ${isExpand ? 'table-expand' : ''}`"
+      :table-class-name="`customize-table ${isExpand ? 'table-expand' : ''} ${isSelectTable ? 'selectedTable' : ''}`"
       :headers="headerValue"
       :items="items"
       :rows-per-page="!disiablePagination ? pageSize : PAGINATION_SIZE_UNLIMIT_DEFAULT"
@@ -655,5 +656,9 @@ watch(totalPaginationLocal, val => {
 }
 .text-header{
   text-transform: capitalize;
+}
+.selectedTable tbody tr td:first-child {
+  display: flex;
+  align-items: start;
 }
 </style>

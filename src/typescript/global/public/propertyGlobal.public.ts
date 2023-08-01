@@ -1,5 +1,6 @@
 import { isEmpty } from './../../../@core/utils/index';
 import axios from '@axios';
+import axiosV5 from '@axiosV5';
 import _ from 'lodash';
 import { Ref } from "vue";
 import { useI18n } from 'vue-i18n';
@@ -24,6 +25,7 @@ interface propertyGlobal {
   _?: _.LoDashStatic,
   i18n?: any,
   axios?: any,
+  axiosV5?: any,
   requestApiCustom?: any,
   getErrorsMessage?: any,
   showAllPageLoading?: any,
@@ -89,6 +91,7 @@ const windowDefineConstProperty = ()=> {
     _: _,
     i18n: useI18n,
     axios: axios,
+    axiosV5: axiosV5,
     showAllPageLoading,
     hideAllPageLoading,
     SERVER_FILE: process.env.VUE_APP_BASE_SERVER_FILE,

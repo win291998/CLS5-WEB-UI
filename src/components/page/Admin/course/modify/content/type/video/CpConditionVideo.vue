@@ -31,7 +31,7 @@ const { fetchConditionAttend } = storeContentVideoTypeModifyManager
 
 onMounted(() => {
   if (!window._.isEmpty(conditionAttend))
-    fetchConditionAttend(Number(route.params.contentId) || null)
+    fetchConditionAttend(Number(route.params?.contentId) || null)
 })
 
 /** state */

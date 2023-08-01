@@ -1803,6 +1803,7 @@
   "training": "Đào tạo",
   "org-struct-ranking": "Cơ cấu tổ chức có điểm cao nhất",
   "achieved-level": "Mức độ đạt được",
+  "levels": "Mức độ",
   "accomplished": "Đã hoàn thành",
   "active-date": "Ngày kích hoạt",
   "answer-content": "Nội dung câu trả lời",
@@ -3535,7 +3536,18 @@
   "add-from-question-bank": "Thêm từ ngân hàng câu hỏi",
   "move-user-success": "Chuyển người dùng thành công!",
   "check-info": "Vui lòng kiểm tra lại thông tin!",
-  "meeting": "Họp trực tuyến",
   "train-route": "Lộ trình đào tạo",
-  "Are-you-delete-survey-topic": "Bạn có muốn xóa chuyên đề khảo sát không?"
+  "Are-you-delete-survey-topic": "Bạn có muốn xóa chuyên đề khảo sát không?",
+  "strikeThrough": "Gạch ngang",
+  "justifyRight": "Canh phải",
+  "justifyCenter": "Canh giữa",
+  "justifyLeft": "Canh trái",
+  "justify": "Canh hai bên",
+  "insertOrderedList": "Danh sách theo thứ tự",
+  "insertUnorderedList": "Danh sách không thứ tự",
+  "no-color": "Xóa màu chữ",
+  "backColor": "Màu nền",
+  "no-backColor": "Xóa màu nền",
+  "link-insert": "Chèn link",
+  "meeting": "Họp trực tuyến"
 }

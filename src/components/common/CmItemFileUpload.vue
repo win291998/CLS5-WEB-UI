@@ -44,7 +44,6 @@ async function dowloadItems(item: any) {
 
 watch(() => props.files, val => {
   listFile.value = val
-  console.log(val)
 }, { deep: true })
 </script>
 

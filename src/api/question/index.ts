@@ -3,6 +3,8 @@ const QuestionService = {
   GetListExam: '/exam/get-paging',
   GetDetailExam: '/exam/get-update-exam-id',
   GetListQuestion: '/question/get-list-question-paging',
+  GetListQuestionV5: '/questions?type=2&pageSize=10',
+  GetDetailQuestion: (id: number) => `/questions/${id}`,
   GetComboboxQuestionLevel: 'questionlevel/get-combobox',
   GetComboboxQuestionType: 'question/get-combobox-question-type',
   GetListQuestionById: 'question/get-answer-from-question',

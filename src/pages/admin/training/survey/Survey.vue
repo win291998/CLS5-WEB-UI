@@ -143,8 +143,6 @@ function sendApproveSurvey() {
     selected.value = []
     toast('SUCCESS', t(result.message))
   }).catch((err: Any) => {
-    console.log(err.response)
-
     toast('ERROR', window.getErrorsMessage(err.response.data.errors, t))
   })
 }
@@ -175,8 +173,6 @@ function GetFeedBackRejectSurvey(id: number) {
 }
 
 async function actionItem([{ id, name }, content]: [Any, Any]) {
-  console.log(id)
-
   switch (id) {
     case 5:
       isShowFeedBack.value = true

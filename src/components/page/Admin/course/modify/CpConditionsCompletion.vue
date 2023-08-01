@@ -113,7 +113,10 @@ onMounted(() => {
                 </div>
                 <span class="text-regular-md">/{{ condition.totalRequireContent }} {{ t('content').toLowerCase() }}</span>
               </div>
-              <div class="styleError text-errors">
+              <div
+                v-if="errors?.length > 0"
+                class="styleError text-errors"
+              >
                 {{ t(MethodsUtil.showErrorsYub(errors)) }}
               </div>
             </Field>
