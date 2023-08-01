@@ -415,7 +415,7 @@ getSettingCourse()
                     <span class="text-regular-md text-lowercase">{{ t('day') }}</span>
                   </div>
                   <div
-                    v-if="errors[0]"
+                    v-if="errors?.length > 0"
                     class="styleError text-errors"
                   >
                     {{ t(MethodsUtil.showErrorsYub(errors)) }}
@@ -534,7 +534,7 @@ getSettingCourse()
                     <span class="text-regular-md text-lowercase">{{ t('day') }}</span>
                   </div>
                   <div
-                    v-if="errors[0]"
+                    v-if="errors?.length > 0"
                     class="styleError text-errors"
                   >
                     {{ t(MethodsUtil.showErrorsYub(errors)) }}
@@ -589,7 +589,7 @@ getSettingCourse()
                       <span class="text-regular-md text-lowercase">{{ t('separate') }}</span>
                     </div>
                     <div
-                      v-if="errors[0]"
+                      v-if="errors?.length > 0"
                       class="styleError text-errors"
                     >
                       {{ t(MethodsUtil.showErrorsYub(errors)) }}
@@ -623,7 +623,7 @@ getSettingCourse()
                       <span class="text-regular-md text-lowercase">{{ t('minutes') }}</span>
                     </div>
                     <div
-                      v-if="errors[0]"
+                      v-if="errors?.length > 0"
                       class="styleError text-errors"
                     >
                       {{ t(MethodsUtil.showErrorsYub(errors)) }}
@@ -707,7 +707,7 @@ getSettingCourse()
                     <span class="text-regular-md text-lowercase">{{ t('month') }}</span>
                   </div>
                   <div
-                    v-if="errors[0]"
+                    v-if="errors?.length > 0"
                     class="styleError text-errors"
                   >
                     {{ t(MethodsUtil.showErrorsYub(errors)) }}
@@ -831,7 +831,7 @@ getSettingCourse()
                     <span class="text-regular-md text-lowercase">{{ t('point') }} / {{ t('minutes') }}</span>
                   </div>
                   <div
-                    v-if="errors[0]"
+                    v-if="errors?.length > 0"
                     class="styleError text-errors"
                   >
                     {{ t(MethodsUtil.showErrorsYub(errors)) }}

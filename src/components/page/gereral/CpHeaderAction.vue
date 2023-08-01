@@ -4,6 +4,7 @@ const props = withDefaults(defineProps<Props>(), {
   isBack: false,
   disabledBack: false,
   isApprove: false,
+  isSendApprove: false,
   isFillter: true,
   isAdd: false,
   disabledDelete: false,
@@ -36,17 +37,19 @@ const CmTextField = defineAsyncComponent(
   disabledDelete:  Disable button delete
 */
 interface Props {
+  addButtonName?: string
   isDelete?: boolean
-  disabledDelete?: boolean
   isBack?: boolean
-  disabledBack?: boolean
   isApprove?: boolean
-  disabledApprove?: boolean
+  isSendApprove?: boolean
   isFillter?: boolean
   isAdd?: boolean
+  disabledDelete?: boolean
+  disabledApprove?: boolean
   disabledAdd?: boolean
-  addButtonName?: string
+  disabledBack?: boolean
   disabledFillter?: boolean
+  disabledSendApprove?: boolean
   keyword?: string
   showFilter?: boolean
 }
@@ -101,30 +104,34 @@ const handleSearch = window._.debounce((value: any) => {
         >
           <VIcon icon="tabler:trash" />
         </CmButton>
-        <div :title="t('ActionDeclined')">
-          <CmButton
-            v-if="isBack"
-            :disabled="disabledBack"
-            size="40"
-            color="error"
-            class="mr-3"
-            @click="handleClickBtn('back')"
-          >
-            <VIcon icon="tabler:corner-down-left" />
-          </CmButton>
-        </div>
-
-        <div :title="t('ActionAgree')">
-          <CmButton
-            v-if="isApprove"
-            :disabled="disabledApprove"
-            size="40"
-            color="success"
-            @click="handleClickBtn('approve')"
-          >
-            <VIcon icon="mdi-checkbox-marked-circle-outline" />
-          </CmButton>
-        </div>
+        <CmButton
+          v-if="isBack"
+          :disabled="disabledBack"
+          size="40"
+          color="error"
+          class="mr-3"
+          @click="handleClickBtn('back')"
+        >
+          <VIcon icon="tabler:corner-down-left" />
+        </CmButton>
+        <CmButton
+          v-if="isSendApprove"
+          :disabled="disabledSendApprove"
+          size="40"
+          color="primary"
+          @click="handleClickBtn('send-approve')"
+        >
+          <VIcon icon="tabler:send" />
+        </CmButton>
+        <CmButton
+          v-if="isApprove"
+          :disabled="disabledApprove"
+          size="40"
+          color="success"
+          @click="handleClickBtn('approve')"
+        >
+          <VIcon icon="mdi-checkbox-marked-circle-outline" />
+        </CmButton>
         <slot name="actionLeft" />
       </div>
     </VCol>
@@ -151,6 +158,7 @@ const handleSearch = window._.debounce((value: any) => {
           prepend-inner-icon="tabler-search"
           @update:model-value="handleSearch"
         />
+        <slot name="actionRight" />
         <CmButton
           v-if="isFillter"
           class="ml-3"

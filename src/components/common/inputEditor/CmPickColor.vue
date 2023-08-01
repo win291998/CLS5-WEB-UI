@@ -38,7 +38,10 @@ function changeColor(e: any, option: any, type: any) {
         v-if="isHideInputColor"
         @click="setColor('foreColor')"
       >
-        <VIcon icon="ic:outline-invert-colors" />
+        <VIcon
+          icon="ic:outline-invert-colors"
+          size="18"
+        />
       </strong>
       <input
         id="colorpicker"
@@ -58,7 +61,10 @@ function changeColor(e: any, option: any, type: any) {
         v-if="isHideInputColor"
         @click="setColor('backColor')"
       >
-        <VIcon icon="ic:outline-format-color-fill" />
+        <VIcon
+          icon="ic:outline-format-color-fill"
+          size="18"
+        />
       </strong>
       <input
         id="backColor"

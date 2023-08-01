@@ -45,6 +45,7 @@ interface Props {
 interface Emit {
   (e: 'update', value: any, instanceId: any): void
   (e: 'update:modelValue', value: any): void
+  (e: 'open'): void
 }
 
 /** ** Khởi tạo prop emit */
@@ -158,6 +159,7 @@ function limitText(count: any) {
       :max-height="props.maxHeight"
       :normalizer="normalizer"
       @update:modelValue="handleUpdate"
+      @open="emit('open')"
     >
       <template
         v-if="props.customLable"

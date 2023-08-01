@@ -120,7 +120,7 @@ async function confirm(val: DataInput) {
     <CmButton
       class="ml-2 mt-1"
       size="40"
-      :color="errors.length > 0 ? 'error' : 'primary'"
+      :color="errors?.length > 0 ? 'error' : 'primary'"
       variant="tonal"
       @click="showModalEdit"
     >

@@ -3,16 +3,27 @@ import CmInputEditorMenu from '@/components/common/inputEditor/CmInputEditorMenu
 
 interface Emit {
   (e: 'update:modelValue', value: any): void
+  (e: 'update:event', value?: any): void
 }
 interface Props {
   modelValue: any
   text?: any
+  minHeight?: any
+  width?: any
   isDebounce?: boolean
+  isMenuSimple?: boolean
+  rlt?: string
+  listMenu?: any[]
 }
 const propsValue = withDefaults(defineProps<Props>(), ({
   modelValue: '',
   text: '',
+  minHeight: '200px',
+  width: 'auto',
   isDebounce: true,
+  isMenuSimple: false,
+  rlt: 'left',
+  listMenu: () => ([]),
 }))
 const emit = defineEmits<Emit>()
 const inputEditor = ref()
@@ -175,6 +186,23 @@ function applyOrderedList(key: any) {
 function applyColor(key: any, option: any, value: any) {
   document.execCommand(key, option, value)
 }
+function addLinkUrl(key: any, option: any, value: any, selection: any, range: any) {
+  const inputEditorTa: any = document.getElementById('inputEditor')
+  const {
+    anchorNode, extentNode, anchorOffset, extentOffset,
+  } = selection
+  range.setStart(anchorNode, anchorOffset)
+  range.setEnd(extentNode, extentOffset)
+
+  nextTick(() => {
+    window?.getSelection()?.removeAllRanges()
+    window?.getSelection()?.addRange(range)
+
+    setTimeout(() => {
+      document.execCommand(key, option, value)
+    }, 500)
+  })
+}
 
 onMounted(() => {
   inputEditor.value.innerHTML = propsValue.modelValue
@@ -222,24 +250,12 @@ function click(event: MouseEvent) {
     statusMenu.justify = ['justify'].includes(window.getComputedStyle(target).textAlign)
     statusMenu.insertOrderedList = document.queryCommandState('insertOrderedList')
     statusMenu.insertUnorderedList = document.queryCommandState('insertUnorderedList')
-
-    // Hiển thị kết quả
-    console.log('Is Bold:', statusMenu.bold)
-    console.log('Is Italic:', statusMenu.italic)
-    console.log('Is Underline:', statusMenu.underline)
-    console.log('Is strikeThrough:', statusMenu.strikeThrough)
-    console.log('Is Align left:', statusMenu.left)
-    console.log('Is Align right:', statusMenu.right)
-    console.log('Is Align center:', statusMenu.center)
-    console.log('Is Align justify:', statusMenu.justify)
-    console.log('IsinsertOrderedList:', statusMenu.insertOrderedList)
-    console.log('Is insertUnorderedList:', statusMenu.insertUnorderedList)
   }
 }
 </script>
 
 <template>
-  <div>
+  <div :style="{ width }">
     <!--
       <div>
       <ToolBarEditor
@@ -262,16 +278,22 @@ function click(event: MouseEvent) {
     <div>
       <CmInputEditorMenu
         :status-menu="statusMenu"
+        :is-menu-simple="isMenuSimple"
+        :list-menu="listMenu"
+        :rlt="rlt"
         @change="applyFormatting"
         @changeAlign="applyAlignment"
         @order="applyOrderedList"
         @changeColor="applyColor"
+        @addLinkUrl="addLinkUrl"
+        @update:event="($item: any) => emit('update:event', $item)"
       />
     </div>
     <div
       id="inputEditor"
       ref="inputEditor"
       contenteditable="true"
+      :style="[`${isMenuSimple && !listMenu.length ? 'borderRadius: 8px' : ''}`, `minHeight: ${minHeight}`]"
       class="input-math border box-textarea p-1"
       @input="handleChangeValue"
       @click="click"
@@ -288,7 +310,6 @@ function click(event: MouseEvent) {
 <style lang="scss" scoped>
   .input-math{
     padding: 10px;
-    min-height: 200px;
     margin-top: -1px;
     border: 1px solid rgba(var(--v-border-color)) !important;
     border-bottom-right-radius: 8px;
@@ -305,7 +326,7 @@ function click(event: MouseEvent) {
 </style>
 
 <style lang="scss">
- .input-math {
+.input-math {
     ol {
         display: block;
         list-style-type: decimal;

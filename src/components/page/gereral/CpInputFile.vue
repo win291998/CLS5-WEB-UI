@@ -239,6 +239,9 @@ watch(() => props.modelValue, (val: any) => {
     }
   }
 })
+defineExpose({
+  openChooseFile,
+})
 </script>
 
 <template>

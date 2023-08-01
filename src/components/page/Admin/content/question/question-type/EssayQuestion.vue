@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import CpAnswerContent from '@/components/page/Admin/content/question/modification/CpAnswerContent.vue'
 import CmInputEditor from '@/components/common/inputEditor/CmInputEditor.vue'
 import CpListTypeFileUpload from '@/components/page/gereral/CpListTypeFileUpload.vue'
 import CpMediaContent from '@/components/page/gereral/CpMediaContent.vue'
@@ -120,7 +119,6 @@ onMounted(() => {
     <VRow>
       <VCol
         cols="12"
-        sm="6"
       >
         <CmInputEditor
           v-model="anserList.content"
@@ -141,30 +139,6 @@ onMounted(() => {
           @update:fileFolder="handleUpadateUrlFile"
           @deleteFile="deleteFile"
         />
-      </VCol>
-      <VCol
-        cols="12"
-        sm="6"
-      >
-        <div class="answer-list">
-          <div
-            v-for="(ans, idAns) in anserList.answers"
-            :key="idAns"
-            class="answer-item mb-6"
-          >
-            <CpAnswerContent
-              v-model:content="ans.content"
-              v-model:url="ans.urlFile"
-              v-model:isShuffle="ans.isShuffle"
-              :is-view="isView"
-              :data="ans"
-              :ans-id="idAns"
-              :is-true="trueValue"
-              @delete="deleteAns"
-              @update:isTrue="changeValueIsTrue"
-            />
-          </div>
-        </div>
       </VCol>
     </VRow>
   </div>
