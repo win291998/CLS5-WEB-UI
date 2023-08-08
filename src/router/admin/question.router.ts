@@ -50,6 +50,7 @@ export default [
             },
             component: () => import('@/pages/admin/content/question/modification/Modification.vue'),
           },
+
         ],
       },
 

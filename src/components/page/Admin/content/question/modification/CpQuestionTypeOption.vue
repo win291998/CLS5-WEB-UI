@@ -1,26 +1,28 @@
 <script setup lang="ts">
 import CmSelect from '@/components/common/CmSelect.vue'
-import MethodsUtil from '@/utils/MethodsUtil'
-import QuestionService from '@/api/question'
-import { TYPE_REQUEST } from '@/typescript/enums/enums'
-import type { Any } from '@/typescript/interface'
+import { validatorStore } from '@/stores/validatator'
 
 const props = withDefaults(defineProps<Props>(), ({
-  questionTypeId: null,
-  questionLevelId: null,
+  typeId: 1,
+  isEdit: false,
 }))
 const emit = defineEmits<Emit>()
 interface Props {
-  questionTypeId?: any
-  questionLevelId?: any
+  typeId?: any
+  isEdit?: boolean
 }
 interface Emit {
-  (e: 'update:questionTypeId', value: any): void
-  (e: 'update:questionLevelId', value: any): void
+  (e: 'update:typeId', value: any): void
   (e: 'update:data', value: any): void
 
 }
 const { t } = window.i18n()
+const storeValidate = validatorStore()
+const { schemaOption, Field, Form, useForm, yup } = storeValidate
+const { submitForm } = useForm()
+const schema = yup.object({
+  typeId: schemaOption.defaultSelectSingle,
+})
 const questionTypes = [
   {
     value: t('QuestionService.QuestionSingleChoice'),
@@ -60,71 +62,63 @@ const questionTypes = [
   },
 ]
 const dataInput = ref<any>({
-  questionLevelId: null,
-  questionTypeId: null,
+  typeId: null,
 })
-
-const questionlevel = ref<Any>([])
-
-// cấp độ câu hỏi
-function getComboboxQuestionLevel() {
-  if (window._.isEmpty(questionlevel.value)) {
-    MethodsUtil.requestApiCustom(QuestionService.GetComboboxQuestionLevel, TYPE_REQUEST.GET).then(({ data }: { data: Any[] }) => {
-      questionlevel.value = data
-    })
-  }
-}
+const myFormOptionQs = ref()
+const isSubmit = computed(() => {
+  return myFormOptionQs.value.validate
+})
 function changeValue(key: string, value: any) {
   dataInput.value[key] = value
   emit('update:data', dataInput.value)
 
   switch (key) {
-    case 'questionTypeId':
-      emit('update:questionTypeId', value)
-      break
-
-    case 'questionLevelId':
-      emit('update:questionLevelId', value)
+    case 'typeId':
+      emit('update:typeId', value)
       break
 
     default:
       break
   }
 }
+defineExpose({
+  isSubmit,
+})
 </script>
 
 <template>
-  <VRow>
-    <VCol
-      cols="12"
-      md="4"
-      sm="4"
-    >
-      <CmSelect
-        :model-value="questionTypeId"
-        :items="questionTypes"
-        item-value="key"
-        custom-key="value"
-        :text="`${t('question-type')}*`"
-        :placeholder="t('question-type')"
-        @update:model-value="($value) => changeValue('questionTypeId', $value)"
-      />
-    </VCol>
-    <VCol
-      cols="12"
-      md="4"
-      sm="4"
-    >
-      <CmSelect
-        :model-value="questionLevelId"
-        :items="questionlevel"
-        item-value="key"
-        custom-key="value"
-        :text="`${t('levels')}*`"
-        :placeholder="t('levels')"
-        @update:model-value="($value) => changeValue('questionLevelId', $value)"
-        @open="getComboboxQuestionLevel"
-      />
-    </VCol>
-  </VRow>
+  <Form
+    ref="myFormOptionQs"
+    :validation-schema="schema"
+    @submit.prevent="submitForm"
+  >
+    <VRow>
+      <VCol
+        cols="12"
+        md="4"
+        sm="4"
+      >
+        <Field
+          v-slot="{ field, errors }"
+          :model-value="typeId"
+          name="typeId"
+          type="number"
+        >
+          <CmSelect
+            :disabled="isEdit"
+            :clearable="false"
+            :field="field"
+            :errors="errors"
+            :model-value="typeId"
+            :items="questionTypes"
+            item-value="key"
+            custom-key="value"
+            :text="`${t('question-type')}*`"
+            :placeholder="t('question-type')"
+            @update:model-value="($value) => changeValue('typeId', $value)"
+          />
+        </Field>
+      </VCol>
+    </VRow>
+  </Form>
 </template>

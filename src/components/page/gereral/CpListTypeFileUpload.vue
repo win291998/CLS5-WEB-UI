@@ -4,10 +4,12 @@ import CmDropDown from '@/components/common/CmDropDown.vue'
 
 interface Props {
   disabled?: boolean
+  disabledDel?: boolean
   type: any // 1: list 2: button
 }
 const props = withDefaults(defineProps<Props>(), ({
   type: 1,
+  disabledDel: false,
 }))
 const emit = defineEmits<Emit>()
 interface Emit {
@@ -15,7 +17,7 @@ interface Emit {
 }
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 
-const actionVerty = [
+const actionVerty = ref([
   {
     title: t('image'),
     type: 'image',
@@ -44,10 +46,11 @@ const actionVerty = [
     title: t('ActionDelete'),
     type: 'delete',
     icon: 'fe:trash',
+    disabled: props.disabledDel,
     action: actionTypeUpload,
   },
-]
-const actionHoz = [
+])
+const actionHoz = ref([
   {
     title: t('image'),
     type: 'image',
@@ -67,7 +70,7 @@ const actionHoz = [
     action: actionTypeUpload,
   },
 
-]
+])
 const actionVideo = ref([
   {
     title: t('video-local'),
@@ -85,6 +88,9 @@ const actionVideo = ref([
 function actionTypeUpload(val: any) {
   emit('upload', val)
 }
+watch(() => props.disabledDel, (val: any) => {
+  actionVerty.value[4].disabled = val
+}, { deep: true })
 </script>
 
 <template>

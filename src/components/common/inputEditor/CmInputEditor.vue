@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import CmInputEditorMenu from '@/components/common/inputEditor/CmInputEditorMenu.vue'
+import MethodsUtil from '@/utils/MethodsUtil'
 
 interface Emit {
   (e: 'update:modelValue', value: any): void
   (e: 'update:event', value?: any): void
+  (e: 'blur', value?: any): void
 }
 interface Props {
   modelValue: any
@@ -14,6 +16,9 @@ interface Props {
   isMenuSimple?: boolean
   rlt?: string
   listMenu?: any[]
+  errors?: any
+  isErrors?: boolean
+  field?: any
 }
 const propsValue = withDefaults(defineProps<Props>(), ({
   modelValue: '',
@@ -28,10 +33,12 @@ const propsValue = withDefaults(defineProps<Props>(), ({
 const emit = defineEmits<Emit>()
 const inputEditor = ref()
 const SERVERFILE = process.env.VUE_APP_BASE_SERVER_FILE
+const { t } = window.i18n()
 
 /**
  * method
  */
+const hasContentChanged = ref(false)
 
 // async function handlePaste(event: any) {
 //   event.preventDefault()
@@ -134,6 +141,7 @@ const SERVERFILE = process.env.VUE_APP_BASE_SERVER_FILE
 
 // thay đổi dữ liệu data update
 const handleChangeValue = window._.debounce((val: any) => {
+  hasContentChanged.value = true
   emit('update:modelValue', inputEditor.value.innerHTML)
 }, propsValue?.isDebounce ? 500 : 0)
 
@@ -203,15 +211,15 @@ function addLinkUrl(key: any, option: any, value: any, selection: any, range: an
     }, 500)
   })
 }
-
 onMounted(() => {
   inputEditor.value.innerHTML = propsValue.modelValue
 })
+watch(() => propsValue.modelValue, val => {
+  if (!hasContentChanged.value)
+    inputEditor.value.innerHTML = val
 
-watch(() => propsValue.modelValue, (val: any) => {
-  inputEditor.value.innerHTML = val
-}, { deep: true })
-
+  hasContentChanged.value = false
+})
 const statusMenu = reactive({
   bold: false,
   underline: false,
@@ -252,58 +260,75 @@ function click(event: MouseEvent) {
     statusMenu.insertUnorderedList = document.queryCommandState('insertUnorderedList')
   }
 }
+function handleBlur() {
+  emit('blur')
+}
 </script>
 
 <template>
-  <div :style="{ width }">
-    <!--
-      <div>
-      <ToolBarEditor
-      :is-show-input="isShowInput"
-      :actived-tool="activedTool"
-      :data-side-bar="dataSideBar"
-      @handerStyleText="execCommand"
-      @addItemToTemplateMail="addItemToTemplateMailText"
-      />
-      </div>
-    -->
+  <div>
     <div
-      v-if="propsValue.text"
-      class="mb-1"
+      :style="{ width }"
+      class="inputEditor"
+      :class="{ styleError: errors?.length }"
     >
-      <label
-        class="text-label-default"
-      >{{ propsValue.text }}</label>
-    </div>
-    <div>
-      <CmInputEditorMenu
-        :status-menu="statusMenu"
-        :is-menu-simple="isMenuSimple"
-        :list-menu="listMenu"
-        :rlt="rlt"
-        @change="applyFormatting"
-        @changeAlign="applyAlignment"
-        @order="applyOrderedList"
-        @changeColor="applyColor"
-        @addLinkUrl="addLinkUrl"
-        @update:event="($item: any) => emit('update:event', $item)"
+      <!--
+        <div>
+        <ToolBarEditor
+        :is-show-input="isShowInput"
+        :actived-tool="activedTool"
+        :data-side-bar="dataSideBar"
+        @handerStyleText="execCommand"
+        @addItemToTemplateMail="addItemToTemplateMailText"
+        />
+        </div>
+      -->
+      <div
+        v-if="propsValue.text"
+        class="mb-1"
+      >
+        <label
+          class="text-label-default"
+        >{{ propsValue.text }}</label>
+      </div>
+
+      <div>
+        <CmInputEditorMenu
+          :status-menu="statusMenu"
+          :is-menu-simple="isMenuSimple"
+          :list-menu="listMenu"
+          :rlt="rlt"
+          @change="applyFormatting"
+          @changeAlign="applyAlignment"
+          @order="applyOrderedList"
+          @changeColor="applyColor"
+          @addLinkUrl="addLinkUrl"
+          @update:event="($item: any) => emit('update:event', $item)"
+        />
+      </div>
+      <div
+        id="inputEditor"
+        ref="inputEditor"
+        contenteditable="true"
+        :style="[`${isMenuSimple && !listMenu.length ? 'borderRadius: 8px' : ''}`, `minHeight: ${minHeight}`]"
+        class="input-math border box-textarea p-1"
+        @input="handleChangeValue"
+        @click="click"
+        @blur="handleBlur"
       />
-    </div>
-    <div
-      id="inputEditor"
-      ref="inputEditor"
-      contenteditable="true"
-      :style="[`${isMenuSimple && !listMenu.length ? 'borderRadius: 8px' : ''}`, `minHeight: ${minHeight}`]"
-      class="input-math border box-textarea p-1"
-      @input="handleChangeValue"
-      @click="click"
-    />
     <!--
       :style="`textAlign:${textAlign}; color:${generalConfig.textColor};`"
       @input="handleChangeValue"
       @mousedown="mousedowns"
       @click="dblclickEditText"
     -->
+    </div>
+    <div
+      v-if="errors?.length > 0"
+      class="styleError text-errors"
+    >
+      {{ t(MethodsUtil.showErrorsYub(errors)) }}
+    </div>
   </div>
 </template>
 
@@ -346,4 +371,10 @@ function click(event: MouseEvent) {
       padding-inline-start: 40px;
     }
  }
+ .inputEditor{
+  border-radius: 8px;
+ }
+ .styleError.inputEditor{
+  outline: 1px solid red;
+}
 </style>

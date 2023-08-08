@@ -202,7 +202,6 @@ async function actionItem([{ id, name }, content]: [Any, Any]) {
   }
 }
 function abc(val: any) {
-  console.log(val)
   console.log('selected', selected.value)
 }
 </script>

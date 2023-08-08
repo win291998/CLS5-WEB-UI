@@ -97,7 +97,7 @@ export default class MethodsUtil {
    * @param {any} payload =>  Dữ liệu đính kèm api
    * @return {object}
    */
-  static requestApiCustom = (url = '', method = 'GET', payload?: any) => {
+  static requestApiCustom = (url = '', method = 'GET', payload?: any, headers?: any) => {
     if (url === undefined)
       return
     const data = (method === 'GET') ? null : (payload || null)
@@ -107,6 +107,7 @@ export default class MethodsUtil {
       method,
       data,
       params,
+      headers,
     })
   }
 

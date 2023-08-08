@@ -4,6 +4,9 @@ body {
   font-family: $font-family-custom !important;
   letter-spacing: normal !important;
 }
+.relative {
+  position: relative;
+}
 .text-primary {
   color: $color-primary-600 !important;
 }
@@ -559,6 +562,12 @@ span {
 @for $i from 0 through 10 {
   .myn-#{$i} {
     margin-block: (-4 * $i) + px;
+  }
+}
+// margin
+@for $i from 0 through 10 {
+  .mn-#{$i} {
+    margin: (-4 * $i) + px;
   }
 }
 .pxn {

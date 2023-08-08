@@ -11,6 +11,7 @@ import {
 
 const props = withDefaults(defineProps<Props>(), ({
   src: '',
+  type: 1,
 }))
 
 const emit = defineEmits<Emit>()
@@ -24,7 +25,9 @@ const CmTextField = defineAsyncComponent(() => import('@/components/common/CmTex
 interface Props {
   src?: any
   disabled?: boolean
-  typeFile?: number
+  type?: number
+  typeMedia?: number
+
 }
 interface Emit {
   (e: 'update:fileFolder', value: any): void
@@ -34,28 +37,29 @@ const SERVERFILE = process.env.VUE_APP_BASE_SERVER_FILE
 
 const isViewDetail = ref(false)
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
-const urlMedia = ref('')
+const urlFile = ref('')
 const urlYoutube = ref('')
 const youtubeId = ref('')
 const refUploadImg = ref<any>(null)
 const refUploadVideo = ref<any>(null)
 const inputFile = ref<any>(null)
+
 const dataFile = ref<any>({
   filePath: null,
   fileFolder: null,
 })
 const isShowModalYoutube = ref(false)
 
-const typeMedia = ref<any>(null)
+const typeFile = ref<any>()
 function onCancel() {
   isShowModalYoutube.value = false
 }
 
 function onConfirmYoutube() {
   isShowModalYoutube.value = false
-  typeMedia.value = 4
+  typeFile.value = 4
   youtubeId.value = MethodsUtil.getYoutubeId(urlYoutube.value)
-  urlMedia.value = `https://www.youtube.com/embed/${youtubeId.value}`
+  urlFile.value = `https://www.youtube.com/embed/${youtubeId.value}`
   emit('update:fileFolder', youtubeId)
 }
 
@@ -68,7 +72,7 @@ function onOpenYoutubeUrl() {
 function changeMedia(type: any, value: any) {
   switch (type) {
     case 'img':
-      typeMedia.value = MethodsUtil.getMediaType(value.fileExtension)
+      typeFile.value = MethodsUtil.getMediaType(value.fileExtension)
       emit('update:fileFolder', value?.fileFolder)
       break
 
@@ -84,8 +88,8 @@ async function uploadFileLocal(data: any, file: any) {
   if (data?.fileFolder) {
     await getInfor(data?.fileFolder).then((value: any) => {
       if (value?.filePath) {
-        typeMedia.value = MethodsUtil.getMediaType(value.fileExtension)
-        urlMedia.value = value.filePath
+        typeFile.value = MethodsUtil.getMediaType(value.fileExtension)
+        urlFile.value = value.filePath
         dataFile.value.filePath = value.filePath
         dataFile.value.fileFolder = data.fileFolder
         dataFile.value.serverCode = data?.serverCode
@@ -97,30 +101,49 @@ async function uploadFileLocal(data: any, file: any) {
 function handleDelteFile() {
   emit('deleteFile')
 }
+function uploadFile() {
+  switch (typeFile.value) {
+    case 1:
+      refUploadImg.value?.hanleClickImage()
+      break
+    case 2:
+      refUploadImg.value?.hanleClickImage()
+      break
+
+    default:
+      break
+  }
+}
+async function initData(val: any) {
+  if (val.includes('fol-')) {
+    await getInfor(val).then(value => {
+      if (value?.filePath) {
+        typeFile.value = MethodsUtil.getMediaType(value.fileExtension)
+        urlFile.value = value.filePath
+        dataFile.value.filePath = value.filePath
+        dataFile.value.fileFolder = val
+      }
+    })
+  }
+  else {
+    youtubeId.value = val
+    typeFile.value = MediaType.YOUTUBE
+    urlFile.value = `https://www.youtube.com/embed/${youtubeId.value}`
+  }
+}
 watch(() => props.src, async (val: any) => {
   if (window._.isEmpty(val)) {
-    urlMedia.value = val
+    urlFile.value = val
     youtubeId.value = val
     urlYoutube.value = val
     return
   }
-  switch (props.typeFile) {
-    case 4:
-      urlMedia.value = `https://www.youtube.com/embed/${youtubeId.value}`
-      return
-
-    default:
-      await getInfor(val).then(value => {
-        if (value?.filePath) {
-          typeMedia.value = MethodsUtil.getMediaType(value.fileExtension)
-          urlMedia.value = value.filePath
-          dataFile.value.filePath = value.filePath
-          dataFile.value.fileFolder = val
-        }
-      })
-      break
-  }
-}, { deep: true })
+  initData(val)
+}, { deep: true, immediate: true })
+watch(() => props.typeMedia, async (val: any) => {
+  if (val)
+    typeFile.value = val
+}, { deep: true, immediate: true })
 defineExpose({
   inputFile,
   refUploadVideo,
@@ -133,27 +156,31 @@ defineExpose({
 </script>
 
 <template>
-  <div class="media-content">
-    <div :class="{ inputMediaImg: typeMedia === MediaType.IMAGE }">
-      <CmImgUpload
-        ref="refUploadImg"
-        v-model:src="urlMedia"
-        :disabled="disabled"
-        :hide="typeMedia !== MediaType.IMAGE"
-        color="infor"
-        is-size-full
-        :is-classic-border="false"
-        :is-rounded="true"
-        :is-icon-text="false"
-        icon="tabler:square-rounded-plus-filled"
-        :tooltip="t('system-management.100x100')"
-        @update:file="($event: any) => changeMedia('img', $event)"
-      />
+  <div
+    class="media-content "
+  >
+    <div :class="{ imageFullContainer: !!urlFile && typeFile === MediaType.IMAGE }">
+      <div :class="{ imageFull: !!urlFile && typeFile === MediaType.IMAGE }">
+        <CmImgUpload
+          ref="refUploadImg"
+          v-model:src="urlFile"
+          :disabled="disabled"
+          :hide="typeFile !== MediaType.IMAGE || !urlFile"
+          color="infor"
+          is-size-full
+          :is-classic-border="false"
+          :is-rounded="true"
+          :is-icon-text="false"
+          icon="tabler:square-rounded-plus-filled"
+          :tooltip="t('system-management.100x100')"
+          @update:file="($event: any) => changeMedia('img', $event)"
+        />
+      </div>
     </div>
     <div class="d-none">
       <CpInputFile
         ref="inputFile"
-        v-model:src="urlMedia"
+        v-model:src="urlFile"
         class="w-100 "
         :accept="MethodsUtil.getMediaTypeExtention(typeFile)"
         :disabled="isViewDetail"
@@ -162,39 +189,53 @@ defineExpose({
         @change="uploadFileLocal"
       />
     </div>
-    <CmAudio
-      v-if="typeMedia === MediaType.AUDIO && urlMedia"
-      v-model:src="urlMedia"
-      width="100"
-    />
-
-    <div class="d-flex justify-center">
-      <embed
-        v-if="typeMedia === MediaType.VIDEO && urlMedia"
-        :src="`${SERVERFILE}${urlMedia}`"
-        class="imageFull"
-      >
+    <div
+      v-if="typeFile === MediaType.AUDIO && urlFile"
+    >
+      <CmAudio
+        v-model:src="urlFile"
+        width="100%"
+      />
     </div>
-    {{ youtubeId }}
 
     <div
-      v-if="typeMedia === MediaType.YOUTUBE && urlMedia"
-      class="d-flex justify-center"
+      v-if="typeFile === MediaType.VIDEO && urlFile"
+      class="d-flex justify-center imageFullContainer"
     >
       <embed
-        :src="urlMedia"
+        :src="`${SERVERFILE}${urlFile}`"
         class="imageFull"
       >
     </div>
     <div
-      v-if="urlMedia"
-      class="d-flex justify-center mt-2"
+      v-if="typeFile === MediaType.YOUTUBE && urlFile"
+      class="d-flex justify-center imageFullContainer"
+    >
+      <embed
+        :src="urlFile"
+        style="--width-ratio: 1;"
+        class="imageFull"
+      >
+    </div>
+    <div
+      v-if="urlFile"
+      :class="[type === 1 ? 'actionFile' : 'actionFileAbs']"
     >
       <CmButton
+        icon="tabler:upload"
+        :size-icon="18"
+        variant="outlined"
+        class="mr-3 bg-white"
+        bg-color="bg-white"
+        color="white"
+        text-color="color-dark"
+        @click="uploadFile"
+      />
+      <CmButton
         icon="fe:trash"
-        :size-icon="20"
-        variant="tonal"
-        class="mr-3"
+        :size-icon="18"
+        variant="outlined"
+        class="mr-3 bg-white"
         bg-color="bg-white"
         color="white"
         text-color="color-dark"
@@ -209,7 +250,7 @@ defineExpose({
       :button-ok-name="t('save')"
       close-on-back
       persistent
-      size="sm"
+      size="md"
       @cancel="onCancel"
       @confirm="onConfirmYoutube"
     >
@@ -226,25 +267,59 @@ defineExpose({
           {{ t("search") }}
         </CmButton>
       </div>
-
-      <embed
+      <div
         v-if="youtubeId"
-        class="w-100 imageFull"
-        :src="`https://www.youtube.com/embed/${youtubeId}`"
+        class="d-flex justify-center imageFullContainer"
       >
+        <embed
+          class="w-100 imageFull"
+          :src="`https://www.youtube.com/embed/${youtubeId}`"
+        >
+      </div>
     </CmDialogs>
   </div>
 </template>
 
 <style scoped>
 .media-content{
-  .inputMediaImg{
-    width: auto;
-    height: 12.5rem;
-  }
+  position: relative;
+  width: 100%;
+
 }
-.imageFull{
-  width: auto;
+/* .imageFull{
+  width: 100%;
+  min-width: 350px;
   height: 12.5rem;
+} */
+.imageFullContainer {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%; /* Tỉ lệ 4:3 */
+  }
+
+  .imageFull {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: lightgray; /* Để thấy rõ vùng ảnh */
+  }
+.actionFileAbs{
+  position: absolute;
+  display: none;
+  top: 50%;
+  left:50%;
+  justify-content: center;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+}
+.actionFile{
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}
+.media-content:hover .actionFileAbs{
+  display: flex;
 }
 </style>

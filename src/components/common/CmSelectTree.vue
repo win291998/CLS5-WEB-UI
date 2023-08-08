@@ -92,19 +92,19 @@ function normalizer(node: any) {
 }
 
 /** ** Sao chép biến model modelValue từ prop  modelValue ngăn thay đổi */
-const modelValue = ref(window._.cloneDeep(props.modelValue))
+const modelValueTree = ref(window._.cloneDeep(props.modelValue))
 
 /** ** Biễn render */
 const render = ref(true)
 
 /** ** Cập nhật dữ liệu trên select */
-// const updateValue = () => {
-//   render.value = false
-//   modelValue.value = window._.cloneDeep(props.modelValue)
-//   nextTick(() => {
-//     render.value = true
-//   })
-// }
+function updateValue() {
+  render.value = false
+  modelValueTree.value = window._.cloneDeep(props.modelValue)
+  nextTick(() => {
+    render.value = true
+  })
+}
 
 /** ** function: xử lý khi tao tác trên node */
 function handleUpdate(value: any, instanceId: any) {
@@ -115,10 +115,14 @@ function limitText(count: any) {
   return t('and-count-more', { count })
 }
 
+onMounted(() => {
+  modelValueTree.value = window._.cloneDeep(props.modelValue)
+})
+
 /** ** watch: check value thay đổi từ bên ngoài */
-// watch(() => props.modelValue, value => {
-//   updateValue()
-// })
+watch(() => props.modelValue, value => {
+  updateValue()
+})
 </script>
 
 <template>
@@ -132,7 +136,7 @@ function limitText(count: any) {
     :dir="rtl ? 'rtl' : 'ltr'"
   >
     <Treeselect
-      v-model="modelValue"
+      :model-value="modelValueTree"
       class="py-1"
       :class="{ styleError: isError || errors?.length > 0 }"
       :value-format="props.valueFormat"

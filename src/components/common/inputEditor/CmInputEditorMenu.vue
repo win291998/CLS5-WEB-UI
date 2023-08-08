@@ -264,6 +264,7 @@ watch(() => props.statusMenu, (val: any) => {
 <style lang="scss" scoped>
 .menu-box{
   border: 1px solid rgba(var(--v-border-color));
+  border-bottom: none;
   background-color:  rgb(var(--v-theme-surface));
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;

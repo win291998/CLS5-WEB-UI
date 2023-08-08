@@ -112,7 +112,6 @@ async function fetchConditionAttend(id: number) {
 function changeCombobox(contentId: number) {
   getDataTable(contentId)
   if (contentId) {
-    debugger
     fetchConditionAttend(contentId)
   }
   else {

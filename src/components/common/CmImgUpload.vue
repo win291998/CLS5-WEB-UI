@@ -2,7 +2,6 @@
 import CmAvatar from '@/components/common/CmAvatar.vue'
 import CmBadge from '@/components/common/CmBadge.vue'
 import MethodsUtil from '@/utils/MethodsUtil'
-import CommonService from '@/api/common'
 import { TYPE_REQUEST } from '@/typescript/enums/enums'
 import toast from '@/plugins/toast'
 import {
@@ -10,6 +9,8 @@ import {
   imageFileExtention,
 } from '@/constant/Globals'
 import type { typeVariant } from '@/typescript/enums/enums'
+import ServerFileService from '@/api/server-file/index'
+import constant from '@/constant/constant'
 
 interface Props {
   src?: string
@@ -58,7 +59,8 @@ const inputImage = ref<HTMLInputElement | null>(null)
 const isLoading = ref(false)
 const serverfile = window.SERVER_FILE || ''
 const isLoadingImg = ref(false)
-
+const selectedFile = ref()
+const SERVERFILE = process.env.VUE_APP_BASE_SERVER_FILE
 function hanleClickImage() {
   inputImage.value?.click()
 }
@@ -79,7 +81,9 @@ async function uploadFile(model: any) {
     formData.append('UserId', userData.id)
 
   try {
-    const res = await MethodsUtil.requestApiCustom(CommonService.SERVERFILE, TYPE_REQUEST.POST, formData).then((value: any) => value)
+    const res = await MethodsUtil.requestApiCustom(`${SERVERFILE}${ServerFileService.UploadFile}`, TYPE_REQUEST.POST, formData, {
+      Authorization: constant.TOKEN_FAKE_SV_FILE,
+    }).then((value: any) => value)
     if (res.filePath)
       toast('SUCCESS', t('upload-file-success'))
 
@@ -95,7 +99,7 @@ async function uploadFile(model: any) {
 }
 
 async function onFileSelected(e: any) {
-  const tmpFiles = e.target.files || e.dataTransfer.files
+  const tmpFiles = e
   if (!tmpFiles.length)
     return
   const file = tmpFiles[0]
@@ -112,6 +116,7 @@ async function onFileSelected(e: any) {
       emit('update:src', data.filePath)
       emit('update:file', data)
     }
+    selectedFile.value = null
   })
 }
 
@@ -176,6 +181,7 @@ defineExpose({
       </CmAvatar>
       <VFileInput
         ref="inputImage"
+        v-model="selectedFile"
         :disabled="disabled"
         class="d-none"
         label="Select a file"
@@ -183,7 +189,7 @@ defineExpose({
         dense
         hide-details
         :accept="imageFileExtention"
-        @change="onFileSelected"
+        @update:modelValue="onFileSelected"
       />
     </template>
   </VTooltip>
