@@ -69,7 +69,8 @@ function getTabActive() {
 }
 function activeTab(value: any) {
   dataTab.value = props.listTab.find(x => x.key === value) as tab
-  dataTab.value.isRendered = true
+  if (dataTab.value)
+    dataTab.value.isRendered = true
   if (props.type === 'button') {
     router.push({
       query: {

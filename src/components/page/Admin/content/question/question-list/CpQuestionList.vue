@@ -31,20 +31,18 @@ const dataComponent = reactive({
 })
 
 const queryParams = ref<any>({
-  keyword: '',
-  sort: ['+questionContent'],
-  pageNumber: 1,
+  topic: null as any,
+  level: null,
+  isGroup: null,
+  createdBy: null,
+  type: null,
+  status: null,
   pageSize: 10,
-  topicId: null as any,
-  statusId: null,
-  typeId: null,
-  userId: null,
-  levelId: null,
-  groupId: null,
-  dateFrom: '',
-  dateTo: '',
-  role: 1,
-  pageToken: '',
+  pageToken: null,
+  searchTerm: null,
+  sortBy: null,
+  startDate: null,
+  endDate: null,
 })
 const headers = [
   { text: '', value: 'checkbox', width: 50 },
@@ -105,10 +103,12 @@ async function getListQuestion() {
     value?.listData.forEach((element: any) => {
       element.actions = [
         MethodsUtil.checkActionType({ id: 1 }),
+        MethodsUtil.checkActionType({ id: 2 }),
+        MethodsUtil.checkActionType({ id: 4 }),
       ]
     })
     items.value = value?.listData
-    totalRecord.value = value?.totalRecord
+    totalRecord.value = value?.totalRecords
   })
 }
 
@@ -117,6 +117,9 @@ function actionItem(type: any) {
   switch (type[0]?.name) {
     case 'ActionEdit':
       router.push({ name: 'question-edit', params: { id: type[1].id } })
+      break
+    case 'ActionViewDetail':
+      // router.push({ name: 'question-view', params: { id: type[1].id } })
       break
 
     default:

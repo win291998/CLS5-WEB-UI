@@ -6,32 +6,47 @@ import MethodsUtil from '@/utils/MethodsUtil'
 import QuestionService from '@/api/question'
 import { TYPE_REQUEST } from '@/typescript/enums/enums'
 import type { Any } from '@/typescript/interface'
+import CmSelect from '@/components/common/CmSelect.vue'
+import { validatorStore } from '@/stores/validatator'
 
 const props = withDefaults(defineProps<Props>(), ({
   topicId: null,
-  questionTypeId: null,
-  singleQuestion: null,
-  isSent: null,
-  questionLevelId: null,
+  isGroup: false,
+  isEdit: false,
+  isView: false,
+  levelId: null,
 }))
 const emit = defineEmits<Emit>()
 interface Props {
   topicId?: any
-  questionTypeId?: any
-  singleQuestion?: any
-  isSent?: any
-  questionLevelId?: any
+  isGroup?: any
+  levelId?: any
+  isEdit?: boolean
+  isView?: boolean
+  isShuffle?: boolean
 }
 interface Emit {
   (e: 'update:topicId', value: any): void
-  (e: 'update:questionTypeId', value: any): void
-  (e: 'update:singleQuestion', value: any): void
-  (e: 'update:isSent', value: any): void
-  (e: 'update:questionLevelId', value: any): void
+  (e: 'update:isGroup', value: any): void
+  (e: 'update:isAutoApprove', value: any): void
+  (e: 'update:levelId', value: any): void
+  (e: 'update:isShuffle', value: any): void
   (e: 'update:data', value: any): void
 
 }
 const { t } = window.i18n()
+const storeValidate = validatorStore()
+const { schemaOption, Field, Form, useForm, yup } = storeValidate
+const { submitForm } = useForm()
+const schema = yup.object({
+  topicId: schemaOption.defaultSelectSingle,
+  levelId: schemaOption.defaultSelectSingle,
+})
+const myFormSettingQs = ref()
+const isSubmit = computed(() => {
+  return myFormSettingQs.value.validate
+})
+
 const questionTypes = [
   {
     value: t('QuestionService.QuestionSingleChoice'),
@@ -73,19 +88,21 @@ const questionTypes = [
 const dataInput = ref<any>({
   topicId: null,
   questionTypeId: null,
-  singleQuestion: true,
+  isGroup: false,
+  isShuffle: false,
 })
 const optionTypeQuestion = ref([
   {
     label: t('single-question'),
-    value: true,
+    value: false,
   },
   {
     label: t('cluster-question'),
-    value: false,
+    value: true,
   },
 ])
 const questionlevel = ref<Any>([])
+const isAutoApprove = ref()
 
 // cấp độ câu hỏi
 function getComboboxQuestionLevel() {
@@ -103,98 +120,140 @@ function changeValue(key: string, value: any) {
     case 'topicId':
       emit('update:topicId', value)
       break
-    case 'questionTypeId':
-      emit('update:questionTypeId', value)
+    case 'isGroup':
+      emit('update:isGroup', value)
       break
-    case 'singleQuestion':
-      emit('update:singleQuestion', value)
+    case 'isAutoApprove':
+      emit('update:isAutoApprove', value)
       break
-    case 'isSent':
-      emit('update:isSent', value)
+    case 'levelId':
+      emit('update:levelId', value)
       break
-    case 'questionLevelId':
-      emit('update:questionLevelId', value)
+    case 'isShuffle':
+      emit('update:isShuffle', value)
       break
 
     default:
       break
   }
 }
+
+onMounted(() => {
+  if (props.isEdit)
+    getComboboxQuestionLevel()
+
+  isAutoApprove.value = MethodsUtil.checkPermission(null, 'QuestionManaging', 128) || true
+  console.log(isAutoApprove.value)
+  emit('update:isAutoApprove', isAutoApprove.value)
+})
+
+defineExpose({
+  isSubmit,
+})
 </script>
 
 <template>
-  <VRow>
-    <VCol
-      cols="12"
-      md="4"
-      sm="4"
-    >
-      <CpTopicSelect
-        :model-value="topicId"
-        :type="6"
-        :text="`${t('topic')}*`"
-        :placeholder="t('topic')"
-        @update:model-value="($value) => changeValue('topicId', $value)"
-      />
-    </VCol>
-    <VCol
-      cols="12"
-      md="4"
-      sm="4"
-    >
-      <CmRadioGroup
-        :model-value="singleQuestion"
-        :label="t('gender')"
-        :option="optionTypeQuestion"
-        @update:model-value="($value) => changeValue('singleQuestion', $value)"
-      />
-    </VCol>
-    <VCol
-      cols="12"
-      md="4"
-      sm="4"
-      class="d-flex align-end"
-    >
-      <div style="height:48px">
-        <CmCheckBox
-          :label="t('auto-send-approve')"
-          :model-value="isSent"
-          @update:model-value="($value) => changeValue('isSent', $value)"
+  <Form
+    ref="myFormSettingQs"
+    :validation-schema="schema"
+    @submit.prevent="submitForm"
+  >
+    <VRow>
+      <VCol
+        cols="12"
+        md="4"
+        sm="4"
+      >
+        <Field
+          v-slot="{ field, errors }"
+          :model-value="topicId"
+          name="topicId"
+          type="number"
+        >
+          <CpTopicSelect
+            :field="field"
+            :errors="errors"
+            :disabled="isView"
+            :model-value="topicId"
+            :type="6"
+            :text="`${t('topic')}*`"
+            :placeholder="t('topic')"
+            @update:model-value="($value) => changeValue('topicId', $value)"
+          />
+        </Field>
+      </VCol>
+      <VCol
+        cols="12"
+        md="4"
+        sm="4"
+      >
+        <Field
+          v-slot="{ field, errors }"
+          :model-value="levelId"
+          name="levelId"
+          type="number"
+        >
+          <CmSelect
+            :field="field"
+            :errors="errors"
+            :disabled="isView"
+            :model-value="levelId"
+            :items="questionlevel"
+            item-value="key"
+            custom-key="value"
+            :text="`${t('levels')}*`"
+            :placeholder="t('levels')"
+            @update:model-value="($value) => changeValue('levelId', $value)"
+            @open="getComboboxQuestionLevel"
+          />
+        </Field>
+      </VCol>
+    </VRow>
+    <VRow>
+      <VCol
+        cols="12"
+        md="4"
+        sm="4"
+      >
+        <CmRadioGroup
+          :disabled="isEdit"
+          :model-value="isGroup"
+          :text="t('questionFormat')"
+          :option="optionTypeQuestion"
+          @update:model-value="($value) => changeValue('isGroup', $value)"
         />
-      </div>
-    </VCol>
-    <!--
-      <VCol
-      cols="12"
-      md="4"
-      sm="4"
-      >
-      <CmSelect
-      :model-value="questionTypeId"
-      :items="questionTypes"
-      item-value="key"
-      custom-key="value"
-      :text="`${t('question-type')}*`"
-      :placeholder="t('question-type')"
-      @update:model-value="($value) => changeValue('questionTypeId', $value)"
-      />
       </VCol>
       <VCol
-      cols="12"
-      md="4"
-      sm="4"
+        cols="12"
+        md="4"
+        sm="4"
+        class="d-flex align-end relative "
       >
-      <CmSelect
-      :model-value="questionLevelId"
-      :items="questionlevel"
-      item-value="key"
-      custom-key="value"
-      :text="`${t('levels')}*`"
-      :placeholder="t('levels')"
-      @update:model-value="($value) => changeValue('questionLevelId', $value)"
-      @open="getComboboxQuestionLevel"
-      />
+        <div>
+          <CmCheckBox
+            :disabled="isView"
+            :label="t('auto-send-approve')"
+            :model-value="isAutoApprove"
+            @update:model-value="($value) => changeValue('isAutoApprove', $value)"
+          />
+        </div>
       </VCol>
-    -->
-  </VRow>
+      <VCol
+        v-if="isGroup"
+        cols="12"
+        md="4"
+        sm="4"
+        class="d-flex align-end relative "
+      >
+        <div>
+          <CmCheckBox
+            :disabled="isView"
+            :label="t('shuffled-question')"
+            :model-value="isShuffle"
+            @update:model-value="($value) => changeValue('isShuffle', $value)"
+          />
+        </div>
+      </VCol>
+    </VRow>
+  </Form>
 </template>

@@ -38,6 +38,7 @@ interface Props {
   modelValue?: any[] | any
   type: number
   multiple?: boolean
+  disabled?: boolean
   field?: any
   errors?: any
 }
@@ -108,6 +109,7 @@ async function confirm(val: DataInput) {
   <div class="d-flex vTextField cm-input-field">
     <CmSelectTree
       v-model:model-value="topicIds"
+      :disabled="disabled"
       :multiple="multiple"
       value-format="id"
       :field="field"
@@ -118,6 +120,7 @@ async function confirm(val: DataInput) {
       @update:model-value="change"
     />
     <CmButton
+      v-if="!disabled"
       class="ml-2 mt-1"
       size="40"
       :color="errors?.length > 0 ? 'error' : 'primary'"

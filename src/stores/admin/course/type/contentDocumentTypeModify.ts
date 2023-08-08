@@ -196,7 +196,6 @@ export const contentDocTypeManagerStore = defineStore('contentDocTypeManager', (
     const params = {
       id,
     }
-    debugger
     await MethodsUtil.requestApiCustom(CourseService.GetRequireParticipate, TYPE_REQUEST.GET, params).then((value: any) => {
       conditionAttend.value = value.data
       if (value.data.dateTimeStart && value.data.dateTimeStart !== null) {
