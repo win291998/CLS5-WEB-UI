@@ -14,6 +14,7 @@ interface Props {
   contentLeft?: string
   contentRight?: string
   disabledDel?: boolean
+  placeholder?: string
 }
 const props = withDefaults(defineProps<Props>(), ({
   isTrue: null,
@@ -145,6 +146,7 @@ watch(() => props.isShuffleRight, val => {
             is-menu-simple
             min-height="50px"
             width="100%"
+            :placeholder="placeholder"
             :model-value="contentLeft"
             @update:event="($event) => eventToolShuffle(false, $event)"
             @update:modelValue="($value: any) => handleChangeContent(false, $value)"
@@ -171,6 +173,7 @@ watch(() => props.isShuffleRight, val => {
             is-menu-simple
             min-height="50px"
             width="100%"
+            :placeholder="placeholder"
             :model-value="contentRight"
             @update:event="($event) => eventToolShuffle(true, $event)"
             @update:modelValue="($value: any) => handleChangeContent(true, $value)"

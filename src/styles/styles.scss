@@ -578,3 +578,16 @@ span {
 .v-radio-group .v-selection-control-group .v-radio:not(:last-child) {
   margin-inline-end: 2rem;
 }
+.answer-fill-blank {
+  margin: 5px;
+  padding: 0.438rem 1rem;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid rgb(var(--v-gray-300));
+  border-radius: 0.357rem;
+  display: inline-block;
+  user-select: none;
+}
+.answer-underline {
+  user-select: none;
+}

@@ -259,8 +259,22 @@ watch(() => props.items, (val: Item[]) => {
 }, { immediate: true })
 
 watch(totalPaginationLocal, val => {
-  if (props?.isLocalTable)
+  if (props?.isLocalTable) {
+    selectedRows.value = []
     emit('update:totalItems', val)
+    props.items?.forEach((element, index) => {
+      element.originIndex = index
+      element.isSelected = !!element.isSelected
+
+      if (element.isSelected)
+        selectedRows.value.push(element[keyid.value])
+    })
+    const itemSelected = props.items.filter((x: Item) => x.isSelected === true)
+    if (props.returnObject)
+      emit('update:selected', itemSelected)
+    else
+      emit('update:selected', selectedRows.value)
+  }
 })
 </script>
 

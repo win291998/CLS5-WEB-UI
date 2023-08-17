@@ -12,17 +12,19 @@ interface Props {
   content: any
   isView: boolean
   disabledDel?: boolean
+  isAnsOrigin?: boolean
   placeholder?: string
 }
 const props = withDefaults(defineProps<Props>(), ({
-  isTrue: true,
+  isTrue: null,
   isShuffle: false,
   isView: false,
   disabledDel: false,
+  isAnsOrigin: false,
   data: () => ({
     content: '',
-    isTrue: true,
-    position: null,
+    isTrue: false,
+    position: 0,
     isShuffle: true,
     urlFile: null,
   }),
@@ -30,7 +32,7 @@ const props = withDefaults(defineProps<Props>(), ({
 }))
 const emit = defineEmits<Emit>()
 interface Emit {
-  (e: 'update:isTrue', value: any): void
+  (e: 'update:isTrue', isAnsOrigin: any, value: any): void
   (e: 'update:content', value: any): void
   (e: 'update:url', value: any): void
   (e: 'update:isShuffle', value: any): void
@@ -43,7 +45,7 @@ const { submitForm } = useForm()
 const schema = yup.object({
   content: schemaOption.defaultStringArea,
 })
-const answerData = ref(props.data)
+const answerData = ref()
 const inputMedia = ref()
 const listMenu = ref([
   {
@@ -52,16 +54,9 @@ const listMenu = ref([
     actived: false,
   },
 ])
-const optionTypeQuestion = ref([
-  {
-    value: false,
-  },
-  {
-    value: true,
-  },
-])
 function changeValue(val: any) {
-  emit('update:isTrue', val)
+  answerData.value.isTrue = val === props.ansId
+  emit('update:isTrue', props.isAnsOrigin, val)
 }
 function eventToolShuffle(val: any) {
   listMenu.value[0].actived = !listMenu.value[0].actived
@@ -72,7 +67,7 @@ function handleChangeContent(val: any) {
 }
 const typeFile = ref()
 const isShowFile = ref(false)
-const getIndex = computed(() => `${String.fromCharCode(65 + props.data.position - 1)}.`)
+const getIndex = computed(() => `${String.fromCharCode(props.isAnsOrigin ? 65 : 65 + props.data.position - 1)}.`)
 function hanleUploadFileContent(val: any) {
   switch (val[0]?.type) {
     case 'image':
@@ -110,6 +105,16 @@ const myFormAnsItem = ref()
 const isSubmit = computed(() => {
   return myFormAnsItem.value.validate
 })
+function deleteFile(dataDelete: any) {
+  emit('update:url', '')
+}
+
+watch(() => props.data, (val: any) => {
+  answerData.value = val
+}, { deep: true, immediate: true })
+watch(() => props.content, (val: any) => {
+  answerData.value.content = val
+}, { deep: true })
 defineExpose({
   isSubmit,
 })
@@ -123,46 +128,22 @@ defineExpose({
   >
     <VRow>
       <VCol
-        cols="3"
-        class="d-flex align-center"
+        cols="2"
+        class="d-flex align-center justify-end"
       >
-        <VRow>
-          <VCol
-            cols="4"
-            class="d-flex align-center justify-end"
-          >
-            <CmRadio
-              :model-value="isTrue"
-              :disabled="isView"
-              :name="`clauseTF${data.position}`"
-              :value="true"
-              @update:model-value="changeValue"
-            />
-          </VCol>
-          <VCol
-            cols="4"
-            class="d-flex align-center justify-end"
-          >
-            <CmRadio
-              :model-value="isTrue"
-              :disabled="isView"
-              :name="`clauseTF${data.position}`"
-              :value="false"
-              @update:model-value="changeValue"
-            />
-          </VCol>
-          <VCol
-            cols="4"
-            class="d-flex align-center"
-          >
-            <div class="px-3">
-              {{ getIndex }}
-            </div>
-          </VCol>
-        </VRow>
+        <CmRadio
+          :model-value="isTrue ? (props.isAnsOrigin ? 1 : data.position) : null"
+          :disabled="isView"
+          name="result"
+          :value="ansId"
+          @update:model-value="changeValue"
+        />
+        <div class="px-3">
+          {{ getIndex }}
+        </div>
       </VCol>
       <VCol
-        cols="8"
+        cols="9"
         class="pxn"
       >
         <Field
@@ -174,12 +155,12 @@ defineExpose({
           <CmInputEditor
             :field="field"
             :errors="errors"
-            :disabled="isView"
             :list-menu="listMenu"
-            :placeholder="placeholder"
+            :disabled="isAnsOrigin"
             rlt="end"
             is-menu-simple
             min-height="50px"
+            :placeholder="placeholder"
             width="100%"
             :model-value="content"
             @update:event="eventToolShuffle"
@@ -202,8 +183,8 @@ defineExpose({
     <!-- <VRow :style="{ display: data.urlFile ? 'block' : 'none' }"> -->
     <VRow v-show="!!data.urlFile">
       <VCol
-        cols="8"
-        offset="3"
+        cols="9"
+        offset="2"
       >
         <CpMediaContent
           ref="inputMedia"
@@ -213,6 +194,7 @@ defineExpose({
           :src="data.urlFile"
           :type-media="typeFile"
           @update:fileFolder="handleUpadateUrlFile"
+          @deleteFile="deleteFile"
         />
       </VCol>
     </VRow>

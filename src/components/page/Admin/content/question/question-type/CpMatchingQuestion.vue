@@ -53,7 +53,7 @@ const { submitForm } = useForm()
 const schema = yup.object({
   content: schemaOption.defaultStringArea,
 })
-const anserList = ref<AnswerItem>(props.question)
+const anserList = ref<any>()
 const trueValue = ref(0)
 const typeFile = ref()
 function createInitData() {
@@ -78,8 +78,6 @@ function createInitData() {
   }
 }
 function deleteAns(dataDelete: any) {
-  console.log(dataDelete)
-
   anserList.value.answers.splice(dataDelete.right.position - 1, 1)
   anserList.value.answers?.forEach((element: any, i: number) => {
     if (element?.left)
@@ -243,6 +241,7 @@ defineExpose({
           >
             <CmInputEditor
               v-model="anserList.content"
+              v-model:basic="anserList.basic"
               :field="field"
               :errors="errors"
               :disabled="isView"
@@ -255,16 +254,20 @@ defineExpose({
           class="mb-4"
           @upload="hanleUploadFileContent"
         />
-        <CpMediaContent
-          ref="inputMedia"
-          :disabled="isView"
-          class="w-100"
-          :type="2"
-          :src="anserList.urlFile"
-          :type-media="typeFile"
-          @update:fileFolder="handleUpadateUrlFile"
-          @deleteFile="deleteFile"
-        />
+        <div class="d-flex justify-center">
+          <div class="w-50">
+            <CpMediaContent
+              ref="inputMedia"
+              :disabled="isView"
+              class="w-100"
+              :type="2"
+              :src="anserList.urlFile"
+              :type-media="typeFile"
+              @update:fileFolder="handleUpadateUrlFile"
+              @deleteFile="deleteFile"
+            />
+          </div>
+        </div>
       </VCol>
     </VRow>
     <VRow>
@@ -289,6 +292,7 @@ defineExpose({
               :data="ans"
               :ans-id="idAns"
               :is-true="ans.isTrue"
+              :placeholder="t('question-choose', { index: idAns + 1 })"
               :disabled-del="checkDisable(idAns + 1)"
               @update:is-shuffle-left="($value: any) => updateIsShuffle(false, $value, idAns)"
               @update:is-shuffle-right="($value: any) => updateIsShuffle(true, $value, idAns)"

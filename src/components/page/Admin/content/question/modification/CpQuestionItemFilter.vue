@@ -143,7 +143,6 @@ onMounted(() => {
     getComboboxQuestionLevel()
 
   isAutoApprove.value = MethodsUtil.checkPermission(null, 'QuestionManaging', 128) || true
-  console.log(isAutoApprove.value)
   emit('update:isAutoApprove', isAutoApprove.value)
 })
 

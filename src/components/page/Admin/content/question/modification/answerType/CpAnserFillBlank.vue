@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import CmRadio from '@/components/common/CmRadio.vue'
 import CmInputEditor from '@/components/common/inputEditor/CmInputEditor.vue'
-import CpListTypeFileUpload from '@/components/page/gereral/CpListTypeFileUpload.vue'
-import CpMediaContent from '@/components/page/gereral/CpMediaContent.vue'
 import { validatorStore } from '@/stores/validatator'
+import CmButton from '@/components/common/CmButton.vue'
 
 interface Props {
   data: any
@@ -15,14 +13,14 @@ interface Props {
   placeholder?: string
 }
 const props = withDefaults(defineProps<Props>(), ({
-  isTrue: true,
+  isTrue: null,
   isShuffle: false,
   isView: false,
   disabledDel: false,
   data: () => ({
     content: '',
-    isTrue: true,
-    position: null,
+    isTrue: false,
+    position: 0,
     isShuffle: true,
     urlFile: null,
   }),
@@ -43,7 +41,7 @@ const { submitForm } = useForm()
 const schema = yup.object({
   content: schemaOption.defaultStringArea,
 })
-const answerData = ref(props.data)
+const answerData = ref()
 const inputMedia = ref()
 const listMenu = ref([
   {
@@ -52,15 +50,8 @@ const listMenu = ref([
     actived: false,
   },
 ])
-const optionTypeQuestion = ref([
-  {
-    value: false,
-  },
-  {
-    value: true,
-  },
-])
 function changeValue(val: any) {
+  answerData.value.isTrue = val === props.ansId
   emit('update:isTrue', val)
 }
 function eventToolShuffle(val: any) {
@@ -105,11 +96,23 @@ function hanleUploadFileContent(val: any) {
 function handleUpadateUrlFile(val: any) {
   emit('update:url', val)
 }
-
+function actionItemDelete() {
+  emit('delete', props.data)
+}
 const myFormAnsItem = ref()
 const isSubmit = computed(() => {
   return myFormAnsItem.value.validate
 })
+function deleteFile(dataDelete: any) {
+  emit('update:url', '')
+}
+
+watch(() => props.data, (val: any) => {
+  answerData.value = val
+}, { deep: true, immediate: true })
+watch(() => props.content, (val: any) => {
+  answerData.value.content = val
+}, { deep: true })
 defineExpose({
   isSubmit,
 })
@@ -123,47 +126,16 @@ defineExpose({
   >
     <VRow>
       <VCol
-        cols="3"
-        class="d-flex align-center"
+        cols="1"
+        class="d-flex align-center justify-end"
       >
-        <VRow>
-          <VCol
-            cols="4"
-            class="d-flex align-center justify-end"
-          >
-            <CmRadio
-              :model-value="isTrue"
-              :disabled="isView"
-              :name="`clauseTF${data.position}`"
-              :value="true"
-              @update:model-value="changeValue"
-            />
-          </VCol>
-          <VCol
-            cols="4"
-            class="d-flex align-center justify-end"
-          >
-            <CmRadio
-              :model-value="isTrue"
-              :disabled="isView"
-              :name="`clauseTF${data.position}`"
-              :value="false"
-              @update:model-value="changeValue"
-            />
-          </VCol>
-          <VCol
-            cols="4"
-            class="d-flex align-center"
-          >
-            <div class="px-3">
-              {{ getIndex }}
-            </div>
-          </VCol>
-        </VRow>
+        <div class="px-3">
+          {{ getIndex }}
+        </div>
       </VCol>
       <VCol
-        cols="8"
-        class="pxn"
+        cols="10"
+        class="d-flex align-center"
       >
         <Field
           v-slot="{ field, errors }"
@@ -176,43 +148,25 @@ defineExpose({
             :errors="errors"
             :disabled="isView"
             :list-menu="listMenu"
-            :placeholder="placeholder"
             rlt="end"
             is-menu-simple
             min-height="50px"
-            width="100%"
+            :placeholder="placeholder"
+            class="w-100"
             :model-value="content"
             @update:event="eventToolShuffle"
             @update:modelValue="handleChangeContent"
           />
         </Field>
-      </VCol>
-      <VCol
-        cols="1"
-        class="d-flex align-center"
-      >
-        <CpListTypeFileUpload
-          :type="2"
-          :disabled="isView"
-          :disabled-del="disabledDel"
-          @upload="hanleUploadFileContent"
-        />
-      </VCol>
-    </VRow>
-    <!-- <VRow :style="{ display: data.urlFile ? 'block' : 'none' }"> -->
-    <VRow v-show="!!data.urlFile">
-      <VCol
-        cols="8"
-        offset="3"
-      >
-        <CpMediaContent
-          ref="inputMedia"
-          :type="2"
-          :disabled="isView"
-          class="w-100"
-          :src="data.urlFile"
-          :type-media="typeFile"
-          @update:fileFolder="handleUpadateUrlFile"
+        <CmButton
+          :disabled="disabledDel"
+          color="infor"
+          is-rounded
+          icon="fe:trash"
+          class="pa-2 ml-3"
+          :size-icon="20"
+          variant="text"
+          @click="actionItemDelete"
         />
       </VCol>
     </VRow>

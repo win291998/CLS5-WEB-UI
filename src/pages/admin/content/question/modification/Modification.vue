@@ -8,6 +8,9 @@ import { TYPE_REQUEST } from '@/typescript/enums/enums'
 import QuestionService from '@/api/question'
 
 import CpSingleChoiceQuestion from '@/components/page/Admin/content/question/question-type/CpSingleChoiceQuestion.vue'
+import CpUnderlinedQuestion from '@/components/page/Admin/content/question/question-type/CpUnderlinedQuestion.vue'
+import CpFillBlankQuestion from '@/components/page/Admin/content/question/question-type/CpFillBlankQuestion.vue'
+import CpFillBlank2Question from '@/components/page/Admin/content/question/question-type/CpFillBlank2Question.vue'
 import CpEssayQuestion from '@/components/page/Admin/content/question/question-type/CpEssayQuestion.vue'
 import CpMultiChoiceQuestion from '@/components/page/Admin/content/question/question-type/CpMultiChoiceQuestion.vue'
 import CpTrueFalseQuestion from '@/components/page/Admin/content/question/question-type/CpTrueFalseQuestion.vue'
@@ -43,12 +46,12 @@ const dataGeneral = ref({
 const clusterQs = ref<any>(
   {
     content: '',
-    urlFile: '',
-    isGroup: '',
-    levelId: '',
-    isShuffle: '',
+    urlFile: null,
+    isGroup: null,
+    levelId: null,
+    isShuffle: null,
     typeId: 1,
-    topicId: '',
+    topicId: null,
     answers: [],
   },
 )
@@ -68,10 +71,16 @@ function checkTypeQuestionItem(typeId: number | null) {
       return CpSingleChoiceQuestion
     case 2:
       return CpMultiChoiceQuestion
+    case 3:
+      return CpUnderlinedQuestion
     case 4:
       return CpTrueFalseQuestion
     case 5:
       return CpClauseTrueFalseQuestion
+    case 6:
+      return CpFillBlankQuestion
+    case 7:
+      return CpFillBlank2Question
     case 8:
       return CpMatchingQuestion
     case 9:
@@ -88,10 +97,14 @@ function handleUpdateQuestion(dataQs: any, id: number) {
 }
 function changeQuestion(dataQs: any, id: number | null, value: number) {
   dataQs.typeId = value
+  dataQs.content = ''
 }
 async function getInforQuestion() {
-  await MethodsUtil.requestApiCustomV5(QuestionService.GetDetailQuestion(Number(route.params.id)), TYPE_REQUEST.GET).then((value: any) => {
-    standardizedDataInitSingle(value)
+  await MethodsUtil.requestApiCustomV5(QuestionService.GetDetailQuestion(Number(route.params.id)), TYPE_REQUEST.GET).then(({ data }: any) => {
+    if (data.isGroup)
+      standardizedDataInitCluse(data)
+    else
+      standardizedDataInitSingle(data)
   })
 }
 
@@ -106,8 +119,6 @@ const myFormContentCLuse = ref() // content câu hỏi chùm
 const storeQuestionManager = questionManagerStore()
 const { refListQsCluse } = storeToRefs(storeQuestionManager) // content câu hỏi cho từng câu chùm
 async function handleSave(id: any) {
-  console.log(refListQsCluse.value)
-
   /**
  * promise1: validate phần chung chủ đề và mức độ
  * promise2: validate phần loại câu hỏi
@@ -129,7 +140,6 @@ async function handleSave(id: any) {
     }
   }
   else {
-    console.log(myFormQsSingle.value)
     promise2 = await myFormOptionQsSingle.value?.isSubmit().then((data: any) => data.valid)
     promise3 = await myFormQsSingle.value?.isSubmit().then((data: any) => data.valid)
     if (myFormQsSingle.value?.isSubmitAns) {
@@ -146,9 +156,9 @@ async function handleSave(id: any) {
         dataPost.value = window._.cloneDeep(questionData.value)
 
         // Khi tất cả promise đã hoàn thành, đây là nơi xử lý kết quả
-        if (questionData.value.typeId !== 0)
+        if (questionData.value.typeId !== 0 && checkQuestionValidSingle(dataPost.value))
           standardizedDataSingle(id)
-        else if (checkQuestionValidCluse(dataPost.value))
+        if (questionData.value.typeId === 0 && checkQuestionValidCluse(dataPost.value))
           standardizedDataCluse(id)
       }
       unLoadComponent(id)
@@ -161,12 +171,34 @@ async function handleSave(id: any) {
 }
 async function postData(id: any) {
   await MethodsUtil.requestApiCustomV5(QuestionService.AddQuestion, isEdit.value ? TYPE_REQUEST.PUT : TYPE_REQUEST.POST, dataPost.value)
-    .then((value: any) => {
+    .then(({ data, status }: any) => {
+      console.log(data)
+      window.notificationApiStatus(status, t)
       unLoadComponent(id)
       onCancel()
     })
 }
 function standardizedDataInitSingle(valueQs: any) {
+  if (valueQs.typeId === 6) {
+    const answers: any[] = []
+    const answerBlank: any[] = []
+    valueQs.answers.forEach((element: any) => {
+      if (element.isTrue)
+        answerBlank[answerBlank.length] = element
+
+      else
+        answers[answers.length] = element
+    })
+    valueQs.answers = answers.map((item: any, index: number) => {
+      item.position = index + 1
+      return item
+    })
+    valueQs.answerBlank = answerBlank.map((item: any, index: number) => {
+      item.position = index + 1
+      return item
+    })
+  }
+
   if (valueQs.typeId === 8) {
     const answers: any[] = []
     valueQs.answers.forEach((element: any) => {
@@ -189,8 +221,79 @@ function standardizedDataInitSingle(valueQs: any) {
   valueQs.isAutoApprove = MethodsUtil.checkPermission(null, 'QuestionManaging', 128) || true
   questionData.value = valueQs
 }
+function standardizedDataInitCluse(valueQsList: any) {
+  valueQsList?.questions.forEach((valueQs: any) => {
+    if (valueQs.typeId === 6) {
+      const answers: any[] = []
+      const answerBlank: any[] = []
+      valueQs.answers.forEach((element: any) => {
+        if (element.isTrue)
+          answerBlank[answerBlank.length] = element
+
+        else
+          answers[answers.length] = element
+      })
+      valueQs.answers = answers.map((item: any, index: number) => {
+        item.position = index + 1
+        return item
+      })
+      valueQs.answerBlank = answerBlank.map((item: any, index: number) => {
+        item.position = index + 1
+        return item
+      })
+    }
+    if (valueQs.typeId === 8) {
+      const answers: any[] = []
+      valueQs.answers.forEach((element: any) => {
+        const position = element.position - 1
+        if (position > -1) {
+          if (answers[position] === undefined) {
+            answers[position] = {
+              left: null,
+              right: null,
+            }
+          }
+          if (element.isTrue === false)
+            answers[position].left = element
+          else answers[position].right = element
+        }
+      })
+      valueQs.answers = answers
+    }
+
+    valueQs.isAutoApprove = MethodsUtil.checkPermission(null, 'QuestionManaging', 128) || true
+    questionData.value = valueQs
+  })
+}
 function standardizedDataSingle(id?: any) {
   delete dataPost.value.questions
+  if (dataPost.value.typeId === 6) {
+    dataPost.value.answers = [
+      ...dataPost.value.answerBlank,
+      ...dataPost.value.answers,
+    ]
+    console.log(dataPost.value.answers)
+
+    dataPost.value.answers.forEach((item: any, index: number) => {
+      item.position = index + 1
+    })
+    delete dataPost.value.answerBlank
+  }
+  if (dataPost.value.typeId === 7) {
+    dataPost.value.answers.forEach((item: any) => {
+      console.log(dataPost.value.answerBlank[item.blank]?.length)
+      if (dataPost.value.answerBlank[item.blank]?.length) {
+        dataPost.value.answerBlank[item.blank]?.forEach((itemBlank: any) => {
+          console.log(itemBlank)
+          itemBlank.position = item.position
+          dataPost.value.answers.push(itemBlank)
+        })
+      }
+    })
+    delete dataPost.value.answerBlank
+    delete dataPost.value.basic
+    console.log(dataPost.value)
+  }
   if (dataPost.value.typeId === 8) {
     const answers: any[] = []
     dataPost.value.answers.forEach((element: any) => {
@@ -201,13 +304,24 @@ function standardizedDataSingle(id?: any) {
     })
     dataPost.value.answers = answers
   }
+
   postData(id)
 }
 function standardizedDataCluse(id?: any) {
   delete dataPost.value.answers
   dataPost.value?.questions?.forEach((element: any) => {
-    console.log(element)
+    if (element.typeId === 6) {
+      element.answers = [
+        ...element.answerBlank,
+        ...element.answers,
+      ]
+      console.log(element.answers)
 
+      element.answers.forEach((item: any, index: number) => {
+        item.position = index + 1
+      })
+      delete element.answerBlank
+    }
     if (element.typeId === 8) {
       const answers: any[] = []
       element.answers.forEach((qs: any) => {
@@ -219,18 +333,7 @@ function standardizedDataCluse(id?: any) {
       element.answers = answers
     }
   })
-  console.log(dataPost.value)
 
-  // if (dataPost.value.typeId === 8) {
-  //   const answers: any[] = []
-  //   dataPost.value.answers.forEach((element: any) => {
-  //     if (element && element.left !== null)
-  //       answers.push(element.left)
-  //     if (element && element.right !== null)
-  //       answers.push(element.right)
-  //   })
-  //   dataPost.value.answers = answers
-  // }
   postData(id)
 }
 
@@ -238,7 +341,6 @@ function handleChangeTypeQs(group: boolean) {
   if (group) {
     questionData.value.typeId = 0
     console.log(questionData.value.questions)
-
     questionData.value.questions = questionData.value.questions?.length ? questionData.value.questions : [window._.cloneDeep(clusterQs.value)]
   }
   else {
@@ -254,6 +356,49 @@ function addQuestions() {
 }
 
 // kiểm tra tính hợp lệ câu hỏi
+function checkQuestionValidSingle(data: any) {
+  /// Trắc nghiệm nhiều lựa chọn: 2
+  /// Gạch chân: 3
+  /// Lựa chọn đúng sai: 4
+  /// Mệnh đề đúng sai: 5
+  /// Điền khuyết: 6
+  /// Điền khuyết loại 2: 7
+  /// Ghép đôi: 8
+  /// Tự luận: 9
+  /// Đa loại câu hỏi: 0
+  let isValid = true
+  const questionNoInvalid = null
+  let messageErr
+  console.log(data)
+
+  if (!data?.content || data?.content === '<br>') {
+    messageErr = t('pls-add-content', { questionNoInvalid })
+    isValid = false
+  }
+  console.log(messageErr)
+
+  // bắt validate chưa chọn đáp án đúng
+  switch (data.typeId) {
+    case 1:
+    case 3:
+    case 5:
+      // eslint-disable-next-line no-case-declarations
+      const answerCorrect = data.answers.find((item: any) => item.isTrue === true)
+      if (!answerCorrect) {
+        messageErr = t('pls-choose-true')
+        isValid = false
+        break
+      }
+      break
+
+    default:
+      break
+  }
+  if (messageErr)
+    toast('WARNING', t(messageErr))
+
+  return isValid
+}
 function checkQuestionValidCluse(data: any) {
   /// Trắc nghiệm nhiều lựa chọn: 2
   /// Gạch chân: 3
@@ -271,7 +416,7 @@ function checkQuestionValidCluse(data: any) {
   for (let i = 0; i < data.questions.length; i += 1) {
     const element = data.questions[i]
 
-    if (!element?.content) {
+    if (!element?.content || element?.content === '<br>') {
       questionNoInvalid = i + 1
       messageErr = t('pls-add-content-qs', { questionNoInvalid })
       isValid = false
@@ -282,6 +427,7 @@ function checkQuestionValidCluse(data: any) {
     switch (element.typeId) {
       case 1:
       case 2:
+      case 3:
       case 5:
         // eslint-disable-next-line no-case-declarations
         const index = element?.answers.findIndex((item: any) => !item.content)
@@ -315,12 +461,13 @@ function checkQuestionValidCluse(data: any) {
     // bắt validate chưa chọn đáp án đúng
     switch (element.typeId) {
       case 1:
+      case 3:
       case 5:
         // eslint-disable-next-line no-case-declarations
         const answerCorrect = element.answers.find((item: any) => item.isTrue === true)
         if (!answerCorrect) {
           questionNoInvalid = i + 1
-          messageErr = `Vui lòng chọn phương án đúng cho câu hỏi ${questionNoInvalid}`
+          messageErr = t('pls-choose-true', { questionNoInvalid })
           isValid = false
           break
         }
@@ -436,7 +583,7 @@ isEdit.value = route?.name === 'question-edit'
             :is="checkTypeQuestionItem(questionData.typeId)"
             v-if="questionData.typeId"
             ref="myFormQsSingle"
-            :question="questionData"
+            v-model:question="questionData"
             :is-edit="isEdit"
           />
         </VCol>

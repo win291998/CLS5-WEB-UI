@@ -53,7 +53,7 @@ const { submitForm } = useForm()
 const schema = yup.object({
   content: schemaOption.defaultStringArea,
 })
-const anserList = ref<AnswerItem>(props.question)
+const anserList = ref<any>()
 const trueValue = ref(0)
 const typeFile = ref()
 function createInitData() {
@@ -121,6 +121,9 @@ function handleUpadateUrlFile(val: any) {
 watch(() => anserList, (val: any) => {
   emit('update', anserList.value)
 }, { deep: true, immediate: true })
+watch(() => props.question, (val: any) => {
+  anserList.value = props.question
+}, { immediate: true })
 onMounted(() => {
   if (!props.isEdit)
     createInitData()
@@ -158,6 +161,7 @@ defineExpose({
           >
             <CmInputEditor
               v-model="anserList.content"
+              v-model:basic="anserList.basic"
               :field="field"
               :errors="errors"
               :disabled="isView"
