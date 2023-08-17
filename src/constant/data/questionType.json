@@ -1,5 +1,6 @@
 {
     "QuestionType": {
+        "0": "QuestionService.QuestionCluster",
         "1": "QuestionService.QuestionSingleChoice",
         "2": "QuestionService.QuestionMultipleChoice",
         "3": "QuestionService.QuestionUnderlined",

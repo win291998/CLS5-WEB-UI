@@ -81,9 +81,10 @@ async function uploadFile(model: any) {
     formData.append('UserId', userData.id)
 
   try {
-    const res = await MethodsUtil.requestApiCustom(`${SERVERFILE}${ServerFileService.UploadFile}`, TYPE_REQUEST.POST, formData, {
-      Authorization: constant.TOKEN_FAKE_SV_FILE,
-    }).then((value: any) => value)
+    const res = await MethodsUtil.requestApiCustom(`${SERVERFILE}${ServerFileService.UploadFile}`, TYPE_REQUEST.POST, formData,
+      {
+        Authorization: constant.TOKEN_FAKE_SV_FILE,
+      }).then((value: any) => value)
     if (res.filePath)
       toast('SUCCESS', t('upload-file-success'))
 

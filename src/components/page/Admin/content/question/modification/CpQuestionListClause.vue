@@ -64,9 +64,10 @@ function handleChangeSelect(value: any) {
             @update:model-value="handleChangeSelect"
           />
         </div>
-        <div v-if="col === 'name'">
-          {{ context.content }}
-        </div>
+        <div
+          v-if="col === 'name'"
+          v-html="context.basic"
+        />
         <div v-if="col === 'type'">
           <div>{{ t((QuestionType as any)[context?.typeId.toString()]) }}</div>
         </div>

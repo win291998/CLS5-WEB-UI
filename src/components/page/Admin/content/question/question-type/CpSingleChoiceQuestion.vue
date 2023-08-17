@@ -95,27 +95,26 @@ function addAnswer() {
 }
 
 const inputMedia = ref()
-const typeFileClick = ref()
 function hanleUploadFileContent(val: any) {
   switch (val[0]?.type) {
     case 'image':
-      typeFileClick.value = 1
+      typeFile.value = 1
       nextTick(() => {
         inputMedia.value?.openImage()
       },
       )
       break
     case 'audio':
-      typeFileClick.value = 2
+      typeFile.value = 2
       nextTick(() => inputMedia.value?.openAudio())
       break
     case 'video-local':
-      typeFileClick.value = 3
+      typeFile.value = 3
 
       nextTick(() => inputMedia.value?.openVideo())
       break
     case 'video-youtube':
-      typeFileClick.value = 4
+      typeFile.value = 4
       nextTick(() => inputMedia.value?.openYoutube())
       break
 
@@ -126,7 +125,6 @@ function hanleUploadFileContent(val: any) {
 
 function handleUpadateUrlFile(val: any) {
   anserList.value.urlFile = val
-  typeFile.value = typeFileClick.value
 }
 const myFormQs = ref()
 const myFormAns = ref()
@@ -187,6 +185,7 @@ defineExpose({
           >
             <CmInputEditor
               v-model="anserList.content"
+              v-model:basic="anserList.basic"
               :field="field"
               :errors="errors"
               :disabled="isView"
@@ -226,6 +225,7 @@ defineExpose({
               v-model:content="ans.content"
               v-model:url="ans.urlFile"
               v-model:isShuffle="ans.isShuffle"
+              :placeholder="t('question-choose', { index: idAns + 1 })"
               :is-view="isView"
               :data="ans"
               :ans-id="idAns + 1"

@@ -4,8 +4,12 @@ import MethodsUtil from '@/utils/MethodsUtil'
 
 interface Emit {
   (e: 'update:modelValue', value: any): void
+  (e: 'update:basic', value: any): void
   (e: 'update:event', value?: any): void
   (e: 'blur', value?: any): void
+  (e: 'focus', value?: any): void
+  (e: 'mouseUp', value?: any): void
+  (e: 'mouseDown', value?: any): void
 }
 interface Props {
   modelValue: any
@@ -14,19 +18,23 @@ interface Props {
   width?: any
   isDebounce?: boolean
   isMenuSimple?: boolean
+  disabled?: boolean
   rlt?: string
   listMenu?: any[]
   errors?: any
   isErrors?: boolean
+  placeholder?: string
   field?: any
 }
 const propsValue = withDefaults(defineProps<Props>(), ({
   modelValue: '',
   text: '',
   minHeight: '200px',
+  placeholder: 'enter-placeholder',
   width: 'auto',
   isDebounce: true,
   isMenuSimple: false,
+  disabled: false,
   rlt: 'left',
   listMenu: () => ([]),
 }))
@@ -142,7 +150,8 @@ const hasContentChanged = ref(false)
 // thay đổi dữ liệu data update
 const handleChangeValue = window._.debounce((val: any) => {
   hasContentChanged.value = true
-  emit('update:modelValue', inputEditor.value.innerHTML)
+  emit('update:modelValue', (!inputEditor.value.innerHTML || inputEditor.value.innerHTML === '<br>') ? null : inputEditor.value.innerHTML)
+  emit('update:basic', inputEditor.value.innerText)
 }, propsValue?.isDebounce ? 500 : 0)
 
 /** method */
@@ -263,6 +272,20 @@ function click(event: MouseEvent) {
 function handleBlur() {
   emit('blur')
 }
+function handleFocus() {
+  emit('focus')
+}
+function handleMouseUp() {
+  emit('mouseUp')
+}
+function handleMouseDown() {
+  emit('mouseDown')
+}
+
+defineExpose({
+  inputEditor,
+  handleChangeValue,
+})
 </script>
 
 <template>
@@ -309,19 +332,18 @@ function handleBlur() {
       <div
         id="inputEditor"
         ref="inputEditor"
-        contenteditable="true"
+        :class="{ 'input-math-disable': disabled }"
+        :contenteditable="disabled ? false : true"
         :style="[`${isMenuSimple && !listMenu.length ? 'borderRadius: 8px' : ''}`, `minHeight: ${minHeight}`]"
-        class="input-math border box-textarea p-1"
+        class="input-math border box-textarea p-1 placeholder custom-underline"
+        :placeholder="t(placeholder)"
         @input="handleChangeValue"
+        @mouseup="handleMouseUp"
+        @mousedown="handleMouseDown"
         @click="click"
         @blur="handleBlur"
+        @focus="handleFocus"
       />
-    <!--
-      :style="`textAlign:${textAlign}; color:${generalConfig.textColor};`"
-      @input="handleChangeValue"
-      @mousedown="mousedowns"
-      @click="dblclickEditText"
-    -->
     </div>
     <div
       v-if="errors?.length > 0"
@@ -347,6 +369,9 @@ function handleBlur() {
   }
   .input-math:focus{
     outline: unset !important;
+  }
+  .input-math-disable{
+    background-color:  rgb(var(--v-gray-100)) ;
   }
 </style>
 
@@ -376,5 +401,19 @@ function handleBlur() {
  }
  .styleError.inputEditor{
   outline: 1px solid red;
+}
+
+[contenteditable][placeholder]:empty:before {
+  content: attr(placeholder);
+  position: absolute;
+  color: gray;
+  background-color: transparent;
+}
+
+.custom-underline {
+  u {
+    text-decoration: underline;
+    color:  rgb(var(--v-primary-600)) !important;
+  }
 }
 </style>

@@ -53,7 +53,7 @@ const { submitForm } = useForm()
 const schema = yup.object({
   content: schemaOption.defaultStringArea,
 })
-const anserList = ref<AnswerItem>(props.question)
+const anserList = ref<any>()
 const trueValue = ref(0)
 const typeFile = ref()
 function createInitData() {
@@ -176,6 +176,7 @@ defineExpose({
           >
             <CmInputEditor
               v-model="anserList.content"
+              v-model:basic="anserList.basic"
               :field="field"
               :errors="errors"
               :disabled="isView"
@@ -216,6 +217,7 @@ defineExpose({
               v-model:url="ans.urlFile"
               v-model:isShuffle="ans.isShuffle"
               v-model:isTrue="ans.isTrue"
+              :placeholder="t('question-choose', { index: idAns + 1 })"
               :is-view="isView"
               :data="ans"
               :ans-id="idAns + 1"

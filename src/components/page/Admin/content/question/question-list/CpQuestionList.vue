@@ -99,16 +99,18 @@ const storeTable = tableStore()
 const { callBackAction } = storeToRefs(storeTable)
 callBackAction.value = actionItem
 async function getListQuestion() {
-  await MethodsUtil.requestApiCustomV5(QuestionService.GetListQuestionV5, TYPE_REQUEST.GET, queryParams.value).then((value: any) => {
-    value?.listData.forEach((element: any) => {
+  await MethodsUtil.requestApiCustomV5(QuestionService.GetListQuestionV5, TYPE_REQUEST.GET, queryParams.value).then(({ data }: any) => {
+    console.log(data)
+
+    data?.listData.forEach((element: any) => {
       element.actions = [
         MethodsUtil.checkActionType({ id: 1 }),
         MethodsUtil.checkActionType({ id: 2 }),
         MethodsUtil.checkActionType({ id: 4 }),
       ]
     })
-    items.value = value?.listData
-    totalRecord.value = value?.totalRecords
+    items.value = data?.listData
+    totalRecord.value = data?.totalRecords
   })
 }
 

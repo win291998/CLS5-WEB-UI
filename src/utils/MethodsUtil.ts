@@ -1,5 +1,6 @@
 import jwt_decode from 'jwt-decode'
 import JSZip from 'jszip'
+import type { Any } from '@/typescript/interface'
 import { ActionType } from '@/constant/data/actionType.json'
 import { typeFile } from '@/constant/data/typeFile.json'
 import { StatusTypeUser } from '@/constant/data/status.json'
@@ -8,7 +9,8 @@ import { TYPE_REQUEST } from '@/typescript/enums/enums'
 import UserService from '@/api/user/index'
 import ServerFileService from '@/api/server-file/index'
 import axios from '@axios'
-import type { Any } from '@/typescript/interface'
+import toast from '@/plugins/toast'
+
 import {
   MediaType, audioExtention, audioTypes, imageFileExtention, imageTypes, otherFileExtention, videoExtention, videoTypes,
 } from '@/constant/Globals'
@@ -501,5 +503,21 @@ export default class MethodsUtil {
       videoId = videoId.substring(0, ampersandPosition)
 
     return videoId
+  }
+
+  // thông báo theo status response api
+  static notificationApiStatus(status: any, t: any, error?: any) {
+    switch (status) {
+      case 201:
+        toast('SUCCESS', t('USR_AddSuccess'))
+        break
+      case 204:
+
+        toast('SUCCESS', t('USR_UpdateSuccess'))
+        break
+
+      default:
+        break
+    }
   }
 }

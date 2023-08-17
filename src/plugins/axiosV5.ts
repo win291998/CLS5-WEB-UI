@@ -46,10 +46,17 @@ axiosIns.interceptors.request.use(
 
 axiosIns.interceptors.response.use(
   (response: any) => {
-    return response.data
+    console.log(response)
+
+    return {
+      status: response.status,
+      data: response.data,
+    }
   },
 
   (error: any) => {
+    console.log(error)
+
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
     const { config, response } = error

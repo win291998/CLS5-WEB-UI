@@ -12,6 +12,7 @@ interface Props {
   content: any
   isView: boolean
   disabledDel?: boolean
+  placeholder?: string
 }
 const props = withDefaults(defineProps<Props>(), ({
   isTrue: null,
@@ -53,8 +54,6 @@ const listMenu = ref([
 ])
 function changeValue(val: any) {
   answerData.value.isTrue = val === props.ansId
-  console.log(val)
-
   emit('update:isTrue', val)
 }
 function eventToolShuffle(val: any) {
@@ -62,8 +61,6 @@ function eventToolShuffle(val: any) {
   emit('update:isShuffle', listMenu.value[0].actived)
 }
 function handleChangeContent(val: any) {
-  console.log(val)
-
   emit('update:content', val)
 }
 const typeFile = ref()
@@ -114,7 +111,7 @@ watch(() => props.data, (val: any) => {
   answerData.value = val
 }, { deep: true, immediate: true })
 watch(() => props.content, (val: any) => {
-  answerData.value = val
+  answerData.value.content = val
 }, { deep: true })
 defineExpose({
   isSubmit,
@@ -161,6 +158,7 @@ defineExpose({
             rlt="end"
             is-menu-simple
             min-height="50px"
+            :placeholder="placeholder"
             width="100%"
             :model-value="content"
             @update:event="eventToolShuffle"

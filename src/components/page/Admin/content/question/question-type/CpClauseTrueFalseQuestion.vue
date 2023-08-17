@@ -52,7 +52,7 @@ const { submitForm } = useForm()
 const schema = yup.object({
   content: schemaOption.defaultStringArea,
 })
-const anserList = ref<AnswerItem>(props.question)
+const anserList = ref<any>()
 const typeFile = ref()
 function createInitData() {
   anserList.value.answers = []
@@ -211,6 +211,7 @@ defineExpose({
           >
             <CmInputEditor
               v-model="anserList.content"
+              v-model:basic="anserList.basic"
               :field="field"
               :errors="errors"
               :disabled="isView"
@@ -254,6 +255,7 @@ defineExpose({
               :is-view="isView"
               :data="ans"
               :ans-id="idAns + 1"
+              :placeholder="t('question-choose', { index: idAns + 1 })"
               :disabled-del="anserList.answers.length <= 1"
               @delete="deleteAns"
             />
