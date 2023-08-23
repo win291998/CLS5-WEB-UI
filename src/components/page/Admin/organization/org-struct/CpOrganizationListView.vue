@@ -81,7 +81,7 @@ getListOrgStruct()
   <SkTree v-show="isLoading" />
   <div
     v-show="!isLoading"
-    class="page-containter-box"
+    class="page-container-box"
   >
     <CmTreeView
       v-if="config?.roots.length"

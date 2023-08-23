@@ -11,6 +11,13 @@ const QuestionService = {
   GetDetailSurvey: '/surveyexam/get-by-id',
   GetListSurveyTopics: '/surveytest/get-paging-test-survey-exam',
   GetDetailSurveyTopic: '/surveytest/get-by-id',
+  GetListGroupFromSurvey: '/usergroup/get-paging-user-group-by-list',
+  GetListPeople: '/surveytest/get-list-people',
+  GetListTestSurvey: '/surveytestcode/get-paging-survey-test-code',
+  GetListTestSurveyFromBankSurvey: '/survey/get-list-survey-paging',
+  GetDetailTestSurvey: '/surveytestcode/get-by-id',
+  GetListQuestionSurveyById: '/surveytestcode/get-list-question',
+  GetListApproveSurveyTest: '/surveytestCode/get-paging-send-agree-test-code-survey-exam',
 
   /** Post */
   PostDeleteExam: '/exam/delete',
@@ -23,9 +30,21 @@ const QuestionService = {
   PostCreateSurveyTopic: '/surveytest/create',
   PostUpdateSurveyTopic: '/surveytest/update',
   PostGetListInfobyTest: 'ExamTest/get-info-by-test',
+  PostListUserAddTest: '/ExamTest/get-info-user-add-test',
+  PostAddUserToSurvey: '/surveytest/add-user',
+  PostDeleteUserFromSurvey: '/surveytest/delete-user',
+  PostCreateGroupUser: '/surveytest/create-group-user',
+  PostGetListTestById: '/survey/get-survey-detail',
+  PostCreateTestSurvey: '/surveytestcode/create',
+  PostUpdateTestSurvey: '/surveytestcode/update',
+  PostAgreeSurveyTest: '/surveytestCode/save-agree-survey-test-code',
+  PostRejectSurveyTest: '/surveytestCode/save-reject-survey-test-code',
+  PostRecallRequestSurveyTest: '/surveyTestCode/recall-request-survey-test-code',
+  PostCreateOrgStrSurveyTest: '/surveytest/create-organizational-structures',
 
   /** Delete */
   DeleteSurveyTopic: '/surveytest/delete',
+  DeleteSurveyTest: '/surveytestcode/delete',
 
   /** Put */
   /** Update */

@@ -128,7 +128,7 @@ defineExpose({
         <slot v-if="!title && !icon" />
         <span
           v-if="props.title || props.icon"
-          class="d-flex align-items-center"
+          class="d-flex align-center justify-center"
         >
           <VIcon
             v-if="props.icon"
