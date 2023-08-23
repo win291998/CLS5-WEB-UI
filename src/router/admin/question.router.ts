@@ -53,6 +53,54 @@ export default [
 
         ],
       },
+      {
+        path: 'question-survey',
+        name: 'question-survey',
+        redirect: { name: 'survey-list' },
+        component: () => import('@/pages/admin/content/survey/Index.vue'),
+        children: [
+          {
+            path: '',
+            name: 'survey-list',
+            component: () => import('@/pages/admin/content/survey/Survey.vue'),
+          },
+          {
+            path: 'add',
+            name: 'survey-add',
+            meta: {
+              breadcrumb: [
+                {
+                  title: 'survey-bank',
+                  to: { name: 'survey-list' },
+                },
+                {
+                  title: 'Add-new',
+                  active: true,
+                },
+              ],
+            },
+            component: () => import('@/pages/admin/content/survey/modification/Modification.vue'),
+          },
+          {
+            path: 'edit/:id',
+            name: 'survey-edit',
+            meta: {
+              breadcrumb: [
+                {
+                  title: 'survey-bank',
+                  to: { name: 'survey-list' },
+                },
+                {
+                  title: 'ActionEdit',
+                  active: true,
+                },
+              ],
+            },
+            component: () => import('@/pages/admin/content/survey/modification/Modification.vue'),
+          },
+
+        ],
+      },
 
     ],
   },

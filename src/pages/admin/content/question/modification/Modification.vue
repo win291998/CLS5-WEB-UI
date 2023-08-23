@@ -150,7 +150,6 @@ async function handleSave(id: any) {
 
   Promise.all([promise1, promise2, promise3, ...promise4])
     .then(async (results: any) => {
-      console.log(results)
       const allTrue = results.every((result: boolean) => result === true)
       if (allTrue) {
         dataPost.value = window._.cloneDeep(questionData.value)
@@ -172,7 +171,6 @@ async function handleSave(id: any) {
 async function postData(id: any) {
   await MethodsUtil.requestApiCustomV5(QuestionService.AddQuestion, isEdit.value ? TYPE_REQUEST.PUT : TYPE_REQUEST.POST, dataPost.value)
     .then(({ data, status }: any) => {
-      console.log(data)
       window.notificationApiStatus(status, t)
       unLoadComponent(id)
       onCancel()
@@ -272,8 +270,6 @@ function standardizedDataSingle(id?: any) {
       ...dataPost.value.answerBlank,
       ...dataPost.value.answers,
     ]
-    console.log(dataPost.value.answers)
-
     dataPost.value.answers.forEach((item: any, index: number) => {
       item.position = index + 1
     })
@@ -281,10 +277,8 @@ function standardizedDataSingle(id?: any) {
   }
   if (dataPost.value.typeId === 7) {
     dataPost.value.answers.forEach((item: any) => {
-      console.log(dataPost.value.answerBlank[item.blank]?.length)
       if (dataPost.value.answerBlank[item.blank]?.length) {
         dataPost.value.answerBlank[item.blank]?.forEach((itemBlank: any) => {
-          console.log(itemBlank)
           itemBlank.position = item.position
           dataPost.value.answers.push(itemBlank)
         })
@@ -292,7 +286,6 @@ function standardizedDataSingle(id?: any) {
     })
     delete dataPost.value.answerBlank
     delete dataPost.value.basic
-    console.log(dataPost.value)
   }
   if (dataPost.value.typeId === 8) {
     const answers: any[] = []
@@ -315,8 +308,6 @@ function standardizedDataCluse(id?: any) {
         ...element.answerBlank,
         ...element.answers,
       ]
-      console.log(element.answers)
-
       element.answers.forEach((item: any, index: number) => {
         item.position = index + 1
       })
@@ -340,7 +331,6 @@ function standardizedDataCluse(id?: any) {
 function handleChangeTypeQs(group: boolean) {
   if (group) {
     questionData.value.typeId = 0
-    console.log(questionData.value.questions)
     questionData.value.questions = questionData.value.questions?.length ? questionData.value.questions : [window._.cloneDeep(clusterQs.value)]
   }
   else {
@@ -369,13 +359,10 @@ function checkQuestionValidSingle(data: any) {
   let isValid = true
   const questionNoInvalid = null
   let messageErr
-  console.log(data)
-
   if (!data?.content || data?.content === '<br>') {
     messageErr = t('pls-add-content', { questionNoInvalid })
     isValid = false
   }
-  console.log(messageErr)
 
   // bắt validate chưa chọn đáp án đúng
   switch (data.typeId) {
@@ -412,7 +399,6 @@ function checkQuestionValidCluse(data: any) {
   let isValid = true
   let questionNoInvalid = null
   let messageErr
-  console.log(data.questions)
   for (let i = 0; i < data.questions.length; i += 1) {
     const element = data.questions[i]
 
@@ -477,7 +463,6 @@ function checkQuestionValidCluse(data: any) {
         break
     }
   }
-  console.log(messageErr)
 
   if (messageErr)
     toast('WARNING', t(messageErr))

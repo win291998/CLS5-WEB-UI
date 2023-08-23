@@ -226,8 +226,6 @@ function updatePositionAns() {
   const elementAns = editableDiv.querySelectorAll('.answer-fill-blank')
   elementAns.forEach((el: any, pos: number) => {
     el.setAttribute('answer-position', pos)
-    console.log(pos)
-
     addAnswerBlank(el.innerHTML, pos)
   })
 }

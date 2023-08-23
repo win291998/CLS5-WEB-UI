@@ -71,6 +71,9 @@ body {
 .color-error-300 {
   color: $color-error-300 !important;
 }
+.color-error-700 {
+  color: $color-error-700 !important;
+}
 
 .color-primary-300 {
   color: $color-primary-300 !important;
@@ -85,6 +88,9 @@ body {
 
 .color-success {
   color: $color-success-600 !important;
+}
+.color-success-700 {
+  color: $color-success-700 !important;
 }
 .color-primary {
   color: $color-primary-600 !important;
@@ -531,43 +537,43 @@ span {
 // margin top
 @for $i from 0 through 10 {
   .mtn-#{$i} {
-    margin-top: (-4 * $i) + px;
+    margin-top: (-4 * $i) + px !important;
   }
 }
 // margin right
 @for $i from 0 through 10 {
   .mrn-#{$i} {
-    margin-right: (-4 * $i) + px;
+    margin-right: (-4 * $i) + px !important;
   }
 }
 // margin bottom
 @for $i from 0 through 10 {
   .mbn-#{$i} {
-    margin-bottom: (-4 * $i) + px;
+    margin-bottom: (-4 * $i) + px !important;
   }
 }
 // margin left
 @for $i from 0 through 10 {
   .mln-#{$i} {
-    margin-left: (-4 * $i) + px;
+    margin-left: (-4 * $i) + px !important;
   }
 }
 // margin inline
 @for $i from 0 through 10 {
   .mxn-#{$i} {
-    margin-inline: (-4 * $i) + px;
+    margin-inline: (-4 * $i) + px !important;
   }
 }
 // margin block
 @for $i from 0 through 10 {
   .myn-#{$i} {
-    margin-block: (-4 * $i) + px;
+    margin-block: (-4 * $i) + px !important;
   }
 }
 // margin
 @for $i from 0 through 10 {
   .mn-#{$i} {
-    margin: (-4 * $i) + px;
+    margin: (-4 * $i) + px !important;
   }
 }
 .pxn {
@@ -590,4 +596,7 @@ span {
 }
 .answer-underline {
   user-select: none;
+}
+.cursor-move {
+  cursor: move;
 }

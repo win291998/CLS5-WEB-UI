@@ -86,8 +86,6 @@ function selectionChange(type: any) {
   if (type) {
     setTimeout(() => {
       selection = window.getSelection()
-      console.log(selection)
-
       range = selection?.getRangeAt(0)
       const text = window.getSelection()?.toString()
       haveSelection.value = range !== null && (Math.abs(range?.startOffset - range?.endOffset) > 0) && !!text
@@ -127,8 +125,6 @@ function checkHasBlank(commonAncestorContainer: any) {
 function updateActionClickAns(key: number) {
   const keyDataDrop = `blank${key}`
   const dropdownElement = CmInputEditorRef.value.inputEditor.querySelector(`.${keyDataDrop}`)
-  console.log(dropdownElement)
-
   dropdownElement.addEventListener('click', ($event: any) => myFunction($event, dropdownElement, anserList.value.answers[dropdownElement.getAttribute('answer-position')]))
 }
 
@@ -209,10 +205,8 @@ function formatFillBlank2() {
   anserList.value?.answers?.forEach((item: any, index: number) => {
     if (typeof item.blank !== 'number') {
       const position = item.position - 1
-      console.log(anserList.value.answerBlank[position])
       if (window._.isEmpty(anserList.value.answerBlank[position]))
         anserList.value.answerBlank[position] = []
-      console.log(index)
 
       item.position = anserList.value.answerBlank[position]?.length + 2
       anserList.value.answerBlank[position][anserList.value.answerBlank[position]?.length] = item
@@ -225,7 +219,6 @@ function formatFillBlank2() {
   anserList.value.answers.forEach((item: any) => {
     updateActionClickAns(item.blank)
   })
-  console.log(anserList.value)
 }
 
 /** Khi thay đổi vị trí đáp án đúng */
@@ -251,8 +244,6 @@ function changeValueIsTrue(isAnsOrigin: any, val: any) {
 
 /** Hàm thực thi khi click vào các vị trí blank2 trong input */
 function myFunction(ev?: any, el?: any, dataEl?: any) {
-  console.log(123)
-
   isActiveAnsCurrent.value = dataEl.position
   el.classList.add('active')
 }
@@ -288,7 +279,6 @@ function updatePositionAns() {
     // Thêm đáp án vào danh sách đáp án lựa chọn
     addAnswer(decodeURIComponent(el.getAttribute('data-text')), pos + 1, positionBlank, icheckTrue)
   })
-  console.log(anserList.value)
 }
 
 /** * thao tác với các file đính kèm */
