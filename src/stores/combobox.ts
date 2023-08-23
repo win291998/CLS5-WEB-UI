@@ -163,7 +163,7 @@ export const comboboxStore = defineStore('combobox', () => {
   const listDistrictCombobox = ref<Any[]>([])
   const getComboboxListDistrict = async () => {
     const { data } = await MethodsUtil.requestApiCustom(ComboboxService.GetComboboxListDistrict, TYPE_REQUEST.GET)
-    const array = []
+    const array: Any[] = []
     data.forEach((item: string) => {
       array.push({
         key: item,
@@ -224,6 +224,7 @@ export const comboboxStore = defineStore('combobox', () => {
     const res = await MethodsUtil.requestApiCustom(ComboboxService.GroupUser, TYPE_REQUEST.GET).then((value: any) => value)
     if (res.code === 200)
       groupUserCombobox.value = res?.data || []
+    console.log(groupUserCombobox.value)
   }
 
   // Lấy danh sách cơ cấu tổ chức
