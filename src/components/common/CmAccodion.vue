@@ -1,6 +1,12 @@
 <script setup lang="ts">
 import GlobalUtil from '@/utils/Global'
 
+/**
+ * Common accorrdion: danh sách đóng mở
+ * input:
+ * output
+ * ex: dánh sách cơ cấu tổ chức, nhóm người dùng, chức danh,... trong table
+ */
 interface Props {
   data: dataAccodion[]
   customKey?: string
