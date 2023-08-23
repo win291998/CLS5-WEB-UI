@@ -332,7 +332,7 @@ span {
 .page-containter {
   padding: $xl-5;
 }
-.page-containter-box {
+.page-container-box {
   margin-top: $xl-4;
   border-radius: $sm;
   border: 1px solid #eaecf0;
@@ -510,9 +510,9 @@ span {
 [class*="v-col"] {
   padding: 8px 12px !important;
 }
-// [class*="v-row"] {
-//   margin: -8px -12px !important;
-// }
+[class*="v-row"] {
+  margin: -8px -12px !important;
+}
 .embed-responsive {
   position: relative;
   width: 100%;

@@ -1,4 +1,5 @@
 {
+  "test-survey-title": "Tiêu đề",
   ":PG_AddUserToCourseFailedAction": "Thêm người dùng vào khóa học thất bại",
   "AcademicDegreeManaging": "Quản lý học hàm",
   "AcademicRankManaging": "Quản lý học vị",
@@ -2152,6 +2153,7 @@
   "confirm-delete-test-code": "Bạn có chắc chắn muốn xóa đề khảo sát",
   "information-survey": "Thông tin kỳ khảo sát",
   "list-my-survey": "Danh sách khảo sát của tôi",
+  "list-test-survey": "Danh sách đề khảo sát",
   "list-survey": "Danh sách kỳ khảo sát",
   "list-survey-topics": "Danh sách chuyên đề khảo sát",
   "name-survey": "Tên kỳ khảo sát",
@@ -3568,5 +3570,9 @@
   "link-insert": "Chèn link",
   "requrie-anwser": "Bắt buộc trả lời",
   "pos-start": "Vị trí bắt đầu",
-  "meeting": "Họp trực tuyến"
+  "meeting": "Họp trực tuyến",
+  "confirm-delete-user-from-survey": "Bạn có muốn xóa người dùng khỏi kỳ khảo sát?",
+  "delete-survey-test": "Bạn có chắc muốn xóa câu khảo sát!",
+  "check-configuration-survey-test": "vui lòng kiểm tra phần cấu hình đề khảo sát!",
+  "please-input-title": "vui lòng nhập trường tiêu đề!"
 }

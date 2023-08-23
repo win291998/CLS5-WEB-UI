@@ -85,7 +85,7 @@ function handleChangeValue(e: any) {
 }
 
 const optionsModel = computed(() => {
-  if (props.items.length) {
+  if (props.items?.length) {
     const exclude = props.items.filter((item: any) => !props.excludeId.includes(item[props.itemValue]))
     const optionsModels = exclude?.map((item: any) => {
       item[props.customKey] = t(item[props.customKey])
