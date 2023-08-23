@@ -75,6 +75,7 @@
     "vue3-tiptap-katex": "^1.0.54",
     "vue3-treeselect": "^0.1.10",
     "vue3-treeview": "^0.4.1",
+    "vuedraggable": "^4.1.0",
     "vuetify": "3.3.1",
     "webfontloader": "^1.6.28",
     "yup": "^1.1.1"

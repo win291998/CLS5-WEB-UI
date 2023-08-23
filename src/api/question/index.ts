@@ -11,6 +11,8 @@ const QuestionService = {
   GetDetailSurvey: '/surveyexam/get-by-id',
   GetListSurveyTopics: '/surveytest/get-paging-test-survey-exam',
   GetDetailSurveyTopic: '/surveytest/get-by-id',
+  GetListSurvey: '/survey/get-list-survey-paging',
+  GetSurveyType: '/survey/get-combobox-survey-type',
 
   /** Post */
   PostDeleteExam: '/exam/delete',
@@ -23,6 +25,9 @@ const QuestionService = {
   PostCreateSurveyTopic: '/surveytest/create',
   PostUpdateSurveyTopic: '/surveytest/update',
   PostGetListInfobyTest: 'ExamTest/get-info-by-test',
+  PostAddSurvey: 'survey/create',
+  PostUpdateSurvey: '/survey/update',
+  PostSurveyDetail: 'survey/get-survey-detail',
 
   /** Delete */
   DeleteSurveyTopic: '/surveytest/delete',

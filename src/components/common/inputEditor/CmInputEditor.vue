@@ -35,6 +35,7 @@ const propsValue = withDefaults(defineProps<Props>(), ({
   isDebounce: true,
   isMenuSimple: false,
   disabled: false,
+  isErrors: true,
   rlt: 'left',
   listMenu: () => ([]),
 }))
@@ -291,9 +292,18 @@ defineExpose({
 <template>
   <div>
     <div
+      v-if="propsValue.text"
+      class="mb-1"
+    >
+      <label
+        class="text-label-default"
+      >{{ propsValue.text }}</label>
+    </div>
+    <div
       :style="{ width }"
       class="inputEditor"
       :class="{ styleError: errors?.length }"
+      :title="t(MethodsUtil.showErrorsYub(errors)) ?? '' "
     >
       <!--
         <div>
@@ -306,15 +316,6 @@ defineExpose({
         />
         </div>
       -->
-      <div
-        v-if="propsValue.text"
-        class="mb-1"
-      >
-        <label
-          class="text-label-default"
-        >{{ propsValue.text }}</label>
-      </div>
-
       <div>
         <CmInputEditorMenu
           :status-menu="statusMenu"
@@ -346,7 +347,7 @@ defineExpose({
       />
     </div>
     <div
-      v-if="errors?.length > 0"
+      v-if="errors?.length > 0 && isErrors"
       class="styleError text-errors"
     >
       {{ t(MethodsUtil.showErrorsYub(errors)) }}

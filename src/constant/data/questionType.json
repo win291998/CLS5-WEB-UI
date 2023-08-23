@@ -11,5 +11,14 @@
         "8": "QuestionService.QuestionPairing",
         "9": "QuestionService.QuestionEssay",
         "10": "QuestionService.QuestionDiversity"
+    },
+    "SurveyType": {
+        "1": "QuestionService.SurveySingleChoice",
+        "2": "QuestionService.SurveyMultipleChoice",
+        "3": "QuestionService.SurveyEssay",
+        "4": "QuestionService.SurveyLinearScale",
+        "5": "QuestionService.SurveyRate",
+        "6": "QUE_MatrixSingleOption",
+        "7": "QUE_MatrixMultipleOption"
     }
 }

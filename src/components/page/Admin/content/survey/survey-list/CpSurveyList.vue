@@ -5,13 +5,13 @@ import MethodsUtil from '@/utils/MethodsUtil'
 import QuestionService from '@/api/question'
 import { TYPE_REQUEST } from '@/typescript/enums/enums'
 import CpQuestionFilter from '@/components/page/Admin/content/question/question-list/CpQuestionFilter.vue'
-import CpQuestionName from '@/components/page/gereral/CpQuestionName.vue'
+import CpSurveyName from '@/components/page/gereral/CpSurveyName.vue'
 import CmTable from '@/components/common/CmTable.vue'
 import type { Any } from '@/typescript/interface'
 import CmButton from '@/components/common/CmButton.vue'
 import CpHeaderAction from '@/components/page/gereral/CpHeaderAction.vue'
-import { QuestionType } from '@/constant/data/questionType.json'
 import { tableStore } from '@/stores/table'
+import { SurveyType } from '@/constant/data/questionType.json'
 
 const CpActionHeaderPage = defineAsyncComponent(() => import('@/components/page/gereral/CpActionHeaderPage.vue'))
 
@@ -88,7 +88,7 @@ async function handleSearch(value: any) {
 function handlerActionHeader(type: any) {
   switch (type) {
     case 'handlerAddButton':
-      router.push({ name: 'question-add' })
+      router.push({ name: 'survey-add' })
       break
 
     default:
@@ -99,16 +99,16 @@ const storeTable = tableStore()
 const { callBackAction } = storeToRefs(storeTable)
 callBackAction.value = actionItem
 async function getListQuestion() {
-  await MethodsUtil.requestApiCustomV5(QuestionService.GetListQuestionV5, TYPE_REQUEST.GET, queryParams.value).then(({ data }: any) => {
-    data?.listData.forEach((element: any) => {
+  await MethodsUtil.requestApiCustom(QuestionService.GetListSurvey, TYPE_REQUEST.GET, queryParams.value).then(({ data }: any) => {
+    data?.pageLists.forEach((element: any) => {
       element.actions = [
         MethodsUtil.checkActionType({ id: 1 }),
         MethodsUtil.checkActionType({ id: 2 }),
         MethodsUtil.checkActionType({ id: 4 }),
       ]
     })
-    items.value = data?.listData
-    totalRecord.value = data?.totalRecords
+    items.value = data?.pageLists
+    totalRecord.value = data?.totalRecord
   })
 }
 
@@ -116,7 +116,7 @@ async function getListQuestion() {
 function actionItem(type: any) {
   switch (type[0]?.name) {
     case 'ActionEdit':
-      router.push({ name: 'question-edit', params: { id: type[1].id } })
+      router.push({ name: 'survey-edit', params: { id: type[1].id } })
       break
     case 'ActionViewDetail':
       // router.push({ name: 'question-view', params: { id: type[1].id } })
@@ -162,7 +162,7 @@ watch(queryParams, (val: Any) => {
   <div>
     <div class="mt-6">
       <CpActionHeaderPage
-        :title="t('questions')"
+        :title="t('surveys')"
         :title-custom-add="t('create-question')"
         is-export-btn
         is-custom-add-btn
@@ -210,17 +210,17 @@ watch(queryParams, (val: Any) => {
       >
         <template #rowItem="{ col, context, dataCol }">
           <div v-if="col === 'name'">
-            <CpQuestionName
+            <CpSurveyName
               v-bind="dataCol"
               :status="context.statusId"
-              :content-basic="context.basic"
+              :content-basic="context.contentBasic"
               :is-expand="isShowDetailAll"
             >
               a
-            </CpQuestionName>
+            </CpSurveyName>
           </div>
           <div v-if="col === 'type'">
-            <div>{{ t((QuestionType as any)[context?.typeId.toString()]) }}</div>
+            <div>{{ t((SurveyType as any)[context?.questionTypeId?.toString()]) }}</div>
           </div>
         </template>
       </CmTable>
