@@ -158,12 +158,17 @@ async function actionItem(type: any) {
       break
   }
 }
+function getIndex(position: number) {
+  return `${String.fromCharCode(65 + position)}.`
+}
 
 /* xem chi tiết */
 function standardizedDataInitSingle(valueQs: any) {
   if (valueQs.typeId === 6) {
     const answers: any[] = []
     const answerBlank: any[] = []
+    valueQs.answersClone = window._.cloneDeep(valueQs.answers)
+
     valueQs.answers.forEach((element: any) => {
       if (element.isTrue)
         answerBlank[answerBlank.length] = element
@@ -179,6 +184,28 @@ function standardizedDataInitSingle(valueQs: any) {
       item.position = index + 1
       return item
     })
+  }
+  if (valueQs.typeId === 7) {
+    const tempElement = document.createElement('div')
+    tempElement.innerHTML = valueQs.content
+    const spanElements = tempElement.querySelectorAll('.answer-select')
+    const listAnserView = ref<any[]>([])
+    valueQs.answers.forEach((item: any, index: number) => {
+      if (!listAnserView.value[item.position])
+        listAnserView.value[item.position] = [toRaw(item)]
+      else
+        listAnserView.value[item.position].push(item)
+    })
+
+    // Lặp qua từng phần tử và xóa nội dung bên trong
+    spanElements.forEach((spanElement, idx) => {
+      const isTrue = listAnserView.value[idx + 1].findIndex((item: any) => item.isTrue)
+      spanElement.innerHTML = `<span>Đáp án ${getIndex(isTrue)} <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m6 9l6 6l6-6"></path></svg>
+</span>`
+    })
+
+    valueQs.content = tempElement.innerHTML
+    console.log(valueQs)
   }
 
   if (valueQs.typeId === 8) {
@@ -213,7 +240,7 @@ async function getInforQuestion(result: any, id: number) {
     result.value = standardizedDataInitSingle(data)
   })
 }
-async function openDetail(dataQs: any) {
+async function openDetail(dataQs: any, el: any) {
   const result = ref()
   if (window._.isEmpty(dataQs?.questionData)) {
     items.value[dataQs.originIndex].loadingShow = true
@@ -227,10 +254,31 @@ async function openDetail(dataQs: any) {
     })
   }
   items.value[dataQs.originIndex].isExpand = true
+  nextTick(() => {
+    attachClickEvent(el, dataQs)
+  })
 }
 async function closeDetail(dataQs: any) {
   console.log(dataQs)
   items.value[dataQs.originIndex].isExpand = false
+}
+const contentRef = ref()
+function handleSpanClick(event: any, pos: number, dataQs: any) {
+  // Xử lý sự kiện khi thẻ span được click
+  console.log('Span clicked:', event.target.innerHTML, pos)
+  items.value[dataQs.originIndex].listCurrentId = pos
+}
+function attachClickEvent(el: any, dataQs: any) {
+  console.log(el)
+
+  nextTick(() => {
+    const answerSpans = el.value?.querySelectorAll('.answer-select')
+    console.log(answerSpans)
+
+    answerSpans?.forEach((span, pos) => {
+      span.addEventListener('click', ($event: any) => handleSpanClick($event, pos + 1, dataQs))
+    })
+  })
 }
 onMounted(async () => {
   callBackAction.value = actionItem
@@ -325,6 +373,7 @@ function exportExcel() {
     </div>
     <div>
       <CmTable
+        ref="contentRef"
         v-model:pageNumber="queryParams.pageNumber"
         v-model:pageSize="queryParams.pageSize"
         v-model:selected="dataComponent.selectedRowsIds"
@@ -333,13 +382,15 @@ function exportExcel() {
         :items="items"
         :total-record="totalRecord"
       >
-        <template #rowItem="{ col, context }">
+        <template
+          #rowItem="{ col, context }"
+        >
           <div v-if="col === 'name'">
             <CpQuestionName
               :status="context.statusId"
               :content-basic="context.isExpand && [3, 6, 7].includes(context.typeId) ? context.questionData.content : context.basic"
               :is-expand="isShowDetailAll || context.isExpand"
-              @update:open="openDetail(context)"
+              @update:open="($event: any) => openDetail(context, $event)"
               @update:close="closeDetail(context)"
             >
               <div v-show="context.loadingShow">
@@ -349,10 +400,11 @@ function exportExcel() {
                 />
               </div>
               <CpContentView
-                v-show="!context.loadingShow"
+                v-if="!context.loadingShow && context.isExpand"
                 :type="context.typeId"
                 :data="context.questionData"
                 :show-content="false"
+                :list-current-id="context.listCurrentId"
                 :show-media="false"
               />
             </CpQuestionName>

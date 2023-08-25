@@ -25,17 +25,18 @@ const props = withDefaults(defineProps<Props>(), ({
 }))
 const emit = defineEmits<Emit>()
 interface Emit {
-  (e: 'update:open'): void
+  (e: 'update:open', val: any): void
   (e: 'update:close'): void
   (e: 'update:isExpand', value: boolean): void
 }
 const isExpandValue = ref(props.isExpand)
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
+const qsNameContentRef = ref()
 
 function expand(valueExpand: boolean) {
   isExpandValue.value = valueExpand
   if (valueExpand)
-    emit('update:open')
+    emit('update:open', qsNameContentRef)
   else
     emit('update:close')
   emit('update:isExpand', valueExpand)
@@ -43,6 +44,9 @@ function expand(valueExpand: boolean) {
 watch(() => props.isExpand, val => {
   isExpandValue.value = val
 }, { deep: true })
+defineExpose({
+  qsNameContentRef,
+})
 </script>
 
 <template>
@@ -51,6 +55,7 @@ watch(() => props.isExpand, val => {
     :class="{ 'mb-3': isExpandValue }"
   >
     <div
+      ref="qsNameContentRef"
       class="qs-name text-medium-md"
       :style="{ width: `${width}px` }"
       :title="t(MethodsUtil.converContentHtmlToText(contentBasic))"
@@ -108,7 +113,7 @@ watch(() => props.isExpand, val => {
   width: 100%;
   min-width: 200px;
   display: flex;
-  padding-block: 9px;
+  /* padding-block: 9px; */
   .qs-name{
     width: 100%;
     overflow: hidden;

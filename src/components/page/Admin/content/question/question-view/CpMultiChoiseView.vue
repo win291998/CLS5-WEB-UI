@@ -36,7 +36,7 @@ function getIndex(position: number) {
       v-html="data.content"
     />
     <div
-      v-if="showMedia"
+      v-if="showMedia && data.urlFile"
       class="view-media mb-5"
     >
       <CpMediaContent
