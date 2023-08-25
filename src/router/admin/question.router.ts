@@ -50,18 +50,34 @@ export default [
             },
             component: () => import('@/pages/admin/content/question/modification/Modification.vue'),
           },
-
+          {
+            path: 'import-file',
+            name: 'question-add-from-file',
+            meta: {
+              breadcrumb: [
+                {
+                  title: 'question-bank',
+                  to: { name: 'question-list' },
+                },
+                {
+                  title: 'import-file',
+                  active: true,
+                },
+              ],
+            },
+            component: () => import('@/pages/admin/content/question/import/ImportFileQuestion.vue'),
+          },
         ],
       },
       {
         path: 'question-survey',
         name: 'question-survey',
-        redirect: { name: 'survey-list' },
+        redirect: { name: 'question-survey-list' },
         component: () => import('@/pages/admin/content/survey/Index.vue'),
         children: [
           {
             path: '',
-            name: 'survey-list',
+            name: 'question-survey-list',
             component: () => import('@/pages/admin/content/survey/Survey.vue'),
           },
           {
@@ -71,7 +87,7 @@ export default [
               breadcrumb: [
                 {
                   title: 'survey-bank',
-                  to: { name: 'survey-list' },
+                  to: { name: 'question-survey-list' },
                 },
                 {
                   title: 'Add-new',
@@ -88,7 +104,7 @@ export default [
               breadcrumb: [
                 {
                   title: 'survey-bank',
-                  to: { name: 'survey-list' },
+                  to: { name: 'question-survey-list' },
                 },
                 {
                   title: 'ActionEdit',

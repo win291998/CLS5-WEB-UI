@@ -62,8 +62,10 @@ function change() {
   }
   emit('update:modelValue', topicIds.value)
 }
-if (props.type)
-  getComboboxTopic(props.type)
+onMounted(() => {
+  if (props.type)
+    getComboboxTopic(props.type)
+})
 
 const isShowModalEdit = ref(false)
 interface DataInput {
@@ -127,7 +129,7 @@ async function confirm(val: DataInput) {
       @update:model-value="change"
     />
     <CmButton
-      v-if="!disabled"
+      v-if="!disabled && isShowAdd"
       class="ml-2 mt-1"
       size="40"
       :color="errors?.length > 0 ? 'error' : 'primary'"

@@ -56,7 +56,7 @@ function getIndex(position: number) {
         :type="1"
         :model-value="showAnswerTrue ? (data.answers.length ? data.answers[0].isTrue : null) : null "
         :disabled="true"
-        name="single"
+        :name="`TF-${data.id}`"
         :value="item === 1"
         class="mr-3"
       />

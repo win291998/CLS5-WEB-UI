@@ -53,8 +53,8 @@ function getIndex(position: number) {
         :type="1"
         :model-value="showAnswerTrue ? item.isTrue : false"
         :disabled="true"
-        name="single"
-        value="true"
+        :name="`single-${data.id}`"
+        :value="true"
         class="mr-3"
       />
       <div>

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import CpApproveSurvey from '@/components/page/Admin/content/survey/approve/CpApproveSurvey.vue'
+
 const CmTab = defineAsyncComponent(() => import('@/components/common/CmTab.vue'))
 const CpSurveyList = defineAsyncComponent(() => import('@/components/page/Admin/content/survey/survey-list/CpSurveyList.vue'))
 
@@ -15,13 +17,13 @@ const listTab = [
     isDisabled: false,
   },
 
-  // {
-  //   key: 'title',
-  //   title: 'title-position',
-  //   component: CpTitleOrgStructTab,
-  //   isRendered: false,
-  //   isDisabled: !isEdit.value,
-  // },
+  {
+    key: 'aprrove',
+    title: 'approve-question',
+    component: CpApproveSurvey,
+    isRendered: false,
+  },
+
   // {
   //   key: 'user',
   //   title: 'user',
