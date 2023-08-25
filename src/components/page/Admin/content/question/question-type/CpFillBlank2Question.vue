@@ -113,7 +113,7 @@ function checkHasBlank(commonAncestorContainer: any) {
   let isHaveUnder = false
   if (commonAncestorContainer.nodeType === 1) {
     commonAncestorContainer.children?.forEach((itemEl: any) => {
-      if (itemEl.classList.contains('answer-fill-blank'))
+      if (itemEl.classList.contains('answer-select'))
         isHaveUnder = true
     })
     return isHaveUnder
@@ -152,7 +152,7 @@ function addAnswerBlank2() {
   if (!checkHasBlank(range.commonAncestorContainer)) {
     // html cần chèn vào vị trí được chọn
     const keyDataDrop = `blank${anserList.value.answers.length}`
-    const htmlAnswer = `<p class="answer-fill-blank ${keyDataDrop}" data-blank="${anserList.value.answers.length}" data="${text}" data-text="${htmlContent}" contenteditable="false" answer-position="${anserList.value.answers.length}">${t('Đáp án A')}</p>`
+    const htmlAnswer = `<p class="answer-select ${keyDataDrop}" data-blank="${anserList.value.answers.length}" data="${text}" data-text="${htmlContent}" contenteditable="false" answer-position="${anserList.value.answers.length}">${t('Đáp án A')}</p>`
 
     /** thêm mẫu blank2 vào input */
     insertHtml(selection, htmlAnswer)
@@ -254,7 +254,7 @@ function updatePositionAns() {
   anserList.value.answers = []
 
   // tìm kiếm đáp án blank2
-  const elementAns = editableDiv.querySelectorAll('.answer-fill-blank')
+  const elementAns = editableDiv.querySelectorAll('.answer-select')
   elementAns.forEach((el: any, pos: number) => {
     let correst = 1 // vị trí đáp án đúng của từng blank2
     const positionBlank = Number(el.getAttribute('data-blank')) // vị trí blank
@@ -374,7 +374,7 @@ function deleteAns(dataDelete: any) {
   const editableDiv = CmInputEditorRef.value.inputEditor
 
   // tìm kiếm đáp án underline
-  const elementAns = editableDiv.querySelectorAll('.answer-fill-blank')
+  const elementAns = editableDiv.querySelectorAll('.answer-select')
   for (let i = 0; i < elementAns.length; i++) {
     const element = elementAns[i]
     const answerIndex = element.getAttribute('answer-position')

@@ -276,6 +276,22 @@ function standardizedDataSingle(id?: any) {
     delete dataPost.value.answerBlank
   }
   if (dataPost.value.typeId === 7) {
+    // Tạo một thẻ div ảo để phân tích HTML
+    const tempDiv = document.createElement('div')
+    tempDiv.innerHTML = dataPost.value.content
+
+    // Lấy tất cả các thẻ có lớp là 'answer-select'
+    const answerSelectElements = tempDiv.querySelectorAll('.answer-select')
+
+    // Xóa dữ liệu của các thẻ 'answer-select'
+    answerSelectElements.forEach(element => {
+      element.innerHTML = '' // Xóa dữ liệu của thẻ
+    })
+
+    // Lấy chuỗi HTML đã được xử lý
+    dataPost.value.content = tempDiv.innerHTML
+
+    // Kết quả cuối cùng
     dataPost.value.answers.forEach((item: any) => {
       if (dataPost.value.answerBlank[item.blank]?.length) {
         dataPost.value.answerBlank[item.blank]?.forEach((itemBlank: any) => {

@@ -609,3 +609,16 @@ span {
 .cursor-move {
   cursor: move;
 }
+.chooseAnsPld {
+  color: rgb(var(--v-gray-300));
+}
+.answer-select {
+  margin: 5px;
+  padding: 0.438rem 1rem;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid rgb(var(--v-gray-300));
+  border-radius: 0.357rem;
+  display: inline-block;
+  user-select: none;
+}
