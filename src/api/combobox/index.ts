@@ -37,6 +37,7 @@ const ComboboxService = {
   GetComboboxContentOffline: '/Course/get-combobox-content-offline',
   GetComboboxListDistrict: '/Title/get-list-distinct',
   GetComboboxSurveyType: '/survey/get-combobox-survey-type',
+  GetComboboxStatusQuestion: '/question/get-combobox-status',
 }
 
 export default ComboboxService

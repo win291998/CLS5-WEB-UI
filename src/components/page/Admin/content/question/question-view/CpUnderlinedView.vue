@@ -54,7 +54,7 @@ function getIndex(position: number) {
         :type="1"
         :model-value="showAnswerTrue ? item.isTrue : false"
         :disabled="true"
-        name="single"
+        :name="`UL-${data.id}`"
         value="true"
         class="mr-3"
       />

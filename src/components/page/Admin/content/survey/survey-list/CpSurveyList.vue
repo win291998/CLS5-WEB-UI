@@ -1,10 +1,10 @@
 <script setup lang="ts">
+import CpSurveyFilter from './CpSurveyFilter.vue'
 import CmCollapse from '@/components/common/CmCollapse.vue'
 import ObjectUtil from '@/utils/ObjectUtil'
 import MethodsUtil from '@/utils/MethodsUtil'
 import QuestionService from '@/api/question'
 import { TYPE_REQUEST } from '@/typescript/enums/enums'
-import CpQuestionFilter from '@/components/page/Admin/content/question/question-list/CpQuestionFilter.vue'
 import CpSurveyName from '@/components/page/gereral/CpSurveyName.vue'
 import CmTable from '@/components/common/CmTable.vue'
 import type { Any } from '@/typescript/interface'
@@ -12,6 +12,9 @@ import CmButton from '@/components/common/CmButton.vue'
 import CpHeaderAction from '@/components/page/gereral/CpHeaderAction.vue'
 import { tableStore } from '@/stores/table'
 import { SurveyType } from '@/constant/data/questionType.json'
+import type { Params } from '@/typescript/interface/params'
+import CpConfirmDialogVue from '@/components/page/gereral/CpConfirmDialog.vue'
+import toast from '@/plugins/toast'
 
 const CpActionHeaderPage = defineAsyncComponent(() => import('@/components/page/gereral/CpActionHeaderPage.vue'))
 
@@ -25,24 +28,20 @@ const route = useRoute()
 const isShowFilter = ref(true)
 const items = ref<Any[]>([])
 const totalRecord = ref<number>(0)
-const dataComponent = reactive({
-  deleteIds: [] as any, // list id các row table muốn xóa
-  selectedRowsIds: [], // list id các row table được chọn
-})
+const selected = ref<any[]>([])
+interface QueryParam extends Params {
+  topicId?: any
+  statusId?: any
+  typeId?: any
+  newUserId?: any
+  dateFrom?: any
+  dateTo?: any
+  keyword?: any
+}
 
-const queryParams = ref<any>({
-  topic: null as any,
-  level: null,
-  isGroup: null,
-  createdBy: null,
-  type: null,
-  status: null,
+const queryParams = ref<QueryParam>({
   pageSize: 10,
-  pageToken: null,
-  searchTerm: null,
-  sortBy: null,
-  startDate: null,
-  endDate: null,
+  pageNumber: 1,
 })
 const headers = [
   { text: '', value: 'checkbox', width: 50 },
@@ -53,22 +52,17 @@ const headers = [
 const isShowDetailAll = ref(false)
 
 /** computed */
-const disabledBtnHeaderAction = computed(() => !dataComponent.selectedRowsIds.length)
-
-/** method */
-//  fillter header
-async function handleFilterCombobox(dataFilter: any) {
-  queryParams.value = {
-    ...queryParams.value,
-    ...dataFilter,
-  }
-}
+const disabledBtnHeaderAction = computed(() => !selected.value.length)
+const isShowModalConfirmSendApprove = ref(false)
 
 // hàm trả về các loại action từ header filter
 function handleClickBtn(type: string) {
   switch (type) {
     case 'fillter':
       isShowFilter.value = !isShowFilter.value
+      break
+    case 'send-approve':
+      isShowModalConfirmSendApprove.value = true
       break
 
       // case 'delete':
@@ -111,6 +105,7 @@ async function getListQuestion() {
     totalRecord.value = data?.totalRecord
   })
 }
+const isShowModalConfirmDelete = ref(false)
 
 // hàm trả về các loại action khi click
 function actionItem(type: any) {
@@ -121,6 +116,10 @@ function actionItem(type: any) {
     case 'ActionViewDetail':
       // router.push({ name: 'question-view', params: { id: type[1].id } })
       break
+    case 'ActionDelete':
+      selected.value = [type[1].id]
+      isShowModalConfirmDelete.value = true
+      break
 
     default:
       break
@@ -129,20 +128,14 @@ function actionItem(type: any) {
 onMounted(async () => {
   if (Object.keys(route.query).length > 1) {
     queryParams.value.keyword = route.query.keyword ? route.query.keyword as string : queryParams.value.keyword
-    queryParams.value.sort = route.query.sort ? route.query.sort as string[] : []
     queryParams.value.pageNumber = route.query.pageNumber ? Number(route.query.pageNumber) : queryParams.value.pageNumber
     queryParams.value.pageSize = route.query.pageSize ? Number(route.query.pageSize) : queryParams.value.pageSize
     queryParams.value.statusId = route.query.statusId ? Number(route.query.statusId) : queryParams.value.statusId
     queryParams.value.typeId = route.query.typeId ? Number(route.query.typeId) : queryParams.value.typeId
-    queryParams.value.userId = route.query.userId ? Number(route.query.userId) : queryParams.value.userId
-    queryParams.value.levelId = route.query.levelId ? Number(route.query.levelId) : queryParams.value.levelId
-    queryParams.value.groupId = route.query.groupId ? Number(route.query.groupId) : queryParams.value.groupId
     queryParams.value.topicId = (route.query.topicId && route.query.topicId.length) ? (route.query.topicId as any)?.map((item: any) => Number(item)) : []
     queryParams.value.dateFrom = route.query.dateFrom ? route.query.dateFrom as string : ''
     queryParams.value.dateTo = route.query.dateTo ? route.query.dateTo as string : queryParams.value.dateTo
-    queryParams.value.role = route.query.role ? Number(route.query.role) : 1
   }
-
   else { await getListQuestion() }
 })
 
@@ -156,6 +149,43 @@ watch(queryParams, (val: Any) => {
   })
   getListQuestion()
 }, { deep: true })
+function exportExcel() {
+  const payload: any = window._.cloneDeep(queryParams.value)
+  delete payload.pageSize
+  delete payload.pageNumber
+  MethodsUtil.dowloadSampleFile(QuestionService.PostExportExcelSurvey, TYPE_REQUEST.POST, 'DanhSachCauKhaoSat.xlxs', payload)
+}
+
+function confirmDelete() {
+  MethodsUtil.requestApiCustom(QuestionService.PostDeleteSurvey, TYPE_REQUEST.POST, { listId: selected.value.map(i => i.id) }).then((result: Any) => {
+    toast('SUCCESS', t('success-delete-gift-group'))
+    getListQuestion()
+    selected.value = []
+  }).catch((err: Any) => {
+    toast('SUCCESS', t(err.response.data.message))
+  })
+}
+
+function sendApprove() {
+  const model = {
+    listId: selected.value.filter(el => el.statusName === 'CourseService.Unsent'),
+  }
+  console.log(model)
+
+  if (model.listId.length) {
+    MethodsUtil.requestApiCustom(QuestionService.PostSurveySubmit, TYPE_REQUEST.POST, model).then((result: Any) => {
+      toast('SUCCESS', t('LOG_SendAgreeSuccessAction'))
+      getListQuestion()
+      selected.value = []
+    }).catch((err: Any) => {
+      const message = err.response.data.message === 'USR_FieldIsRequired' ? 'survey.req-approve' : err.response.data.message
+      toast('SUCCESS', t(message))
+    })
+  }
+  else {
+    toast('ERROR', t('req-approve'))
+  }
+}
 </script>
 
 <template>
@@ -167,11 +197,18 @@ watch(queryParams, (val: Any) => {
         is-export-btn
         is-custom-add-btn
         @click="handlerActionHeader"
+        @exportExcel="exportExcel"
       />
     </div>
     <CmCollapse :is-show="isShowFilter">
-      <CpQuestionFilter
+      <CpSurveyFilter
         v-model:topicId="queryParams.topicId"
+        v-model:statusId="queryParams.statusId"
+        v-model:question-type="queryParams.typeId"
+        v-model:owner-id="queryParams.newUserId"
+        v-model:date-from="queryParams.dateFrom"
+        v-model:date-to="queryParams.dateTo"
+        v-model:page-number="queryParams.pageNumber"
       />
     </CmCollapse>
     <div>
@@ -183,6 +220,7 @@ watch(queryParams, (val: Any) => {
         is-fillter
         @click="handleClickBtn"
         @update:keyword="handleSearch"
+        @delete-multiple="() => { isShowModalConfirmDelete = true }"
       >
         <template #actionRight>
           <CmButton
@@ -202,10 +240,11 @@ watch(queryParams, (val: Any) => {
       <CmTable
         v-model:pageNumber="queryParams.pageNumber"
         v-model:pageSize="queryParams.pageSize"
-        v-model:selected="dataComponent.selectedRowsIds"
+        v-model:selected="selected"
         is-update-row-force
         :headers="headers"
         :items="items"
+        return-object
         :total-record="totalRecord"
       >
         <template #rowItem="{ col, context, dataCol }">
@@ -225,5 +264,17 @@ watch(queryParams, (val: Any) => {
         </template>
       </CmTable>
     </div>
+    <CpConfirmDialogVue
+      v-model:is-dialog-visible="isShowModalConfirmDelete"
+      :confirmation-msg="t('delete-survey-test')"
+      :type="2"
+      @confirm="confirmDelete"
+    />
+    <CpConfirmDialogVue
+      v-model:is-dialog-visible="isShowModalConfirmSendApprove"
+      :confirmation-msg="t('warning-request-approve-question-survey')"
+      :type="1"
+      @confirm="sendApprove"
+    />
   </div>
 </template>

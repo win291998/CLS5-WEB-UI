@@ -20,8 +20,12 @@ const QuestionService = {
   GetDetailTestSurvey: '/surveytestcode/get-by-id',
   GetListQuestionSurveyById: '/surveytestcode/get-list-question',
   GetListApproveSurveyTest: '/surveytestCode/get-paging-send-agree-test-code-survey-exam',
+  GetExportExcelQuestion: '/Question/export-excel-list-question',
 
   /** Post */
+  PostExportExcelSurvey: '/Survey/export-excel-survey-bank',
+  PostApproveQuestion: '/question/approve',
+  PostDeclineQuestion: '/question/decline',
   PostDeleteExam: '/exam/delete',
   PostCreateExam: '/exam/create',
   PostUpdateExam: '/exam/update',
@@ -46,6 +50,12 @@ const QuestionService = {
   PostRejectSurveyTest: '/surveytestCode/save-reject-survey-test-code',
   PostRecallRequestSurveyTest: '/surveyTestCode/recall-request-survey-test-code',
   PostCreateOrgStrSurveyTest: '/surveytest/create-organizational-structures',
+  PostApproveQuestionSurvey: '/survey/approve',
+  PostDeclineQuestionSurvey: '/survey/decline',
+  PostDeleteSurvey: '/survey/delete',
+  PostSurveySubmit: '/survey/submit',
+  PostDownloadTemplateQuestion: '/question/generate-excel-template-create-question',
+  PostImportQuestionFromFile: '/question/import-questions-excel-json',
 
   /** Delete */
   DeleteSurveyTopic: '/surveytest/delete',

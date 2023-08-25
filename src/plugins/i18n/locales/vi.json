@@ -3574,5 +3574,6 @@
   "confirm-delete-user-from-survey": "Bạn có muốn xóa người dùng khỏi kỳ khảo sát?",
   "delete-survey-test": "Bạn có chắc muốn xóa câu khảo sát!",
   "check-configuration-survey-test": "vui lòng kiểm tra phần cấu hình đề khảo sát!",
-  "please-input-title": "vui lòng nhập trường tiêu đề!"
+  "please-input-title": "vui lòng nhập trường tiêu đề!",
+  "Url": "Đường dẫn"
 }

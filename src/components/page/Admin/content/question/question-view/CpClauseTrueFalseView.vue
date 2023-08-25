@@ -61,7 +61,7 @@ function getIndex(position: number) {
         :type="1"
         :model-value="showAnswerTrue ? item.isTrue : null"
         :disabled="true"
-        :name="`clauseTF${item.position}`"
+        :name="`clauseTF${item.position}-${data.id}`"
         :value="true"
         class="mr-7"
       />
@@ -69,7 +69,7 @@ function getIndex(position: number) {
         :type="1"
         :model-value="showAnswerTrue ? item.isTrue : null"
         :disabled="true"
-        :name="`clauseTF${item.position}`"
+        :name="`clauseTF${item.position}-${data.id}`"
         :value="false"
         class="mr-3"
       />

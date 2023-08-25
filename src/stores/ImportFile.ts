@@ -44,10 +44,8 @@ export const useImportFileStore = defineStore('importFile', () => {
 
   const getValidData = async (listData: Array<object>, paramExtend?: any) => {
     let model: any = {
-      listLocal: [],
       listExcel: listData,
       isSave: false,
-      type: type.value,
     }
     if (paramExtend) {
       const { customListExcel, customListLocal, customIsSave, ...extend } = paramExtend
@@ -57,16 +55,19 @@ export const useImportFileStore = defineStore('importFile', () => {
       }
       if (customListExcel) {
         model[customListExcel] = listData
-        model.listExcel = []
+        delete model.listExcel
       }
-      if (customListLocal)
+      if (customListLocal) {
         model[customListLocal] = []
+        delete model.listLocal
+      }
 
       if (customIsSave)
         model[customIsSave] = false
     }
     paramsImport.validData = []
     paramsImport.invalidData = []
+
     await MethodsUtil.requestApiCustom(config.importFile?.urlFileDefault, config.importFile?.method, model).then((value: any) => {
       checkDataError(value.data)
       const validData = value.data.filter((item: any) => item.isSuccess === true)

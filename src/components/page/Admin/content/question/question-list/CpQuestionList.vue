@@ -33,7 +33,7 @@ const dataComponent = reactive({
 })
 
 const queryParams = ref<any>({
-  topic: null as any,
+  topic: [],
   level: null,
   isGroup: null,
   createdBy: null,
@@ -60,14 +60,6 @@ const questionCurrentView = ref()
 const disabledBtnHeaderAction = computed(() => !dataComponent.selectedRowsIds.length)
 
 /** method */
-//  fillter header
-async function handleFilterCombobox(dataFilter: any) {
-  queryParams.value = {
-    ...queryParams.value,
-    ...dataFilter,
-  }
-}
-
 // hàm trả về các loại action từ header filter
 function handleClickBtn(type: string) {
   switch (type) {
@@ -83,6 +75,23 @@ function handleClickBtn(type: string) {
       break
   }
 }
+const actionAdd = [
+  {
+    title: t('create-question'),
+    icon: 'circum:pen',
+    action: () => {
+      router.push({ name: 'question-add' })
+    },
+  },
+  {
+    title: t('add-from-file'),
+    icon: 'tabler:file-plus',
+    action: () => {
+      router.push({ name: 'question-add-from-file' })
+    },
+  },
+
+]
 
 // search ở fillter header
 async function handleSearch(value: any) {
@@ -245,7 +254,7 @@ onMounted(async () => {
 })
 
 watch(queryParams, (val: Any) => {
-  const params = ObjectUtil.omitByDeep(val)
+  const params = ObjectUtil.omitByDeep(JSON.parse(JSON.stringify(val)))
   router.push({
     query: {
       tab: route.query.tab,
@@ -254,6 +263,14 @@ watch(queryParams, (val: Any) => {
   })
   getListQuestion()
 }, { deep: true })
+
+function exportExcel() {
+  const payload = {
+    Sort: queryParams.value.sort,
+    role: 1,
+  }
+  MethodsUtil.dowloadSampleFile(QuestionService.GetExportExcelQuestion, TYPE_REQUEST.GET, 'DanhSachCauHoi.xlxs', payload)
+}
 </script>
 
 <template>
@@ -262,14 +279,24 @@ watch(queryParams, (val: Any) => {
       <CpActionHeaderPage
         :title="t('questions')"
         :title-custom-add="t('create-question')"
+        :title-custom="t('AddFromFiles')"
         is-export-btn
-        is-custom-add-btn
+        is-custom-group-btn
+        :action-add="actionAdd"
         @click="handlerActionHeader"
+        @exportExcel="exportExcel"
       />
     </div>
     <CmCollapse :is-show="isShowFilter">
       <CpQuestionFilter
-        v-model:topicId="queryParams.topicId"
+        v-model:topicId="queryParams.topic"
+        v-model:formOfStudy="queryParams.formOfStudy"
+        v-model:sort="queryParams.sort"
+        v-model:isDisplayHome="queryParams.isDisplayHome"
+        v-model:statusId="queryParams.statusId"
+        v-model:ownerId="queryParams.ownerId"
+        v-model:dateFrom="queryParams.dateFrom"
+        v-model:dateTo="queryParams.dateTo"
       />
     </CmCollapse>
     <div>

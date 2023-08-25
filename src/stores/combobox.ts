@@ -42,7 +42,7 @@ export const comboboxStore = defineStore('combobox', () => {
     { key: '-name', value: t('CourseService_Sort_By_Name_Desc') },
     { key: '-modifiedDate', value: t('CourseService_Sort_By_Updated_Date') },
   ])
-  const isDisplayHome = ref([
+  const isDisplayHomeCombobox = ref([
     {
       key: t('yes'),
       value: true,
@@ -143,6 +143,24 @@ export const comboboxStore = defineStore('combobox', () => {
       element.text = t(element.value)
     })
     eventTypeCombobox.value = data
+  }
+
+  // Lấy danh sách sự kiện
+  const statusQuestionCombobox = ref<Any[]>([])
+  const getComboboxStatusQuestion = async () => {
+    const { data } = await MethodsUtil.requestApiCustom(ComboboxService.GetComboboxStatusQuestion, TYPE_REQUEST.GET)
+    data.forEach((element: combobox) => {
+      element.text = t(element.value)
+    })
+    statusQuestionCombobox.value = data
+  }
+  const surveyTypeCombobox = ref<Any[]>([])
+  const getComboboxSurveyType = async () => {
+    const { data } = await MethodsUtil.requestApiCustom(ComboboxService.GetComboboxSurveyType, TYPE_REQUEST.GET)
+    data.forEach((element: combobox) => {
+      element.text = t(element.value)
+    })
+    surveyTypeCombobox.value = data
   }
 
   // Lấy danh sách loại chi phí
@@ -382,7 +400,7 @@ export const comboboxStore = defineStore('combobox', () => {
     topicCombobox,
     compoboxSortCourse,
     formOfStudyCombobox,
-    isDisplayHome,
+    isDisplayHomeCombobox,
     compoboxStatusCourse,
     compoboxCourseApprove,
     compoboxCostTypes,
@@ -391,8 +409,12 @@ export const comboboxStore = defineStore('combobox', () => {
     eventTypeCombobox,
     comboboxAuthor,
     listDistrictCombobox,
+    statusQuestionCombobox,
+    surveyTypeCombobox,
 
     // function
+    getComboboxSurveyType,
+    getComboboxStatusQuestion,
     categoryCostCombobox,
     getComboboxApprover,
     fetchStatusUsersCombobox,
