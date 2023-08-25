@@ -413,6 +413,13 @@ span {
   .ring2-type-3 {
     background-color: $color-primary-50;
   }
+  .ring1-type-4 {
+    background-color: $color-gray-100;
+  }
+
+  .ring2-type-4 {
+    background-color: $color-gray-50;
+  }
 
   .noti-zindex {
     z-index: 10;
@@ -596,6 +603,8 @@ span {
 }
 .answer-underline {
   user-select: none;
+  color: rgb(var(--v-primary-600));
+  font-weight: 500;
 }
 .cursor-move {
   cursor: move;

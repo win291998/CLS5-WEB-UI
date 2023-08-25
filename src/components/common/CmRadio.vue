@@ -33,7 +33,7 @@ watch(() => props.modelValue, val => {
     :class="{ 'radio-item2': type === 1 }"
   >
     <input
-      :id="`radio-${value}`"
+      :id="`radio-${name}-${value}`"
       v-model="selectedOption"
       type="radio"
       :name="name"
@@ -42,12 +42,11 @@ watch(() => props.modelValue, val => {
       :disabled="disabled"
       @change="change"
     >
-    <!--
-      <label
+
+    <label
       :class="{ disabled }"
-      :for="`radio-${value}`"
-      >{{ label }}</label>
-    -->
+      :for="`radio-${name}-${value}`"
+    >{{ label }}</label>
   </div>
 </template>
 
@@ -59,7 +58,7 @@ watch(() => props.modelValue, val => {
 }
 
 .radio-item input[type='radio'] {
-  // display: none;
+  display: none;
 }
 
 .radio-item label {
@@ -75,7 +74,7 @@ watch(() => props.modelValue, val => {
   width: 20px;
   height: 20px;
   border-radius: 11px;
-  border: 2px solid rgb(var(--v-primary-600));
+  border: 2px solid rgb(var(--v-gray-600)) !important;
   background-color: transparent;
 }
 .radio-item label.disabled:before {
@@ -87,7 +86,31 @@ watch(() => props.modelValue, val => {
   width: 20px;
   height: 20px;
   border-radius: 11px;
-  border: 2px solid rgb(var(--v-primary-300));
+  border: 2px solid rgb(var(--v-gray-300)) !important;
+  background-color: rgb(var(--v-gray-100));
+}
+.radio-item input[type=radio]:checked + label.disabled:before {
+  content: " ";
+  display: inline-block;
+  position: relative;
+  top: 5px;
+  margin: 0 5px 0 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 11px;
+  border: 1px solid rgb(var(--v-primary-600)) !important;
+  background-color: transparent;
+}
+.radio-item input[type=radio]:checked + label:before {
+  content: " ";
+  display: inline-block;
+  position: relative;
+  top: 5px;
+  margin: 0 5px 0 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 11px;
+  border: 1px solid rgb(var(--v-primary-600)) !important;
   background-color: transparent;
 }
 
@@ -101,7 +124,7 @@ watch(() => props.modelValue, val => {
   transform: translate(0%, 0%);
   content: " ";
   display: block;
-  background: rgb(var(--v-primary-600));
+  background: rgb(var(--v-primary-600)) !important;
 }
 .radio-item.radio-item2 input[type=radio]:checked + label:after {
   border-radius: 11px;
@@ -113,6 +136,6 @@ watch(() => props.modelValue, val => {
   transform: translate(0%, 0%);
   content: " ";
   display: block;
-  background: rgb(var(--v-primary-600));
+  background: rgb(var(--v-primary-600)) !important;
 }
 </style>
