@@ -7,6 +7,8 @@ import { TYPE_REQUEST } from '@/typescript/enums/enums'
 import CpQuestionFilter from '@/components/page/Admin/content/question/question-list/CpQuestionFilter.vue'
 import CpQuestionName from '@/components/page/gereral/CpQuestionName.vue'
 import CmTable from '@/components/common/CmTable.vue'
+import CpContentView from '@/components/page/gereral/CpContentView.vue'
+import CpMdQuestionView from '@/components/page/Admin/content/question/modal/CpMdQuestionView.vue'
 import type { Any } from '@/typescript/interface'
 import CmButton from '@/components/common/CmButton.vue'
 import CpHeaderAction from '@/components/page/gereral/CpHeaderAction.vue'
@@ -44,13 +46,15 @@ const queryParams = ref<any>({
   startDate: null,
   endDate: null,
 })
-const headers = [
+const headers = ref([
   { text: '', value: 'checkbox', width: 50 },
-  { text: t('question'), value: 'name', type: 'custom', width: 450 },
+  { text: t('question'), value: 'name', type: 'custom', width: 700 },
   { text: t('question-type'), value: 'type', type: 'custom' },
   { text: '', value: 'actions', width: 150 },
-]
+])
+
 const isShowDetailAll = ref(false)
+const questionCurrentView = ref()
 
 /** computed */
 const disabledBtnHeaderAction = computed(() => !dataComponent.selectedRowsIds.length)
@@ -68,7 +72,7 @@ async function handleFilterCombobox(dataFilter: any) {
 function handleClickBtn(type: string) {
   switch (type) {
     case 'fillter':
-      isShowFilter.value = !isShowFilter.value
+      isShowFilter.value = true
       break
 
       // case 'delete':
@@ -111,22 +115,116 @@ async function getListQuestion() {
     totalRecord.value = data?.totalRecords
   })
 }
+const isShowModalView = ref(false)
 
 // hàm trả về các loại action khi click
-function actionItem(type: any) {
+async function actionItem(type: any) {
+  console.log(type)
   switch (type[0]?.name) {
     case 'ActionEdit':
       router.push({ name: 'question-edit', params: { id: type[1].id } })
       break
     case 'ActionViewDetail':
-      // router.push({ name: 'question-view', params: { id: type[1].id } })
+
+      console.log(window._.isEmpty(type[1]?.questionData))
+
+      if (window._.isEmpty(type[1]?.questionData)) {
+        const result = ref()
+        await getInforQuestion(result, type[1].id).then(() => {
+          console.log(result.value)
+          items.value[type[1].originIndex].questionData = result.value
+          questionCurrentView.value = items.value[type[1].originIndex]
+          setTimeout(() => {
+            isShowModalView.value = true
+          }, 500)
+        })
+      }
+      else {
+        questionCurrentView.value = items.value[type[1].originIndex]
+        isShowModalView.value = true
+      }
       break
 
     default:
       break
   }
 }
+
+/* xem chi tiết */
+function standardizedDataInitSingle(valueQs: any) {
+  if (valueQs.typeId === 6) {
+    const answers: any[] = []
+    const answerBlank: any[] = []
+    valueQs.answers.forEach((element: any) => {
+      if (element.isTrue)
+        answerBlank[answerBlank.length] = element
+
+      else
+        answers[answers.length] = element
+    })
+    valueQs.answers = answers.map((item: any, index: number) => {
+      item.position = index + 1
+      return item
+    })
+    valueQs.answerBlank = answerBlank.map((item: any, index: number) => {
+      item.position = index + 1
+      return item
+    })
+  }
+
+  if (valueQs.typeId === 8) {
+    const answers: any[] = []
+    valueQs.answers.forEach((element: any) => {
+      const position = element.position - 1
+      if (position > -1) {
+        if (answers[position] === undefined) {
+          answers[position] = {
+            left: null,
+            right: null,
+          }
+        }
+        if (element.isTrue === false)
+          answers[position].left = element
+        else answers[position].right = element
+      }
+    })
+    valueQs.answers = answers
+  }
+
+  valueQs.isAutoApprove = MethodsUtil.checkPermission(null, 'QuestionManaging', 128) || true
+  return valueQs
+}
+const loadingShow = ref(false)
+async function getInforQuestion(result: any, id: number) {
+  loadingShow.value = true
+  await MethodsUtil.requestApiCustomV5(QuestionService.GetDetailQuestion(Number(id)), TYPE_REQUEST.GET).then(({ data }: any) => {
+    // if (data.isGroup)
+    //   standardizedDataInitCluse(data)
+    // else
+    result.value = standardizedDataInitSingle(data)
+  })
+}
+async function openDetail(dataQs: any) {
+  const result = ref()
+  if (window._.isEmpty(dataQs?.questionData)) {
+    items.value[dataQs.originIndex].loadingShow = true
+
+    await getInforQuestion(result, dataQs.id).then(() => {
+      console.log(result.value)
+      items.value[dataQs.originIndex].questionData = result.value
+      setTimeout(() => {
+        items.value[dataQs.originIndex].loadingShow = false
+      }, 500)
+    })
+  }
+  items.value[dataQs.originIndex].isExpand = true
+}
+async function closeDetail(dataQs: any) {
+  console.log(dataQs)
+  items.value[dataQs.originIndex].isExpand = false
+}
 onMounted(async () => {
+  callBackAction.value = actionItem
   if (Object.keys(route.query).length > 1) {
     queryParams.value.keyword = route.query.keyword ? route.query.keyword as string : queryParams.value.keyword
     queryParams.value.sort = route.query.sort ? route.query.sort as string[] : []
@@ -208,15 +306,28 @@ watch(queryParams, (val: Any) => {
         :items="items"
         :total-record="totalRecord"
       >
-        <template #rowItem="{ col, context, dataCol }">
+        <template #rowItem="{ col, context }">
           <div v-if="col === 'name'">
             <CpQuestionName
-              v-bind="dataCol"
               :status="context.statusId"
-              :content-basic="context.basic"
-              :is-expand="isShowDetailAll"
+              :content-basic="context.isExpand && [3, 6, 7].includes(context.typeId) ? context.questionData.content : context.basic"
+              :is-expand="isShowDetailAll || context.isExpand"
+              @update:open="openDetail(context)"
+              @update:close="closeDetail(context)"
             >
-              a
+              <div v-show="context.loadingShow">
+                <VProgressLinear
+                  indeterminate
+                  color="primary"
+                />
+              </div>
+              <CpContentView
+                v-show="!context.loadingShow"
+                :type="context.typeId"
+                :data="context.questionData"
+                :show-content="false"
+                :show-media="false"
+              />
             </CpQuestionName>
           </div>
           <div v-if="col === 'type'">
@@ -224,6 +335,12 @@ watch(queryParams, (val: Any) => {
           </div>
         </template>
       </CmTable>
+    </div>
+    <div>
+      <CpMdQuestionView
+        v-model:isShowModal="isShowModalView"
+        :data="questionCurrentView"
+      />
     </div>
   </div>
 </template>

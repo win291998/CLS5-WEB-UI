@@ -10,9 +10,9 @@ import UserService from '@/api/user/index'
 import ServerFileService from '@/api/server-file/index'
 import axios from '@axios'
 import toast from '@/plugins/toast'
-
 import {
-  MediaType, audioExtention, audioTypes, imageFileExtention, imageTypes, otherFileExtention, videoExtention, videoTypes,
+  MediaType,
+  audioExtention, audioTypes, excelFileExtention, imageFileExtention, imageTypes, otherFileExtention, videoExtention, videoTypes,
 } from '@/constant/Globals'
 
 const SERVERFILE = process.env.VUE_APP_BASE_SERVER_FILE
@@ -328,8 +328,14 @@ export default class MethodsUtil {
     return (typeFile as any)[type ?? 'default']
   }
 
+  static checkTypeFileUpload(type: string) {
+    if (excelFileExtention.includes(type))
+      return typeFile.excel
+    return typeFile.default
+  }
+
   static showErrorsYub(errors: any) {
-    if (errors.length)
+    if (errors?.length)
       return errors[0] === 'this cannot be null' ? 'not-empty' : errors[0]
     return ''
   }

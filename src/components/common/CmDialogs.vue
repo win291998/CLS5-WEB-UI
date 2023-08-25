@@ -147,7 +147,7 @@ const sizeModal = computed(() => {
           <slot />
         </template>
         <VDivider
-          v-if="isDivSpace"
+          v-if="!isHideFooter"
           class="mb-1"
         />
         <template

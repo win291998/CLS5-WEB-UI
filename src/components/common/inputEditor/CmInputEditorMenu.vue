@@ -27,6 +27,7 @@ const props = withDefaults(defineProps<Props>(), ({
     insertUnorderedList: false,
   }),
   isMenuSimple: false,
+  disabled: false,
   rlt: 'left',
   listMenu: [],
 }))
@@ -39,6 +40,7 @@ const config = ref({
 interface Props {
   statusMenu?: any
   isMenuSimple?: boolean
+  disabled?: boolean
   rlt?: string
   listMenu?: any
 }
@@ -106,6 +108,7 @@ watch(() => props.statusMenu, (val: any) => {
         <button
           class="menu-item"
           :title="t('bold')"
+          :disabled="disabled"
           :class="{ actived: activeMenu.bold }"
           @click="styleFontText('bold', 'strong')"
         >
@@ -114,6 +117,7 @@ watch(() => props.statusMenu, (val: any) => {
         <button
           class="menu-item"
           :title="t('underline')"
+          :disabled="disabled"
           :class="{ actived: activeMenu.underline }"
           @click="styleFontText('underline', 'u')"
         >
@@ -122,6 +126,7 @@ watch(() => props.statusMenu, (val: any) => {
         <button
           class="menu-item"
           :title="t('italic')"
+          :disabled="disabled"
           :class="{ actived: activeMenu.italic }"
           @click="styleFontText('italic', 'em')"
         >
@@ -130,6 +135,7 @@ watch(() => props.statusMenu, (val: any) => {
         <button
           class="menu-item"
           :title="t('strikeThrough')"
+          :disabled="disabled"
           :class="{ actived: activeMenu.strikeThrough }"
           @click="styleFontText('strikeThrough', 'strike')"
         >
@@ -138,6 +144,7 @@ watch(() => props.statusMenu, (val: any) => {
         <button
           class="menu-item"
           :class="{ actived: activeMenu.left }"
+          :disabled="disabled"
           :title="t('justifyLeft')"
           @click="styleAsignText('justifyLeft', 'left')"
         >
@@ -146,6 +153,7 @@ watch(() => props.statusMenu, (val: any) => {
         <button
           class="menu-item"
           :class="{ actived: activeMenu.center }"
+          :disabled="disabled"
           :title="t('justifyCenter')"
           @click="styleAsignText('justifyCenter', 'center')"
         >
@@ -154,6 +162,7 @@ watch(() => props.statusMenu, (val: any) => {
         <button
           class="menu-item"
           :class="{ actived: activeMenu.right }"
+          :disabled="disabled"
           :title="t('justifyRight')"
           @click="styleAsignText('justifyRight', 'right')"
         >
@@ -163,6 +172,7 @@ watch(() => props.statusMenu, (val: any) => {
           class="menu-item"
           :title="t('justify')"
           :class="{ actived: activeMenu.justify }"
+          :disabled="disabled"
           @click="styleAsignText('justifyFull', 'justify')"
         >
           <VIcon icon="tabler:align-justified" />
@@ -170,6 +180,7 @@ watch(() => props.statusMenu, (val: any) => {
         <button
           class="menu-item"
           :title="t('insertOrderedList')"
+          :disabled="disabled"
           :class="{ actived: activeMenu.insertOrderedList }"
           @click="orderList('insertOrderedList')"
         >
@@ -178,6 +189,7 @@ watch(() => props.statusMenu, (val: any) => {
         <button
           class="menu-item"
           :title="t('insertUnorderedList')"
+          :disabled="disabled"
           :class="{ actived: activeMenu.insertUnorderedList }"
           @click="orderList('insertUnorderedList')"
         >
@@ -185,6 +197,7 @@ watch(() => props.statusMenu, (val: any) => {
         </button>
         <button
           class="menu-item"
+          :disabled="disabled"
           :title="t('color')"
         >
           <CmPickColor
@@ -194,6 +207,7 @@ watch(() => props.statusMenu, (val: any) => {
         </button>
         <button
           :title="t('no-color')"
+          :disabled="disabled"
           class="menu-item"
           @click="changeColor('foreColor', null, '#000')"
         >
@@ -204,6 +218,7 @@ watch(() => props.statusMenu, (val: any) => {
         </button>
         <button
           class="menu-item"
+          :disabled="disabled"
           :title="t('backColor')"
         >
           <CmPickColor
@@ -214,6 +229,7 @@ watch(() => props.statusMenu, (val: any) => {
         </button>
         <button
           class="menu-item"
+          :disabled="disabled"
           :title="t('no-backColor')"
           @click="changeColor('backColor', null, '#fff')"
         >
@@ -224,12 +240,17 @@ watch(() => props.statusMenu, (val: any) => {
         </button>
         <button
           class="menu-item"
+          :disabled="disabled"
           :title="t('link-insert')"
         >
-          <CmAddLink @addLinkUrl="addLinkUrl" />
+          <CmAddLink
+            :disabled="disabled"
+            @addLinkUrl="addLinkUrl"
+          />
         </button>
         <button
           class="menu-item"
+          :disabled="disabled"
           :title="t('Math')"
         >
           <span>Math</span>
@@ -249,6 +270,7 @@ watch(() => props.statusMenu, (val: any) => {
         <button
           v-for="(item, id) in listMenu"
           :key="id"
+          :disabled="disabled"
           :class="{ actived: item.actived }"
           class="menu-item"
           :title="t(item.title)"

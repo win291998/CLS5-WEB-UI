@@ -322,6 +322,7 @@ defineExpose({
           :is-menu-simple="isMenuSimple"
           :list-menu="listMenu"
           :rlt="rlt"
+          :disabled="disabled"
           @change="applyFormatting"
           @changeAlign="applyAlignment"
           @order="applyOrderedList"
@@ -357,6 +358,7 @@ defineExpose({
 
 <style lang="scss" scoped>
   .input-math{
+    position: relative;
     padding: 10px;
     margin-top: -1px;
     border: 1px solid rgba(var(--v-border-color)) !important;
