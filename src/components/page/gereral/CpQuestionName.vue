@@ -12,6 +12,7 @@ interface Props {
   content?: any
   contentBasic?: any
   width?: any
+  maxWidth?: any
   status?: any
   typeStatus?: string
   isExpand?: boolean
@@ -22,6 +23,7 @@ const props = withDefaults(defineProps<Props>(), ({
   contentBasic: '',
   typeStatus: 'id',
   status: null,
+  maxWidth: 600,
 }))
 const emit = defineEmits<Emit>()
 interface Emit {
@@ -57,7 +59,7 @@ defineExpose({
     <div
       ref="qsNameContentRef"
       class="qs-name text-medium-md"
-      :style="{ width: `${width}px` }"
+      :style="{ width: `${width}px`, maxWidth: `${maxWidth}px` }"
       :title="t(MethodsUtil.converContentHtmlToText(contentBasic))"
       v-html="contentBasic"
     />

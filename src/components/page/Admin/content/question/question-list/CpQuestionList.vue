@@ -180,10 +180,23 @@ function standardizedDataInitSingle(valueQs: any) {
       item.position = index + 1
       return item
     })
+
     valueQs.answerBlank = answerBlank.map((item: any, index: number) => {
       item.position = index + 1
       return item
     })
+    console.log(valueQs)
+    const tempElement = document.createElement('div')
+    tempElement.innerHTML = valueQs.content
+
+    // Lấy tất cả các phần tử <span> có class="answer-fill-blank"
+    const spanElements = tempElement.querySelectorAll('span.answer-fill-blank')
+
+    // Lặp qua từng phần tử và xóa nội dung bên trong
+    spanElements.forEach((spanElement: any, index: number) => {
+      spanElement.innerHTML = `<span >${valueQs.answerBlank[index]?.content}</span>`
+    })
+    valueQs.content = tempElement.innerHTML
   }
   if (valueQs.typeId === 7) {
     const tempElement = document.createElement('div')
@@ -230,14 +243,59 @@ function standardizedDataInitSingle(valueQs: any) {
   valueQs.isAutoApprove = MethodsUtil.checkPermission(null, 'QuestionManaging', 128) || true
   return valueQs
 }
+function standardizedDataInitCluse(valueQsList: any) {
+  valueQsList?.questions.forEach((valueQs: any) => {
+    if (valueQs.typeId === 6) {
+      valueQs.answersClone = window._.cloneDeep(valueQs.answers)
+      const answers: any[] = []
+      const answerBlank: any[] = []
+      valueQs.answers.forEach((element: any) => {
+        if (element.isTrue)
+          answerBlank[answerBlank.length] = element
+
+        else
+          answers[answers.length] = element
+      })
+      valueQs.answers = answers.map((item: any, index: number) => {
+        item.position = index + 1
+        return item
+      })
+      valueQs.answerBlank = answerBlank.map((item: any, index: number) => {
+        item.position = index + 1
+        return item
+      })
+    }
+    if (valueQs.typeId === 8) {
+      const answers: any[] = []
+      valueQs.answers.forEach((element: any) => {
+        const position = element.position - 1
+        if (position > -1) {
+          if (answers[position] === undefined) {
+            answers[position] = {
+              left: null,
+              right: null,
+            }
+          }
+          if (element.isTrue === false)
+            answers[position].left = element
+          else answers[position].right = element
+        }
+      })
+      valueQs.answers = answers
+    }
+
+    valueQs.isAutoApprove = MethodsUtil.checkPermission(null, 'QuestionManaging', 128) || true
+  })
+  return valueQsList
+}
 const loadingShow = ref(false)
 async function getInforQuestion(result: any, id: number) {
   loadingShow.value = true
   await MethodsUtil.requestApiCustomV5(QuestionService.GetDetailQuestion(Number(id)), TYPE_REQUEST.GET).then(({ data }: any) => {
-    // if (data.isGroup)
-    //   standardizedDataInitCluse(data)
-    // else
-    result.value = standardizedDataInitSingle(data)
+    if (data.isGroup)
+      result.value = standardizedDataInitCluse(data)
+    else
+      result.value = standardizedDataInitSingle(data)
   })
 }
 async function openDetail(dataQs: any, el: any) {
@@ -275,7 +333,7 @@ function attachClickEvent(el: any, dataQs: any) {
     const answerSpans = el.value?.querySelectorAll('.answer-select')
     console.log(answerSpans)
 
-    answerSpans?.forEach((span, pos) => {
+    answerSpans?.forEach((span: any, pos: any) => {
       span.addEventListener('click', ($event: any) => handleSpanClick($event, pos + 1, dataQs))
     })
   })
@@ -347,7 +405,7 @@ function exportExcel() {
         v-model:dateTo="queryParams.dateTo"
       />
     </CmCollapse>
-    <div>
+    <div class="my-3">
       <CpHeaderAction
         is-delete
         is-send-approve
@@ -399,14 +457,28 @@ function exportExcel() {
                   color="primary"
                 />
               </div>
-              <CpContentView
-                v-if="!context.loadingShow && context.isExpand"
-                :type="context.typeId"
-                :data="context.questionData"
-                :show-content="false"
-                :list-current-id="context.listCurrentId"
-                :show-media="false"
-              />
+              <div v-if="context.typeId !== 10 && !context.loadingShow && context.isExpand">
+                <CpContentView
+                  :type="context.typeId"
+                  :data="context.questionData"
+                  :show-content="false"
+                  :list-current-id="context.listCurrentId"
+                  :show-media="false"
+                />
+              </div>
+              <div v-if="context.typeId === 10 && context.questionData && !context.loadingShow && context.isExpand">
+                <div
+                  v-for="qsItem in context.questionData?.questions"
+                  :key="qsItem.id"
+                  class="mb-5"
+                >
+                  <CpContentView
+                    :type="qsItem.typeId"
+                    :data="qsItem"
+                    :show-media="false"
+                  />
+                </div>
+              </div>
             </CpQuestionName>
           </div>
           <div v-if="col === 'type'">
