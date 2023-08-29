@@ -246,7 +246,7 @@ defineExpose({
         sm="6"
       >
         <div class="answer-select-range d-flex  mb-5">
-          <div class="answer-select">
+          <div class="answer-range">
             <CmSelect
               :disabled="false"
               :clearable="false"
@@ -264,7 +264,7 @@ defineExpose({
             <div> {{ t('to') }}</div>
           </div>
 
-          <div class="answer-select">
+          <div class="answer-range">
             <CmSelect
               :disabled="false"
               :clearable="false"
@@ -305,7 +305,7 @@ defineExpose({
 
 <style lang="scss">
 .answer-select-range{
-  .answer-select{
+  .answer-range{
     width: 45%;
   }
   .answer-select-mid{

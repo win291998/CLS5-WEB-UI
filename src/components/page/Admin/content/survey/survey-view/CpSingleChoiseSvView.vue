@@ -36,12 +36,12 @@ function getIndex(position: number) {
       v-html="data.content"
     />
     <div
-      v-if="showMedia && data.urlFile"
+      v-if="showMedia && data.urlMedia"
       class="view-media mb-5"
     >
       <CpMediaContent
         :disabled="true"
-        :src="data.urlFile"
+        :src="data.urlMedia"
       />
     </div>
     <div
@@ -66,7 +66,7 @@ function getIndex(position: number) {
         >
           <CpMediaContent
             :disabled="true"
-            :src="item.urlFile"
+            :src="item.urlMedia"
           />
         </div>
       </div>

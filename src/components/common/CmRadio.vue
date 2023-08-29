@@ -82,7 +82,6 @@ watch(() => props.modelValue, val => {
   display: inline-block;
   position: relative;
   top: 5px;
-  margin: 0 5px 0 0;
   width: 20px;
   height: 20px;
   border-radius: 11px;

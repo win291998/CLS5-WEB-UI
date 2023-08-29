@@ -9,6 +9,14 @@ import CpMatchingView from '@/components/page/Admin/content/question/question-vi
 import CpFillBlankView from '@/components/page/Admin/content/question/question-view/CpFillBlankView.vue'
 import CpFillBlank2View from '@/components/page/Admin/content/question/question-view/CpFillBlank2View.vue'
 
+// survey
+import CpSingleChoiseSvView from '@/components/page/Admin/content/survey/survey-view/CpSingleChoiseSvView.vue'
+import CpMultiChoiseSvView from '@/components/page/Admin/content/survey/survey-view/CpMultiChoiseSvView.vue'
+import CpRangeSvView from '@/components/page/Admin/content/survey/survey-view/CpRangeSvView.vue'
+import CpEvaluateSvView from '@/components/page/Admin/content/survey/survey-view/CpEvaluateSvView.vue'
+import CpEssaySvView from '@/components/page/Admin/content/survey/survey-view/CpEssaySvView.vue'
+import CpMatrixSingleSvView from '@/components/page/Admin/content/survey/survey-view/CpMatrixSingleSvView.vue'
+
 /**
  * Xem chi tiết các loại câu hỏi
  */
@@ -22,6 +30,9 @@ interface Props {
   showContent: boolean
   showMedia: boolean
   showAnswerTrue: boolean
+  isSurvey?: boolean
+  disabled?: boolean
+  maxWidth?: number
   listCurrentId?: number // vị trí hiện thị của danh sách đám án click câu đk loại 2
 }
 const props = withDefaults(defineProps<Props>(), ({
@@ -29,6 +40,8 @@ const props = withDefaults(defineProps<Props>(), ({
   showContent: true,
   showMedia: true,
   showAnswerTrue: true,
+  isSurvey: false,
+  disabled: false,
 }))
 
 function checkTypeQuestion() {
@@ -64,17 +77,43 @@ function checkTypeQuestion() {
       return CpSingleChoiceView
   }
 }
+function checkTypeSurvey() {
+  switch (props.type) {
+    case 1:
+      return CpSingleChoiseSvView
+
+    case 2:
+      return CpMultiChoiseSvView
+
+    case 3:
+      return CpEssaySvView
+
+    case 4:
+      return CpRangeSvView
+
+    case 5:
+      return CpEvaluateSvView
+
+    case 6:
+      return CpMatrixSingleSvView
+
+    default:
+      return CpSingleChoiseSvView
+  }
+}
 </script>
 
 <template>
   <div class="w-100">
     <Component
-      :is="checkTypeQuestion()"
+      :is="isSurvey ? checkTypeSurvey() : checkTypeQuestion()"
       :data="data"
       :show-content="showContent"
       :show-media="showMedia"
       :show-answer-true="showAnswerTrue"
       :list-current-id="listCurrentId"
+      :max-width="maxWidth"
+      :disabled="disabled"
     />
   </div>
 </template>

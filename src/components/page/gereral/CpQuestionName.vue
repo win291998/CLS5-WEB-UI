@@ -23,7 +23,7 @@ const props = withDefaults(defineProps<Props>(), ({
   contentBasic: '',
   typeStatus: 'id',
   status: null,
-  maxWidth: 600,
+  maxWidth: 750,
 }))
 const emit = defineEmits<Emit>()
 interface Emit {
@@ -64,6 +64,7 @@ defineExpose({
       v-html="contentBasic"
     />
     <div
+      v-if="status"
       class="qs-icon-action mr-3"
     >
       <CmButton

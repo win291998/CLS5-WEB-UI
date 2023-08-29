@@ -118,7 +118,7 @@ watch(() => props.listCurrentId, (val: number) => {
         :value="true"
         class="mr-3"
       />
-      <div>
+      <div class="w-100">
         <span class="mr-1">{{ getIndex(idx) }} </span>
         <span v-html="item.content" />
       </div>

@@ -76,7 +76,7 @@ async function getInforQuestion() {
 }
 
 function onCancel() {
-  router.push({ name: 'survey-list' })
+  router.push({ name: 'question-survey-list' })
 }
 const myFormSettingQs = ref() // thông tin chung của câu hỏi
 const myFormOptionQsSingle = ref() // loại câu hỏi đơn

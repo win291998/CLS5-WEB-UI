@@ -10,7 +10,7 @@ const props = withDefaults(defineProps<Props>(), ({
   question: () => ({
     content: '',
     isGroup: false,
-    urlFile: null,
+    urlMedia: null,
     isAutoApprove: true,
     levelId: null,
     typeId: 1,
@@ -36,7 +36,7 @@ interface Props {
 interface AnswerItem {
   content: string
   isGroup: false
-  urlFile: null | string
+  urlMedia: null | string
   isAutoApprove: true
   levelId: null
   typeId: null | number
@@ -62,7 +62,7 @@ function createInitData() {
       content: '',
       position: i + 1,
       isShuffle: false,
-      urlFile: null,
+      urlMedia: null,
     })
   }
 }
@@ -75,14 +75,14 @@ function deleteAns(dataDelete: any) {
   })
 }
 function deleteFile(dataDelete: any) {
-  anserList.value.urlFile = ''
+  anserList.value.urlMedia = ''
 }
 function addAnswer() {
   anserList.value.answers[anserList.value.answers.length] = {
     content: '',
     position: anserList.value?.answers?.length + 1,
     isShuffle: false,
-    urlFile: null,
+    urlMedia: null,
   }
 }
 
@@ -116,7 +116,7 @@ function hanleUploadFileContent(val: any) {
 }
 
 function handleUpadateUrlFile(val: any) {
-  anserList.value.urlFile = val
+  anserList.value.urlMedia = val
 }
 const myFormQs = ref()
 const myFormAns = ref()
@@ -195,7 +195,7 @@ defineExpose({
           :disabled="isView"
           class="w-100"
           :type="2"
-          :src="anserList.urlFile"
+          :src="anserList.urlMedia"
           :type-media="typeFile"
           @update:fileFolder="handleUpadateUrlFile"
           @deleteFile="deleteFile"
@@ -215,7 +215,7 @@ defineExpose({
             <CpAnswerMultiContent
               ref="myFormAns"
               v-model:content="ans.content"
-              v-model:url="ans.urlFile"
+              v-model:url="ans.urlMedia"
               v-model:isShuffle="ans.isShuffle"
               :placeholder="t('question-choose', { index: idAns + 1 })"
               :is-view="isView"

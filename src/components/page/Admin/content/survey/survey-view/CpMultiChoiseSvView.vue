@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import CmRadio from '@/components/common/CmRadio.vue'
 import CpMediaContent from '@/components/page/gereral/CpMediaContent.vue'
+import CmCheckBox from '@/components/common/CmCheckBox.vue'
 
 /**
  * Xem chi tiết các loại câu hỏi
@@ -36,12 +36,12 @@ function getIndex(position: number) {
       v-html="data.content"
     />
     <div
-      v-if="showMedia && data.urlFile"
+      v-if="showMedia && data.urlMedia"
       class="view-media mb-5"
     >
       <CpMediaContent
         :disabled="true"
-        :src="data.urlFile"
+        :src="data.urlMedia"
       />
     </div>
     <div
@@ -49,14 +49,13 @@ function getIndex(position: number) {
       :key="item.id"
       class="item-answer w-100"
     >
-      <CmRadio
-        :type="1"
-        :model-value="showAnswerTrue ? item.isTrue : false"
-        :disabled="true"
-        :name="`single-${data.id}`"
-        :value="true"
-        class="mr-3"
-      />
+      <div class="mr-1">
+        <CmCheckBox
+          :disabled="true"
+          :model-value="showAnswerTrue ? item.isTrue : false"
+        />
+      </div>
+
       <div class="w-100">
         <span class="mr-1">{{ getIndex(item.position) }} </span>
         <span v-html="item.content" />
@@ -66,7 +65,7 @@ function getIndex(position: number) {
         >
           <CpMediaContent
             :disabled="true"
-            :src="item.urlFile"
+            :src="item.urlMedia"
           />
         </div>
       </div>
