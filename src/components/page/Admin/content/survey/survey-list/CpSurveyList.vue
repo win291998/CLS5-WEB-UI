@@ -5,7 +5,7 @@ import ObjectUtil from '@/utils/ObjectUtil'
 import MethodsUtil from '@/utils/MethodsUtil'
 import QuestionService from '@/api/question'
 import { TYPE_REQUEST } from '@/typescript/enums/enums'
-import CpSurveyName from '@/components/page/gereral/CpSurveyName.vue'
+import CpQuestionName from '@/components/page/gereral/CpQuestionName.vue'
 import CmTable from '@/components/common/CmTable.vue'
 import type { Any } from '@/typescript/interface'
 import CmButton from '@/components/common/CmButton.vue'
@@ -15,6 +15,8 @@ import { SurveyType } from '@/constant/data/questionType.json'
 import type { Params } from '@/typescript/interface/params'
 import CpConfirmDialogVue from '@/components/page/gereral/CpConfirmDialog.vue'
 import toast from '@/plugins/toast'
+import CpContentView from '@/components/page/gereral/CpContentView.vue'
+import CpMdSurveyView from '@/components/page/Admin/content/survey/modal/CpMdSurveyView.vue'
 
 const CpActionHeaderPage = defineAsyncComponent(() => import('@/components/page/gereral/CpActionHeaderPage.vue'))
 
@@ -45,11 +47,13 @@ const queryParams = ref<QueryParam>({
 })
 const headers = [
   { text: '', value: 'checkbox', width: 50 },
-  { text: t('question'), value: 'name', type: 'custom', width: 450 },
+  { text: t('question'), value: 'name', type: 'custom', width: 750 },
   { text: t('question-type'), value: 'type', type: 'custom' },
   { text: '', value: 'actions', width: 150 },
 ]
 const isShowDetailAll = ref(false)
+const questionCurrentView = ref()
+const isShowModalView = ref(false)
 
 /** computed */
 const disabledBtnHeaderAction = computed(() => !selected.value.length)
@@ -108,13 +112,30 @@ async function getListQuestion() {
 const isShowModalConfirmDelete = ref(false)
 
 // hàm trả về các loại action khi click
-function actionItem(type: any) {
+async function actionItem(type: any) {
   switch (type[0]?.name) {
     case 'ActionEdit':
       router.push({ name: 'survey-edit', params: { id: type[1].id } })
       break
     case 'ActionViewDetail':
-      // router.push({ name: 'question-view', params: { id: type[1].id } })
+
+      console.log(window._.isEmpty(type[1]?.questionData))
+
+      if (window._.isEmpty(type[1]?.questionData)) {
+        const result = ref()
+        await getInforSurvey(result, type[1].id).then(() => {
+          console.log(result.value)
+          items.value[type[1].originIndex] = { ...items.value[type[1].originIndex], ...result.value[0] }
+          questionCurrentView.value = items.value[type[1].originIndex]
+          setTimeout(() => {
+            isShowModalView.value = true
+          }, 500)
+        })
+      }
+      else {
+        questionCurrentView.value = items.value[type[1].originIndex]
+        isShowModalView.value = true
+      }
       break
     case 'ActionDelete':
       selected.value = [type[1].id]
@@ -186,6 +207,38 @@ function sendApprove() {
     toast('ERROR', t('req-approve'))
   }
 }
+const loadingShow = ref(false)
+async function getInforSurvey(result: any, id: number) {
+  loadingShow.value = true
+  const params = {
+    listId: [Number(id)],
+  }
+  await MethodsUtil.requestApiCustom(QuestionService.PostSurveyDetail, TYPE_REQUEST.POST, params).then(({ data }: any) => {
+    console.log(data)
+    result.value = data
+  })
+}
+async function openDetail(dataQs: any, el: any) {
+  const result = ref()
+  console.log(dataQs)
+
+  if (window._.isEmpty(dataQs?.surveyData)) {
+    items.value[dataQs.originIndex].loadingShow = true
+
+    await getInforSurvey(result, dataQs.id).then(() => {
+      console.log(result.value)
+      items.value[dataQs.originIndex] = { ...items.value[dataQs.originIndex], ...result.value[0] }
+      setTimeout(() => {
+        items.value[dataQs.originIndex].loadingShow = false
+      }, 500)
+    })
+  }
+  items.value[dataQs.originIndex].isExpand = true
+}
+async function closeDetail(dataQs: any) {
+  console.log(dataQs)
+  items.value[dataQs.originIndex].isExpand = false
+}
 </script>
 
 <template>
@@ -211,7 +264,7 @@ function sendApprove() {
         v-model:page-number="queryParams.pageNumber"
       />
     </CmCollapse>
-    <div>
+    <div class="my-3">
       <CpHeaderAction
         is-delete
         is-send-approve
@@ -249,14 +302,30 @@ function sendApprove() {
       >
         <template #rowItem="{ col, context, dataCol }">
           <div v-if="col === 'name'">
-            <CpSurveyName
-              v-bind="dataCol"
+            <CpQuestionName
               :status="context.statusId"
               :content-basic="context.contentBasic"
-              :is-expand="isShowDetailAll"
+              :is-expand="isShowDetailAll || context.isExpand"
+              @update:open="($event: any) => openDetail(context, $event)"
+              @update:close="closeDetail(context)"
             >
-              a
-            </CpSurveyName>
+              <div v-show="context.loadingShow">
+                <VProgressLinear
+                  indeterminate
+                  color="primary"
+                />
+              </div>
+              <CpContentView
+                v-if="!context.loadingShow && context.isExpand"
+                :type="context.questionTypeId"
+                :data="context"
+                disabled
+                :show-content="false"
+                :show-media="false"
+                :is-survey="true"
+                :max-width="dataCol.width"
+              />
+            </CpQuestionName>
           </div>
           <div v-if="col === 'type'">
             <div>{{ t((SurveyType as any)[context?.questionTypeId?.toString()]) }}</div>
@@ -275,6 +344,10 @@ function sendApprove() {
       :confirmation-msg="t('warning-request-approve-question-survey')"
       :type="1"
       @confirm="sendApprove"
+    />
+    <CpMdSurveyView
+      v-model:isShowModal="isShowModalView"
+      :data="questionCurrentView"
     />
   </div>
 </template>

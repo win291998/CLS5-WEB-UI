@@ -18,7 +18,7 @@ const props = withDefaults(defineProps<Props>(), ({
   data: () => ({
     content: '',
     position: 0,
-    urlFile: null,
+    urlMedia: null,
   }),
 
 }))
@@ -147,8 +147,8 @@ defineExpose({
         />
       </VCol>
     </VRow>
-    <!-- <VRow :style="{ display: data.urlFile ? 'block' : 'none' }"> -->
-    <VRow v-show="!!data.urlFile">
+    <!-- <VRow :style="{ display: data.urlMedia ? 'block' : 'none' }"> -->
+    <VRow v-show="!!data.urlMedia">
       <VCol
         cols="9"
         offset="2"
@@ -158,7 +158,7 @@ defineExpose({
           :type="2"
           :disabled="isView"
           class="w-100"
-          :src="data.urlFile"
+          :src="data.urlMedia"
           :type-media="typeFile"
           @update:fileFolder="handleUpadateUrlFile"
           @deleteFile="deleteFile"

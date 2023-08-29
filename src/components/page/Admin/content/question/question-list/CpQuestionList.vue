@@ -48,7 +48,7 @@ const queryParams = ref<any>({
 })
 const headers = ref([
   { text: '', value: 'checkbox', width: 50 },
-  { text: t('question'), value: 'name', type: 'custom', width: 700 },
+  { text: t('question'), value: 'name', type: 'custom', width: 750 },
   { text: t('question-type'), value: 'type', type: 'custom' },
   { text: '', value: 'actions', width: 150 },
 ])

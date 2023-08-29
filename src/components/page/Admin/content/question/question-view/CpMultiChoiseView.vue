@@ -56,7 +56,7 @@ function getIndex(position: number) {
         />
       </div>
 
-      <div>
+      <div class="w-100">
         <span class="mr-1">{{ getIndex(item.position) }} </span>
         <span v-html="item.content" />
         <div

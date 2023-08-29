@@ -134,6 +134,8 @@ const reaction = [
   },
 
 ]
+const amountAnswer = ref(1)
+
 function createInitData() {
   anserList.value.answers = []
   anserList.value?.answers.push({
@@ -142,6 +144,7 @@ function createInitData() {
     isShuffle: false,
     urlFile: null,
   })
+  amountAnswer.value = anserList.value?.answers?.length
 }
 
 function deleteAns(dataDelete: any) {
@@ -198,7 +201,6 @@ const isSubmitAns = computed(() => {
 })
 
 // thay đổi số lượng đánh giá
-const amountAnswer = ref(1)
 const isAddContent = ref(false)
 function factorChange(value: number) {
   amountAnswer.value = value
@@ -261,10 +263,10 @@ defineExpose({
         class="mbn-2"
       >
         <div class="answer-select-range d-flex">
-          <div class="answer-select">
+          <div class="answer-evaluate-select">
             {{ t('factor') }}
           </div>
-          <div class="answer-select">
+          <div class="answer-evaluate-select">
             {{ t('Shape') }}
           </div>
           <div class="answer-select-end" />
@@ -318,7 +320,7 @@ defineExpose({
         sm="6"
       >
         <div class="answer-select-range d-flex  mb-5">
-          <div class="answer-select">
+          <div class="answer-evaluate-select">
             <CmSelect
               :disabled="false"
               :clearable="false"
@@ -330,7 +332,7 @@ defineExpose({
               @update:model-value="factorChange"
             />
           </div>
-          <div class="answer-select">
+          <div class="answer-evaluate-select">
             <CmSelect
               :model-value="anserList.reactionId"
               :disabled="false"
@@ -395,7 +397,7 @@ defineExpose({
 <style lang="scss">
 .survey-evaluate{
   .answer-select-range{
-    .answer-select{
+    .answer-evaluate-select{
       width: 40%;
       margin-right: 16px;
     }

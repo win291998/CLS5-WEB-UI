@@ -61,7 +61,7 @@ function getIndex(position: number) {
         class="mr-3"
       />
 
-      <div>
+      <div class="w-100">
         <span class="mr-1">{{ getIndex(item) }} </span>
         <span>
           {{ item === 1 ? t('true') : t('false') }}
