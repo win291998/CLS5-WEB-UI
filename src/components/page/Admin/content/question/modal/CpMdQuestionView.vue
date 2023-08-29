@@ -40,7 +40,7 @@ watch(() => props.isShowModal, isShow => {
 </script>
 
 <template>
-  <div>
+  <div class="view-content">
     <CmDialogs
       :title="t('preview')"
       :is-dialog-visible="isShowModal"
@@ -49,11 +49,36 @@ watch(() => props.isShowModal, isShow => {
       @cancel="onCancel"
       @confirm="onConfirm"
     >
-      <CpContentView
-        :type="data.typeId"
-        :data="data.questionData"
-        :show-answer-true="false"
-      />
+      <div v-if="data.typeId !== 10">
+        <CpContentView
+          :type="data.typeId"
+          :data="data.questionData"
+          :show-answer-true="false"
+        />
+      </div>
+      <div v-if="data.typeId === 10 && data.questionData">
+        <div class="text-medium-md text-cluse-title">
+          Yêu cầu chung: Nội dung câu hỏi chùm câu hỏi chùm câu hỏi chùm
+        </div>
+        <div
+          v-for="qsItem in data.questionData?.questions"
+          :key="qsItem.id"
+          class="mb-5"
+        >
+          <CpContentView
+            :type="qsItem.typeId"
+            :data="qsItem"
+            :show-answer-true="false"
+          />
+        </div>
+      </div>
     </CmDialogs>
   </div>
 </template>
+
+<style lang="scss">
+ .text-cluse-title{
+    color:  rgb(var(--v-gray-900)) !important;
+    margin-bottom: 20px;
+  }
+</style>

@@ -123,9 +123,11 @@ function checkHasBlank(commonAncestorContainer: any) {
 
 // cập nhật lại event khi click vào đáp án blank 2 trong input editor khi edit
 function updateActionClickAns(key: number) {
-  const keyDataDrop = `blank${key}`
+  const keyDataDrop = `answer-select[data-blank="${key}"]`
+  console.log(keyDataDrop)
   const dropdownElement = CmInputEditorRef.value.inputEditor.querySelector(`.${keyDataDrop}`)
-  dropdownElement.addEventListener('click', ($event: any) => myFunction($event, dropdownElement, anserList.value.answers[dropdownElement.getAttribute('answer-position')]))
+  console.log(dropdownElement)
+  dropdownElement?.addEventListener('click', ($event: any) => myFunction($event, dropdownElement, anserList.value.answers[dropdownElement.getAttribute('answer-position')]))
 }
 
 function changeValueContent() {
@@ -151,8 +153,9 @@ function addAnswerBlank2() {
   // kiểm tra xem có chứa đáp án blank2 đã tạo không nếu không sẽ tạo có sẽ cảnh báo
   if (!checkHasBlank(range.commonAncestorContainer)) {
     // html cần chèn vào vị trí được chọn
-    const keyDataDrop = `blank${anserList.value.answers.length}`
+    const keyDataDrop = `answer-select[data-blank="${anserList.value.answers.length}"]`
     const htmlAnswer = `<p class="answer-select ${keyDataDrop}" data-blank="${anserList.value.answers.length}" data="${text}" data-text="${htmlContent}" contenteditable="false" answer-position="${anserList.value.answers.length}">${t('Đáp án A')}</p>`
+    anserList.value.answerBlank[anserList.value.answers.length] = []
 
     /** thêm mẫu blank2 vào input */
     insertHtml(selection, htmlAnswer)
@@ -187,8 +190,9 @@ function addAnswerBlank(content: any, pos: number) {
 }
 
 // ===> thêm phương án blank vào danh sách đáp án
-function addAnswer(content: any, pos: number = anserList.value?.answers?.length + 1, keyBlank?: any, icheckTrue?: boolean) {
+function addAnswer(content: any, pos: number = anserList.value?.answers?.length + 1, keyBlank?: any, icheckTrue?: boolean, id?: any) {
   anserList.value.answers[anserList.value.answers.length] = {
+    ...(id ? { id } : {}),
     content,
     isTrue: window._.isEmpty(icheckTrue),
     position: pos,
@@ -197,26 +201,65 @@ function addAnswer(content: any, pos: number = anserList.value?.answers?.length 
     blank: keyBlank,
   }
 }
+function checkShowAnsIsTrue(el: any) {
+  let correst = 1 // vị trí đáp án đúng của từng blank2
+  const positionBlank = Number(el.getAttribute('data-blank')) // vị trí blank
+  const icheckTrue = checkAnswerCorrest(positionBlank) // check đáp án đúng trong danh sách câu trả lời nhiễu
+  if (!window._.isEmpty(icheckTrue)) {
+    // nếu có thì gắn vị trí đó cho biến correst
+    anserList.value?.answerBlank[positionBlank]?.forEach((item: any) => {
+      if (item.isTrue === true) {
+        correst = item.position
+        return false
+      }
+    })
+  }
+
+  el.innerHTML = `Đáp án ${icheckTrue ? getIndex(correst - 1) : getIndex(0)}`
+}
 
 // format dữ liệu cho blank 2 khi edit
 function formatFillBlank2() {
   anserList.value.answerBlank = []
   const answer: any[] = []
+  const listAns: any[] = []
   anserList.value?.answers?.forEach((item: any, index: number) => {
-    if (typeof item.blank !== 'number') {
-      const position = item.position - 1
-      if (window._.isEmpty(anserList.value.answerBlank[position]))
-        anserList.value.answerBlank[position] = []
+    const position = item.position - 1
+    if (!listAns?.[position])
+      listAns[position] = [] as any
 
-      item.position = anserList.value.answerBlank[position]?.length + 2
-      anserList.value.answerBlank[position][anserList.value.answerBlank[position]?.length] = item
-    }
-    else {
-      answer[answer.length] = item
-    }
+    item.position = listAns[position]?.length + 1
+    listAns[position][listAns[position]?.length] = item
   })
+  console.log(listAns)
+  listAns.forEach((item: any, index: number) => {
+    console.log(item)
+
+    anserList.value.answerBlank[anserList.value.answerBlank.length] = item.slice(1)
+    const ansHtml = item.slice(0, 1)[0]
+    ansHtml.blank = index
+
+    answer[answer.length] = ansHtml
+    console.log(answer)
+  })
+
   anserList.value.answers = answer
-  anserList.value.answers.forEach((item: any) => {
+
+  const editableDiv = CmInputEditorRef.value.inputEditor
+  const elementAns = editableDiv.querySelectorAll('.answer-select')
+  elementAns.forEach((el: any, pos: number) => {
+    console.log(el)
+    el.setAttribute('data-blank', pos)
+    el.setAttribute('answer-position', pos)
+    el.setAttribute('data-text', anserList.value.answers[pos].content)
+    el.setAttribute('data-id', anserList.value.answers[pos].id ?? '')
+    checkShowAnsIsTrue(el)
+  })
+
+  anserList.value.answers.forEach((item: any, idx: number) => {
+    item.position = idx + 1
+    console.log(item.blank)
+
     updateActionClickAns(item.blank)
   })
 }
@@ -244,22 +287,25 @@ function changeValueIsTrue(isAnsOrigin: any, val: any) {
 
 /** Hàm thực thi khi click vào các vị trí blank2 trong input */
 function myFunction(ev?: any, el?: any, dataEl?: any) {
+  console.log(dataEl)
+
   isActiveAnsCurrent.value = dataEl.position
   el.classList.add('active')
 }
 
 /** cập nhật dữ liệu và vị trí các đáp án trong dk loại 2 */
+
 function updatePositionAns() {
   const editableDiv = CmInputEditorRef.value.inputEditor
   anserList.value.answers = []
 
   // tìm kiếm đáp án blank2
   const elementAns = editableDiv.querySelectorAll('.answer-select')
+  const listBlank = ref<any[]>([])
   elementAns.forEach((el: any, pos: number) => {
     let correst = 1 // vị trí đáp án đúng của từng blank2
     const positionBlank = Number(el.getAttribute('data-blank')) // vị trí blank
     const icheckTrue = checkAnswerCorrest(positionBlank) // check đáp án đúng trong danh sách câu trả lời nhiễu
-
     if (!window._.isEmpty(icheckTrue)) {
       // nếu có thì gắn vị trí đó cho biến correst
       anserList.value?.answerBlank[positionBlank]?.forEach((item: any) => {
@@ -270,14 +316,15 @@ function updatePositionAns() {
       })
     }
 
-    // cập nhật lại vị trí dom của đáp án blank2 trong input
-    el.setAttribute('answer-position', pos)
-
     // thay dữ liệu vị trí đó thành dạng 'Đáp án ...'
     el.innerHTML = `Đáp án ${icheckTrue ? getIndex(correst - 1) : getIndex(0)}`
 
+    // cập nhật lại vị trí dom của đáp án blank2 trong input
+    el.setAttribute('answer-position', pos)
+    listBlank.value.push(Number(el.getAttribute('data-blank')))
+
     // Thêm đáp án vào danh sách đáp án lựa chọn
-    addAnswer(decodeURIComponent(el.getAttribute('data-text')), pos + 1, positionBlank, icheckTrue)
+    addAnswer(decodeURIComponent(el.getAttribute('data-text')), pos + 1, positionBlank, icheckTrue, el.getAttribute('data-id') ? Number(el.getAttribute('data-id')) : null)
   })
 }
 

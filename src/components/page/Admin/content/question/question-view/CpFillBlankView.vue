@@ -32,24 +32,23 @@ function getIndex(position: number) {
 }
 const contentBlank = computed(() => {
   const result = ref(props.data.content)
-  if (!props.showAnswerTrue) {
-    // Chuỗi ban đầu
-    // Lấy tất cả các phần tử <span> có class="answer-fill-blank"
-    // Tạo một phần tử tạm thời để chứa chuỗi HTML
-    const tempElement = document.createElement('div')
-    tempElement.innerHTML = props.data.content
 
-    // Lấy tất cả các phần tử <span> có class="answer-fill-blank"
-    const spanElements = tempElement.querySelectorAll('span.answer-fill-blank')
+  // Chuỗi ban đầu
+  // Lấy tất cả các phần tử <span> có class="answer-fill-blank"
+  // Tạo một phần tử tạm thời để chứa chuỗi HTML
+  const tempElement = document.createElement('div')
+  tempElement.innerHTML = props.data.content
 
-    // Lặp qua từng phần tử và xóa nội dung bên trong
-    spanElements.forEach(spanElement => {
-      spanElement.innerHTML = '<span class="chooseAnsPld">Lựa chọn</span>'
-    })
+  // Lấy tất cả các phần tử <span> có class="answer-fill-blank"
+  const spanElements = tempElement.querySelectorAll('span.answer-fill-blank')
 
-    // Lấy chuỗi HTML đã chỉnh sửa từ phần tử tạm thời
-    result.value = tempElement.innerHTML
-  }
+  // Lặp qua từng phần tử và xóa nội dung bên trong
+  spanElements.forEach((spanElement: any, index: number) => {
+    spanElement.innerHTML = props.showAnswerTrue ? `<span >${props.data?.answerBlank[index]?.content}</span>` : '<span class="chooseAnsPld">Lựa chọn</span>'
+  })
+
+  // Lấy chuỗi HTML đã chỉnh sửa từ phần tử tạm thời
+  result.value = tempElement.innerHTML
   return result.value
 })
 </script>
@@ -94,6 +93,8 @@ const contentBlank = computed(() => {
       margin-right: 16px;
       border: 1px solid rgb(var(--v-gray-300));
       padding: 10px 14px;
+      display: flex;
+      align-items: center;
     }
 
   }

@@ -22,7 +22,7 @@ interface Props {
   showContent: boolean
   showMedia: boolean
   showAnswerTrue: boolean
-  listCurrentId: number
+  listCurrentId?: number // vị trí hiện thị của danh sách đám án click câu đk loại 2
 }
 const props = withDefaults(defineProps<Props>(), ({
   type: 1,

@@ -26,7 +26,7 @@ const props = withDefaults(defineProps<Props>(), ({
   }),
   showContent: true,
   showMedia: true,
-  showAnswerTrue: true,
+  showAnswerTrue: false,
   listCurrentId: 1,
 }))
 const { t } = window.i18n()
@@ -39,42 +39,6 @@ function myAnserClick() {
 }
 const contentBlank = ref()
 
-// const contentBlank = computed(() => {
-//   const result = ref(props.data.content)
-
-//   const tempElement = document.createElement('div')
-//   tempElement.innerHTML = props.data.content
-//   const spanElements = tempElement.querySelectorAll('span.answer-select')
-//   console.log(spanElements)
-
-//   // Lặp qua từng phần tử và xóa nội dung bên trong
-//   spanElements.forEach((spanElement, idx) => {
-//     spanElement.innerHTML = `<span>Đáp án ${getIndex(idx)} <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m6 9l6 6l6-6"></path></svg>
-// </span>`
-//   })
-
-//   result.value = tempElement.innerHTML
-
-//   // if (!props.showAnswerTrue) {
-//   //   // Chuỗi ban đầu
-//   //   // Lấy tất cả các phần tử <span> có class="answer-fill-blank"
-//   //   // Tạo một phần tử tạm thời để chứa chuỗi HTML
-//   //   const tempElement = document.createElement('div')
-//   //   tempElement.innerHTML = props.data.content
-
-//   //   // Lấy tất cả các phần tử <span> có class="answer-fill-blank"
-//   //   const spanElements = tempElement.querySelectorAll('span.answer-fill-blank')
-
-//   //   // Lặp qua từng phần tử và xóa nội dung bên trong
-//   //   spanElements.forEach(spanElement => {
-//   //     spanElement.innerHTML = '<span class="chooseAnsPld">Lựa chọn</span>'
-//   //   })
-
-//   //   // Lấy chuỗi HTML đã chỉnh sửa từ phần tử tạm thời
-//   //   result.value = tempElement.innerHTML
-//   // }
-//   return result.value
-// })
 const contentBlankRef = ref()
 const listAnserView = ref<any[]>([])
 
@@ -98,19 +62,21 @@ props.data.answers.forEach((item: any, index: number) => {
     listAnserView.value[item.position].push(item)
 })
 onMounted(() => {
-  console.log(123)
-
   const result = ref(props.data.content)
 
   const tempElement = document.createElement('div')
   tempElement.innerHTML = props.data.content
-  const spanElements = tempElement.querySelectorAll('span.answer-select')
+  const spanElements = tempElement.querySelectorAll('.answer-select')
+  console.log(spanElements)
 
   // Lặp qua từng phần tử và xóa nội dung bên trong
   spanElements.forEach((spanElement, idx) => {
     const isTrue = listAnserView.value[idx + 1].findIndex((item: any) => item.isTrue)
-    spanElement.innerHTML = `<span class="chooseAnsPld">${props.showAnswerTrue ? `Đáp án ${getIndex(isTrue)}` : `Lựa chọn ${idx + 1}`} <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m6 9l6 6l6-6"></path></svg>
-</span>`
+    spanElement.innerHTML = ''
+    console.log(spanElement)
+
+    spanElement.innerHTML = `<span style="display: inline-flex;" class="${!props.showAnswerTrue ? 'chooseAnsPld' : ''}">${props.showAnswerTrue ? `Đáp án ${getIndex(isTrue)}` : `Lựa chọn ${idx + 1}`} <svg xmlns="http://www.w3.org/2000/svg" style="margin-top: 5px;" width="1em" height="1em" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m6 9l6 6l6-6"></path></svg>
+    </span>`
   })
 
   contentBlank.value = tempElement.innerHTML
