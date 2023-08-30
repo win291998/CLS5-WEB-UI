@@ -107,6 +107,7 @@ function checkTypeSurvey() {
   <div class="w-100">
     <Component
       :is="isSurvey ? checkTypeSurvey() : checkTypeQuestion()"
+      v-if="!data?.isGroup || isSurvey"
       :data="data"
       :show-content="showContent"
       :show-media="showMedia"
@@ -115,5 +116,18 @@ function checkTypeSurvey() {
       :max-width="maxWidth"
       :disabled="disabled"
     />
+    <div v-else-if="data?.isGroup">
+      <div
+        v-for="qsItem in data?.questions"
+        :key="qsItem.id"
+        class="mb-5"
+      >
+        <CpContentView
+          :type="qsItem.typeId"
+          :data="qsItem"
+          :show-media="false"
+        />
+      </div>
+    </div>
   </div>
 </template>

@@ -60,6 +60,7 @@ interface Props {
   titlePageUpload?: string
   isFilter?: boolean
   filterConfig?: filter
+  isPositionErr?: boolean
 }
 
 /** ** Khởi tạo store */
@@ -68,12 +69,14 @@ const storeCombobox = comboboxStore()
 const router = useRouter()
 const { paramsImport } = store
 const { organizationsCombobox } = storeToRefs(storeCombobox)
-const { type, refTableValid } = storeToRefs(store)
+const { type, refTableValid, isLocal } = storeToRefs(store)
 const { checkInvalidData, fileChange, updateFromFile } = store
 // eslint-disable-next-line vue/no-setup-props-destructure
 store.customKeyError = props.customKeyError
-const isEditing = ref(false)
+// eslint-disable-next-line vue/no-setup-props-destructure
+isLocal.value = props.isPositionErr
 
+const isEditing = ref(false)
 const headers = reactive([
   { text: '', value: 'checkbox' },
   ...props?.config?.table?.header,
@@ -81,7 +84,7 @@ const headers = reactive([
 
 const headersInvalid = computed(() => {
   const select = {
-    text: 'Select',
+    text: '',
     value: 'select',
     thClass: 'custom-th-class',
     sortable: false,
@@ -286,7 +289,17 @@ async function closeDetail(dataQs: any) {
             is-import-file
             :custom-key-error="customKeyError"
             @changeCellvalue="changeCellvalue"
-          />
+          >
+            <template #rowItem="{ col, context }">
+              <div v-if="col === 'content'">
+                <CpQuestionName
+                  :status="context.statusId"
+                  :content-basic="context.isExpand && [3, 6, 7].includes(context.typeId) ? context.questionData.content : context.contentBasic"
+                  :is-expand="context.isExpand"
+                />
+              </div>
+            </template>
+          </CmTable>
         </div>
       </div>
     </div>

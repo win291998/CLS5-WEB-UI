@@ -2,6 +2,7 @@
 interface Props {
   name: string
   isGroup: boolean
+  topic: string
 }
 const props = withDefaults(defineProps<Props>(), {})
 const { t } = window.i18n()
@@ -21,10 +22,13 @@ const type = computed(() => {
 </script>
 
 <template>
-  <div>
+  <div v-if="name">
     {{ t(name) }}
   </div>
-  <div :class="`text-${type.color}`">
-    {{ t(type.name) }}
-  </div>
+  <span v-if="isGroup !== null">
+    <span :class="`text-${type.color}`">
+      {{ t(type.name) }}
+    </span>
+    <span v-if="topic">{{ topic }}</span>
+  </span>
 </template>
