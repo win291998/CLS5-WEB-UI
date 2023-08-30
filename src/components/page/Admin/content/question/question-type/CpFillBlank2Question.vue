@@ -52,7 +52,7 @@ const anserList = ref<any>({
   answerBlank: [] as any[],
 })
 const CmInputEditorRef = ref()
-const isActiveAnsCurrent = ref(1)
+const isActiveAnsCurrent = ref(0)
 
 /** function */
 
@@ -124,9 +124,7 @@ function checkHasBlank(commonAncestorContainer: any) {
 // cập nhật lại event khi click vào đáp án blank 2 trong input editor khi edit
 function updateActionClickAns(key: number) {
   const keyDataDrop = `answer-select[data-blank="${key}"]`
-  console.log(keyDataDrop)
   const dropdownElement = CmInputEditorRef.value.inputEditor.querySelector(`.${keyDataDrop}`)
-  console.log(dropdownElement)
   dropdownElement?.addEventListener('click', ($event: any) => myFunction($event, dropdownElement, anserList.value.answers[dropdownElement.getAttribute('answer-position')]))
 }
 
@@ -231,16 +229,12 @@ function formatFillBlank2() {
     item.position = listAns[position]?.length + 1
     listAns[position][listAns[position]?.length] = item
   })
-  console.log(listAns)
   listAns.forEach((item: any, index: number) => {
-    console.log(item)
-
     anserList.value.answerBlank[anserList.value.answerBlank.length] = item.slice(1)
     const ansHtml = item.slice(0, 1)[0]
     ansHtml.blank = index
 
     answer[answer.length] = ansHtml
-    console.log(answer)
   })
 
   anserList.value.answers = answer
@@ -248,7 +242,6 @@ function formatFillBlank2() {
   const editableDiv = CmInputEditorRef.value.inputEditor
   const elementAns = editableDiv.querySelectorAll('.answer-select')
   elementAns.forEach((el: any, pos: number) => {
-    console.log(el)
     el.setAttribute('data-blank', pos)
     el.setAttribute('answer-position', pos)
     el.setAttribute('data-text', anserList.value.answers[pos].content)
@@ -258,8 +251,6 @@ function formatFillBlank2() {
 
   anserList.value.answers.forEach((item: any, idx: number) => {
     item.position = idx + 1
-    console.log(item.blank)
-
     updateActionClickAns(item.blank)
   })
 }
@@ -274,7 +265,7 @@ function changeValueIsTrue(isAnsOrigin: any, val: any) {
   anserList.value?.answerBlank[positionBlank]?.forEach((item: any) => {
     item.isTrue = !isAnsOrigin ? item.position === val : false
   })
-  updatePositionAns()
+  updatePositionAns(true)
 
   // // do chèn data content bằng dom nên input không phản hồi cập nhật dữ liệu=> reactive lại input content
   anserList.value.content = CmInputEditorRef.value.inputEditor.innerHTML
@@ -287,17 +278,18 @@ function changeValueIsTrue(isAnsOrigin: any, val: any) {
 
 /** Hàm thực thi khi click vào các vị trí blank2 trong input */
 function myFunction(ev?: any, el?: any, dataEl?: any) {
-  console.log(dataEl)
-
   isActiveAnsCurrent.value = dataEl.position
   el.classList.add('active')
 }
 
 /** cập nhật dữ liệu và vị trí các đáp án trong dk loại 2 */
 
-function updatePositionAns() {
+function updatePositionAns(type?: boolean) {
   const editableDiv = CmInputEditorRef.value.inputEditor
   anserList.value.answers = []
+
+  if (!type)
+    isActiveAnsCurrent.value = 0
 
   // tìm kiếm đáp án blank2
   const elementAns = editableDiv.querySelectorAll('.answer-select')
@@ -416,43 +408,12 @@ defineExpose({
 /// /////////////thao tác với input underline
 
 // phương thức xóa đáp án
-function deleteAns(dataDelete: any) {
-  //  ref của input editor
-  const editableDiv = CmInputEditorRef.value.inputEditor
+function deleteAns(dataDelete: number, posBlank: number) {
+  anserList.value?.answerBlank[posBlank]?.splice(dataDelete, 1)
 
-  // tìm kiếm đáp án underline
-  const elementAns = editableDiv.querySelectorAll('.answer-select')
-  for (let i = 0; i < elementAns.length; i++) {
-    const element = elementAns[i]
-    const answerIndex = element.getAttribute('answer-position')
-
-    // kiểm tra vị trí delete có trùng với vị trí của element được tìm thấy
-    if (dataDelete.position - 1 === Number(answerIndex)) {
-      // tạo một  vùng được chọn mới
-      const range = document.createRange()
-
-      // bao bọc vùng chọn cho element
-      range.selectNode(element)
-
-      // tạo một selection
-      const selection: any = window.getSelection()
-
-      // xóa tất cả các range hiện tại
-      selection.removeAllRanges()
-
-      // add range đã tạo để selection cho vùng được chọn
-      selection.addRange(range)
-      const textReset = selection?.toString()
-      insertHtml(selection, textReset)
-    }
-  }
-
-  anserList.value?.answers?.splice(dataDelete.position - 1, 1)
-
-  anserList.value?.answers?.forEach((element: any, i: number) => {
-    element.position = i + 1
+  anserList.value?.answerBlank[posBlank]?.forEach((element: any, i: number) => {
+    element.position = i + 2
   })
-  updatePositionAns()
 }
 
 // phương thức xóa vùng được chọn
@@ -559,7 +520,7 @@ function deleteSelectedText(selection: any) {
                 :data="ans"
                 :ans-id="1"
                 :is-true="ans.isTrue"
-                @delete="deleteAns"
+                disabled-del
                 @update:isTrue="changeValueIsTrue"
               />
             </div>
@@ -578,12 +539,13 @@ function deleteSelectedText(selection: any) {
               :data="ans"
               :ans-id="idAns + 2"
               :is-true="ans.isTrue"
-              @delete="deleteAns"
+              @delete="($value: any) => deleteAns(idAns, anserList.answers[isActiveAnsCurrent - 1]?.blank)"
               @update:isTrue="changeValueIsTrue"
             />
           </div>
         </div>
         <BLink
+          v-if="isActiveAnsCurrent"
           class="cursor-pointer"
           @click="addAnswerBlank('', isActiveAnsCurrent)"
         >

@@ -214,7 +214,6 @@ async function getInforSurvey(result: any, id: number) {
     listId: [Number(id)],
   }
   await MethodsUtil.requestApiCustom(QuestionService.PostSurveyDetail, TYPE_REQUEST.POST, params).then(({ data }: any) => {
-    console.log(data)
     result.value = data
   })
 }

@@ -2622,6 +2622,7 @@
   "amount-question": "Số câu hỏi",
   "answer": "Phương án",
   "answers": "Câu trả lời",
+  "total-points": "Tổng điểm",
   "at-least-1": "Số lượng câu hỏi tối thiểu là 1",
   "auto-send-approve": "Tự động gửi duyệt",
   "choose-correct-answer": "Vui lòng lựa chọn đáp án đúng cho câu hỏi",
@@ -3577,5 +3578,5 @@
   "please-input-title": "vui lòng nhập trường tiêu đề!",
   "Url": "Đường dẫn",
   "add-question-from-file": "Thêm câu hỏi từ tệp tin",
-  "IsTrue":"Đáp Án Đúng"
+  "IsTrue": "Đáp Án Đúng"
 }
