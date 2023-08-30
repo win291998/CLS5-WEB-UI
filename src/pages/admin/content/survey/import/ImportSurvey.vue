@@ -9,108 +9,36 @@ import { useImportFileStore } from '@/stores/ImportFile'
 
 // Cập nhật năng lực
 function dataColumnExcel(rowData: Array<any>) {
-  const listAnswer: Any[] = rowData.filter((el, idx) => el !== null && idx > 10)
-  const data: Any = {
-    id: rowData[0],
-    groupId: rowData[1],
-    topic: rowData[2],
-    rank: rowData[3],
-    type: rowData[4],
-    contentBasic: rowData[5],
-    urlFile: rowData[6],
-    correctAnswer: rowData[7],
-    shuffle: rowData[8],
-    answerNotShuffle: rowData[9],
-    level: rowData[10],
+  const [id,
+    groupId,
+    topic,
+    rank,
+    type,
+    contentBasic,
+    urlFile,
+    correctAnswer,
+    shuffle,
+    answerNotShuffle,
+    level
+    , ...array] = rowData
+  const listAnswer: Any[] = array.filter(el => el !== null)
+  const typeId = getQuestionTypeFromname(type)
+  return {
+    id,
+    groupId,
+    topic,
+    rank,
+    type,
+    contentBasic,
+    urlFile,
+    correctAnswer,
+    shuffle,
+    answerNotShuffle,
+    level,
+    content: contentBasic,
     listAnswer,
+    typeId,
   }
-  data.content = data.contentBasic
-  data.typeId = getQuestionTypeFromname(data.type)
-  if (data.typeId === 4) {
-    const correct = Number(data.correctAnswer)
-    if (listAnswer.length >= 2) {
-      if (correct === 1)
-        data.listAnswer = [listAnswer[0]]
-      else data.listAnswer = [listAnswer[1]]
-    }
-  }
-  if (data.typeId === 3 || data.typeId === 6 || data.typeId === 7)
-    setHtmlContent(data)
-
-  return data
-}
-
-// lấy nội dung html
-function setHtmlContent(question: Any) {
-  let html = `<p>${question.content}</p>`
-
-  // câu hỏi gạch chân/đk loại 1
-  if (question.typeId === 3) {
-    for (let i = 0; i < question.listAnswer.length; i += 1) {
-      const element = question.listAnswer[i]
-      const key = `{{${i + 1}}}`
-      if (html.includes(key)) {
-        // eslint-disable-next-line no-irregular-whitespace
-        const blank = `<span class="answer-underline" data-position="${i}">﻿<span contenteditable="false">${element} </span>﻿</span>`
-        html = html.replaceAll(key, blank)
-      }
-      else {
-        question.isSuccess = false
-        break
-      }
-    }
-  }
-  else if (question.typeId === 6) {
-    // câu hỏi điền khuyết loại 1
-    question.contentBasic = question.contentBasic.replaceAll(/\{{(.+?)\}}/g, ' ... ')
-    for (let i = 0; i < question.listAnswer.length; i += 1) {
-      if (i < question.listAnswer.length) {
-        const element = question.listAnswer[i]
-        const key = `{{${i + 1}}}`
-        if (html.includes(key)) {
-          // eslint-disable-next-line no-irregular-whitespace
-          const blank = `<span class="answer-fill-blank">﻿<span contenteditable="false">( ${i + 1} )</span>﻿</span>`
-          html = html.replaceAll(key, blank)
-        }
-      }
-      else {
-        question.isSuccess = false
-        break
-      }
-    }
-  }
-  else if (question.typeId === 7) {
-    // câu hỏi điền khuyết loại 2
-    question.contentBasic = question.contentBasic.replaceAll(/\{{(.+?)\}}/g, ' ... ')
-
-    // lấy danh sách câu hỏi
-    const answers = []
-    const answerDatas = question.content.split('{{')
-    for (let i = 1; i < answerDatas.length; i += 1) {
-      const element = answerDatas[i]
-      const answerDataContent = element.split('}}')
-      if (answerDataContent.length > 0)
-        answers.push(answerDataContent[0])
-    }
-    question.listAnswer = answers
-
-    // const correctAnswers = question.correctAnswer.split(',')
-    for (let i = 0; i < question.listAnswer.length; i += 1) {
-      if (i < question.listAnswer.length) {
-        const element = question.listAnswer[i]
-        const key = `{{${element}}}`
-        if (html.includes(key)) {
-          const blank = `<span class="answer-select" contenteditable="false">( ${i + 1} )</span>`
-          html = html.replaceAll(key, blank)
-        }
-      }
-      else {
-        question.isSuccess = false
-        break
-      }
-    }
-  }
-  question.content = html
 }
 
 // lấy kiểu câu hỏi từ tên
@@ -167,7 +95,7 @@ const config = reactive<Config>(
         },
         {
           text: t('topic'),
-          value: 'topicName',
+          value: 'topic',
         },
         {
           text: t('Url'),

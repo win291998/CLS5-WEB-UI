@@ -10,7 +10,7 @@ export const useImportFileStore = defineStore('importFile', () => {
   const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
   const type = ref<number | string | undefined>(2)
   const config = reactive<Config>({ table: { header: [] } })
-
+  const isLocal = ref(true)
   const paramsImport = reactive({
     validData: <any>[],
     invalidData: <any>[],
@@ -31,7 +31,10 @@ export const useImportFileStore = defineStore('importFile', () => {
           if (item[customKeyError.value]) {
             item.messageErr = ''
             item[customKeyError.value].forEach((err: any) => {
-              item.messageErr += `${t(err.location)} ${t(`${err.message}`)} <br> `
+              if (isLocal.value)
+                item.messageErr += `${t(err.location)}: ${t(`${err.message}`)} <br> `
+              else
+                item.messageErr += `${t(`${err.message}`)} <br> `
             })
           }
         }
@@ -221,5 +224,5 @@ export const useImportFileStore = defineStore('importFile', () => {
     }
   }
 
-  return { refTableValid, getValidData, checkInvalidData, checkDataError, paramsImport, fileChange, config, type, updateFromFile, customKeyError, $reset }
+  return { refTableValid, getValidData, checkInvalidData, checkDataError, paramsImport, fileChange, config, type, updateFromFile, customKeyError, $reset, isLocal }
 })

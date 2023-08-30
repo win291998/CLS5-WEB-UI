@@ -265,25 +265,6 @@ function standardizedDataInitCluse(valueQsList: any) {
         return item
       })
     }
-    if (valueQs.typeId === 8) {
-      const answers: any[] = []
-      valueQs.answers.forEach((element: any) => {
-        const position = element.position - 1
-        if (position > -1) {
-          if (answers[position] === undefined) {
-            answers[position] = {
-              left: null,
-              right: null,
-            }
-          }
-          if (element.isTrue === false)
-            answers[position].left = element
-          else answers[position].right = element
-        }
-      })
-      valueQs.answers = answers
-    }
-
     valueQs.isAutoApprove = MethodsUtil.checkPermission(null, 'QuestionManaging', 128) || true
   })
   return valueQsList
@@ -457,7 +438,7 @@ function exportExcel() {
                   color="primary"
                 />
               </div>
-              <div v-if="context.typeId !== 10 && !context.loadingShow && context.isExpand">
+              <div v-if="!context.loadingShow && context.isExpand">
                 <CpContentView
                   :type="context.typeId"
                   :data="context.questionData"
@@ -465,19 +446,6 @@ function exportExcel() {
                   :list-current-id="context.listCurrentId"
                   :show-media="false"
                 />
-              </div>
-              <div v-if="context.typeId === 10 && context.questionData && !context.loadingShow && context.isExpand">
-                <div
-                  v-for="qsItem in context.questionData?.questions"
-                  :key="qsItem.id"
-                  class="mb-5"
-                >
-                  <CpContentView
-                    :type="qsItem.typeId"
-                    :data="qsItem"
-                    :show-media="false"
-                  />
-                </div>
               </div>
             </CpQuestionName>
           </div>

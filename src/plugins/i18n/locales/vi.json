@@ -3575,5 +3575,7 @@
   "delete-survey-test": "Bạn có chắc muốn xóa câu khảo sát!",
   "check-configuration-survey-test": "vui lòng kiểm tra phần cấu hình đề khảo sát!",
   "please-input-title": "vui lòng nhập trường tiêu đề!",
-  "Url": "Đường dẫn"
+  "Url": "Đường dẫn",
+  "add-question-from-file": "Thêm câu hỏi từ tệp tin",
+  "IsTrue":"Đáp Án Đúng"
 }

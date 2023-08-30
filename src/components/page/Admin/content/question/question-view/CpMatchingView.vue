@@ -28,6 +28,34 @@ const { t } = window.i18n()
 function getIndex(position: number) {
   return `${String.fromCharCode(65 + position - 1)}.`
 }
+
+const dataValue = ref<question>({
+  content: '',
+  answers: [],
+})
+watch(() => props.data, val => {
+  const answers: any[] = []
+  const temp = window._.cloneDeep(val)
+  console.log(temp)
+
+  temp?.answers.forEach((element: any) => {
+    const position = element.position - 1
+    if (position > -1) {
+      if (answers[position] === undefined) {
+        answers[position] = {
+          left: null,
+          right: null,
+        }
+      }
+      if (element.isTrue === false)
+        answers[position].left = element
+      else answers[position].right = element
+    }
+  })
+
+  temp.answers = answers
+  dataValue.value = temp
+}, { immediate: true, deep: true })
 </script>
 
 <template>
@@ -35,19 +63,19 @@ function getIndex(position: number) {
     <div
       v-if="showContent"
       class="text-medium-md mb-5"
-      v-html="data.content"
+      v-html="dataValue.content"
     />
     <div
-      v-if="showMedia && data.urlFile"
+      v-if="showMedia && dataValue.urlFile"
       class="view-media mb-5"
     >
       <CpMediaContent
         :disabled="true"
-        :src="data.urlFile"
+        :src="dataValue.urlFile"
       />
     </div>
     <div
-      v-for="item in data.answers"
+      v-for="item in dataValue.answers"
       :key="item.id"
       class="w-100"
     >
