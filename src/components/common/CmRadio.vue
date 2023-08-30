@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import MethodsUtil from '@/utils/MethodsUtil'
+
 interface Props {
   name: string
   value: any
@@ -22,6 +24,7 @@ const selectedOption = ref(props.modelValue)
 function change() {
   emit('update:model-value', selectedOption.value)
 }
+const idRandom = ref(MethodsUtil.createRandomId(10))
 watch(() => props.modelValue, val => {
   selectedOption.value = val
 }, { immediate: true })
@@ -33,7 +36,7 @@ watch(() => props.modelValue, val => {
     :class="{ 'radio-item2': type === 1 }"
   >
     <input
-      :id="`radio-${name}-${value}`"
+      :id="`radio-${name}-${value}-${idRandom}`"
       v-model="selectedOption"
       type="radio"
       :name="name"
@@ -45,7 +48,7 @@ watch(() => props.modelValue, val => {
 
     <label
       :class="{ disabled }"
-      :for="`radio-${name}-${value}`"
+      :for="`radio-${name}-${value}-${idRandom}`"
     >{{ label }}</label>
   </div>
 </template>
@@ -74,7 +77,7 @@ watch(() => props.modelValue, val => {
   width: 20px;
   height: 20px;
   border-radius: 11px;
-  border: 2px solid rgb(var(--v-gray-600)) !important;
+  border: 1px solid rgb(var(--v-gray-300)) !important;
   background-color: transparent;
 }
 .radio-item label.disabled:before {

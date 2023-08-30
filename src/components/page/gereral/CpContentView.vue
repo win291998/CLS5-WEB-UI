@@ -16,6 +16,7 @@ import CpRangeSvView from '@/components/page/Admin/content/survey/survey-view/Cp
 import CpEvaluateSvView from '@/components/page/Admin/content/survey/survey-view/CpEvaluateSvView.vue'
 import CpEssaySvView from '@/components/page/Admin/content/survey/survey-view/CpEssaySvView.vue'
 import CpMatrixSingleSvView from '@/components/page/Admin/content/survey/survey-view/CpMatrixSingleSvView.vue'
+import CpMatrixMultiSvView from '@/components/page/Admin/content/survey/survey-view/CpMatrixMultiSvView.vue'
 
 /**
  * Xem chi tiết các loại câu hỏi
@@ -96,6 +97,9 @@ function checkTypeSurvey() {
 
     case 6:
       return CpMatrixSingleSvView
+
+    case 7:
+      return CpMatrixMultiSvView
 
     default:
       return CpSingleChoiseSvView

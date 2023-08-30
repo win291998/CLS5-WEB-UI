@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import CmRadio from '@/components/common/CmRadio.vue'
 import ArraysUtil from '@/utils/ArrayUtil'
+import CmCheckBox from '@/components/common/CmCheckBox.vue'
 
 /**
  * Xem chi tiết các loại câu hỏi
@@ -60,11 +60,12 @@ function getCheckedValue(categoryId: number, levelId: number) {
   const checkedValue = listAnswerMatrixValue.value.find((item: any) => item.categoryId === categoryId && item.levelId === levelId)
   return !!checkedValue
 }
-function onChangeAnswer(categoryId: number, levelId: number) {
-  const index = listAnswerMatrixValue.value?.findIndex(item => item.categoryId === categoryId)
+function onChangeAnswer(categoryId: number, levelId: number, value: any) {
+  const index = listAnswerMatrixValue.value?.findIndex(item => item.categoryId === categoryId && item.levelId === levelId)
+  console.log(value)
 
-  if (index >= 0) {
-    listAnswerMatrixValue.value.splice(index, 1, { categoryId, levelId })
+  if (index >= 0 && value === false) {
+    listAnswerMatrixValue.value.splice(index, 1)
   }
   else {
     listAnswerMatrixValue.value.push({
@@ -150,13 +151,10 @@ watch(() => props.data.listAnswerMatrix, (val: any) => {
               :key="level.id"
               class="tb-label-content"
             >
-              <CmRadio
-                :type="1"
-                :model-value="showAnswerTrue ? getCheckedValue(catg.id, level.id) : false"
+              <CmCheckBox
                 :disabled="false"
-                :name="`mx-single-${catg.id}`"
-                :value="true"
-                @update:model-value="onChangeAnswer(catg.id, level.id)"
+                :model-value="showAnswerTrue ? getCheckedValue(catg.id, level.id) : false"
+                @change="($value: any) => onChangeAnswer(catg.id, level.id, $value)"
               />
             </div>
           </div>
