@@ -52,16 +52,16 @@ watch(() => props.isShowModal, isShow => {
       <div v-if="data.typeId !== 10">
         <CpContentView
           :type="data.typeId"
-          :data="data.questionData"
+          :data="data"
           :show-answer-true="false"
         />
       </div>
-      <div v-if="data.typeId === 10 && data.questionData">
+      <div v-if="data.typeId === 10 && data">
         <div class="text-medium-md text-cluse-title">
           Yêu cầu chung: Nội dung câu hỏi chùm câu hỏi chùm câu hỏi chùm
         </div>
         <div
-          v-for="qsItem in data.questionData?.questions"
+          v-for="qsItem in data?.questions"
           :key="qsItem.id"
           class="mb-5"
         >

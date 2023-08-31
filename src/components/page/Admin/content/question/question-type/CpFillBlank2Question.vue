@@ -188,11 +188,11 @@ function addAnswerBlank(content: any, pos: number) {
 }
 
 // ===> thêm phương án blank vào danh sách đáp án
-function addAnswer(content: any, pos: number = anserList.value?.answers?.length + 1, keyBlank?: any, icheckTrue?: boolean, id?: any) {
+function addAnswer(content: any, pos: number = anserList.value?.answers?.length + 1, keyBlank?: any, isCheckTrue?: boolean, id?: any) {
   anserList.value.answers[anserList.value.answers.length] = {
     ...(id ? { id } : {}),
     content,
-    isTrue: window._.isEmpty(icheckTrue),
+    isTrue: window._.isEmpty(isCheckTrue),
     position: pos,
     isShuffle: false,
     urlFile: null,
@@ -202,8 +202,8 @@ function addAnswer(content: any, pos: number = anserList.value?.answers?.length 
 function checkShowAnsIsTrue(el: any) {
   let correst = 1 // vị trí đáp án đúng của từng blank2
   const positionBlank = Number(el.getAttribute('data-blank')) // vị trí blank
-  const icheckTrue = checkAnswerCorrest(positionBlank) // check đáp án đúng trong danh sách câu trả lời nhiễu
-  if (!window._.isEmpty(icheckTrue)) {
+  const isCheckTrue = checkAnswerCorrest(positionBlank) // check đáp án đúng trong danh sách câu trả lời nhiễu
+  if (!window._.isEmpty(isCheckTrue)) {
     // nếu có thì gắn vị trí đó cho biến correst
     anserList.value?.answerBlank[positionBlank]?.forEach((item: any) => {
       if (item.isTrue === true) {
@@ -213,7 +213,7 @@ function checkShowAnsIsTrue(el: any) {
     })
   }
 
-  el.innerHTML = `Đáp án ${icheckTrue ? getIndex(correst - 1) : getIndex(0)}`
+  el.innerHTML = `Đáp án ${isCheckTrue ? getIndex(correst - 1) : getIndex(0)}`
 }
 
 // format dữ liệu cho blank 2 khi edit
@@ -297,8 +297,8 @@ function updatePositionAns(type?: boolean) {
   elementAns.forEach((el: any, pos: number) => {
     let correst = 1 // vị trí đáp án đúng của từng blank2
     const positionBlank = Number(el.getAttribute('data-blank')) // vị trí blank
-    const icheckTrue = checkAnswerCorrest(positionBlank) // check đáp án đúng trong danh sách câu trả lời nhiễu
-    if (!window._.isEmpty(icheckTrue)) {
+    const isCheckTrue = checkAnswerCorrest(positionBlank) // check đáp án đúng trong danh sách câu trả lời nhiễu
+    if (!window._.isEmpty(isCheckTrue)) {
       // nếu có thì gắn vị trí đó cho biến correst
       anserList.value?.answerBlank[positionBlank]?.forEach((item: any) => {
         if (item.isTrue === true) {
@@ -309,14 +309,14 @@ function updatePositionAns(type?: boolean) {
     }
 
     // thay dữ liệu vị trí đó thành dạng 'Đáp án ...'
-    el.innerHTML = `Đáp án ${icheckTrue ? getIndex(correst - 1) : getIndex(0)}`
+    el.innerHTML = `Đáp án ${isCheckTrue ? getIndex(correst - 1) : getIndex(0)}`
 
     // cập nhật lại vị trí dom của đáp án blank2 trong input
     el.setAttribute('answer-position', pos)
     listBlank.value.push(Number(el.getAttribute('data-blank')))
 
     // Thêm đáp án vào danh sách đáp án lựa chọn
-    addAnswer(decodeURIComponent(el.getAttribute('data-text')), pos + 1, positionBlank, icheckTrue, el.getAttribute('data-id') ? Number(el.getAttribute('data-id')) : null)
+    addAnswer(decodeURIComponent(el.getAttribute('data-text')), pos + 1, positionBlank, isCheckTrue, el.getAttribute('data-id') ? Number(el.getAttribute('data-id')) : null)
   })
 }
 

@@ -67,6 +67,7 @@ const QuestionService = {
   /** apiv5 */
   GetDetailQuestion: (id: number) => `/questions/${id}`,
   GetListQuestionV5: '/questions',
+  GetListQuestionDetailV5: '/questions/with-detail',
   AddQuestion: '/questions',
 
 }

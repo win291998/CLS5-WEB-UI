@@ -260,8 +260,8 @@ function standardizedDataInitCluse(valueQsList: any) {
     }
 
     valueQs.isAutoApprove = MethodsUtil.checkPermission(null, 'QuestionManaging', 128) || true
-    questionData.value = valueQs
   })
+  questionData.value = valueQsList
 }
 function standardizedDataSingle(id?: any) {
   delete dataPost.value.questions
