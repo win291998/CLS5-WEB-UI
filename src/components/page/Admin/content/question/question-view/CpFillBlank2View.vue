@@ -34,9 +34,7 @@ const listCurrent = ref(1)
 function getIndex(position: number) {
   return `${String.fromCharCode(65 + position)}.`
 }
-function myAnserClick() {
-  console.log('position')
-}
+
 const contentBlank = ref()
 
 const contentBlankRef = ref()
@@ -67,13 +65,11 @@ onMounted(() => {
   const tempElement = document.createElement('div')
   tempElement.innerHTML = props.data.content
   const spanElements = tempElement.querySelectorAll('.answer-select')
-  console.log(spanElements)
 
   // Lặp qua từng phần tử và xóa nội dung bên trong
   spanElements.forEach((spanElement, idx) => {
     const isTrue = listAnserView.value[idx + 1].findIndex((item: any) => item.isTrue)
     spanElement.innerHTML = ''
-    console.log(spanElement)
 
     spanElement.innerHTML = `<span style="display: inline-flex;" class="${!props.showAnswerTrue ? 'chooseAnsPld' : ''}">${props.showAnswerTrue ? `Đáp án ${getIndex(isTrue)}` : `Lựa chọn ${idx + 1}`} <svg xmlns="http://www.w3.org/2000/svg" style="margin-top: 5px;" width="1em" height="1em" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m6 9l6 6l6-6"></path></svg>
     </span>`
@@ -83,7 +79,6 @@ onMounted(() => {
   attachClickEvent()
 })
 watch(() => props.listCurrentId, (val: number) => {
-  console.log(val)
   listCurrent.value = val
 })
 </script>

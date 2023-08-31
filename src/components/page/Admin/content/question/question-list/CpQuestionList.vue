@@ -135,13 +135,14 @@ async function actionItem(type: any) {
       break
     case 'ActionViewDetail':
 
-      console.log(window._.isEmpty(type[1]?.questionData))
-
-      if (window._.isEmpty(type[1]?.questionData)) {
+      if (window._.isEmpty(type[1]?.answers) && window._.isEmpty(type[1]?.question)) {
         const result = ref()
         await getInforQuestion(result, type[1].id).then(() => {
           console.log(result.value)
-          items.value[type[1].originIndex].questionData = result.value
+          items.value[type[1].originIndex] = {
+            ...items.value[type[1].originIndex],
+            ...result.value,
+          }
           questionCurrentView.value = items.value[type[1].originIndex]
           setTimeout(() => {
             isShowModalView.value = true
@@ -221,25 +222,6 @@ function standardizedDataInitSingle(valueQs: any) {
     console.log(valueQs)
   }
 
-  if (valueQs.typeId === 8) {
-    const answers: any[] = []
-    valueQs.answers.forEach((element: any) => {
-      const position = element.position - 1
-      if (position > -1) {
-        if (answers[position] === undefined) {
-          answers[position] = {
-            left: null,
-            right: null,
-          }
-        }
-        if (element.isTrue === false)
-          answers[position].left = element
-        else answers[position].right = element
-      }
-    })
-    valueQs.answers = answers
-  }
-
   valueQs.isAutoApprove = MethodsUtil.checkPermission(null, 'QuestionManaging', 128) || true
   return valueQs
 }
@@ -279,22 +261,48 @@ async function getInforQuestion(result: any, id: number) {
       result.value = standardizedDataInitSingle(data)
   })
 }
+const contentNameRef = ref<any>({})
+
+async function getInforQuestionDetail(isShow: boolean) {
+  loadingShow.value = true
+  await MethodsUtil.requestApiCustomV5(QuestionService.GetListQuestionDetailV5, TYPE_REQUEST.GET, queryParams.value).then(({ data }: any) => {
+    console.log(data)
+
+    data?.listData.forEach((element: any, index: number) => {
+      const dynamicRef = getContentNameRef(element) // Truy vấn đến ref của CpQuestionName có id 1
+      console.log(dynamicRef.value) // In ra giá trị của ref
+      element.isExpand = isShow
+      const result = ref()
+      if (element.isGroup)
+        result.value = standardizedDataInitCluse(element)
+      else
+        result.value = standardizedDataInitSingle(element)
+      items.value[index] = {
+        ...items.value[index],
+        ...result.value,
+      }
+
+      attachClickEvent(dynamicRef.value.qsNameContentRef, items.value[index])
+    })
+  })
+}
 async function openDetail(dataQs: any, el: any) {
   const result = ref()
-  if (window._.isEmpty(dataQs?.questionData)) {
-    items.value[dataQs.originIndex].loadingShow = true
+  items.value[dataQs.originIndex].loadingShow = true
 
-    await getInforQuestion(result, dataQs.id).then(() => {
-      console.log(result.value)
-      items.value[dataQs.originIndex].questionData = result.value
-      setTimeout(() => {
-        items.value[dataQs.originIndex].loadingShow = false
-      }, 500)
-    })
-  }
+  await getInforQuestion(result, dataQs.id).then(() => {
+    console.log(result.value)
+    items.value[dataQs.originIndex] = {
+      ...items.value[dataQs.originIndex],
+      ...result.value,
+    }
+    setTimeout(() => {
+      items.value[dataQs.originIndex].loadingShow = false
+    }, 500)
+  })
   items.value[dataQs.originIndex].isExpand = true
   nextTick(() => {
-    attachClickEvent(el, dataQs)
+    attachClickEvent(el.value, dataQs)
   })
 }
 async function closeDetail(dataQs: any) {
@@ -304,14 +312,14 @@ async function closeDetail(dataQs: any) {
 const contentRef = ref()
 function handleSpanClick(event: any, pos: number, dataQs: any) {
   // Xử lý sự kiện khi thẻ span được click
-  console.log('Span clicked:', event.target.innerHTML, pos)
+  console.log('Span clicked:', event.target.innerHTML, pos, dataQs.originIndex)
   items.value[dataQs.originIndex].listCurrentId = pos
 }
 function attachClickEvent(el: any, dataQs: any) {
-  console.log(el)
+  console.log(el, dataQs)
 
   nextTick(() => {
-    const answerSpans = el.value?.querySelectorAll('.answer-select')
+    const answerSpans = el?.querySelectorAll('.answer-select')
     console.log(answerSpans)
 
     answerSpans?.forEach((span: any, pos: any) => {
@@ -357,6 +365,20 @@ function exportExcel() {
     role: 1,
   }
   MethodsUtil.dowloadSampleFile(QuestionService.GetExportExcelQuestion, TYPE_REQUEST.GET, 'DanhSachCauHoi.xlxs', payload)
+}
+
+async function showDetailAll() {
+  isShowDetailAll.value = !isShowDetailAll.value
+  await getInforQuestionDetail(isShowDetailAll.value).then(() => {
+    console.log(items.value)
+    console.log(contentNameRef)
+  })
+}
+function getContentNameRef(context: any) {
+  if (!contentNameRef[`CpQuestionName${context?.id}`])
+    contentNameRef[`CpQuestionName${context?.id}`] = ref(null)
+
+  return contentNameRef[`CpQuestionName${context.id}`]
 }
 </script>
 
@@ -405,7 +427,7 @@ function exportExcel() {
             :size-icon="20"
             :icon="isShowDetailAll ? 'tabler:eye' : 'tabler:eye-off'"
             :title="isShowDetailAll ? t('collapse-all') : t('show-all')"
-            @click="() => isShowDetailAll = !isShowDetailAll"
+            @click="showDetailAll"
           />
         </template>
       </CpHeaderAction>
@@ -426,8 +448,9 @@ function exportExcel() {
         >
           <div v-if="col === 'name'">
             <CpQuestionName
+              :ref="getContentNameRef(context)"
               :status="context.statusId"
-              :content-basic="context.isExpand && [3, 6, 7].includes(context.typeId) ? context.questionData.content : context.basic"
+              :content-basic="context.isExpand && [3, 6, 7].includes(context.typeId) ? context.content : context.basic"
               :is-expand="isShowDetailAll || context.isExpand"
               @update:open="($event: any) => openDetail(context, $event)"
               @update:close="closeDetail(context)"
@@ -441,7 +464,7 @@ function exportExcel() {
               <div v-if="!context.loadingShow && context.isExpand">
                 <CpContentView
                   :type="context.typeId"
-                  :data="context.questionData"
+                  :data="context"
                   :show-content="false"
                   :list-current-id="context.listCurrentId"
                   :show-media="false"
@@ -451,6 +474,18 @@ function exportExcel() {
           </div>
           <div v-if="col === 'type'">
             <div>{{ t((QuestionType as any)[context?.typeId.toString()]) }}</div>
+            <div
+              v-if="context.isGroup"
+              class="text-primary"
+            >
+              {{ $t('cluster-question') }}
+            </div>
+            <div
+              v-else
+              class="text-warning"
+            >
+              {{ $t('single-question') }}
+            </div>
           </div>
         </template>
       </CmTable>

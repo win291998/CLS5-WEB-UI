@@ -36,8 +36,6 @@ const dataValue = ref<question>({
 watch(() => props.data, val => {
   const answers: any[] = []
   const temp = window._.cloneDeep(val)
-  console.log(temp)
-
   temp?.answers.forEach((element: any) => {
     const position = element.position - 1
     if (position > -1) {
