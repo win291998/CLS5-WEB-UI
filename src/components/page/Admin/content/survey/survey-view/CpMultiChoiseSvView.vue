@@ -14,6 +14,7 @@ interface Props {
   showContent: boolean
   showMedia: boolean
   showAnswerTrue: boolean
+  disabled?: boolean
 }
 const props = withDefaults(defineProps<Props>(), ({
   data: () => ({
@@ -22,6 +23,7 @@ const props = withDefaults(defineProps<Props>(), ({
   showContent: true,
   showMedia: true,
   showAnswerTrue: true,
+  disabled: false,
 }))
 function getIndex(position: number) {
   return `${String.fromCharCode(65 + position - 1)}.`
@@ -51,7 +53,7 @@ function getIndex(position: number) {
     >
       <div class="mr-1">
         <CmCheckBox
-          :disabled="true"
+          :disabled="disabled"
           :model-value="showAnswerTrue ? item.isTrue : false"
         />
       </div>

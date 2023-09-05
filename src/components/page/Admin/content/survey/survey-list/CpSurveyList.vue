@@ -217,6 +217,25 @@ async function getInforSurvey(result: any, id: number) {
     result.value = data
   })
 }
+async function getInforSurveyDetail(result: any, listId: any) {
+  loadingShow.value = true
+  const params = {
+    listId,
+  }
+  await MethodsUtil.requestApiCustom(QuestionService.PostSurveyDetail, TYPE_REQUEST.POST, params).then(({ data }: any) => {
+    result.value = data
+    console.log(data)
+
+    data.forEach((item: any, id: number) => {
+      item.isExpand = isShowDetailAll.value
+      items.value[id] = {
+        ...items.value[id],
+        ...item,
+      }
+    })
+    console.log(items.value)
+  })
+}
 async function openDetail(dataQs: any, el: any) {
   const result = ref()
   console.log(dataQs)
@@ -237,6 +256,15 @@ async function openDetail(dataQs: any, el: any) {
 async function closeDetail(dataQs: any) {
   console.log(dataQs)
   items.value[dataQs.originIndex].isExpand = false
+}
+
+async function showDetailAll() {
+  isShowDetailAll.value = !isShowDetailAll.value
+  const result = ref()
+  const listId = items.value.map((item: any) => item.id)
+  await getInforSurveyDetail(result, listId).then(() => {
+    console.log(result.value)
+  })
 }
 </script>
 
@@ -283,7 +311,7 @@ async function closeDetail(dataQs: any) {
             :size-icon="20"
             :icon="isShowDetailAll ? 'tabler:eye' : 'tabler:eye-off'"
             :title="isShowDetailAll ? t('collapse-all') : t('show-all')"
-            @click="() => isShowDetailAll = !isShowDetailAll"
+            @click="showDetailAll"
           />
         </template>
       </CpHeaderAction>
@@ -318,7 +346,6 @@ async function closeDetail(dataQs: any) {
                 v-if="!context.loadingShow && context.isExpand"
                 :type="context.questionTypeId"
                 :data="context"
-                disabled
                 :show-content="false"
                 :show-media="false"
                 :is-survey="true"

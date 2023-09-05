@@ -177,7 +177,7 @@ watch(tabActive, val => {
   }
   .item-tab {
     border-radius: unset !important;
-    text-transform: capitalize !important;
+    text-transform: initial !important;
     box-shadow: unset !important;
   }
 

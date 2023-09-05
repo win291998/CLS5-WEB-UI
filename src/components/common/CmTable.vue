@@ -675,4 +675,11 @@ watch(totalPaginationLocal, val => {
   display: flex;
   align-items: start;
 }
+.table-expand.selectedTable tbody tr td:first-child {
+  display: table-cell;
+  align-items: unset;
+}
+.v-btn--icon.v-btn--density-comfortable {
+  width: auto;
+}
 </style>

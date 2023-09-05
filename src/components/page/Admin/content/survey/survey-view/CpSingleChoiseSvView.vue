@@ -14,6 +14,7 @@ interface Props {
   showContent: boolean
   showMedia: boolean
   showAnswerTrue: boolean
+  disabled?: boolean
 }
 const props = withDefaults(defineProps<Props>(), ({
   data: () => ({
@@ -22,6 +23,7 @@ const props = withDefaults(defineProps<Props>(), ({
   showContent: true,
   showMedia: true,
   showAnswerTrue: true,
+  disabled: false,
 }))
 function getIndex(position: number) {
   return `${String.fromCharCode(65 + position - 1)}.`
@@ -52,7 +54,7 @@ function getIndex(position: number) {
       <CmRadio
         :type="1"
         :model-value="showAnswerTrue ? item.isTrue : false"
-        :disabled="true"
+        :disabled="disabled"
         :name="`single-${data.id}`"
         :value="true"
         class="mr-3"
