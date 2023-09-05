@@ -64,7 +64,7 @@ const disabledBtnHeaderAction = computed(() => !dataComponent.selectedRowsIds.le
 function handleClickBtn(type: string) {
   switch (type) {
     case 'fillter':
-      isShowFilter.value = true
+      isShowFilter.value = !isShowFilter.value
       break
 
       // case 'delete':

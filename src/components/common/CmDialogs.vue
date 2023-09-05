@@ -190,7 +190,7 @@ const sizeModal = computed(() => {
 .v-card-actions {
   padding-top: 12px;
   padding-bottom: 24px;
-  padding-inline: 24px !important;
+  padding-inline: 16px !important;
 }
 
 .modal-custom-divspace .v-card-item {

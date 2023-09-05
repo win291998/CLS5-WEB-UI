@@ -28,6 +28,7 @@ export default [
       {
         path: 'list-course',
         name: 'list-course',
+        component: () => import('@/pages/users/course/MyCourse.vue'),
       },
       {
         path: 'calendar',

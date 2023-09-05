@@ -171,6 +171,7 @@ const handleSearch = window._.debounce((value: any) => {
           :title="isShowFilter ? t('hide-filter') : t('show-filter')"
           @click="handleClickBtn('fillter')"
         />
+        <slot name="actionEnd" />
       </div>
     </VCol>
   </VRow>
