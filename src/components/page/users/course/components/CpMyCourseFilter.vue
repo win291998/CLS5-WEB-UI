@@ -7,8 +7,8 @@ import type { Any } from '@/typescript/interface'
 import CpTopicSelect from '@/components/page/gereral/CpTopicSelect.vue'
 
 const props = withDefaults(defineProps<Props>(), ({
-  topicId: () => ([]),
-  formOfStudy: null,
+  topicIds: () => ([]),
+  studyTypeId: null,
   sort: null,
   statusId: null,
   ownerId: null,
@@ -22,8 +22,8 @@ const CmSelect = defineAsyncComponent(() => import('@/components/common/CmSelect
 /** ** Interface */
 interface Emit {
   (e: 'update', value: any): void
-  (e: 'update:topicId', value: any): void
-  (e: 'update:formOfStudy', value: any): void
+  (e: 'update:topicIds', value: any): void
+  (e: 'update:studyTypeId', value: any): void
   (e: 'update:sort', value: any): void
   (e: 'update:pageSize', value: any): void
   (e: 'update:pageNumber', value: any): void
@@ -31,55 +31,46 @@ interface Emit {
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 /** ** Khởi tạo store */
 const storeCombobox = comboboxStore()
-const { topicCombobox, formOfStudyCombobox, compoboxSortCourse } = storeToRefs(storeCombobox)
-const { getComboboxTopic, getComboboxFormStudy } = storeCombobox
+const { topicCombobox } = storeToRefs(storeCombobox)
+const { getComboboxTopic } = storeCombobox
 
 interface Props {
-  topicId: any[]
-  formOfStudy?: any
+  topicIds: any[]
+  studyTypeId?: any
   sort?: any
-  isDisplayHome?: any
-  statusId?: any
-  ownerId?: any
-  dateFrom?: any
-  dateTo?: any
 }
-watch(() => props.topicId, val => {
+const topics = ref([])
+
+watch(() => props.topicIds, (val: any) => {
   console.log(val)
+  topics.value = val
 })
 
 const LABEL = Object.freeze({
   FILLTER1: t('form-study'),
-  FILLTER2: t('filter-course'),
+  FILLTER2: t('latest-course'),
 })
+const sortOption = [
+  { key: t('latest-course'), value: '-date' },
+  { key: t('oldest-course'), value: '*date' },
+]
+const studyTypes = [
+  { key: 1, value: 'Online' },
+  { key: 2, value: 'Offline' },
+]
 
 // method
 
 function change(key: any, value: any) {
   switch (key) {
-    case 'topicId':
-      emit('update:topicId', value)
+    case 'topicIds':
+      emit('update:topicIds', value)
       break
-    case 'formOfStudy':
-      emit('update:formOfStudy', value)
+    case 'studyTypeId':
+      emit('update:studyTypeId', value)
       break
     case 'sort':
       emit('update:sort', value)
-      break
-    case 'isDisplayHome':
-      emit('update:isDisplayHome', value)
-      break
-    case 'statusId':
-      emit('update:statusId', value)
-      break
-    case 'ownerId':
-      emit('update:ownerId', value)
-      break
-    case 'dateFrom':
-      emit('update:dateFrom', value)
-      break
-    case 'dateTo':
-      emit('update:dateTo', value)
       break
     default:
       break
@@ -91,20 +82,17 @@ function change(key: any, value: any) {
 
 const questionLevel = ref()
 function getComboboxQuestionLevel() {
-  MethodsUtil.requestApiCustom(QuestionService.GetComboboxQuestionLevel, TYPE_REQUEST.GET).then(({ data }: { data: Any[] }) => {
-    questionLevel.value = data
-  })
+  if (window._.isEmpty(questionLevel.value)) {
+    MethodsUtil.requestApiCustom(QuestionService.GetComboboxQuestionLevel, TYPE_REQUEST.GET).then(({ data }: { data: Any[] }) => {
+      questionLevel.value = data
+    })
+  }
 }
-
-if (formOfStudyCombobox.value)
-  getComboboxFormStudy()
 
 // created
 onUnmounted(() => {
   topicCombobox.value = []
-  formOfStudyCombobox.value = []
 })
-const topics = ref([])
 if (topicCombobox.value)
   getComboboxTopic(2)
 </script>
@@ -124,7 +112,7 @@ if (topicCombobox.value)
           :text="`${t('topic')}`"
           :is-show-add="false"
           :placeholder="t('topic')"
-          @update:model-value="($event) => change('topicId', $event)"
+          @update:model-value="($event) => change('topicIds', $event)"
         />
       </VCol>
       <VCol
@@ -133,13 +121,13 @@ if (topicCombobox.value)
         sm="4"
       >
         <CmSelect
-          :model-value="formOfStudy"
-          :items="formOfStudyCombobox"
+          :model-value="studyTypeId"
+          :items="studyTypes"
           item-value="key"
           custom-key="value"
           :text="LABEL.FILLTER1"
           :placeholder="LABEL.FILLTER1"
-          @update:model-value="($event) => change('formOfStudy', $event)"
+          @update:model-value="($event) => change('studyTypeId', $event)"
           @open="getComboboxQuestionLevel"
         />
       </VCol>
@@ -150,9 +138,7 @@ if (topicCombobox.value)
       >
         <CmSelect
           :model-value="sort"
-          :items="compoboxSortCourse"
-          item-value="key"
-          custom-key="value"
+          :items="sortOption"
           :text="LABEL.FILLTER2"
           :placeholder="LABEL.FILLTER2"
           @update:model-value="($event) => change('sort', $event)"
