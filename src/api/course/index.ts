@@ -39,6 +39,7 @@ const CourseService = {
   GetSampleFileUpdatePoint: 'Course/template-excel-update-point', // Lấy thông tin file mẫu cập nhật điểm
   GetListFilesCourse: 'contentarchive/get-files-in-course', // Lấy danh sách file tải của khóa học
   GetListSurvey: '/surveyexam/get-paging',
+  GetListMyCourse: '/CourseUser/my-courses',
 
   /** Post */
   PostAddCourseOrg: '/course/add-course-to-organizational-structures',
