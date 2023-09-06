@@ -5,6 +5,10 @@ import CpMyCourseItemCard from '@/components/page/users/course/components/CpMyCo
 import CpHeaderAction from '@/components/page/gereral/CpHeaderAction.vue'
 import CmSwitch from '@/components/common/CmSwitch.vue'
 import CpMyCourseItemHappenning from '@/components/page/users/course/item/CpMyCourseItemHappenning.vue'
+import MethodsUtil from '@/utils/MethodsUtil'
+
+import { TYPE_REQUEST } from '@/typescript/enums/enums'
+import CourseService from '@/api/course/index'
 
 /** lib */
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
@@ -13,18 +17,13 @@ const route = useRoute()
 const isShowFilter = ref(true)
 
 const queryParams = ref<any>({
-  topic: [],
-  level: null,
-  isGroup: null,
-  createdBy: null,
-  type: null,
-  status: null,
-  pageSize: 10,
-  pageToken: null,
-  searchTerm: null,
-  sortBy: null,
-  startDate: null,
-  endDate: null,
+  sort: '-date',
+  typeId: 1,
+  studyTypeId: null,
+  topicIds: [],
+  search: null,
+  pageSize: 12,
+  pageNumber: 1,
 })
 const dataComponent = reactive({
   deleteIds: [] as any, // list id các row table muốn xóa
@@ -74,6 +73,19 @@ const action = reactive([
   // action: handleOrgTree,
   },
 ])
+interface course {
+  id: number
+  [name: string]: any
+}
+const myCourseHappening = ref<course[]>([])
+function getListMyCourseHappen() {
+  MethodsUtil.requestApiCustom(CourseService.GetListMyCourse, TYPE_REQUEST.GET, queryParams.value).then((result: any) => {
+    console.log(result)
+    myCourseHappening.value = result?.data?.myCourseHappening
+  })
+}
+
+getListMyCourseHappen()
 </script>
 
 <template>
@@ -118,11 +130,12 @@ const action = reactive([
       <div class="my-course-list">
         <VRow>
           <VCol
-            v-for="item in 20"
-            :key="item"
+            v-for="item in myCourseHappening"
+            :key="item.id"
             cols="12"
             sm="6"
             md="4"
+            xl="3"
           >
             <CpMyCourseItemCard>
               <CpMyCourseItemHappenning />
