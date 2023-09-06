@@ -353,10 +353,11 @@ span {
   font-weight: 400px;
 }
 .text-ellipsis {
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
   word-break: break-word;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 //icon notifi
 .icon-noti {

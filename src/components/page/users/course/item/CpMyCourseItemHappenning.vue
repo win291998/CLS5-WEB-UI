@@ -1,18 +1,46 @@
 <script setup lang="ts">
+import DateUtil from '@/utils/DateUtil'
 
+const propsValue = withDefaults(defineProps<Props>(), ({
+  data: null,
+}))
+
+interface Props {
+  data: any
+}
 </script>
 
 <template>
-  <div class="d-flex ">
-    <div class="mr-2 d-flex align-center">
-      <VIcon
-        icon="tabler:calendar"
-        size="16"
-        color="error"
-      />
+  <div>
+    <div
+      v-if="data.courseStartDate"
+      class="d-flex "
+    >
+      <div class="mr-2 d-flex align-center">
+        <VIcon
+          icon="tabler:calendar-check"
+          size="16"
+          color="error"
+        />
+      </div>
+      <div class="text-regular-sm">
+        <div>{{ DateUtil.formatTimeToHHmm(data.courseStartDate) }} {{ DateUtil.formatDateToDDMM(data.courseStartDate, '-') }}</div>
+      </div>
     </div>
-    <div class="text-regular-sm">
-      12:00 28-12-2022
+    <div
+      v-if="data.courseEndDate"
+      class="d-flex mb-4"
+    >
+      <div class="mr-2 d-flex align-center">
+        <VIcon
+          icon="tabler:calendar-cancel"
+          size="16"
+          color="error"
+        />
+      </div>
+      <div class="text-regular-sm">
+        <div>{{ DateUtil.formatTimeToHHmm(data.courseEndDate) }} {{ DateUtil.formatDateToDDMM(data.courseEndDate, '-') }}</div>
+      </div>
     </div>
   </div>
 </template>

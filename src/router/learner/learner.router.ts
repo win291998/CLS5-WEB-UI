@@ -31,6 +31,16 @@ export default [
         component: () => import('@/pages/users/course/MyCourse.vue'),
       },
       {
+        path: 'course-detail/:id',
+        name: 'course-detail',
+        component: () => import('@/pages/users/course/course-detail/MyCourseDetail.vue'),
+      },
+      {
+        path: 'course-learning/:id',
+        name: 'course-learning',
+        component: () => import('@/pages/users/course/course-learning/CourseLearning.vue'),
+      },
+      {
         path: 'calendar',
         name: 'calendar',
       },

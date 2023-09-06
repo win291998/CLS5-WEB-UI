@@ -6,7 +6,7 @@ const propsValue = withDefaults(defineProps<Props>(), ({
 }))
 
 interface Props {
-  src: string // đường dẫn
+  src: string | null // đường dẫn
   height?: string // chiều cao
   cover?: boolean // độ phủ
 }
@@ -17,6 +17,8 @@ interface Props {
     <VImg
       v-if="src"
       :src="src"
+      :height="height"
+      :cover="cover"
     />
   </div>
 </template>

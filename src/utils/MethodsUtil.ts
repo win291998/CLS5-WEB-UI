@@ -14,6 +14,7 @@ import {
   MediaType,
   audioExtention, audioTypes, excelFileExtention, imageFileExtention, imageTypes, otherFileExtention, videoExtention, videoTypes,
 } from '@/constant/Globals'
+import { configStore } from '@/stores/index'
 
 const SERVERFILE = process.env.VUE_APP_BASE_SERVER_FILE
 type CallbackFunction = (key: string) => any
@@ -248,6 +249,33 @@ export default class MethodsUtil {
       result += characters.charAt(Math.floor(Math.random() * charactersLength))
 
     return `randomId-${result}`
+  }
+
+  static getRandomImage = (type = 0) => {
+    const configControl = configStore()
+    const { defaultThemeValue } = storeToRefs(configControl)
+    const listExamImages: any = defaultThemeValue.value[type === 0 ? 'examImages' : 'items']
+
+    return listExamImages[Math.floor(Math.random() * listExamImages.length)].value
+  }
+
+  static getThemeItem(type = 1) {
+    const configControl = configStore()
+    const { defaultThemeValue } = storeToRefs(configControl)
+    return (key: any) => {
+      const themeItemValue = defaultThemeValue.value?.items?.find(el => el.key === key)
+      if (themeItemValue)
+        return themeItemValue.value
+
+      return ''
+    }
+  }
+
+  static urlImageFile = (src: string) => {
+    if (src)
+      return src.startsWith('http') ? src : SERVERFILE + src
+
+    return null
   }
 
   // // kiểm tra quyền trên view

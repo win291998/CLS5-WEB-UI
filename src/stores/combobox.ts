@@ -42,6 +42,7 @@ export const comboboxStore = defineStore('combobox', () => {
     { key: '-name', value: t('CourseService_Sort_By_Name_Desc') },
     { key: '-modifiedDate', value: t('CourseService_Sort_By_Updated_Date') },
   ])
+
   const isDisplayHomeCombobox = ref([
     {
       key: t('yes'),

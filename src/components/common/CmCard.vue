@@ -11,6 +11,7 @@ interface Props {
   padding?: string
   borderRadius?: string
   hover?: boolean
+  hideAction?: boolean
   href?: string
   rounded?: string | number | boolean
   variant?: string
@@ -22,6 +23,7 @@ const props = withDefaults(defineProps<Props>(), ({
   disabled: false,
   shadow: 'shadow-md',
   borderRadius: '8px',
+  hideAction: false,
 }))
 </script>
 
@@ -59,7 +61,10 @@ const props = withDefaults(defineProps<Props>(), ({
     <template #text>
       <slot name="text" />
     </template>
-    <template #actions>
+    <template
+      v-if="!hideAction"
+      #actions
+    >
       <slot name="actions" />
     </template>
   </VCard>

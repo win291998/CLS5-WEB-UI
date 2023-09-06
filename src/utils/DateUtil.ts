@@ -36,10 +36,10 @@ export default class DateUtil {
   }
 
   // format date to DD/MM/YYYY
-  static formatDateToDDMM = (value: any) => {
+  static formatDateToDDMM = (value: any, type = '/') => {
     if (!value)
       return ''
-    return moment(String(value)).format('DD/MM/YYYY')
+    return moment(String(value)).format(`DD${type}MM${type}YYYY`)
   }
 
   static formatTimeToHHmm = (value: any) => {

@@ -111,7 +111,7 @@ defineExpose({
     :icon="isRounded ? icon : null"
     v-bind="propsBlind"
     :class="[color, outlined, className, !isRounded ? 'text-style-btn' : '', color === 'white' ? 'border-button' : '']"
-    @click="handleClick"
+    @click.stop="handleClick"
   >
     <!-- :class="[`${prefixColor}-${color}`, bgColor, className]" -->
     <template

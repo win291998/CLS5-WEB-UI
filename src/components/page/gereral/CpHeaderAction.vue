@@ -84,6 +84,9 @@ const handleSearch = window._.debounce((value: any) => {
   emit('update:pageNumber', 1)
   emit('update:pageSize', 10)
 }, 500)
+watch(() => props.keyword, (val: string) => {
+  keySearch.value = val
+})
 </script>
 
 <template>
