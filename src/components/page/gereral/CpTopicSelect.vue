@@ -52,7 +52,10 @@ interface Emit {
 
 const topicIds = props.multiple ? ref<any[]>([]) : ref<any>(null)
 watch(() => props.modelValue, (val: any[] | any) => {
-  topicIds.value = val
+  if (!window._.isEmpty(val) && window._.isEmpty(topicCombobox.value)) {
+    getComboboxTopic(props.type)
+    topicIds.value = val
+  }
 }, { immediate: true })
 
 function change() {
@@ -63,7 +66,9 @@ function change() {
   emit('update:modelValue', topicIds.value)
 }
 onMounted(() => {
-  if (props.type)
+  console.log(props.modelValue)
+
+  if (props.type && !window._.isEmpty(props.modelValue))
     getComboboxTopic(props.type)
 })
 
@@ -87,7 +92,10 @@ const dataInput = ref<DataInput>({
 function showModalEdit() {
   isShowModalEdit.value = true
 }
-
+function open() {
+  if (props.type && window._.isEmpty(topicCombobox.value))
+    getComboboxTopic(props.type)
+}
 async function confirm(val: DataInput) {
   let mes = t('add-success')
   let status: typeToast = 'SUCCESS'
@@ -127,6 +135,7 @@ async function confirm(val: DataInput) {
       :normalizer-custom-type="['id', 'name', 'children']"
       :placeholder="placeholder"
       @update:model-value="change"
+      @open="open"
     />
     <CmButton
       v-if="!disabled && isShowAdd"

@@ -71,22 +71,27 @@ function activeTab(value: any) {
   dataTab.value = props.listTab.find(x => x.key === value) as tab
   if (dataTab.value?.isRendered !== undefined && dataTab.value?.isRendered !== null)
     dataTab.value.isRendered = true
-  if (props.type === 'button') {
-    router.push({
-      query: {
-        ...route.query,
-        [props.label]: value,
-      },
-    })
-  }
-  else {
-    router.replace({
-      query: {
-        ...route.query,
-        [props.label]: value,
-      },
-    })
-  }
+  nextTick(() => {
+    if (props.type === 'button') {
+      console.log(route.query[props.label])
+      const temp = window._.cloneDeep(route.query)
+      router.push({
+        query: {
+          ...temp,
+          [props.label]: value,
+        },
+      })
+    }
+    else {
+      router.replace({
+        query: {
+          ...route.query,
+          [props.label]: value,
+        },
+      })
+    }
+  })
+
   emit('activeTab', tabActive.value)
 }
 

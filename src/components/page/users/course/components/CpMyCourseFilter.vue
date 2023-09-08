@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { comboboxStore } from '@/stores/combobox'
 import MethodsUtil from '@/utils/MethodsUtil'
 import { TYPE_REQUEST } from '@/typescript/enums/enums'
 import QuestionService from '@/api/question'
@@ -29,10 +28,6 @@ interface Emit {
   (e: 'update:pageNumber', value: any): void
 }
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
-/** ** Khởi tạo store */
-const storeCombobox = comboboxStore()
-const { topicCombobox } = storeToRefs(storeCombobox)
-const { getComboboxTopic } = storeCombobox
 
 interface Props {
   topicIds: any[]
@@ -88,13 +83,6 @@ function getComboboxQuestionLevel() {
     })
   }
 }
-
-// created
-onUnmounted(() => {
-  topicCombobox.value = []
-})
-if (topicCombobox.value)
-  getComboboxTopic(2)
 </script>
 
 <template>
@@ -108,7 +96,7 @@ if (topicCombobox.value)
         <CpTopicSelect
           v-model:model-value="topics"
           multiple
-          :type="4"
+          :type="2"
           :text="`${t('topic')}`"
           :is-show-add="false"
           :placeholder="t('topic')"
