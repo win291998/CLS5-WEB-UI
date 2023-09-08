@@ -13,6 +13,11 @@ import type { Any } from '@/typescript/interface'
 import ObjectUtil from '@/utils/ObjectUtil'
 import CmImg from '@/components/common/CmImg.vue'
 import CmTable from '@/components/common/CmTable.vue'
+import { StatusTypeFormStudy } from '@/constant/data/status.json'
+import CmChip from '@/components/common/CmChip.vue'
+import CpCustomInforCourse from '@/components/page/gereral/CpCustomInforCourse.vue'
+import StringUtil from '@/utils/StringUtil'
+import DateUtil from '@/utils/DateUtil'
 
 /** lib */
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
@@ -73,7 +78,7 @@ const totalHappening = ref(0)
 function getListMyCourseHappen() {
   MethodsUtil.requestApiCustom(CourseService.GetListMyCourse, TYPE_REQUEST.GET, queryParams.value).then((result: any) => {
     console.log(result)
-    myCourseHappening.value = result?.data?.myCourseHappening
+    myCourseHappening.value = result?.data?.myCourseHappening ?? []
     totalHappening.value = result?.data?.totalHappening
   })
 }
@@ -119,9 +124,12 @@ function getImage(id: number): string {
 
 // view table
 const headers = ref([
-  { text: '', value: 'checkbox', width: 50 },
-  { text: t('proficiency'), value: 'proficiencyName' },
-  { text: t('level'), value: 'levels', type: 'custom', width: 250 },
+  { text: t('Course_Name'), value: 'courseName', type: 'custom' },
+  { text: t('topic'), value: 'topicName', type: 'custom' },
+  { text: t('form-study'), value: 'formOfStudy', type: 'custom' },
+  { text: t('author-name'), value: 'fullname', type: 'custom' },
+  { text: t('Process'), value: 'process', type: 'custom' },
+  { text: t('end-time'), value: 'courseEndDate', type: 'custom' },
 ])
 
 onMounted(async () => {
@@ -169,7 +177,7 @@ watch(queryParams, (val: Any) => {
   <div class="mt-6">
     <div class="mt-6">
       <div class="text-medium-lg mb-6">
-        {{ t('course-happenning') }}
+        {{ t('course-happening') }}
       </div>
       <CmCollapse :is-show="isShowFilter">
         <CpMyCourseFilter
@@ -239,27 +247,54 @@ watch(queryParams, (val: Any) => {
       </div>
       <div v-else>
         <CmTable
-          v-model:pageSize="queryParams.pageSize"
+          v-model:page-number="queryParams.pageNumber"
+          v-model:page-size="queryParams.pageSize"
           :headers="headers"
-          :items="items"
-          :total-record="totalRecord"
-          :page-number="queryParams.pageNumber"
-          return-object
-          :type-pagination="2"
-          @handlePageClick="handlePageClick"
-          @update:selected="selectedRows"
+          :items="myCourseHappening"
+          :total-record="totalHappening"
+          :type-pagination="1"
         >
           <template #rowItem="{ col, context }">
-            <div v-if="col === 'levels'">
-              <CmSelect
-                v-model="context.selectedLevel"
-                :items="context.levels"
-                custom-key="proficiencyLevelName"
-                item-value="proficiencyLevelMapId"
-                :append-to-body="true"
-                :placeholder="LABEL.PLH_SELECT"
-                @update:modelValue="changeCellvalue($event, context)"
+            <div v-if="col === 'courseName'">
+              <CpCustomInforCourse
+                label-title="name"
+                :context="context"
               />
+            </div>
+
+            <div v-if="col === 'formOfStudy'">
+              <CmChip
+                v-if="context.formOfStudy"
+                :color="MethodsUtil.checkType(context.formOfStudy, StatusTypeFormStudy, 'id')?.color"
+              >
+                <VIcon
+                  start
+                  icon="carbon:dot-mark"
+                  size="12"
+                />
+                <span>{{ t(MethodsUtil.checkType(context.formOfStudy, StatusTypeFormStudy, 'id')?.name) }}</span>
+              </CmChip>
+            </div>
+            <div v-if="col === 'fullname'">
+              {{ StringUtil.formatFullName(context?.author?.firstName, context?.author?.lastName) || '-' }}
+            </div>
+            <div v-if="col === 'topicName'">
+              {{ context?.topicName || '-' }}
+            </div>
+            <div v-if="col === 'process'">
+              <VProgressLinear
+                rounded-bar
+                :model-value="context.completionRatio.toFixed()"
+                color="success"
+                class="mt-6"
+                rounded
+                height="8"
+              />
+            </div>
+            <div v-if="col === 'courseEndDate'">
+              <div class="text-nowrap">
+                {{ DateUtil.formatTimeToHHmm(context[col]) }} {{ DateUtil.formatDateToDDMM(context[col], '-') }}
+              </div>
             </div>
           </template>
         </CmTable>

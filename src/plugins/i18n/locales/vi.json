@@ -613,6 +613,7 @@
   "export-file-excel": "Xuất file excel",
   "subject": "Môn học",
   "process": "Tiến trình học tập",
+  "Process": "Tiến trình",
   "rating": "Xếp hạng",
   "talent": "Năng lực",
   "timeline": "Dòng thời gian",
@@ -1844,6 +1845,7 @@
   "classification": "Xếp loại",
   "communication-skill": "Kĩ năng giao tiếp",
   "complete-asign-course": "Khóa học hoàn thành / được gán",
+  "course-complete": "Khóa học hoàn thành",
   "complete-asign-exam": "Kì thi hoàn thành / được gán",
   "complete-asign-survey": "Khảo sát hoàn thành/ được gán",
   "complete-candidate": "Thí sinh đã hoàn thành",
@@ -3580,6 +3582,6 @@
   "please-input-title": "vui lòng nhập trường tiêu đề!",
   "Url": "Đường dẫn",
   "add-question-from-file": "Thêm câu hỏi từ tệp tin",
-  "course-happenning": "Khóa học đang diễn ra",
+  "course-happening": "Khóa học đang diễn ra",
   "IsTrue": "Đáp Án Đúng"
 }

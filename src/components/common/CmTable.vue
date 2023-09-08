@@ -257,6 +257,9 @@ watch(() => props.items, (val: Item[]) => {
       selectedRows.value.push(element[keyid.value])
   })
 }, { immediate: true })
+watch(() => props.pageSize, (val: number) => {
+  pageSize.value = val
+}, { immediate: true })
 
 watch(totalPaginationLocal, val => {
   if (props?.isLocalTable) {
@@ -514,6 +517,7 @@ watch(totalPaginationLocal, val => {
         :type="typePagination"
         :total-items="isLocalTable ? totalPaginationLocal : totalRecord || items.length"
         :current-page="props.pageNumber"
+        :page-size="pageSize"
         @pageClick="pageSizeChange"
       />
     </div>

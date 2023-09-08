@@ -359,6 +359,9 @@ span {
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+.text-nowrap {
+  text-wrap: nowrap;
+}
 //icon notifi
 .icon-noti {
   display: flex;
