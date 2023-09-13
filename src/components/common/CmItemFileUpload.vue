@@ -45,8 +45,6 @@ async function dowloadItems(item: any) {
   emit('downloadFile', item)
 }
 async function refesh(item: any) {
-  console.log(item)
-
   emit('refesh', item)
 }
 

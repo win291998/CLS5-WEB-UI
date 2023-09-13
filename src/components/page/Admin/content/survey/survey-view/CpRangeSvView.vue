@@ -37,7 +37,6 @@ function getIndex(position: number) {
 }
 const valueRange = ref(null)
 watch(() => props.data.answeredValue, val => {
-  console.log(val)
   valueRange.value = val
 })
 </script>

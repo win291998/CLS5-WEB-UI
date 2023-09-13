@@ -4,7 +4,7 @@ import CpMyCourseFilter from '@/components/page/users/course/components/CpMyCour
 import CpMyCourseItemCard from '@/components/page/users/course/components/CpMyCourseItemCard.vue'
 import CpHeaderAction from '@/components/page/gereral/CpHeaderAction.vue'
 import CmSwitch from '@/components/common/CmSwitch.vue'
-import CpMyCourseItemCompleted from '@/components/page/users/course/item/CpMyCourseItemCompleted.vue'
+import CpMyCourseItemHome from '@/components/page/users/course/item/CpMyCourseItemHome.vue'
 import MethodsUtil from '@/utils/MethodsUtil'
 import CmPagination from '@/components/common/CmPagination.vue'
 import { TYPE_REQUEST } from '@/typescript/enums/enums'
@@ -13,13 +13,9 @@ import type { Any } from '@/typescript/interface'
 import ObjectUtil from '@/utils/ObjectUtil'
 import CmImg from '@/components/common/CmImg.vue'
 import CmTable from '@/components/common/CmTable.vue'
-import { StatusTypeFormStudy } from '@/constant/data/status.json'
-import CmChip from '@/components/common/CmChip.vue'
 import CpCustomInforCourse from '@/components/page/gereral/CpCustomInforCourse.vue'
 import StringUtil from '@/utils/StringUtil'
 import DateUtil from '@/utils/DateUtil'
-import CmButton from '@/components/common/CmButton.vue'
-import CmIcon from '@/components/common/CmIcon.vue'
 
 /** lib */
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
@@ -29,10 +25,10 @@ const isShowFilter = ref(true)
 
 const queryParams = ref<any>({
   sort: '-date',
-  typeId: 4,
+  typeId: 1,
   studyTypeId: null,
   topicIds: [],
-  search: null,
+  keyword: null,
   pageSize: 12,
   pageNumber: 1,
 })
@@ -49,11 +45,11 @@ function handleClickBtn(type: string) {
   }
 }
 
-// search ở fillter header
+// keyword ở fillter header
 async function handleSearch(value: any) {
   queryParams.value.pageNumber = 1
-  queryParams.value.search = value
-  getListMyCourseComplete()
+  queryParams.value.keyword = value
+  getListMyCourseHome()
 }
 
 const activeSwitch = ref(false)
@@ -73,18 +69,18 @@ interface course {
   id: number
   [name: string]: any
 }
-const myCourseComplete = ref<course[]>([])
-const totalComplete = ref(0)
+const myCourseHome = ref<course[]>([])
+const totalRecord = ref(0)
 const groupType = ref(route.query.type)
-function getListMyCourseComplete() {
-  MethodsUtil.requestApiCustom(CourseService.GetListMyCourse, TYPE_REQUEST.GET, queryParams.value).then((result: any) => {
-    myCourseComplete.value = result?.data?.myCourseComplete ?? []
-    totalComplete.value = result?.data?.totalComplete
+function getListMyCourseHome() {
+  MethodsUtil.requestApiCustom(CourseService.GetListMyCourseHome, TYPE_REQUEST.GET, queryParams.value).then((result: any) => {
+    myCourseHome.value = result?.data?.pageLists ?? []
+    totalRecord.value = result?.data?.totalRecord
   })
 }
 function pageChange(pageNumber: any) {
   queryParams.value.pageNumber = pageNumber
-  getListMyCourseComplete()
+  getListMyCourseHome()
 }
 
 //  Bấm nút vào nội dung khóa học
@@ -92,6 +88,17 @@ async function clickDetailCourse(item: any, actionClick: any) {
   if (item) {
     const { id } = item
     switch (actionClick) {
+      case 'start':
+      case 'continue':
+
+        // const [requiredCourses, requiredProficiencies] = await this.checkCourseCondition(id)
+        // if ((requiredCourses && requiredCourses.length > 0) || (requiredProficiencies && requiredProficiencies.length > 0))
+        //  openModalNotifi(requiredProficiencies, requiredCourses)
+
+        // else
+        router.push({ name: 'course-learning', params: { id }, query: {} })
+
+        break
       case 'review':
         router.push({ name: 'course-review', params: { id }, query: {} })
         break
@@ -113,22 +120,15 @@ function getImage(id: number): string {
 const headers = ref([
   { text: t('Course_Name'), value: 'courseName', type: 'custom' },
   { text: t('topic'), value: 'topicName', type: 'custom' },
-  { text: t('form-study'), value: 'formOfStudy', type: 'custom' },
   { text: t('author-name'), value: 'fullname', type: 'custom' },
-  { text: t('end-time'), value: 'courseEndDate', type: 'custom' },
-  { text: '', value: 'evaluate', type: 'custom' },
-  { text: '', value: 'action', type: 'custom' },
+  { text: t('start-time'), value: 'startDate', type: 'custom' },
+  { text: t('end-time'), value: 'endDate', type: 'custom' },
 ])
 
-function review(row: any) {
-  if (row.isReviewExpired)
-    clickDetailCourse(row, 'detail')
-  clickDetailCourse(row, 'review')
-}
 onMounted(async () => {
-  groupType.value = 'completed'
+  groupType.value = 'homePage'
   if (Object.keys(route.query).length > 1) {
-    queryParams.value.search = route.query.search ? route.query.search as string : queryParams.value.search
+    queryParams.value.keyword = route.query.keyword ? route.query.keyword as string : queryParams.value.keyword
     queryParams.value.sort = route.query.sort ? route.query.sort as string[] : []
     queryParams.value.studyTypeId = route.query.studyTypeId ? Number(route.query.studyTypeId) : queryParams.value.studyTypeId
     if (route.query.topicIds && route.query.topicIds?.length) {
@@ -150,18 +150,17 @@ onMounted(async () => {
     queryParams.value.pageSize = route.query.pageSize ? Number(route.query.pageSize) : queryParams.value.pageSize
   }
 
-  else { await getListMyCourseComplete() }
+  else { await getListMyCourseHome() }
 })
 watch(queryParams, (val: Any) => {
   const params = ObjectUtil.omitByDeep(JSON.parse(JSON.stringify(val)))
-  groupType.value = 'completed'
   router.push({
     query: {
       type: route.query.type,
       ...params,
     },
   })
-  getListMyCourseComplete()
+  getListMyCourseHome()
 }, { deep: true })
 </script>
 
@@ -169,7 +168,7 @@ watch(queryParams, (val: Any) => {
   <div class="mt-6">
     <div class="mt-6">
       <div class="text-medium-lg mb-6">
-        {{ t('course-complete') }}
+        {{ t('course-home') }}
       </div>
       <CmCollapse :is-show="isShowFilter">
         <CpMyCourseFilter
@@ -181,7 +180,7 @@ watch(queryParams, (val: Any) => {
       <div class="my-3">
         <CpHeaderAction
           is-fillter
-          :keyword="queryParams.search"
+          :keyword="queryParams.keyword"
           @click="handleClickBtn"
           @update:keyword="handleSearch"
         >
@@ -200,10 +199,10 @@ watch(queryParams, (val: Any) => {
         v-show="!activeSwitch"
         class="my-course-list"
       >
-        <div v-if="myCourseComplete?.length">
+        <div v-if="myCourseHome?.length">
           <VRow>
             <VCol
-              v-for="item in myCourseComplete"
+              v-for="item in myCourseHome"
               :key="item.id"
               cols="12"
               sm="6"
@@ -215,15 +214,16 @@ watch(queryParams, (val: Any) => {
                 :group-type="groupType"
                 @click="clickDetailCourse"
               >
-                <CpMyCourseItemCompleted :data="item" />
+                <CpMyCourseItemHome :data="item" />
               </CpMyCourseItemCard>
             </VCol>
           </VRow>
           <CmPagination
             :type="3"
-            :total-items="totalComplete"
+            :total-items="totalRecord"
             :current-page="1"
             :page-size="12"
+            :total-visible="3"
             @pageClick="pageChange"
           />
         </div>
@@ -248,8 +248,8 @@ watch(queryParams, (val: Any) => {
           v-model:page-number="queryParams.pageNumber"
           v-model:page-size="queryParams.pageSize"
           :headers="headers"
-          :items="myCourseComplete"
-          :total-record="totalComplete"
+          :items="myCourseHome"
+          :total-record="totalRecord"
           :type-pagination="1"
         >
           <template #rowItem="{ col, context }">
@@ -259,69 +259,21 @@ watch(queryParams, (val: Any) => {
                 :context="context"
               />
             </div>
-
-            <div v-if="col === 'formOfStudy'">
-              <CmChip
-                v-if="context.formOfStudy"
-                :color="MethodsUtil.checkType(context.formOfStudy, StatusTypeFormStudy, 'id')?.color"
-              >
-                <VIcon
-                  start
-                  icon="carbon:dot-mark"
-                  size="12"
-                />
-                <span>{{ t(MethodsUtil.checkType(context.formOfStudy, StatusTypeFormStudy, 'id')?.name) }}</span>
-              </CmChip>
-            </div>
             <div v-if="col === 'fullname'">
               {{ StringUtil.formatFullName(context?.author?.firstName, context?.author?.lastName) || '-' }}
             </div>
             <div v-if="col === 'topicName'">
               {{ context?.topicName || '-' }}
             </div>
-            <div v-if="col === 'courseEndDate'">
+            <div v-if="col === 'startDate'">
               <div class="text-noWrap">
                 {{ DateUtil.formatTimeToHHmm(context[col]) }} {{ DateUtil.formatDateToDDMM(context[col], '-') }}
               </div>
             </div>
-            <div v-if="col === 'evaluate'">
-              <div class="mb-3">
-                <div class="d-flex flex-noWrap">
-                  <CmIcon
-                    bg-color="warning"
-                    color="warning"
-                    icon="solar:pen-2-linear"
-                    :size="16"
-                    class="mr-3"
-                  />
-                  <div class="text-noWrap d-flex align-center">
-                    <div>{{ StringUtil.decimalToFixed(Number(context.point), 2) }} {{ t('scores') }}</div>
-                  </div>
-                </div>
+            <div v-if="col === 'endDate'">
+              <div class="text-noWrap">
+                {{ DateUtil.formatTimeToHHmm(context[col]) }} {{ DateUtil.formatDateToDDMM(context[col], '-') }}
               </div>
-              <div v-if="context.ratingScaleName">
-                <div class="d-flex flex-noWrap">
-                  <CmIcon
-                    bg-color="success"
-                    color="success"
-                    icon="lucide:bar-chart"
-                    :size="16"
-                    class="mr-3"
-                  />
-                  <div class="text-noWrap d-flex align-center">
-                    {{ t(context.ratingScaleName) }}
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div v-if="col === 'action'">
-              <CmButton
-                class="w-100 button-action"
-                :title="t('review')"
-                color="primary"
-                variant="text"
-                @click="review(context)"
-              />
             </div>
           </template>
         </CmTable>

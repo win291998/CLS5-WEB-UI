@@ -129,8 +129,6 @@ async function onFileSelected(event: any) {
   params.value.files = file
   if (props.fileType)
     params.value.fileType = props.fileType
-  console.log(file)
-
   filesData.value.name = file.name
   filesData.value.size = file.size
   filesData.value.icon = MethodsUtil.checkTypeFileUpload(file.type)?.icon
@@ -190,8 +188,6 @@ async function upFileServer(file: any) {
         fileNameInput.value = filesData.value.name
         filesData.value.processing = 100
         clearInterval(intervalProgress.value)
-        console.log(value)
-
         isShowModalProcessing.value = false
         fileUpload.value[0].icon = MethodsUtil.checkTypeFileUpload(file.type)?.icon
         fileUpload.value[0].name = fileNameInput.value

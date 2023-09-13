@@ -119,12 +119,9 @@ async function actionItem(type: any) {
       break
     case 'ActionViewDetail':
 
-      console.log(window._.isEmpty(type[1]?.questionData))
-
       if (window._.isEmpty(type[1]?.questionData)) {
         const result = ref()
         await getInforSurvey(result, type[1].id).then(() => {
-          console.log(result.value)
           items.value[type[1].originIndex] = { ...items.value[type[1].originIndex], ...result.value[0] }
           questionCurrentView.value = items.value[type[1].originIndex]
           setTimeout(() => {
@@ -191,7 +188,6 @@ function sendApprove() {
   const model = {
     listId: selected.value.filter(el => el.statusName === 'CourseService.Unsent'),
   }
-  console.log(model)
 
   if (model.listId.length) {
     MethodsUtil.requestApiCustom(QuestionService.PostSurveySubmit, TYPE_REQUEST.POST, model).then((result: Any) => {
@@ -224,8 +220,6 @@ async function getInforSurveyDetail(result: any, listId: any) {
   }
   await MethodsUtil.requestApiCustom(QuestionService.PostSurveyDetail, TYPE_REQUEST.POST, params).then(({ data }: any) => {
     result.value = data
-    console.log(data)
-
     data.forEach((item: any, id: number) => {
       item.isExpand = isShowDetailAll.value
       items.value[id] = {
@@ -233,18 +227,15 @@ async function getInforSurveyDetail(result: any, listId: any) {
         ...item,
       }
     })
-    console.log(items.value)
   })
 }
 async function openDetail(dataQs: any, el: any) {
   const result = ref()
-  console.log(dataQs)
 
   if (window._.isEmpty(dataQs?.surveyData)) {
     items.value[dataQs.originIndex].loadingShow = true
 
     await getInforSurvey(result, dataQs.id).then(() => {
-      console.log(result.value)
       items.value[dataQs.originIndex] = { ...items.value[dataQs.originIndex], ...result.value[0] }
       setTimeout(() => {
         items.value[dataQs.originIndex].loadingShow = false
@@ -254,7 +245,6 @@ async function openDetail(dataQs: any, el: any) {
   items.value[dataQs.originIndex].isExpand = true
 }
 async function closeDetail(dataQs: any) {
-  console.log(dataQs)
   items.value[dataQs.originIndex].isExpand = false
 }
 
@@ -262,9 +252,7 @@ async function showDetailAll() {
   isShowDetailAll.value = !isShowDetailAll.value
   const result = ref()
   const listId = items.value.map((item: any) => item.id)
-  await getInforSurveyDetail(result, listId).then(() => {
-    console.log(result.value)
-  })
+  await getInforSurveyDetail(result, listId)
 }
 </script>
 

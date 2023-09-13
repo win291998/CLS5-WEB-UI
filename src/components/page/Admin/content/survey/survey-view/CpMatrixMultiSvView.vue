@@ -62,7 +62,6 @@ function getCheckedValue(categoryId: number, levelId: number) {
 }
 function onChangeAnswer(categoryId: number, levelId: number, value: any) {
   const index = listAnswerMatrixValue.value?.findIndex(item => item.categoryId === categoryId && item.levelId === levelId)
-  console.log(value)
 
   if (index >= 0 && value === false) {
     listAnswerMatrixValue.value.splice(index, 1)

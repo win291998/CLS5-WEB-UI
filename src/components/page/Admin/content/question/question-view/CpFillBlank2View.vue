@@ -42,7 +42,6 @@ const listAnserView = ref<any[]>([])
 
 function handleSpanClick(event: any, pos: number) {
   // Xử lý sự kiện khi thẻ span được click
-  console.log('Span clicked:', event.target.innerHTML, pos)
   listCurrent.value = pos
 }
 function attachClickEvent() {

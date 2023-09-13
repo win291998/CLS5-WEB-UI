@@ -20,16 +20,10 @@ function getDataTab() {
     testId: Number(route.params.topicId),
     typeId: 2,
   }
-  console.log(payload)
-
   MethodsUtil.requestApiCustom(QuestionService.GetListPeople, TYPE_REQUEST.GET, payload).then((result: Any) => {
     listGroup.value = result?.data
   })
 }
-
-watch(listGroup, val => {
-  console.log(val)
-})
 
 const listTab = computed((): Tab[] => [
   {

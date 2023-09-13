@@ -11,11 +11,14 @@ interface Props {/** ** Interface */
   labelColor?: typeof colorType[any]
   fullColor?: string
   hover?: boolean
+  disabled?: boolean
   sizeIcon?: any
   labels?: any[]
   halfIncrements?: boolean
+  justifySpace?: boolean
   density?: typeof densityType[any]
   maxWidth?: number
+  modelValue?: number
 }
 
 const props = withDefaults(defineProps<Props>(), ({
@@ -23,6 +26,7 @@ const props = withDefaults(defineProps<Props>(), ({
   length: 0,
   hover: false,
   halfIncrements: false,
+  justifySpace: true,
   emptyColor: 'orange',
   fullColor: 'orange',
   fullIcon: 'tabler:star-filled',
@@ -31,12 +35,20 @@ const props = withDefaults(defineProps<Props>(), ({
   density: 'default',
   maxWidth: 700,
 }))
+const emit = defineEmits<Emit>()
+interface Emit {
+  (e: 'update:model-value', value: any): void
+}
 const ratingValue = ref()
+function changeRating(val: any) {
+  ratingValue.value = val
+  emit('update:model-value', val)
+}
 </script>
 
 <template>
   <VRating
-    v-model="ratingValue"
+    :model-value="modelValue"
     :empty-icon="emptyIcon"
     :full-icon="fullIcon"
     :half-icon="halfIcon"
@@ -48,8 +60,11 @@ const ratingValue = ref()
     :density="density"
     :style="{ width: '100%' }"
     :length="length"
-    :disabled="true"
-    class="d-flex justify-space-around rating-common"
+    :disabled="disabled"
+    :size="sizeIcon"
+    class="d-flex rating-common"
+    :class="{ 'justify-space-around': justifySpace }"
+    @update:model-value="changeRating"
   >
     <template
       v-if="labels"
@@ -62,6 +77,15 @@ const ratingValue = ref()
         v-html="props.label"
       />
     </template>
+    <template
+      #item="{ icon, isFilled }"
+    >
+      <VIcon
+        :icon="icon"
+        :color="isFilled ? fullColor : emptyColor"
+        :size="sizeIcon"
+      />
+    </template>
   </VRating>
 </template>
 
@@ -72,6 +96,11 @@ const ratingValue = ref()
 .rating-common{
   .text-rating{
     white-space: pre-wrap;
+  }
+  .v-rating__item{
+    label{
+      display: flex;
+    }
   }
 }
 </style>

@@ -37,7 +37,6 @@ interface Props {
 const topics = ref([])
 
 watch(() => props.topicIds, (val: any) => {
-  console.log(val)
   topics.value = val
 })
 

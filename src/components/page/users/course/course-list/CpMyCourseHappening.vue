@@ -38,8 +38,6 @@ const queryParams = ref<any>({
 /** method */
 // hàm trả về các loại action từ header filter
 function handleClickBtn(type: string) {
-  console.log(type)
-
   switch (type) {
     case 'fillter':
       isShowFilter.value = !isShowFilter.value
@@ -75,9 +73,9 @@ interface course {
 }
 const myCourseHappening = ref<course[]>([])
 const totalHappening = ref(0)
+const groupType = ref(route.query.type)
 function getListMyCourseHappen() {
   MethodsUtil.requestApiCustom(CourseService.GetListMyCourse, TYPE_REQUEST.GET, queryParams.value).then((result: any) => {
-    console.log(result)
     myCourseHappening.value = result?.data?.myCourseHappening ?? []
     totalHappening.value = result?.data?.totalHappening
   })
@@ -91,8 +89,6 @@ function pageChange(pageNumber: any) {
 async function clickDetailCourse(item: any, actionClick: any) {
   if (item) {
     const { id } = item
-    console.log(actionClick)
-
     switch (actionClick) {
       case 'start':
       case 'continue':
@@ -102,17 +98,17 @@ async function clickDetailCourse(item: any, actionClick: any) {
         //  openModalNotifi(requiredProficiencies, requiredCourses)
 
         // else
-        router.push({ name: 'course-learning', params: { id } })
+        router.push({ name: 'course-learning', params: { id }, query: {} })
 
         break
       case 'review':
-        router.push({ name: 'detail-courses', params: { id } })
+        router.push({ name: 'course-review', params: { id }, query: {} })
         break
       case 'detail':
-        router.push({ name: 'course-detail', params: { id } })
+        router.push({ name: 'course-detail', params: { id }, query: {} })
         break
       default:
-        router.push({ name: 'course-detail', params: { id } })
+        router.push({ name: 'course-detail', params: { id }, query: {} })
         break
     }
   }
@@ -133,10 +129,8 @@ const headers = ref([
 ])
 
 onMounted(async () => {
+  groupType.value = 'going-on'
   if (Object.keys(route.query).length > 1) {
-    console.log(route.query.topicIds?.length)
-    console.log(route.query.topicIds)
-
     queryParams.value.search = route.query.search ? route.query.search as string : queryParams.value.search
     queryParams.value.sort = route.query.sort ? route.query.sort as string[] : []
     queryParams.value.studyTypeId = route.query.studyTypeId ? Number(route.query.studyTypeId) : queryParams.value.studyTypeId
@@ -162,6 +156,7 @@ onMounted(async () => {
   else { await getListMyCourseHappen() }
 })
 watch(queryParams, (val: Any) => {
+  groupType.value = 'going-on'
   const params = ObjectUtil.omitByDeep(JSON.parse(JSON.stringify(val)))
   router.push({
     query: {
@@ -205,7 +200,7 @@ watch(queryParams, (val: Any) => {
         </CpHeaderAction>
       </div>
       <div
-        v-if="!activeSwitch"
+        v-show="!activeSwitch"
         class="my-course-list"
       >
         <div v-if="myCourseHappening?.length">
@@ -220,6 +215,7 @@ watch(queryParams, (val: Any) => {
             >
               <CpMyCourseItemCard
                 :data="item"
+                :group-type="groupType"
                 @click="clickDetailCourse"
               >
                 <CpMyCourseItemHappenning :data="item" />
@@ -236,16 +232,21 @@ watch(queryParams, (val: Any) => {
         </div>
         <div
           v-else
-          class="d-flex justify-center"
         >
-          <CmImg
-            :src="MethodsUtil.urlImageFile(getImage(6))"
-            height="12rem"
-            cover
-          />
+          <div class="d-flex justify-center">
+            <div style="width: 200px;">
+              <CmImg
+                :src="MethodsUtil.urlImageFile(getImage(6))"
+                cover
+              />
+            </div>
+          </div>
+          <div class="d-flex justify-center">
+            {{ t('empty-data') }}
+          </div>
         </div>
       </div>
-      <div v-else>
+      <div v-show="activeSwitch">
         <CmTable
           v-model:page-number="queryParams.pageNumber"
           v-model:page-size="queryParams.pageSize"
@@ -292,7 +293,7 @@ watch(queryParams, (val: Any) => {
               />
             </div>
             <div v-if="col === 'courseEndDate'">
-              <div class="text-nowrap">
+              <div class="text-noWrap">
                 {{ DateUtil.formatTimeToHHmm(context[col]) }} {{ DateUtil.formatDateToDDMM(context[col], '-') }}
               </div>
             </div>

@@ -168,12 +168,9 @@ function addAnswerUnder() {
   // lấy text đang được bôi đen
   let text: any = window.getSelection()?.toString()
   const firstCharacter = text.slice(0, 1)
-  console.log(firstCharacter === ' ')
-  if (firstCharacter === ' ') {
-    console.log(text)
+  if (firstCharacter === ' ')
     text = text.slice(1)
-    console.log(text)
-  }
+
   const lastCharacter = text.slice(text.length - 1)
 
   if (lastCharacter === ' ')

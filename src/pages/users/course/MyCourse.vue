@@ -2,6 +2,8 @@
 import CmTab from '@/components/common/CmTab.vue'
 import CpMyCourseHappening from '@/components/page/users/course/course-list/CpMyCourseHappening.vue'
 import CpMyCourseCompleted from '@/components/page/users/course/course-list/CpMyCourseCompleted.vue'
+import CpMyCourseFinished from '@/components/page/users/course/course-list/CpMyCourseFinished.vue'
+import CpMyCourseHome from '@/components/page/users/course/course-list/CpMyCourseHome.vue'
 
 /**
  *
@@ -21,14 +23,26 @@ const listTab = [
     component: CpMyCourseCompleted,
     isRendered: false,
   },
+  {
+    key: 'finished',
+    title: 'CSE_CourseEndDateRequire',
+    component: CpMyCourseFinished,
+    isRendered: false,
+  },
+  {
+    key: 'proposal',
+    title: 'course-proposal',
+    component: CpMyCourseFinished,
+    isDisabled: true,
+    isRendered: false,
+  },
+  {
+    key: 'homePage',
+    title: 'course-home',
+    component: CpMyCourseHome,
+    isRendered: false,
+  },
 
-  // {
-  //   key: 'condition-complete',
-  //   title: 'condition-completed-content',
-  //   component: CpConditionCompletedVideo,
-  //   isRendered: false,
-  //   isDisabled: computed(() => !route.params.contentId).value,
-  // },
 ]
 </script>
 

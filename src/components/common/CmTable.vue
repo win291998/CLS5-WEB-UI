@@ -44,7 +44,6 @@ const props = withDefaults(defineProps<Props>(), ({
 const emit = defineEmits<Emit>()
 
 const isLoading = ref<boolean>(false)
-
 interface HeaderCustom extends Header {
   type?: string
   typeOrg?: number
@@ -83,6 +82,7 @@ interface Props {
   searchField?: any
   searchValue?: any
   isView?: boolean
+  isBorderRow?: boolean
 }
 interface Emit {
   (e: 'handleClickRow', dataRow: object, index: number): void
@@ -103,6 +103,12 @@ const { handleActionTable } = storeTable
 // $ref dataTable
 const dataTable = ref()
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
+
+const colorRow = ref('#ffff')
+watch(() => props.isBorderRow, (val: boolean) => {
+  colorRow.value = val ? '#EAECF0' : '#ffff'
+}, { immediate: true })
+
 // Checkbox table
 const selectedRows = ref<Item[]>([])
 const selectedAll = computed(() => {
@@ -282,6 +288,8 @@ watch(totalPaginationLocal, val => {
 </script>
 
 <template>
+  <!-- ví dụ tích hợp drag and drop xem tham khảo ở https://github.com/HC200ok/vue3-easy-data-table/issues/140 -->
+
   <SkTable v-show="isLoading" />
   <div
     v-show="!isLoading"
@@ -528,6 +536,7 @@ watch(totalPaginationLocal, val => {
 @use "@/styles/variables/common/table.cm" as *;
 @use "@/styles/style-global.scss" as *;
 // *****************************emplement**********************************************************//
+$colorBorderRow: v-bind(colorRow)  ; // Giá trị ban đầu của biến
 .customize-table {
   /** css custom */
   // phần table
@@ -541,7 +550,7 @@ watch(totalPaginationLocal, val => {
   --easy-table-header-item-padding: #{$table-header-item-padding};  // padding header
 
   // phần body table
-  --easy-table-row-border: #{$table-row-border}; // màu các row của phần body
+  --easy-table-row-border:  #{$border-xs} solid #{$colorBorderRow}; // màu các row của phần body
   --easy-table-body-even-row-font-color: #{$table-body-even-row-font-color};  // màu chữ các hàng chẵn phần body
   --easy-table-body-even-row-background-color: #{$table-body-even-row-background-color}; // màu nền các hàng chẵn phần body
   --easy-table-body-row-font-color: #{$table-body-row-font-color};  // màu chữ các hàng lẻ phần body

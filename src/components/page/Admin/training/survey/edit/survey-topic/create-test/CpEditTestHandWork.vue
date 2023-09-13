@@ -47,8 +47,6 @@ function getActionMove(idx: number, total: number) {
 }
 callBackAction.value = actionItem
 async function actionItem([{ id }, content]: [Any, Any]) {
-  console.log(123)
-
   switch (id) {
     case 20:
       moveUpItem(content.originIndex)
