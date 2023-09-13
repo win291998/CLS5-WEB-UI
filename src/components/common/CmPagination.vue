@@ -61,6 +61,20 @@ function handlePageClick(page: number) {
 function handlePageSizeChange(pageSize: number) {
   emit('pageClick', 1, pageSize)
 }
+const visibleItems = ref(PAGINATION_TOTAL_VISIABLE)
+function handleResize() {
+  // Kiểm tra kích thước màn hình và cập nhật giá trị visibleItems
+  if (window.innerWidth >= 768)
+    visibleItems.value = 6 // Giá trị cho màn hình md trở lên
+
+  else
+    visibleItems.value = 3 // Giá trị cho màn hình mobile
+}
+window.addEventListener('resize', handleResize)
+
+onUnmounted(() => {
+  window.removeEventListener('resize', handleResize)
+})
 
 // watch
 watch([() => props.currentPage], ([newValue]) => {
@@ -81,7 +95,7 @@ watch([() => props.currentPage], ([newValue]) => {
         v-if="showPageSelect === true"
         class="d-flex align-center mr-4 pagination-select"
       >
-        <span class="text-nowrap text-regular-sm ">
+        <span class="text-noWrap text-regular-sm ">
           {{ t('show') }}
         </span>
         <VSelect
@@ -96,13 +110,13 @@ watch([() => props.currentPage], ([newValue]) => {
           single-line
           @update:modelValue="handlePageSizeChange"
         />
-        <span class="text-nowrap text-regular-sm ">{{ `${t('of')} ${totalItems} ${t('item')}` }}</span>
+        <span class="text-noWrap text-regular-sm ">{{ `${t('of')} ${totalItems} ${t('item')}` }}</span>
       </div>
       <div class="page-number d-flex align-center">
         <VPagination
           v-model="selectedPage"
           :length="totalItemsLength"
-          :total-visible="PAGINATION_TOTAL_VISIABLE"
+          :total-visible="visibleItems"
           rounded="circle"
           @update:modelValue="handlePageClick"
         >
@@ -145,7 +159,7 @@ watch([() => props.currentPage], ([newValue]) => {
     <VPagination
       v-model="selectedPage"
       :length="totalItemsLength"
-      :total-visible="PAGINATION_TOTAL_VISIABLE"
+      :total-visible="visibleItems"
       rounded="circle"
       @update:modelValue="handlePageClick"
     >

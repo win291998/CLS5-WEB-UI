@@ -49,9 +49,6 @@ interface Props {
   dateTo?: any
   questionType?: any
 }
-watch(() => props.topicId, val => {
-  console.log(val)
-})
 
 const LABEL = Object.freeze({
   FILLTER1: t('choose-topic'),

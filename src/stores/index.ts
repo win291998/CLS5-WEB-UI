@@ -39,7 +39,6 @@ export const configStore = defineStore('appConfig', () => {
   }
   const getThemeConfig = async () => {
     await MethodsUtil.requestApiCustom(SystemService.ThemeSystem, TYPE_REQUEST.GET).then((value: any) => {
-      console.log(value)
       defaultThemeValue.value = value.data
       localStorage.setItem('themeConfig', JSON.stringify(value.data))
     })

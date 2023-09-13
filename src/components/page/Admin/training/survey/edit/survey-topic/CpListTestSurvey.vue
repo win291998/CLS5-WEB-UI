@@ -85,7 +85,6 @@ const dataDetail = ref<Any>()
 function getDetailTestSurvey(id: number) {
   MethodsUtil.requestApiCustom(QuestionService.GetDetailTestSurvey, TYPE_REQUEST.GET, { id }).then((result: Any) => {
     dataDetail.value = result.data
-    console.log(dataDetail.value)
   })
 }
 const listQuestion = ref<Any[]>([])

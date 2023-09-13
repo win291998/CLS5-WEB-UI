@@ -66,8 +66,6 @@ function change() {
   emit('update:modelValue', topicIds.value)
 }
 onMounted(() => {
-  console.log(props.modelValue)
-
   if (props.type && !window._.isEmpty(props.modelValue))
     getComboboxTopic(props.type)
 })

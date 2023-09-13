@@ -4,7 +4,7 @@ import CpMyCourseFilter from '@/components/page/users/course/components/CpMyCour
 import CpMyCourseItemCard from '@/components/page/users/course/components/CpMyCourseItemCard.vue'
 import CpHeaderAction from '@/components/page/gereral/CpHeaderAction.vue'
 import CmSwitch from '@/components/common/CmSwitch.vue'
-import CpMyCourseItemCompleted from '@/components/page/users/course/item/CpMyCourseItemCompleted.vue'
+import CpMyCourseItemFinished from '@/components/page/users/course/item/CpMyCourseItemFinished.vue'
 import MethodsUtil from '@/utils/MethodsUtil'
 import CmPagination from '@/components/common/CmPagination.vue'
 import { TYPE_REQUEST } from '@/typescript/enums/enums'
@@ -19,7 +19,6 @@ import CpCustomInforCourse from '@/components/page/gereral/CpCustomInforCourse.v
 import StringUtil from '@/utils/StringUtil'
 import DateUtil from '@/utils/DateUtil'
 import CmButton from '@/components/common/CmButton.vue'
-import CmIcon from '@/components/common/CmIcon.vue'
 
 /** lib */
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
@@ -29,7 +28,7 @@ const isShowFilter = ref(true)
 
 const queryParams = ref<any>({
   sort: '-date',
-  typeId: 4,
+  typeId: 5,
   studyTypeId: null,
   topicIds: [],
   search: null,
@@ -53,7 +52,7 @@ function handleClickBtn(type: string) {
 async function handleSearch(value: any) {
   queryParams.value.pageNumber = 1
   queryParams.value.search = value
-  getListMyCourseComplete()
+  getListMyCourseFinish()
 }
 
 const activeSwitch = ref(false)
@@ -73,18 +72,18 @@ interface course {
   id: number
   [name: string]: any
 }
-const myCourseComplete = ref<course[]>([])
-const totalComplete = ref(0)
+const myCourseFinish = ref<course[]>([])
+const totalFinish = ref(0)
 const groupType = ref(route.query.type)
-function getListMyCourseComplete() {
+function getListMyCourseFinish() {
   MethodsUtil.requestApiCustom(CourseService.GetListMyCourse, TYPE_REQUEST.GET, queryParams.value).then((result: any) => {
-    myCourseComplete.value = result?.data?.myCourseComplete ?? []
-    totalComplete.value = result?.data?.totalComplete
+    myCourseFinish.value = result?.data?.myCourseFinish ?? []
+    totalFinish.value = result?.data?.totalFinish
   })
 }
 function pageChange(pageNumber: any) {
   queryParams.value.pageNumber = pageNumber
-  getListMyCourseComplete()
+  getListMyCourseFinish()
 }
 
 //  Bấm nút vào nội dung khóa học
@@ -115,18 +114,17 @@ const headers = ref([
   { text: t('topic'), value: 'topicName', type: 'custom' },
   { text: t('form-study'), value: 'formOfStudy', type: 'custom' },
   { text: t('author-name'), value: 'fullname', type: 'custom' },
+  { text: t('Process'), value: 'process', type: 'custom' },
   { text: t('end-time'), value: 'courseEndDate', type: 'custom' },
-  { text: '', value: 'evaluate', type: 'custom' },
   { text: '', value: 'action', type: 'custom' },
 ])
-
 function review(row: any) {
   if (row.isReviewExpired)
     clickDetailCourse(row, 'detail')
   clickDetailCourse(row, 'review')
 }
 onMounted(async () => {
-  groupType.value = 'completed'
+  groupType.value = 'finished'
   if (Object.keys(route.query).length > 1) {
     queryParams.value.search = route.query.search ? route.query.search as string : queryParams.value.search
     queryParams.value.sort = route.query.sort ? route.query.sort as string[] : []
@@ -150,18 +148,18 @@ onMounted(async () => {
     queryParams.value.pageSize = route.query.pageSize ? Number(route.query.pageSize) : queryParams.value.pageSize
   }
 
-  else { await getListMyCourseComplete() }
+  else { await getListMyCourseFinish() }
 })
 watch(queryParams, (val: Any) => {
+  groupType.value = 'finished'
   const params = ObjectUtil.omitByDeep(JSON.parse(JSON.stringify(val)))
-  groupType.value = 'completed'
   router.push({
     query: {
       type: route.query.type,
       ...params,
     },
   })
-  getListMyCourseComplete()
+  getListMyCourseFinish()
 }, { deep: true })
 </script>
 
@@ -169,7 +167,7 @@ watch(queryParams, (val: Any) => {
   <div class="mt-6">
     <div class="mt-6">
       <div class="text-medium-lg mb-6">
-        {{ t('course-complete') }}
+        {{ t('CSE_CourseEndDateRequire') }}
       </div>
       <CmCollapse :is-show="isShowFilter">
         <CpMyCourseFilter
@@ -200,10 +198,10 @@ watch(queryParams, (val: Any) => {
         v-show="!activeSwitch"
         class="my-course-list"
       >
-        <div v-if="myCourseComplete?.length">
+        <div v-if="myCourseFinish?.length">
           <VRow>
             <VCol
-              v-for="item in myCourseComplete"
+              v-for="item in myCourseFinish"
               :key="item.id"
               cols="12"
               sm="6"
@@ -215,13 +213,13 @@ watch(queryParams, (val: Any) => {
                 :group-type="groupType"
                 @click="clickDetailCourse"
               >
-                <CpMyCourseItemCompleted :data="item" />
+                <CpMyCourseItemFinished :data="item" />
               </CpMyCourseItemCard>
             </VCol>
           </VRow>
           <CmPagination
             :type="3"
-            :total-items="totalComplete"
+            :total-items="totalFinish"
             :current-page="1"
             :page-size="12"
             @pageClick="pageChange"
@@ -248,8 +246,8 @@ watch(queryParams, (val: Any) => {
           v-model:page-number="queryParams.pageNumber"
           v-model:page-size="queryParams.pageSize"
           :headers="headers"
-          :items="myCourseComplete"
-          :total-record="totalComplete"
+          :items="myCourseFinish"
+          :total-record="totalFinish"
           :type-pagination="1"
         >
           <template #rowItem="{ col, context }">
@@ -279,39 +277,19 @@ watch(queryParams, (val: Any) => {
             <div v-if="col === 'topicName'">
               {{ context?.topicName || '-' }}
             </div>
+            <div v-if="col === 'process'">
+              <VProgressLinear
+                rounded-bar
+                :model-value="context.completionRatio.toFixed()"
+                color="success"
+                class="mt-6"
+                rounded
+                height="8"
+              />
+            </div>
             <div v-if="col === 'courseEndDate'">
               <div class="text-noWrap">
                 {{ DateUtil.formatTimeToHHmm(context[col]) }} {{ DateUtil.formatDateToDDMM(context[col], '-') }}
-              </div>
-            </div>
-            <div v-if="col === 'evaluate'">
-              <div class="mb-3">
-                <div class="d-flex flex-noWrap">
-                  <CmIcon
-                    bg-color="warning"
-                    color="warning"
-                    icon="solar:pen-2-linear"
-                    :size="16"
-                    class="mr-3"
-                  />
-                  <div class="text-noWrap d-flex align-center">
-                    <div>{{ StringUtil.decimalToFixed(Number(context.point), 2) }} {{ t('scores') }}</div>
-                  </div>
-                </div>
-              </div>
-              <div v-if="context.ratingScaleName">
-                <div class="d-flex flex-noWrap">
-                  <CmIcon
-                    bg-color="success"
-                    color="success"
-                    icon="lucide:bar-chart"
-                    :size="16"
-                    class="mr-3"
-                  />
-                  <div class="text-noWrap d-flex align-center">
-                    {{ t(context.ratingScaleName) }}
-                  </div>
-                </div>
               </div>
             </div>
             <div v-if="col === 'action'">

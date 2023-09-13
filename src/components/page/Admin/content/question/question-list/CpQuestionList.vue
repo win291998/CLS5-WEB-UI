@@ -48,7 +48,7 @@ const queryParams = ref<any>({
 })
 const headers = ref([
   { text: '', value: 'checkbox', width: 50 },
-  { text: t('question'), value: 'name', type: 'custom', width: 750 },
+  { text: t('question'), value: 'name', type: 'custom', width: 650 },
   { text: t('question-type'), value: 'type', type: 'custom' },
   { text: '', value: 'actions', width: 150 },
 ])
@@ -128,7 +128,6 @@ const isShowModalView = ref(false)
 
 // hàm trả về các loại action khi click
 async function actionItem(type: any) {
-  console.log(type)
   switch (type[0]?.name) {
     case 'ActionEdit':
       router.push({ name: 'question-edit', params: { id: type[1].id } })
@@ -138,7 +137,6 @@ async function actionItem(type: any) {
       if (window._.isEmpty(type[1]?.answers) && window._.isEmpty(type[1]?.question)) {
         const result = ref()
         await getInforQuestion(result, type[1].id).then(() => {
-          console.log(result.value)
           items.value[type[1].originIndex] = {
             ...items.value[type[1].originIndex],
             ...result.value,
@@ -186,7 +184,6 @@ function standardizedDataInitSingle(valueQs: any) {
       item.position = index + 1
       return item
     })
-    console.log(valueQs)
     const tempElement = document.createElement('div')
     tempElement.innerHTML = valueQs.content
 
@@ -219,7 +216,6 @@ function standardizedDataInitSingle(valueQs: any) {
     })
 
     valueQs.content = tempElement.innerHTML
-    console.log(valueQs)
   }
 
   valueQs.isAutoApprove = MethodsUtil.checkPermission(null, 'QuestionManaging', 128) || true
@@ -266,11 +262,8 @@ const contentNameRef = ref<any>({})
 async function getInforQuestionDetail(isShow: boolean) {
   loadingShow.value = true
   await MethodsUtil.requestApiCustomV5(QuestionService.GetListQuestionDetailV5, TYPE_REQUEST.GET, queryParams.value).then(({ data }: any) => {
-    console.log(data)
-
     data?.listData.forEach((element: any, index: number) => {
       const dynamicRef = getContentNameRef(element) // Truy vấn đến ref của CpQuestionName có id 1
-      console.log(dynamicRef.value) // In ra giá trị của ref
       element.isExpand = isShow
       const result = ref()
       if (element.isGroup)
@@ -291,7 +284,6 @@ async function openDetail(dataQs: any, el: any) {
   items.value[dataQs.originIndex].loadingShow = true
 
   await getInforQuestion(result, dataQs.id).then(() => {
-    console.log(result.value)
     items.value[dataQs.originIndex] = {
       ...items.value[dataQs.originIndex],
       ...result.value,
@@ -306,21 +298,16 @@ async function openDetail(dataQs: any, el: any) {
   })
 }
 async function closeDetail(dataQs: any) {
-  console.log(dataQs)
   items.value[dataQs.originIndex].isExpand = false
 }
 const contentRef = ref()
 function handleSpanClick(event: any, pos: number, dataQs: any) {
   // Xử lý sự kiện khi thẻ span được click
-  console.log('Span clicked:', event.target.innerHTML, pos, dataQs.originIndex)
   items.value[dataQs.originIndex].listCurrentId = pos
 }
 function attachClickEvent(el: any, dataQs: any) {
-  console.log(el, dataQs)
-
   nextTick(() => {
     const answerSpans = el?.querySelectorAll('.answer-select')
-    console.log(answerSpans)
 
     answerSpans?.forEach((span: any, pos: any) => {
       span.addEventListener('click', ($event: any) => handleSpanClick($event, pos + 1, dataQs))
@@ -369,10 +356,7 @@ function exportExcel() {
 
 async function showDetailAll() {
   isShowDetailAll.value = !isShowDetailAll.value
-  await getInforQuestionDetail(isShowDetailAll.value).then(() => {
-    console.log(items.value)
-    console.log(contentNameRef)
-  })
+  await getInforQuestionDetail(isShowDetailAll.value)
 }
 function getContentNameRef(context: any) {
   if (!contentNameRef[`CpQuestionName${context?.id}`])

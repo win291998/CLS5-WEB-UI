@@ -13,6 +13,7 @@ const propsValue = withDefaults(defineProps<Props>(), ({
 const emit = defineEmits<Emit>()
 interface Props {
   data: any
+  groupType?: any
 }
 
 // Cấu trúc Emit
@@ -32,21 +33,38 @@ function getImage(type = 0) {
 function goToDetail() {
   router.push({ name: 'course-detail', params: { id: propsValue.data?.id } })
 }
-function getButtonTitle() {
-  switch (propsValue.data?.statusName || '') {
-    case 'CourseService.LearnerStudying':
-      action.value = 'continue'
-      return t('continue-now')
-    case 'CourseService.LearnerHaveNotStudiedYet':
-      action.value = 'start'
-      return t('start-learn')
-    case 'CourseService.LearnerCompleted':
-      action.value = 'review'
-      return t('review')
-    default:
-      action.value = 'registry'
-      return ''
+
+function getButtonTitle(groupType: any) {
+  if (groupType === 'going-on') {
+    switch (propsValue.data?.statusName) {
+      case 'CourseService.LearnerStudying':
+        action.value = 'continue'
+        return t('continue-now')
+      case 'CourseService.LearnerHaveNotStudiedYet':
+        action.value = 'start'
+        return t('start-learn')
+      case 'CourseService.LearnerCompleted':
+        action.value = 'review'
+        return t('review')
+      default:
+        action.value = 'registry'
+        return ''
+    }
   }
+  if (groupType === 'upcoming') {
+    action.value = 'detail'
+    return t('detail')
+  }
+  if (groupType === 'completed' || groupType === 'finished') {
+    if (propsValue.data?.isReviewExpired) {
+      action.value = 'detail'
+      return t('detail')
+    }
+    action.value = 'review'
+    return t('review')
+  }
+  action.value = 'registry'
+  return t('register-now')
 }
 </script>
 
@@ -67,7 +85,10 @@ function getButtonTitle() {
           />
         </div>
         <VCardTitle>
-          <div class="d-flex flex-nowrap">
+          <div
+            v-if="data.completionRatio"
+            class="d-flex flex-nowrap"
+          >
             <div class="w-100 mr-3">
               <VProgressLinear
                 rounded-bar
@@ -86,7 +107,7 @@ function getButtonTitle() {
       </template>
       <template #text>
         <div class="text-semibold-sm label-author mb-2">
-          {{ StringUtil.formatFullName(data?.author?.firstName, data?.author?.lastName) }}
+          {{ StringUtil.formatFullName(data?.author?.firstName || data?.user?.firstName, data?.author?.lastName || data?.user?.lastName) }}
         </div>
         <div class="text-semibold-md label-course ">
           <span
@@ -106,10 +127,14 @@ function getButtonTitle() {
       </template>
       <div class="box-content">
         <slot />
-        <div style="height: 40px; margin-bottom: 8px;" />
+        <div
+          v-if="groupType !== 'homePage'"
+          style="height: 40px; margin-bottom: 8px;"
+        />
         <CmButton
+          v-if="groupType !== 'homePage'"
           class="w-100 button-action"
-          :title="getButtonTitle()"
+          :title="getButtonTitle(groupType)"
           color="primary"
           @click="emit('click', data, action)"
           @touchstart="emit('click', data, action)"

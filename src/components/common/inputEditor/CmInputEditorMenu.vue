@@ -8,6 +8,7 @@ import CmAddLink from './CmAddLink.vue'
 interface Emit {
   (e: 'change', key: any, value?: any): void
   (e: 'update:event', value?: any): void
+  (e: 'addMathType', value?: any): void
   (e: 'changeAlign', key: any, value?: any): void
   (e: 'order', type: any, value?: any): void
   (e: 'changeColor', key: any, option: any, value?: any): void
@@ -52,7 +53,12 @@ function insertA() {
   })
   document.execCommand('insertHTML', false, htmlString)
 }
-
+function addMathType() {
+  const htmlString = katex.renderToString('c = \\pm\\sqrt{a^2 + b^2}', {
+    throwOnError: false,
+  })
+  emit('addMathType', htmlString)
+}
 function styleFontText(key: any, value?: any) {
   activeMenu.value[key] = !activeMenu.value[key as never]
   emit('change', key, value)
@@ -255,11 +261,12 @@ watch(() => props.statusMenu, (val: any) => {
         >
           <span>Math</span>
         </button>
-        <div
+        <button
           class="menu-item"
+          @click="addMathType"
         >
           <span>a</span>
-        </div>
+        </button>
         <div class="mark" />
       </div>
       <div
