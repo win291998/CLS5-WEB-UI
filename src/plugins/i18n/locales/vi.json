@@ -3609,5 +3609,16 @@
   "Url": "Đường dẫn",
   "add-question-from-file": "Thêm câu hỏi từ tệp tin",
   "course-happening": "Khóa học đang diễn ra",
-  "IsTrue": "Đáp Án Đúng"
+  "IsTrue":"Đáp Án Đúng",
+  "question-survey": "Câu khảo sát",
+  "min-value": "Giá trị phải lớn hơn hoặc bằng {val}",
+  "rating-scale-name": "Tên thang đáng giá",
+  "passed-score": "Mức điểm đạt",
+  "Delete-rating-scale":"Bạn có chắc chắn muốn xóa thang đánh giá này?",
+  "Delete-level-rating-scale":"Bạn có chắc chắn muốn xóa mức độ đánh giá này?",
+  "add-rating-scale": "Thêm thang đánh giá",
+  "edit-rating-scale": "Chỉnh sửa thang đánh giá",
+  "edit-level": "Sửa mức đánh giá",
+  "minimum-score": "Mức điểm tối thiếu",
+  "confirm-delete-certification": "Bạn có chắc chắn muốn xóa mẫu chứng nhận này không ?"
 }

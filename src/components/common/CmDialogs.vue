@@ -128,12 +128,12 @@ const sizeModal = computed(() => {
       >
         <template #title>
           <VCardTitle>
-            {{ title }}
+            {{ title ? t(title) : '' }}
             <slot name="title" />
           </VCardTitle>
 
           <VCardSubtitle>
-            {{ subTitle }}
+            {{ subTitle ? t(subTitle) : '' }}
             <slot name="sub-title" />
           </VCardSubtitle>
           <VIcon

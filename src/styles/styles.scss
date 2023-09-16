@@ -359,6 +359,7 @@ span {
 }
 
 .text-errors {
+  width: max-content !important;
   color: $color-error-600 !important;
   line-height: 12px;
   word-break: break-word;

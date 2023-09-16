@@ -532,7 +532,6 @@ export default class MethodsUtil {
         return audioExtention
       case 3:
         return videoExtention
-
       default:
         return otherFileExtention
     }
