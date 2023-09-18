@@ -63,6 +63,8 @@ interface Props {
   headers: HeaderCustom[]
   items?: Item[]
   rowClassName?: string
+  tableClass?: string
+  headerClass?: string
   pageSize?: number
   isEditing?: boolean
   customId?: string
@@ -95,6 +97,7 @@ interface Emit {
   (e: 'update:pageSize', size: number): void
   (e: 'update:selected', data: Item): void
   (e: 'update:totalItems', value: any): void
+  (e: 'update:expand', value: any): void
 }
 
 const storeTable = tableStore()
@@ -170,6 +173,11 @@ function checkedAll(value: any) {
 function showRow(item: ClickRowArgument) {
   const index = props.items.findIndex((row: any) => row.key === item.key)
   emit('handleClickRow', item, index)
+  if (props.isExpand)
+    emit('update:expand', item)
+}
+function contextmenuRow(item: any) {
+  console.log(item)
 }
 
 // sự kiện click chọn item
@@ -298,7 +306,7 @@ watch(totalPaginationLocal, val => {
     <EasyDataTable
       ref="dataTable"
       alternating
-      :table-class-name="`customize-table ${isExpand ? 'table-expand' : ''} ${isSelectTable ? 'selectedTable' : ''}`"
+      :table-class-name="`customize-table ${tableClass} ${isExpand ? 'table-expand' : ''} ${isSelectTable ? 'selectedTable' : ''}`"
       :headers="headerValue"
       :items="items"
       :rows-per-page="!disiablePagination ? pageSize : PAGINATION_SIZE_UNLIMIT_DEFAULT"
@@ -310,15 +318,19 @@ watch(totalPaginationLocal, val => {
       :body-row-class-name="rowClassName"
       :search-field="searchField"
       :search-value="searchValue"
+      :header-class-name="[headerClass]"
       @click-row="showRow"
     >
       <template #header-select />
       <template
         v-if="isExpand"
-        #expand
+        #expand="content"
       >
         <div>
-          <slot name="tableSub" />
+          <slot
+            name="tableSub"
+            :content="content"
+          />
         </div>
       </template>
       <template #empty-message>
@@ -694,5 +706,9 @@ $colorBorderRow: v-bind(colorRow)  ; // Giá trị ban đầu của biến
 }
 .v-btn--icon.v-btn--density-comfortable {
   width: auto;
+}
+.vue3-easy-data-table__body td.expand{
+ background-color:  rgb(var(--v-gray-50)) !important;
+ padding: unset !important;
 }
 </style>
