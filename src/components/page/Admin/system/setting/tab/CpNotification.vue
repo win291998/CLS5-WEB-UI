@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import CpConfigurationAll from './notification/CpConfigurationAll.vue'
+import CpNotificationGeneral from './notification/CpNotificationGeneral.vue'
 import SharedService from '@/api/shared'
 import CmButton from '@/components/common/CmButton.vue'
 import CmMenu from '@/components/common/CmMenu.vue'
@@ -7,6 +8,8 @@ import { TYPE_REQUEST } from '@/typescript/enums/enums'
 import type { Any, Tab } from '@/typescript/interface'
 import MethodsUtil from '@/utils/MethodsUtil'
 import CmTab from '@/components/common/CmTab.vue'
+import CpActionFooterEdit from '@/components/page/gereral/CpActionFooterEdit.vue'
+import toast from '@/plugins/toast'
 
 interface Item {
   id: any
@@ -29,6 +32,12 @@ function getMenuNotification() {
   })
 }
 getMenuNotification()
+const tab = ref('all')
+const type = computed(() => {
+  if (tab.value && tab.value === 'mail')
+    return 2
+  return 1
+})
 
 const listTab: Tab[] = [
   {
@@ -40,15 +49,60 @@ const listTab: Tab[] = [
     title: 'configuration-mail',
   },
 ]
+
+const configuration = ref()
+function getDataDetail(val: Any) {
+  getDetailNotify(val.id)
+  configuration.value.getListKeyword({ ...val, type: type.value })
+}
+function typeActive(val: string) {
+  tab.value = val
+}
+
+interface Notify {
+  code?: string
+  emailCanvas?: any
+  emailTemplate?: string
+  emailTemplateCusto?: string
+  eventDbId?: number
+  eventId?: number
+  id?: number
+  interval?: number | null
+  isMailSending?: true
+  isMobileNotification?: true
+  isWebNotification?: true
+  notificationTemplate?: string
+  remind?: number | null
+  time?: number | null
+}
+
+const dataNotify = ref<Notify>({})
+function getDetailNotify(id: number) {
+  MethodsUtil.requestApiCustom(`${SharedService.GetListNotification}/${id}`, TYPE_REQUEST.GET).then((res: Any) => {
+    dataNotify.value = res.data
+  })
+}
+
+async function updateNotify(unload: any) {
+  await MethodsUtil.requestApiCustom(SharedService.PutUpdateNotification, TYPE_REQUEST.PUT, dataNotify.value).then((result: Any) => {
+    toast('SUCCESS', t('USR_UpdateSuccess'))
+    getMenuNotification()
+  }).catch((err: Any) => {
+    toast('ERROR', window.getErrorsMessage(err.response.data.errors, t))
+  })
+  unload()
+}
+const isGeneral = ref(true)
+const route = useRoute()
 </script>
 
 <template>
   <div
-    style="height: 1000px;"
     class="mt-2"
   >
     <CmMenu
       :items="listMenu"
+      @change="getDataDetail"
     >
       <template #header>
         <CmButton
@@ -59,14 +113,33 @@ const listTab: Tab[] = [
       </template>
       <template #content>
         <div class="ml-6">
-          <CmTab
-            :list-tab="listTab"
-            label="tab"
-            type="underline"
+          <div
+            v-if="isGeneral === false"
+          >
+            <CmTab
+              :list-tab="listTab"
+              label="tab"
+              is-un-query
+              type="underline"
+              @activeTab="typeActive"
+            />
+            <CpConfigurationAll
+              v-if="tab === 'all'"
+              ref="configuration"
+              v-model:notify="dataNotify"
+            />
+          </div>
+
+          <CpNotificationGeneral
+            v-if="tab === 'all' && isGeneral === true"
+            :items="listMenu"
           />
-          <CpConfigurationAll />
         </div>
       </template>
     </CmMenu>
+    <CpActionFooterEdit
+      is-save
+      @on-save="(idx, unload) => { updateNotify(unload) }"
+    />
   </div>
 </template>

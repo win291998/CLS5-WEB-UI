@@ -12,6 +12,7 @@ const SharedService = {
   GetListCertificationId: '/certificationtemplate/get-paging',
   GetListCertificationById: '/certificationtemplate/get-by-list-id',
   GetListNotification: '/NotificationConfig',
+  GetListKeywordNotify: '/NotificationConfig/keyword',
 
   /** Post */
   PostCreateTopic: '/topic/create',
@@ -38,6 +39,8 @@ const SharedService = {
   DeleteLevel: '/ratingscale/delete-level',
 
   /** Put */
+  PutUpdateNotification: '/notificationconfig',
+
   /** Update */
 
   PatchSetDefaultCertification: '/CertificationTemplate/set-default',

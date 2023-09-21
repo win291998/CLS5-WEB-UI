@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import CmCollapse from './CmCollapse.vue'
-import type { Any } from '@/typescript/interface'
 
 interface Props {
   items: Item[]
@@ -14,20 +13,28 @@ interface Item {
   isShow: boolean
   items: Item[]
 }
+interface Emit {
+  (e: 'change', val: Item): void
+}
 const props = withDefaults(defineProps<Props>(), {})
+const emit = defineEmits<Emit>()
 const { t } = window.i18n()
 const isShow = ref(false)
 const rail = ref(false)
 const drawer = ref(true)
-const idxbf = ref(-1)
-function handleActiveNavItem(idx: number, item: Any) {
+const idxbf = ref<any>(-1)
+function handleActiveNavItem(idx: number, item: Item, idxParent: number) {
+  const position = `${idxParent}${idx}`
   if (idxbf.value === idx)
     return
-  const element = document.getElementsByClassName('nav-item')
-  if (idxbf.value > -1)
-    element[idxbf.value].classList.remove('nav-item-active')
-  element[idx].classList.add('nav-item-active')
-  idxbf.value = idx
+  const element = document.getElementById(`nav-item${position}`)
+  if (idxbf.value !== -1) {
+    const el = document.getElementById(`nav-item${idxbf.value}`)
+    el?.classList.remove('nav-item-active')
+  }
+  element?.classList.add('nav-item-active')
+  emit('change', item)
+  idxbf.value = position
 }
 
 function showChildren(idx: number, val: boolean) {
@@ -82,10 +89,10 @@ function showChildren(idx: number, val: boolean) {
                 class="nav-group-children"
               >
                 <li
-                  v-for="(i, idx) in items[0].items"
+                  v-for="(i, index) in items[0].items"
+                  :id="`nav-item${idx}${index}`"
                   :key="i.id"
-                  class="nav-item"
-                  @click="handleActiveNavItem(idx, i)"
+                  @click="handleActiveNavItem(index, i, idx)"
                 >
                   {{ t(i.code) }}
                 </li>
@@ -135,7 +142,7 @@ function showChildren(idx: number, val: boolean) {
           }
         }
         .nav-group-children {
-          .nav-item {
+          [id*=nav-item] {
             cursor: pointer;
             padding: 12px 16px;
           }
