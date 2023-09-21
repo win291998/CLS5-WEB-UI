@@ -30,7 +30,7 @@ interface Props {
   apiList: Api
   apiAdd: Api
   apiDetail: Api
-  routerCancel?: string
+  routerCancel?: any
 }
 interface Emit {
   (e: 'update:modelValue', data: any): void
@@ -104,7 +104,7 @@ async function handleSave(idx: number, unload: any) {
   })
 }
 function onCancel() {
-  router.push({ name: props.routerCancel })
+  router.push(props.routerCancel)
 }
 onUpdated(() => {
   setTimeout(() => {
@@ -126,7 +126,7 @@ watch(render, val => {
   <SkTree v-show="isLoading" />
   <div
     v-show="!isLoading"
-    class="page-container-box"
+    class="page-container-box box-org"
   >
     <CmTreeView
       :key="render"
@@ -139,7 +139,7 @@ watch(render, val => {
       @update:model-value="updateValueOrg"
     />
   </div>
-  <div>
+  <div class="mt-6">
     <CpActionFooterEdit
       v-if="!isView"
       is-cancel
@@ -151,3 +151,10 @@ watch(render, val => {
     />
   </div>
 </template>
+
+<style lang="scss">
+.page-container-box.box-org{
+  overflow-y: scroll;
+  max-height: 700px;
+}
+</style>

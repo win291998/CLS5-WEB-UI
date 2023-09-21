@@ -70,6 +70,7 @@ interface Props {
   componentPropsEdit?: any
   emit?: any
   getParams?: any
+  minHeight?: any
 }
 const storeTable = tableStore()
 const { callBackAction } = storeToRefs(storeTable)
@@ -307,6 +308,7 @@ function exportExcel() {
     :total-record="totalRecord"
     :custom-id="customId"
     :is-expand="isExpand"
+    :min-height="minHeight"
     @handlePageClick="handlePageClick"
   >
     <template #rowItem="{ col, context, dataCol }">
@@ -398,7 +400,8 @@ function exportExcel() {
     :api="props.apiAdd?.apiModal"
     :method="props.apiAdd?.methodModal"
     :exclude-ids="props.apiEdit?.excludeIds || []"
-    :params="props.apiEdit?.params"
+    :params="props.apiEdit?.params || props.apiAdd?.params"
+    :payload="props.apiEdit?.payload || props.apiAdd?.payload"
     @confirm="confirmModal"
   />
 

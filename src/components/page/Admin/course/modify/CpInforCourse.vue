@@ -74,7 +74,7 @@ if (formOfStudyCombobox.value)
       <VRow class="mb-3">
         <VCol
           cols="12"
-          md="6"
+          sm="6"
         >
           <VRow class="d-flex">
             <VCol
@@ -104,7 +104,7 @@ if (formOfStudyCombobox.value)
         </VCol>
         <VCol
           cols="12"
-          md="6"
+          sm="6"
         >
           <VRow class="d-flex">
             <VCol

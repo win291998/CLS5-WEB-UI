@@ -14,6 +14,11 @@ import CpTestThematicList from '@/components/page/Admin/exam/edit/thematic/compo
 import CpShiftTest from '@/components/page/Admin/exam/edit/thematic/components/CpShiftTest.vue'
 import CmTab from '@/components/common/CmTab.vue'
 import CmButton from '@/components/common/CmButton.vue'
+import CpOrganization from '@/components/page/gereral/CpOrganization.vue'
+import CourseService from '@/api/course'
+import StringJwt from '@/utils/Jwt'
+import CpManaging from '@/components/page/gereral/CpManaging.vue'
+import CpMdEditGroupUser from '@/components/page/gereral/CpMdEditGroupUser.vue'
 
 const emit = defineEmits<Emit>()
 const route = useRoute()
@@ -138,8 +143,10 @@ function cancel() {
   const query = window._.cloneDeep(route.query)
   delete query.tabThematic
   router.push({ name: 'exam-edit', query: { ...query }, params: { id: route.params.id } })
+  console.log(route.query.thematicId)
 
-  // emit('onCancel')
+  if (!route.params.thematicId)
+    emit('onCancel')
 }
 
 // sửa chuyên đề khảo sát
@@ -186,6 +193,14 @@ onMounted(() => {
     transferTab()
   }
 })
+const headerUserGroup = computed(() => {
+  return [
+    { text: '', value: 'checkbox' },
+    { text: t('user-group-name'), value: 'name' },
+    { text: t('description'), value: 'description' },
+    { text: '', value: 'actions', width: 50 },
+  ]
+})
 
 /**
  *
@@ -199,25 +214,98 @@ const listTabCandidate = [
     isRendered: true,
   },
   {
-    key: 'group-management',
+    key: 'group-user',
     title: 'group-management',
-    isSlot: true,
+    component: CpManaging,
     isRendered: false,
+    dataTab: {
+      // isView: isViewDetail,
+      titlePage: t('list-group-user'),
+      customId: 'id', // id table select
+      isShowExportExcel: false,
+      header: headerUserGroup,
+      actionsTable: [
+        {
+          id: 2,
+          name: 'QuestionService.ActionDelete',
+        },
+      ],
+      minHeight: 100,
+      componentEdit: CpMdEditGroupUser,
+      apiList: {
+        api: ExamService.PostGroupShift,
+        method: TYPE_REQUEST.POST,
+        payload: {
+          testId: Number(route.params.thematicId),
+          isAdd: false,
+        },
+      },
+      apiAdd: {
+        api: ExamService.PostCreateGroupUser,
+        method: TYPE_REQUEST.POST,
+        apiModal: ExamService.PostGroupShift,
+        methodModal: TYPE_REQUEST.POST,
+        payload: {
+          testId: Number(route.params.thematicId),
+          isAdd: true,
+        },
+        params: {
+          examId: Number(route.params.id),
+          testId: Number(route.params.thematicId),
+          typeId: 4,
+        },
+        customKey: 'listModel',
+      },
+      apiDelete: {
+        api: ExamService.PostDeleteUserGroup,
+        method: TYPE_REQUEST.POST,
+        label: 'groupModels',
+        params: {
+          examId: Number(route.params.id),
+          testId: Number(route.params.thematicId),
+        },
+      },
+    },
   },
   {
-    key: 'document',
-    title: 'organizational',
-    isSlot: true,
+    key: 'organizational-structure',
+    title: 'organizational-structure-management',
+    component: CpOrganization,
     isRendered: false,
+    dataTab: {
+      // isView: isViewDetail,
+      apiList: {
+        api: CourseService.GetOrganizationalStructure,
+        method: TYPE_REQUEST.GET,
+        params: {
+          role: StringJwt.getRole(),
+        },
+      },
+      apiAdd: {
+        api: ExamService.PostDeleteOrgTest,
+        method: TYPE_REQUEST.POST,
+        params: {
+          examId: Number(route.params.id),
+          testId: Number(route.params.thematicId),
+          listModelNew: [],
+          listModelOld: [],
+        },
+      },
+      apiDetail: {
+        api: ExamService.PostOrgTest,
+        method: TYPE_REQUEST.POST,
+        params: {
+          testId: Number(route.params.thematicId),
+          typeId: 2,
+        },
+      },
+      routerCancel: { name: 'exam-edit', query: { ...window._.cloneDeep(route.query) }, params: { id: route.params.id } },
+    },
   },
 ]
+const tabActiveAsign = ref()
 function activeTab(val: any) {
-  // if (val === 'capacity')
-  //   getCapacityCourse()
-  // if (val === 'content')
-  //   getContentCourseById()
-  // if (val === 'document')
-  //   getDocumentCourse()
+  tabActiveAsign.value = val
 }
 </script>
 
@@ -305,7 +393,10 @@ function activeTab(val: any) {
         </div>
       </template>
     </CmTab>
-    <div class="mt-6 d-flex justify-end">
+    <div
+      v-if="tabActiveAsign !== 'organizational-structure'"
+      class="mt-6 d-flex justify-end"
+    >
       <CmButton
         bg-color="bg-white"
         color="white"

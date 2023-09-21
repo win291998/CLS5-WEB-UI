@@ -132,7 +132,7 @@ const listTab: Tab[] = [
         },
         label: 'organizationalStructureId',
       },
-      routerCancel: 'course-list',
+      routerCancel: { name: 'course-list' },
     },
   },
 ]
