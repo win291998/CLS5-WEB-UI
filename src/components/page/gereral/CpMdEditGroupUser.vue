@@ -1,8 +1,6 @@
 <script lang="ts" setup>
 import CmDialogs from '@/components/common/CmDialogs.vue'
-import CpCustomInfo from '@/components/page/gereral/CpCustomInfo.vue'
 import type { Any } from '@/typescript/interface'
-import type { Params } from '@/typescript/interface/params'
 import MethodsUtil from '@/utils/MethodsUtil'
 import { useStoreAddUser } from '@/stores/admin/group-user/modalEditGroupUser'
 import StringJwt from '@/utils/Jwt'
@@ -29,25 +27,17 @@ interface Props {
   customKey: string
   api: string
   method: string
+  params?: any
+  payload?: any
 }
 interface Emit {
   (e: 'update:isShow', data: boolean): void
   (e: 'confirm', data: any): void
 }
-interface QueryParams extends Params {
-  keyword: string
-  roleId: number | null
-  titles: string[] | null
-  userRole: number | null
-  excludeIds: number[] | null
-  categoryTitleId: number[] | null
-  groupId: number[] | null
-  organizationalStructureId: number[] | null
-  id: number | null
-}
+
 const route = useRoute()
 
-const queryParams = reactive<QueryParams>({
+const queryParams = reactive<any>({
   keyword: '',
   roleId: null,
   titles: '',
@@ -63,7 +53,25 @@ const queryParams = reactive<QueryParams>({
 const listUser = ref<Any[]>([])
 const totalRecord = ref<number>(0)
 async function fetchDataModal() {
-  const { data } = await MethodsUtil.requestApiCustom(props.api, props.method, queryParams)
+  console.log(window._.isEmpty(props.payload))
+  let params
+  if (!window._.isEmpty(props.payload)) {
+    params = {
+      ...props.payload,
+      pageNumber: queryParams.pageNumber,
+      pageSize: queryParams.pageSize,
+      keyword: queryParams.keyword,
+      excludeIds: queryParams.excludeIds,
+      userRole: queryParams.userRole,
+    }
+  }
+  else {
+    params = {
+      ...queryParams,
+      ...props.params,
+    }
+  }
+  const { data } = await MethodsUtil.requestApiCustom(props.api, props.method, params)
   listUser.value = data.pageLists
   totalRecord.value = data.totalRecord
 }
@@ -77,8 +85,8 @@ function hidden() {
 const listItem = ref<any>([])
 const headers = [
   { text: '', value: 'checkbox' },
-  { text: t('user-name'), value: 'name', type: 'custom' },
-  { text: t('email'), value: 'email' },
+  { text: t('user-group-name'), value: 'name' },
+  { text: t('description'), value: 'description' },
 ]
 
 async function confirm() {
@@ -117,16 +125,6 @@ async function confirm() {
       :items="listUser"
       :return-object="true"
       :total-record="totalRecord"
-    >
-      <template #rowItem="{ col, context }">
-        <div v-if="col === 'name'">
-          <CpCustomInfo
-            :context="context"
-            :is-show-code="false"
-            :is-show-email="false"
-          />
-        </div>
-      </template>
-    </CmTable>
+    />
   </CmDialogs>
 </template>

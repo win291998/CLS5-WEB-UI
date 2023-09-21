@@ -43,12 +43,12 @@ const headerUserGroup = computed(() => {
     return [{ text: t('user-group-name'), value: 'name' },
       { text: t('description'), value: 'description' }]
   }
-  return [[
+  return [
     { text: '', value: 'checkbox' },
     { text: t('user-group-name'), value: 'name' },
     { text: t('description'), value: 'description' },
     { text: '', value: 'actions', width: 50 },
-  ]]
+  ]
 })
 const listTab: Tab[] = [
   {
@@ -164,7 +164,7 @@ const listTab: Tab[] = [
           id: route.params.id,
         },
       },
-      routerCancel: 'course-list',
+      routerCancel: { name: 'course-list' },
     },
   },
   {

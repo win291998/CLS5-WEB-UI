@@ -107,7 +107,7 @@ const listTab = computed((): Tab[] => [
           testId: Number(route.params.id),
         },
       },
-      routerCancel: 'course-list',
+      routerCancel: { name: 'course-list' },
     },
   },
 

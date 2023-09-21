@@ -7,6 +7,7 @@ import SharedService from '@/api/shared'
 import CpManaging from '@/components/page/gereral/CpManaging.vue'
 import { TYPE_REQUEST } from '@/typescript/enums/enums'
 import CpMdEditCourseCost from '@/components/page/Admin/training/cost/modal/CpMdEditCourseCost.vue'
+import CmButton from '@/components/common/CmButton.vue'
 
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 
@@ -41,7 +42,7 @@ const listTab: Tab[] = [
         { text: t('description'), value: 'description' },
         { text: '', value: 'actions', width: 150 },
       ],
-
+      minHeight: 100,
       actionsTable: [
         {
           id: 1,
@@ -85,7 +86,10 @@ const listTab: Tab[] = [
 ]
 function activeTab(tab: any) {
   nextTick(() => {
-    router.replace({ query: { tab } })
+    if (tab === 'list-test')
+      router.replace({ query: { tab, tabThematic: route.query.tabThematic } })
+    else
+      router.replace({ query: { tab } })
   })
 }
 </script>
@@ -96,4 +100,15 @@ function activeTab(tab: any) {
     label="tab"
     @activeTab="activeTab"
   />
+  <div
+    v-if="route.query.tab !== 'info' && !route.query.tabThematic"
+    class="d-flex justify-end mt-6"
+  >
+    <CmButton
+      :title="t('come-back')"
+      color="secondary"
+      variant="outlined"
+      @click="router.push({ name: 'exam-list' })"
+    />
+  </div>
 </template>

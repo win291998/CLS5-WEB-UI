@@ -11,7 +11,7 @@ const emit = defineEmits<Emit>()
 interface Emit {
   (e: 'update:modelValue', data: string): void
 }
-function updateModel(val: string) {
+function updateModel(val: string, b) {
   emit('update:modelValue', val)
 }
 
@@ -31,7 +31,7 @@ watch(() => props.modelValue, val => {
       :is-active="active === i.key"
       :disabled="i.isDisabled"
       :is-end="(idx + 1) === listTab.length"
-      @click="updateModel(i.key)"
+      @click="i.isDisabled ? null : updateModel(i.key, i.isDisabled)"
     />
   </div>
 </template>
