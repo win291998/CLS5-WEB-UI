@@ -196,6 +196,9 @@ const sizeModal = computed(() => {
   padding-top: 12px;
   padding-bottom: 24px;
   padding-inline: 16px !important;
+  .v-btn{
+    padding: 10px 16px;
+  }
 }
 
 .modal-custom-divspace .v-card-item {

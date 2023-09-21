@@ -73,24 +73,11 @@ function clickDetailCourse(id: number, idBtn: number, unLoadComponent: any) {
     @cancel="cancelModal"
   >
     <template #title>
-      <div class="d-flex justify-center mb-5">
-        <div class="icon-noti-lg">
-          <VIcon
-            icon="prime-check-circle"
-            color="success"
-            class="noti-zindex"
-            :size="40"
-          />
-          <span
-            class="ring1 ring1-type-0"
-          />
-          <span
-            class="ring2 ring2-type-0"
-          />
-        </div>
+      <div class="d-flex justify-center text-bold-xl color-primary mt-6">
+        {{ t('notification-my-course') }}
       </div>
-      <div class="d-flex justify-center text-semibold-lg text-title-noti mb-2">
-        {{ t('are-you-sure') }}
+      <div class="d-flex justify-center text-regular-md  text-title-noti mb-2 ">
+        {{ t('notification-my-course-req') }}
       </div>
     </template>
     <div>
@@ -155,3 +142,9 @@ function clickDetailCourse(id: number, idBtn: number, unLoadComponent: any) {
     </div>
   </CmDialogs>
 </template>
+
+<style lang="scss">
+.text-title{
+  color:  rgb(var(--v-gray-900));
+}
+</style>

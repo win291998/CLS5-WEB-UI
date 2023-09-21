@@ -19,8 +19,6 @@ function dataColumnExcel(rowData: Array<any>) {
     id: rowData[0],
     listAnswer,
   }
-  console.log(data)
-  debugger
   data.content = data.contentBasic
   data.typeId = getQuestionTypeFromname(data.type)
   if (data.typeId === 5) {

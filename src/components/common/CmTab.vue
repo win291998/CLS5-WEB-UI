@@ -117,9 +117,9 @@ watch(tabActive, val => {
   activeTab(val)
 }, { immediate: true })
 onUnmounted(() => {
-  router.replace({
-    query: {},
-  })
+  // router.replace({
+  //   query: {},
+  // })
   onUnmountedValue.value = true
 })
 </script>

@@ -22,7 +22,6 @@ const listMenu = ref<Item[]>([])
 
 function getMenuNotification() {
   MethodsUtil.requestApiCustom(SharedService.GetListNotification, TYPE_REQUEST.GET).then((result: Any) => {
-    console.log(result.data)
     result.data.items.forEach((element: Item) => {
       element.isShow = false
     })

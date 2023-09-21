@@ -97,8 +97,6 @@ const SERVERFILE = process.env.VUE_APP_BASE_SERVER_FILE
 
 async function downloadFile(idx: any, unLoadComponent: any, urlFileName?: any) {
   await MethodsUtil.getDocLocalInfoFileDown(urlFileName).then(value => {
-    console.log(value)
-
     MethodsUtil.dowloadSampleFile(`${SERVERFILE}${value.filePath}`,
       TYPE_REQUEST.GET, value.fileName || 'local').then((data: any) => {
       unLoadComponent(idx)
