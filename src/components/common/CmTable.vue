@@ -176,9 +176,6 @@ function showRow(item: ClickRowArgument) {
   if (props.isExpand)
     emit('update:expand', item)
 }
-function contextmenuRow(item: any) {
-  console.log(item)
-}
 
 // sự kiện click chọn item
 function checkedItem(index: number, value: boolean | undefined) {
@@ -697,8 +694,8 @@ $colorBorderRow: v-bind(colorRow)  ; // Giá trị ban đầu của biến
   text-transform: capitalize;
 }
 .selectedTable tbody tr td:first-child {
-  display: flex;
-  align-items: start;
+  // display: flex;
+  // align-items: start;
 }
 .table-expand.selectedTable tbody tr td:first-child {
   display: table-cell;

@@ -96,8 +96,6 @@ function setFaviconAndPageTitle(icon: any, title: any) {
 async function getPortalInfo() {
   try {
     const data = await MethodsUtil.requestApiCustom(`${process.env.VUE_APP_BASE_API}/management/get-setting-portal`)
-    console.log(data)
-
     if (data?.data) {
       localStorage.setItem('portalIcon', data.data.icon || '/badge/favicon.svg')
       localStorage.setItem('portalTitle', data.data.portalTitle || '')

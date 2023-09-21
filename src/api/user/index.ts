@@ -60,6 +60,7 @@ const UserService = {
   GetEventGroup: 'event/get-paging-event-groups',
   GetInfoPortal: '/management/get-setting-portal',
   GetSettingExpPoint: '/Experience/get-list',
+  GetPeopleService: '/user/get-people-service',
 
   PostGetAuthorContent: '/courseuser/', // GetPagingUserGroup
   PostDeleteGroupFromEvent: '/event/remove-group-user-from-event',

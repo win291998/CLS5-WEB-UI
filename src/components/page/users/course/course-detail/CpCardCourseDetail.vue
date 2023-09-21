@@ -92,8 +92,6 @@ async function goToLearn(id: number, idBtn: number, unLoadComponent: any) {
   }
   else {
     const [requiredCourses, requiredProficiencies]: any = await checkCourseCondition(id)
-    console.log(requiredCourses, requiredProficiencies)
-
     if (window._.isEmpty(requiredCourses) && window._.isEmpty(requiredProficiencies)) {
       if ([2, 3, 4, 11].includes(actionType.key)) {
         const query = { ...route.query }
@@ -126,8 +124,6 @@ async function checkCourseCondition(courseId: number) {
       MethodsUtil.requestApiCustom(CourseService.GetLnCheckCourseRequire, TYPE_REQUEST.GET, params),
       MethodsUtil.requestApiCustom(CourseService.GetLnCourseProfRequire, TYPE_REQUEST.GET, params),
     ])
-  console.log(requiredCourses, requiredProficiencyIds)
-
   requiredCourses = requiredCourses.data || []
   requiredProficiencyIds = requiredProficiencyIds.data || []
   let requiredProficiencies: never[] = []
