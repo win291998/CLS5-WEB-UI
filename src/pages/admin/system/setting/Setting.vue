@@ -6,6 +6,7 @@ import type { Tab } from '@/typescript/interface'
 import CpRatingScale from '@/components/page/Admin/system/setting/tab/CpRatingScale.vue'
 import CpCertification from '@/components/page/Admin/system/setting/tab/CpCertification.vue'
 import CpNotification from '@/components/page/Admin/system/setting/tab/CpNotification.vue'
+import CpEmailConfig from '@/components/page/Admin/system/setting/tab/CpEmailConfig.vue'
 
 const listTab: Tab[] = [
   {
@@ -14,14 +15,19 @@ const listTab: Tab[] = [
     component: CpGeneralInfo,
   },
   {
+    key: 'rating-scale',
+    title: 'rating-scale',
+    component: CpRatingScale,
+  },
+  {
     key: 'experience-point',
     title: 'experience-point-setting',
     component: CpExpPoint,
   },
   {
-    key: 'rating-scale',
-    title: 'rating-scale',
-    component: CpRatingScale,
+    key: 'email-config',
+    title: 'email-config',
+    component: CpEmailConfig,
   },
   {
     key: 'certification',

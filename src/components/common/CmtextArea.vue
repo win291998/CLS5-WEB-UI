@@ -120,7 +120,7 @@ const messageError = computed(() => {
   font-style: normal;
   font-weight: 400;
   line-height: 24px;
-  border: $border-input;
+  // border: $border-input;
   border-radius: $border-radius-input !important;
 }
 .v-textarea .v-field__outline__end,

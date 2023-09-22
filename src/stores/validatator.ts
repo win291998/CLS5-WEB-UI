@@ -59,7 +59,7 @@ export const validatorStore = defineStore('validator', () => {
       MAX: 255,
     },
     USERNAME: {
-      FIELD: t('common.sign-name'),
+      FIELD: t('sign-name'),
       MAX: 255,
       MIN: 3,
     },

@@ -25,7 +25,7 @@ const ExamService = {
   PostGroupShift: '/examtest/get-paging-group',
   PostOrgTest: '/examtest/get-list-id-group',
   PostCreateGroupUser: '/examtest/create-group-user',
-  PostDeleteUserGroup: '/examtest/delete-group-user',
+  PostDeleteUserGroup: '/ExamTest/delete-list-group',
   PostDeleteOrgTest: '/examtest/create-organizational-structures',
 
   /** Delete */

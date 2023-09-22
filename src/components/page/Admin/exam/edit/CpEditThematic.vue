@@ -259,7 +259,7 @@ const listTabCandidate = [
       apiDelete: {
         api: ExamService.PostDeleteUserGroup,
         method: TYPE_REQUEST.POST,
-        label: 'groupModels',
+        label: 'ids',
         params: {
           examId: Number(route.params.id),
           testId: Number(route.params.thematicId),
@@ -368,7 +368,7 @@ function activeTab(val: any) {
 
   <div v-if="route.query.tabThematic === 'candidate'">
     <CmTab
-      :is-render="true"
+      :is-render="false"
       :list-tab="listTabCandidate"
       label="type"
       is-un-query

@@ -309,8 +309,10 @@ watchEffect(() => {
   --dp-border-radius: $border-radius-xs
   --height-top-month: v-bind(marginHeader)
 }
+.cm-date-time-picker {
   .dp__main {
     height: 40px;
+    overflow: hidden;
     .dp__input_icon_pad {
       height: 40px;
       border: 1px solid $color-gray-300;
@@ -344,7 +346,9 @@ watchEffect(() => {
     .v-field__field {
       height: 36px;
     }
-
+    .v-field{
+      border: unset !important;
+    }
     .v-field__input {
       border: unset !important;
       border-radius: $border-radius-xs;
@@ -375,6 +379,7 @@ watchEffect(() => {
     }
   }
 .dp__calendar {
+  overflow: hidden;
   width: 100%;
   display: v-bind(displayCalendar);
   .dp__calendar_item {
@@ -578,5 +583,6 @@ watchEffect(() => {
 }
 .dp__disabled{
   background: $color-gray-100;
+}
 }
 </style>
