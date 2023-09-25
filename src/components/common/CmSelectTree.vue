@@ -95,15 +95,18 @@ function normalizer(node: any) {
 }
 
 /** ** Sao chép biến model modelValue từ prop  modelValue ngăn thay đổi */
-const modelValueTree = ref(props.multiple ? [] : null)
+const modelValueTree = ref<any>(props.multiple ? [] : null)
 
 /** ** Biễn render */
 const render = ref('')
+const optionValue = ref<any>([])
 
 /** ** Cập nhật dữ liệu trên select */
 function updateValue() {
-  render.value = MethodsUtil.createRandomId(10)
-  modelValueTree.value = window._.cloneDeep(props.modelValue)
+  if (optionValue.value.length) {
+    render.value = MethodsUtil.createRandomId(10)
+    modelValueTree.value = window._.cloneDeep(props.modelValue)
+  }
 }
 
 /** ** function: xử lý khi tao tác trên node */
@@ -119,11 +122,12 @@ function limitText(count: any) {
 watch(() => props.modelValue, () => {
   updateValue()
 })
-const optionValue = ref<any>()
 const called = ref(false)
 watch(() => props.options, val => {
   if (val.length)
     called.value = true
+  optionValue.value = props.options
+  updateValue()
 })
 function waitForTrueValue() {
   return new Promise((resolve: any) => {
@@ -140,6 +144,7 @@ async function loadOptions({ action }: any) {
     if (!called.value)
       await waitForTrueValue()
     optionValue.value = props.options
+    updateValue()
   }
 }
 </script>

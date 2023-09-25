@@ -179,11 +179,15 @@ onUnmounted(() => {
     <div v-else>
       <Component
         :is="dataTab?.component"
+        v-if="!dataTab.isSlot"
         :key="dataTab?.key"
         :emit="useEmitter"
         :data-general="dataGeneral"
         v-bind="dataTab?.dataTab"
       />
+      <div v-else>
+        <slot :context="dataTab" />
+      </div>
     </div>
   </div>
 </template>

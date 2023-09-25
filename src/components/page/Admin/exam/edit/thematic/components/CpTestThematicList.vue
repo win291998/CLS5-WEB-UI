@@ -203,7 +203,7 @@ async function handleAddTeacher(data: any) {
     isShowDialogAddTeacher.value = false
   })
     .catch((err: any) => {
-      toast('ERROR', window.getErrorsMessage(err.response.data.error, t))
+      toast('ERROR', window.getErrorsMessage(err.response.data.errors, t))
     })
 }
 onMounted(() => {

@@ -69,7 +69,7 @@ async function updateSettingGeneral(unloadButton: any) {
   <div class="mt-2">
     <VRow>
       <VCol
-        lg="4"
+        sm="4"
         cols="12"
       >
         <CmTextFieldVue
@@ -79,7 +79,7 @@ async function updateSettingGeneral(unloadButton: any) {
         />
       </VCol>
       <VCol
-        lg="4"
+        sm="4"
         cols="12"
       >
         <CmTextFieldVue
@@ -89,7 +89,7 @@ async function updateSettingGeneral(unloadButton: any) {
         />
       </VCol>
       <VCol
-        lg="4"
+        sm="4"
         cols="12"
       >
         <CmTextFieldVue
@@ -99,7 +99,7 @@ async function updateSettingGeneral(unloadButton: any) {
         />
       </VCol>
       <VCol
-        lg="4"
+        sm="4"
         cols="12"
       >
         <CmTextFieldVue
@@ -113,17 +113,10 @@ async function updateSettingGeneral(unloadButton: any) {
           <VCol
             cols="12"
             sm="6"
-            lg="2"
           >
-            <div class="text-medium-sm color-dark">
+            <div class="text-medium-sm color-dark mb-2">
               {{ TITLE.FIELD5 }}
             </div>
-          </VCol>
-          <VCol
-            cols="12"
-            sm="6"
-            lg="4"
-          >
             <div class="input-avatar">
               <CmImgUpload
                 v-model:src="dataInput.logo"
@@ -138,17 +131,10 @@ async function updateSettingGeneral(unloadButton: any) {
           <VCol
             cols="12"
             sm="6"
-            lg="2"
           >
-            <div class="text-medium-sm color-dark">
+            <div class="text-medium-sm color-dark  mb-2">
               {{ TITLE.FIELD6 }}
             </div>
-          </VCol>
-          <VCol
-            cols="12"
-            sm="6"
-            lg="4"
-          >
             <div class="input-icon">
               <CmImgUpload
                 v-model:src="dataInput.icon"
@@ -179,6 +165,7 @@ async function updateSettingGeneral(unloadButton: any) {
 .input-avatar{
   width: 18.875rem;
   height: 12.5rem;
+  max-width: 100%;
 }
 .input-icon{
   width: 12.5rem;

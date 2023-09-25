@@ -116,7 +116,7 @@ function actionItem(type: any) {
     case 'ActionEdit':
       router.push({ name: 'course-edit', params: { id: Number(type[1].id) } })
       break
-    case 'CopyCourse':
+    case 'copy':
       isShowModalCoppyCourse.value = true
       coppyData.value.id = type[1].id
       break
@@ -355,7 +355,7 @@ window.hideAllPageLoading()
                 icon="carbon:dot-mark"
                 size="12"
               />
-              <span>{{ t(MethodsUtil.checkType(context.formOfStudyName, StatusTypeFormStudy, 'name')?.name) }}</span>
+              <span>{{ t(MethodsUtil.checkType(context.formOfStudyName, StatusTypeFormStudy, 'name')?.name || '') }}</span>
             </CmChip>
           </div>
           <div v-if="col === 'time'">

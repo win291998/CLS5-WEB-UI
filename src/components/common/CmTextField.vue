@@ -7,6 +7,7 @@ type IconValue = string | JSXComponent
 
 const props = withDefaults(defineProps<Props>(), ({
   prependInnerIcon: '',
+  appendInnerIcon: '',
   label: '',
   bgColor: 'white',
   type: 'text',
@@ -24,6 +25,7 @@ const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 interface Props {
   modelValue?: any
   prependInnerIcon?: IconValue
+  appendInnerIcon?: any
   label?: string
   text?: string
   bgColor?: string
@@ -42,6 +44,7 @@ interface Props {
 }
 interface Emit {
   (e: 'update:modelValue', value: any): void
+  (e: 'click:append-inner', value: any): void
   (e: 'change', value: any): void
   (e: 'focused', value: any): void
 }
@@ -90,6 +93,9 @@ function focusInput(params: boolean) {
   isFocus.value = params
   emit('focused', params)
 }
+function handleAppendinner(val: any) {
+  emit('click:append-inner', val)
+}
 watch(() => props.modelValue, val => {
   formModelValue.value = val
 })
@@ -114,6 +120,7 @@ watch(() => props.modelValue, val => {
         v-bind="field"
         :disabled="disabled"
         :prepend-inner-icon="props.prependInnerIcon"
+        :append-inner-icon="appendInnerIcon"
         :label="props.label"
         :bg-color="bgColor"
         :placeholder="placeholder"
@@ -128,6 +135,7 @@ watch(() => props.modelValue, val => {
         @change="handleChangeText"
         @update:modelValue="handleUpdateText"
         @update:focused="focusInput"
+        @click:append-inner="handleAppendinner"
         @keydown="keydown"
       />
     </div>
@@ -146,7 +154,7 @@ watch(() => props.modelValue, val => {
   height: auto;
   padding: 4px 0;
 }
-.vTextField .v-field__input{
+.vTextField .v-field{
   color: $color-gray-900 !important;
   /* Text md/Regular */
   font-family: Inter, sans-serif;
@@ -156,6 +164,18 @@ watch(() => props.modelValue, val => {
   font-weight: 400;
   line-height: 24px;
   border: $border-input;
+  border-radius: $border-radius-input !important;
+}
+ .vTextField .v-field--appended .v-field__input{
+  color: $color-gray-900 !important;
+  /* Text md/Regular */
+  font-family: Inter, sans-serif;
+  font-size: 16px;
+  height: 40px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  border: unset !important;
   border-radius: $border-radius-input !important;
 }
 .cm-input-field .v-field--variant-outlined .v-field__outline__start {
@@ -181,31 +201,34 @@ watch(() => props.modelValue, val => {
     border: none !important;
   }
 }
-.cm-input-field-error .v-field__input{
+.cm-input-field-error .v-field{
   border: 1px solid red;
 }
-.cm-input-field .v-field__input:focus{
+.v-field .v-field__field{
+  border-radius: 8px;
+  overflow: hidden;
+}
+.cm-input-field .v-field:focus{
   border: 1px solid rgb(var(--v-primary-300));
   border-radius: 8px;
 }
 .cm-input-field .v-field__outline{
   z-index: -1 !important;
 }
+.cm-input-field .focus .v-field__outline{
+  border-radius:8px;
+  border: 1px solid rgb(var(--v-primary-300)) !important;
+  box-shadow: 0px 0px 0px 4px rgb(var(--v-primary-100)), 0px 1px 2px 0px rgb(var(--v-primary-300));
+}
 .cm-input-field-error.cm-input-field .focus .v-field__outline{
   border-radius:8px;
   border: 1px solid rgb(var(--v-error-300)) !important;
   box-shadow: 0px 0px 0px 4px rgb(var(--v-error-100)), 0px 1px 2px 0px rgb(var(--v-gray-900)) !important;
 }
-.cm-input-field-error.cm-input-field .focus .v-field__input:focus{
+.cm-input-field-error.cm-input-field .focus .v-field:focus{
   border-radius:8px;
   border: 1px solid rgb(var(--v-error-300)) !important;
   box-shadow: 0px 0px 0px 4px rgb(var(--v-error-100)), 0px 1px 2px 0px rgb(var(--v-gray-900)) !important;
-}
-
-.cm-input-field .focus .v-field__outline{
-  border-radius:8px;
-  border: 1px solid rgb(var(--v-primary-300)) !important;
-  box-shadow: 0px 0px 0px 4px rgb(var(--v-primary-100)), 0px 1px 2px 0px rgb(var(--v-primary-300));
 }
 
 .cm-input-field .v-field--variant-outlined .v-field__outline__start {

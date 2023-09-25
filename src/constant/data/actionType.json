@@ -121,7 +121,7 @@
     },
     {
       "id": 18,
-      "name": "CopyCourse",
+      "name": "copy",
       "key": "CopyCourse",
       "icon": "tabler:copy",
       "color": "color-primary",

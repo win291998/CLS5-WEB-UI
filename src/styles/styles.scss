@@ -250,6 +250,12 @@ body {
 .no-background {
   background-color: transparent;
 }
+.b-container {
+  border: 1px solid rgb(var(--v-gray-300));
+  background-color: #ffff;
+  border-radius: 8px;
+  overflow: hidden;
+}
 .card-container {
   border-radius: 8px;
   padding: 24px;

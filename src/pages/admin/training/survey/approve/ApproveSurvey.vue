@@ -75,7 +75,7 @@ function handleApprove() {
     toast('SUCCESS', t(result.message))
     selected.value = []
   }).catch((err: Any) => {
-    toast('ERROR', window.getErrorsMessage(err.response.data.error, t))
+    toast('ERROR', window.getErrorsMessage(err.response.data.errors, t))
   })
 }
 function handleReject() {
@@ -87,7 +87,7 @@ function handleReject() {
     toast('SUCCESS', t(result.message))
     selected.value = []
   }).catch((err: Any) => {
-    toast('ERROR', window.getErrorsMessage(err.response.data.error, t))
+    toast('ERROR', window.getErrorsMessage(err.response.data.errors, t))
   })
 }
 

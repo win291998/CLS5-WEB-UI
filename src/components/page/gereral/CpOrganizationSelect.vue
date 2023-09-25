@@ -88,10 +88,13 @@ async function dataOrgSelect() {
     await getAllOrgStruct()
   }
 }
-onMounted(async () => {
-  if (props.isRender)
-    await dataOrgSelect()
+watch(() => props.isRender, (val: any) => {
+  if (val)
+    dataOrgSelect()
 })
+watch(() => props.modelValue, (val: any) => {
+  organizationsValue.value = val
+}, { immediate: true })
 </script>
 
 <template>

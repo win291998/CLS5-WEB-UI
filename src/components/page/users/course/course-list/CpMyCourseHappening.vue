@@ -210,8 +210,7 @@ watch(queryParams, (val: Any) => {
               :key="item.id"
               cols="12"
               sm="6"
-              md="4"
-              xl="3"
+              md="3"
             >
               <CpMyCourseItemCard
                 :data="item"

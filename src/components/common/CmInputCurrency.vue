@@ -162,7 +162,7 @@ function focusInput(params: boolean) {
   font-style: normal;
   font-weight: 400;
   line-height: 24px;
-  border: $border-input;
+  // border: $border-input;
   border-radius: $border-radius-input !important;
 }
 .cm-input-field .v-field--variant-outlined .v-field__outline__start {
@@ -187,9 +187,6 @@ function focusInput(params: boolean) {
   {
     border: none !important;
   }
-}
-.cm-input-field-error .v-field__input{
-  border: 1px solid red;
 }
 .cm-input-field .v-field__input:focus{
   border: 1px solid rgb(var(--v-primary-300));

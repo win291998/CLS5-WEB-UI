@@ -6,8 +6,10 @@ const ExamService = {
   GetPeopleInShiftById: '/examTest/get-paging-people-in-shift',
   GetNumberPeopleInShiftAuto: '/examtest/get-number-user-shift-auto',
   GetListTestCodeShift: '/examtest/get-paging-list-test-code-shift',
+  GetGroupExamTestCombobox: (id: number) => `/examTest/${id}/combobox`,
 
   /** Post */
+  PostCoppyExam: (id: number) => `/exam/${id}/clone`,
   PostCreateThematic: '/examtest/create',
   PostUpdateThematic: '/examtest/update',
   PostDeletePeople: '/examtest/delete-people',
@@ -25,7 +27,7 @@ const ExamService = {
   PostGroupShift: '/examtest/get-paging-group',
   PostOrgTest: '/examtest/get-list-id-group',
   PostCreateGroupUser: '/examtest/create-group-user',
-  PostDeleteUserGroup: '/examtest/delete-group-user',
+  PostDeleteUserGroup: '/ExamTest/delete-list-group',
   PostDeleteOrgTest: '/examtest/create-organizational-structures',
 
   /** Delete */

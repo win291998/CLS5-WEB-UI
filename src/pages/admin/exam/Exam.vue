@@ -12,6 +12,9 @@ import CpCustomInforCourse from '@/components/page/gereral/CpCustomInforCourse.v
 import { _ } from '@/utils/LodashUtil'
 import ObjectUtil from '@/utils/ObjectUtil'
 import { tableStore } from '@/stores/table'
+import toast from '@/plugins/toast'
+import CpMdCoppyExam from '@/components/page/Admin/exam/modal/CpMdCoppyExam.vue'
+import ExamService from '@/api/exam'
 
 const { t } = window.i18n()
 const storeTable = tableStore()
@@ -54,8 +57,15 @@ const router = useRouter()
 
 async function getListExam() {
   const { data } = await MethodsUtil.requestApiCustom(QuestionService.GetListExam, TYPE_REQUEST.GET, queryParams)
+  data.pageLists.forEach((element: any) => {
+    element.actions = [
+      ...element.actions,
+      MethodsUtil.checkActionType({ id: 18 }),
+    ]
+  })
   items.value = data.pageLists
   totalRecord.value = data.totalRecord
+  callBackAction.value = actionItem
 }
 onMounted(async () => {
   if (!_.isEmpty(route.query)) {
@@ -74,15 +84,37 @@ onMounted(async () => {
   }
 })
 
+const isShowModalCoppy = ref(false)
+const coppyDataId = ref()
 function actionItem(type: any) {
+  console.log(type)
   switch (type[0]?.name) {
     case 'ActionEdit':
       router.push({ name: 'exam-edit', params: { id: type[1]?.id }, query: { tab: 'info' } })
 
       break
+    case 'copy':
+      console.log(type)
+
+      isShowModalCoppy.value = true
+      coppyDataId.value = type[1].id
+      break
     default:
       break
   }
+}
+
+async function handleCoppyExam(coppyData: any) {
+  await MethodsUtil.requestApiCustom(ExamService.PostCoppyExam(coppyDataId.value), TYPE_REQUEST.POST, coppyData).then((value: any) => {
+    toast('SUCCESS', t(value.message))
+    nextTick(() => {
+      isShowModalCoppy.value = false
+      getListExam()
+    })
+  })
+    .catch((error: any) => {
+      toast('ERROR', window.getErrorsMessage(error.response.data.errors, t))
+    })
 }
 callBackAction.value = actionItem
 watch(queryParams, (val: Any) => {
@@ -142,4 +174,9 @@ function addExam() {
       </template>
     </CmTable>
   </div>
+  <CpMdCoppyExam
+    :id="coppyDataId"
+    v-model:is-show-modal="isShowModalCoppy"
+    @save-change="handleCoppyExam"
+  />
 </template>

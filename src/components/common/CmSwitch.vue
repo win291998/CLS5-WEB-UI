@@ -12,6 +12,8 @@ interface Props {
   trueValue?: any
   falseValue?: any
   hideSetails?: boolean
+  disabled?: boolean
+
 }
 interface item {
   title?: string
@@ -27,6 +29,7 @@ const propsValue = withDefaults(defineProps<Props>(), ({
   type: 1,
   trueValue: true,
   falseValue: false,
+  disabled: false,
   hideSetails: true,
 }))
 const emit = defineEmits<Emit>()
@@ -58,6 +61,7 @@ function changeValue(value: any) {
       :class="`${positionBorder(index)} button-group ${item.value === modelValue ? 'active' : ''}`"
       color="color"
       variant="outlined"
+      :disabled="disabled"
       @click="item?.action"
     >
       <span :class="`color-${color} font-weight-600`">
@@ -85,6 +89,7 @@ function changeValue(value: any) {
         :true-value="trueValue"
         :false-value="falseValue"
         :hide-details="hideSetails"
+        :disabled="disabled"
         @update:modelValue="changeValue"
       />
     </div>
