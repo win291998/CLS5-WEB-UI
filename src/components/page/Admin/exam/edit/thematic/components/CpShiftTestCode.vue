@@ -147,7 +147,7 @@ async function handleAddTestCode(data: any) {
     toast('SUCCESS', t(result.message))
     isShowDialogAddTestCode.value = false
   }).catch((err: any) => {
-    toast('ERROR', window.getErrorsMessage(err.response.data.error, t))
+    toast('ERROR', window.getErrorsMessage(err.response.data.errors, t))
   })
 }
 onMounted(() => {

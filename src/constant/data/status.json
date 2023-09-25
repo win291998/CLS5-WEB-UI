@@ -191,6 +191,12 @@
             "name": "CourseService.Offline",
             "color": "error",
             "note": "Học offline"
+        },
+        {
+            "id": 3,
+            "name": "CourseService.OnlineAndOffline",
+            "color": "primary",
+            "note": "Học online và offline "
         }
     ],
     "StatusUserAprove": [

@@ -40,6 +40,7 @@ const props = withDefaults(defineProps<Props>(), ({
   isUpdateRowForce: false,
   isLocalTable: false,
   isView: false,
+  isBorderRow: true,
 }))
 const emit = defineEmits<Emit>()
 

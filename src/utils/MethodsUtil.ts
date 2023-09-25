@@ -188,7 +188,7 @@ export default class MethodsUtil {
   }
 
   static checkType = (key: number | string, data: any, customkey = 'id') => {
-    return data.find((item: any) => item[customkey] === key)
+    return data?.find((item: any) => item[customkey] === key) || {}
   }
 
   static formatFullName = (firstName: string, lastName: string) => {

@@ -146,13 +146,14 @@ onUnmounted(() => {
     </div>
     <div class="mb-6">
       <CmTableGroup
-        key-check-parent-row="id"
+        key-check-parent-row="level"
         :value-check-parent-row="0"
         :group-options="groupOptions"
         :headers="headers"
         :items="itemsRefer"
         custom-id="courseContentId"
         disiable-pagination
+        is-border-row
         @handleClickRow="handleClickRow"
         @update:selected="selectedRowsRefer"
       >

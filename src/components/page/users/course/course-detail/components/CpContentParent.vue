@@ -28,6 +28,7 @@ function checkNumContent(contentArchiveTypeTotal: any) {
     >
       <div v-if="el.typeId === 13">
         <CmAccodion
+          is-bg-active
           is-open
           is-tree
         >

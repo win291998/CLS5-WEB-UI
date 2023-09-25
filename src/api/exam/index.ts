@@ -6,8 +6,10 @@ const ExamService = {
   GetPeopleInShiftById: '/examTest/get-paging-people-in-shift',
   GetNumberPeopleInShiftAuto: '/examtest/get-number-user-shift-auto',
   GetListTestCodeShift: '/examtest/get-paging-list-test-code-shift',
+  GetGroupExamTestCombobox: (id: number) => `/examTest/${id}/combobox`,
 
   /** Post */
+  PostCoppyExam: (id: number) => `/exam/${id}/clone`,
   PostCreateThematic: '/examtest/create',
   PostUpdateThematic: '/examtest/update',
   PostDeletePeople: '/examtest/delete-people',

@@ -15,8 +15,10 @@ interface Props {
   classNameLabel?: Array<any>
   isOpen?: boolean
   isCustom?: boolean
+  isDefault?: boolean
   isTree?: boolean
   isBgActive?: boolean
+  isBorder?: boolean
 }
 interface dataAccodion {
   label?: any
@@ -32,16 +34,18 @@ interface Emit {
 
 const props = withDefaults(defineProps<Props>(), ({
   data: () => ([{
-    label: 'Title',
-    content: 'Content',
+    label: '',
+    content: '',
   }]),
   customKey: 'content',
   customKeyChild: 'content',
   customLabel: 'label',
   classNameLabel: () => ([]),
   isOpen: false,
+  isDefault: true,
   isCustom: false,
   isBgActive: false,
+  isBorder: false,
 }))
 
 const emit = defineEmits<Emit>()
@@ -65,17 +69,18 @@ const panel = props.isOpen ? ref(checkAllValue()) : ref([])
           v-for="(item, index) in data"
           :key="index"
           :value="item.value || item.label"
+          :class="{ 'isBorder-collap': isBorder }"
         >
           <template #title>
-            <div>
+            <div v-if="isDefault">
               <VAvatar
+                v-if="item.icon"
                 size="32"
                 class="mr-2"
                 :class="[item.colorClass]"
                 variant="tonal"
               >
                 <VIcon
-                  v-if="item.icon"
                   :icon="item.icon"
                   size="14"
                   :class="[item.colorClass]"
@@ -83,12 +88,14 @@ const panel = props.isOpen ? ref(checkAllValue()) : ref([])
               </VAvatar>
             </div>
             <span
+              v-if="isDefault"
               :class="[props.classNameLabel[0]]"
               class="text-regular-sm"
             >{{ item[customLabel] }}</span>
             <slot
               class="text-regular-sm"
-              name="title"
+              name="titleData"
+              :context="item"
             />
           </template>
           <template #text>
@@ -126,8 +133,9 @@ const panel = props.isOpen ? ref(checkAllValue()) : ref([])
               {{ item?.[customKey] }}
             </div>
             <slot
-              name="text"
+              name="textData"
               class="text-regular-sm"
+              :context="item"
             />
           </template>
         </VExpansionPanel>
@@ -158,6 +166,9 @@ const panel = props.isOpen ? ref(checkAllValue()) : ref([])
 .v-expansion-panel:not(:first-child)::after {
   border-block-start-style: unset !important;
 }
+.v-expansion-panel:not(:first-child) {
+  margin-top: 8px !important;
+}
 
 .v-expansion-panel-text__wrapper {
   padding-inline: 3.5rem 1rem !important;
@@ -168,5 +179,8 @@ const panel = props.isOpen ? ref(checkAllValue()) : ref([])
     /* CSS styles cho khi aria-expanded="true" */
     background-color: rgb(var(--v-gray-200));
   }
+}
+.isBorder-collap:not(:last-child){
+  border-bottom: 1px solid rgb(var(--v-gray-300));
 }
 </style>

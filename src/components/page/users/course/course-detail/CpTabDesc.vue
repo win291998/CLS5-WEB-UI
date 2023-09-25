@@ -192,7 +192,7 @@ function expandRow(val: any) {
           </div>
         </div>
         <div v-if="context.key === 'content'">
-          <div class="box-content-course">
+          <div class="box-content-course card-container ">
             <PerfectScrollbar
               v-if="dataContent?.length"
               :options="config"

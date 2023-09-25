@@ -7,6 +7,7 @@ import CpRatingScale from '@/components/page/Admin/system/setting/tab/CpRatingSc
 import CpCertification from '@/components/page/Admin/system/setting/tab/CpCertification.vue'
 import CpNotification from '@/components/page/Admin/system/setting/tab/CpNotification.vue'
 import CpEmailConfig from '@/components/page/Admin/system/setting/tab/CpEmailConfig.vue'
+import CpLoginRegis from '@/components/page/Admin/system/setting/tab/CpLoginRegis.vue'
 
 const listTab: Tab[] = [
   {
@@ -28,6 +29,11 @@ const listTab: Tab[] = [
     key: 'email-config',
     title: 'email-config',
     component: CpEmailConfig,
+  },
+  {
+    key: 'setting-login',
+    title: 'setting-login',
+    component: CpLoginRegis,
   },
   {
     key: 'certification',

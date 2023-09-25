@@ -23,6 +23,7 @@ const props = withDefaults(defineProps<Props>(), ({
   minHeight: 300,
   disiablePagination: false,
   returnObject: false,
+  isBorderRow: true,
 }))
 
 //* ***********emit */
@@ -61,6 +62,7 @@ interface Props {
   minHeight?: number
   returnObject?: boolean
   disiablePagination?: boolean
+  isBorderRow?: boolean
 }
 interface Emit {
   (e: 'handleClickRow', dataRow: object): void
@@ -207,6 +209,11 @@ watch(() => props.items, (val: Item[]) => {
     if (element.isSelected)
       selectedRows.value.push([props.customId])
   })
+}, { immediate: true })
+
+const colorRow = ref('#ffff')
+watch(() => props.isBorderRow, (val: boolean) => {
+  colorRow.value = val ? '#EAECF0' : '#ffff'
 }, { immediate: true })
 onUpdated(() => {
   nextTick(() => {
@@ -426,7 +433,7 @@ console.time('update')
 <style lang="scss" scoped>
 @use "@/styles/variables/common/table.cm" as *;
 @use "@/styles/style-global.scss" as *;
-
+$colorBorderRow: v-bind(colorRow)  ; // Giá trị ban đầu của biến
 .cm-table-group-text-line {
   min-inline-size: 100px;
 }
@@ -444,7 +451,7 @@ console.time('update')
   --easy-table-header-item-padding: #{$table-header-item-padding};  // padding header
 
   // phần body table
-  --easy-table-row-border: #{$table-row-border}; // màu các row của phần body
+  // --easy-table-row-border:  #{$border-xs} solid #{$colorBorderRow}; // màu các row của phần body
   --easy-table-body-even-row-font-color: #{$table-body-even-row-font-color};  // màu chữ các hàng chẵn phần body
   --easy-table-body-even-row-background-color: #{$table-body-even-row-background-color}; // màu nền các hàng chẵn phần body
   --easy-table-body-row-font-color: #{$table-body-row-font-color};  // màu chữ các hàng lẻ phần body
