@@ -562,4 +562,31 @@ export default class MethodsUtil {
         break
     }
   }
+
+  static hanleUploadFileContent(ref: any, val: any) {
+    switch (val[0]?.type) {
+      case 'image':
+        nextTick(() => {
+          ref.value?.openImage()
+        },
+        )
+        return 1
+      case 'audio':
+        nextTick(() => ref.value?.openAudio())
+        return 2
+      case 'video-local':
+
+        nextTick(() => ref.value?.openVideo())
+        return 3
+
+      case 'video-youtube':
+        nextTick(() => ref.value?.openYoutube())
+        return 4
+      case 'file':
+        nextTick(() => ref.value?.openFile())
+        return 5
+      default:
+        break
+    }
+  }
 }

@@ -6,7 +6,7 @@ import MethodsUtil from '@/utils/MethodsUtil'
 const props = withDefaults(defineProps<Props>(), {
   isShowModal: false,
   iconStatus: true,
-  type: 0, // 0: progress, 1:success, 2:error
+  type: 0, // 3: progress, 0:success, 2:error
   files: () => ([
     { name: 'Real-Time', icon: 'tabler:file', size: 0, processing: 0 },
   ]),
@@ -70,7 +70,7 @@ watch(() => props.files, val => {
             <div class="d-flex align-start">
               <CmIconNoti
                 :icon="item.icon"
-                :type="2"
+                :type="3"
               />
               <VTooltip
                 v-if="item?.type"

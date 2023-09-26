@@ -4,6 +4,7 @@ import { TYPE_REQUEST } from '@/typescript/enums/enums'
 import MethodsUtil from '@/utils/MethodsUtil'
 import ServerFileService from '@/api/server-file/index'
 import CmDialogs from '@/components/common/CmDialogs.vue'
+import CmItemFileUpload from '@/components/common/CmItemFileUpload.vue'
 
 import {
   MediaType,
@@ -48,7 +49,7 @@ const dataFile = ref<any>({
   fileFolder: null,
 })
 const isShowModalYoutube = ref(false)
-
+const fileUpload = ref([{ name: 'Real-Time', icon: 'tabler:file', size: 0, type: 0, processing: 95, statusDownload: 2 }])
 const typeFile = ref<any>()
 function onCancel() {
   isShowModalYoutube.value = false
@@ -92,6 +93,10 @@ async function uploadFileLocal(data: any, file: any) {
         dataFile.value.filePath = value.filePath
         dataFile.value.fileFolder = data.fileFolder
         dataFile.value.serverCode = data?.serverCode
+        fileUpload.value[0].name = value.fileName
+        fileUpload.value[0].type = 1
+        fileUpload.value[0].statusDownload = 3
+        fileUpload.value[0].size = value.fileSize
         emit('update:fileFolder', data?.fileFolder)
       }
     })
@@ -106,10 +111,13 @@ function uploadFile() {
       refUploadImg.value?.hanleClickImage()
       break
     case 2:
-      refUploadImg.value?.hanleClickImage()
+      inputFile.value?.openChooseFile()
       break
-
+    case 3:
+      inputFile.value?.openChooseFile()
+      break
     default:
+      inputFile.value?.openChooseFile()
       break
   }
 }
@@ -118,6 +126,10 @@ async function initData(val: any) {
     await getInfor(val).then(value => {
       if (value?.filePath) {
         typeFile.value = MethodsUtil.getMediaType(value.fileExtension)
+        fileUpload.value[0].name = value.fileName
+        fileUpload.value[0].type = 1
+        fileUpload.value[0].statusDownload = 3
+        fileUpload.value[0].size = value.fileSize
         urlFile.value = value.filePath
         dataFile.value.filePath = value.filePath
         dataFile.value.fileFolder = val
@@ -150,6 +162,7 @@ defineExpose({
   openImage: () => refUploadImg.value?.hanleClickImage(),
   openVideo: () => inputFile.value?.openChooseFile(),
   openAudio: () => inputFile.value?.openChooseFile(),
+  openFile: () => inputFile.value?.openChooseFile(),
   openYoutube: () => onOpenYoutubeUrl(),
 })
 </script>
@@ -215,6 +228,17 @@ defineExpose({
         style="--width-ratio: 1;"
         class="imageFull"
       >
+    </div>
+    <div
+      v-if="typeFile === MediaType.OTHER_FILE && !!urlFile"
+      class="d-flex justify-center"
+    >
+      <CmItemFileUpload
+        v-if="fileUpload[0].type === 1"
+        :files="fileUpload"
+        :type="0"
+        class="w-100"
+      />
     </div>
     <div
       v-if="urlFile && !disabled"
