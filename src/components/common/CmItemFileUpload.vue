@@ -6,7 +6,7 @@ import MethodsUtil from '@/utils/MethodsUtil'
 const props = withDefaults(defineProps<Props>(), {
   isShowModal: false,
   iconStatus: true,
-  type: 0, // 0: progress, 1:success, 2:error
+  type: 0, // 3: progress, 0:success, 2:error
   files: () => ([
     { name: 'Real-Time', icon: 'tabler:file', size: 0, processing: 0 },
   ]),
@@ -14,7 +14,7 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<Emit>()
 interface Emit {
   (e: 'cancel', value: any): void
-  (e: 'downloadFile', value?: any): void
+  (e: 'downloadFile', value?: any, idbtn: number, unload: any): void
   (e: 'refesh', value?: any): void
 }
 
@@ -41,8 +41,8 @@ const config = ref({
 async function cancel(index: any) {
   emit('cancel', index)
 }
-async function dowloadItems(item: any) {
-  emit('downloadFile', item)
+async function dowloadItems(item: any, idx: number, unload: any) {
+  emit('downloadFile', item, idx, unload)
 }
 async function refesh(item: any) {
   emit('refesh', item)
@@ -70,7 +70,7 @@ watch(() => props.files, val => {
             <div class="d-flex align-start">
               <CmIconNoti
                 :icon="item.icon"
-                :type="2"
+                :type="3"
               />
               <VTooltip
                 v-if="item?.type"
@@ -92,7 +92,7 @@ watch(() => props.files, val => {
               is-rounded
               :size-icon="20"
               variant="text"
-              @click="dowloadItems(item)"
+              @click="(id: number, unload: any) => dowloadItems(item, id, unload)"
             />
             <CmButton
               v-else-if="item.statusDownload === 2 "

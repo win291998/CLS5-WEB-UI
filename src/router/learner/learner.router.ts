@@ -24,6 +24,15 @@ export default [
       {
         path: 'list-my-exam',
         name: 'list-my-exam',
+        component: () => import('@/pages/users/exam/MyExam.vue'),
+      },
+      {
+        path: 'exam/my-test/:id',
+        name: 'my-test',
+        component: () => import('@/pages/users/exam/test/MyTest.vue'),
+        meta: {
+          layout: 'blank',
+        },
       },
       {
         path: 'list-course',
@@ -71,5 +80,12 @@ export default [
       },
     ],
   },
-
+  {
+    path: '/learner/exam/my-test/:id',
+    name: 'my-test',
+    meta: {
+      layout: 'blank',
+    },
+    component: () => import('@/pages/users/exam/test/MyTest.vue'),
+  },
 ]

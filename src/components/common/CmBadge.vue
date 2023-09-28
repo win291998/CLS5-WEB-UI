@@ -10,6 +10,7 @@ interface Props {
   offsetY?: number | string
   icon?: string
   sizeIcon?: number
+  hide?: boolean
 }
 
 /** ** Khởi tạo prop emit */
@@ -27,8 +28,10 @@ const props = withDefaults(defineProps<Props>(), ({
     :location="location"
     :offset-x="offsetX"
     :offset-y="offsetY"
+    :class="{ hide }"
   >
     <template
+      v-if="!hide"
       #badge
     >
       <span
@@ -40,8 +43,8 @@ const props = withDefaults(defineProps<Props>(), ({
           :icon="icon"
           class="m-0"
         />
-        <slot name="badge-content" />
       </span>
+      <slot name="badge-content" />
     </template>
     <slot />
   </VBadge>
@@ -51,10 +54,12 @@ const props = withDefaults(defineProps<Props>(), ({
 @use "@/styles/style-global.scss" as *;
 
 .v-badge__badge {
-  padding: 5px;
   border-radius: 50%;
   margin: 0;
   block-size: auto;
+}
+.hide .v-badge__badge {
+  display: none;
 }
 
 .v-badge__badge .v-icon {

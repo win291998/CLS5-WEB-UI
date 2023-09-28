@@ -453,6 +453,8 @@ function getContentNameRef(context: any) {
                   :show-content="false"
                   :list-current-id="context.listCurrentId"
                   :show-media="false"
+                  disabled
+                  show-answer-true
                 />
               </div>
             </CpQuestionName>

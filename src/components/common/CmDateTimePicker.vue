@@ -310,7 +310,44 @@ watchEffect(() => {
   --height-top-month: v-bind(marginHeader)
 }
 .cm-date-time-picker {
-  .dp__main {
+  .input-date-time {
+    position: absolute;
+    top: 1px;
+    right: 28px;
+    width: calc(100% - 56px);
+    height: inherit;
+    .v-field__field {
+      height: 36px;
+    }
+    .v-field{
+      border: unset !important;
+      height: unset !important;
+    }
+    .v-field__input {
+      border: unset !important;
+      border-radius: $border-radius-xs;
+      padding-inline-end: unset;
+      padding-inline-start: 10px;
+      box-shadow: unset !important;
+      &::placeholder {
+        font-size: 14px;
+        width: 95px;
+      }
+    }
+    .focus {
+      .v-field__outline {
+        box-shadow: unset !important;
+        border: unset !important;
+      }
+
+    }
+    .v-field__outline {
+      --v-field-border-width: 0
+    }
+  }
+
+}
+.dp__main {
     height: 40px;
     overflow: hidden;
     .dp__input_icon_pad {
@@ -337,40 +374,7 @@ watchEffect(() => {
       box-shadow: 0px 0px 0px 4px $color-error-100, 0px 1px 2px 0px $color-gray-900;
     }
   }
-  .input-date-time {
-    position: absolute;
-    top: 1px;
-    right: 28px;
-    width: calc(100% - 56px);
-    height: inherit;
-    .v-field__field {
-      height: 36px;
-    }
-    .v-field{
-      border: unset !important;
-    }
-    .v-field__input {
-      border: unset !important;
-      border-radius: $border-radius-xs;
-      padding-inline-end: unset;
-      padding-inline-start: 10px;
-      box-shadow: unset !important;
-      &::placeholder {
-        font-size: 14px;
-        width: 95px;
-      }
-    }
-    .focus {
-      .v-field__outline {
-        box-shadow: unset !important;
-        border: unset !important;
-      }
 
-    }
-    .v-field__outline {
-      --v-field-border-width: 0
-    }
-  }
   .dp__menu_inner {
     width: 300px !important;
     width: auto;
@@ -583,6 +587,5 @@ watchEffect(() => {
 }
 .dp__disabled{
   background: $color-gray-100;
-}
 }
 </style>

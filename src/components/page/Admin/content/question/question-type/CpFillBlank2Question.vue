@@ -7,6 +7,7 @@ import { validatorStore } from '@/stores/validatator'
 import { questionManagerStore } from '@/stores/admin/content/question/question'
 import toast from '@/plugins/toast'
 import CmButton from '@/components/common/CmButton.vue'
+import MethodsUtil from '@/utils/MethodsUtil'
 
 const props = withDefaults(defineProps<Props>(), ({
   question: () => ({
@@ -52,7 +53,7 @@ const anserList = ref<any>({
   answerBlank: [] as any[],
 })
 const CmInputEditorRef = ref()
-const isActiveAnsCurrent = ref(0)
+const isActiveAnsCurrent = ref(1)
 
 /** function */
 
@@ -329,31 +330,7 @@ function deleteFile(dataDelete: any) {
 }
 
 function hanleUploadFileContent(val: any) {
-  switch (val[0]?.type) {
-    case 'image':
-      typeFile.value = 1
-      nextTick(() => {
-        inputMedia.value?.openImage()
-      },
-      )
-      break
-    case 'audio':
-      typeFile.value = 2
-      nextTick(() => inputMedia.value?.openAudio())
-      break
-    case 'video-local':
-      typeFile.value = 3
-
-      nextTick(() => inputMedia.value?.openVideo())
-      break
-    case 'video-youtube':
-      typeFile.value = 4
-      nextTick(() => inputMedia.value?.openYoutube())
-      break
-
-    default:
-      break
-  }
+  typeFile.value = MethodsUtil.hanleUploadFileContent(inputMedia, val)
 }
 
 function handleUpadateUrlFile(val: any) {

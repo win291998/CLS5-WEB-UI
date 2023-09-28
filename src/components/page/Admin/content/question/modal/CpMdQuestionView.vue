@@ -53,6 +53,7 @@ watch(() => props.isShowModal, isShow => {
         <CpContentView
           :type="data.typeId"
           :data="data"
+          is-review
           :show-answer-true="false"
         />
       </div>

@@ -88,7 +88,6 @@ const groupExamTestCombobox = ref([])
 async function getGroupExamTestCombobox() {
   if (!groupExamTestCombobox.value.length) {
     await MethodsUtil.requestApiCustom(ExamService.GetGroupExamTestCombobox(props.id), TYPE_REQUEST.GET).then((value: any) => {
-      console.log(value)
       groupExamTestCombobox.value = value.data
     })
   }

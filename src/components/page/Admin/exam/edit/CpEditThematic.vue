@@ -143,7 +143,6 @@ function cancel() {
   const query = window._.cloneDeep(route.query)
   delete query.tabThematic
   router.push({ name: 'exam-edit', query: { ...query }, params: { id: route.params.id } })
-  console.log(route.query.thematicId)
 
   if (!route.params.thematicId)
     emit('onCancel')

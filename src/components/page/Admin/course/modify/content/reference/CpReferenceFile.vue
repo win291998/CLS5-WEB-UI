@@ -94,7 +94,7 @@ async function handleSave(idx: any) {
       else { // cập nhật
         contentRefer.value.courseId = route.params.id
         contentRefer.value.archiveTypeId = 14
-        response = await MethodsUtil.requestApiCustom(CourseService.PostAddRefer, TYPE_REQUEST.POST, contentRefer.value)
+        response = await MethodsUtil.requestApiCustom(CourseService.PostCreateContent, TYPE_REQUEST.POST, contentRefer.value)
       }
       if (response.code === 200) {
         resetData()

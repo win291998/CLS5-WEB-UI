@@ -4,6 +4,8 @@ import { TYPE_REQUEST } from '@/typescript/enums/enums'
 import MethodsUtil from '@/utils/MethodsUtil'
 import ServerFileService from '@/api/server-file/index'
 import CmDialogs from '@/components/common/CmDialogs.vue'
+import CmItemFileUpload from '@/components/common/CmItemFileUpload.vue'
+import toast from '@/plugins/toast'
 
 import {
   MediaType,
@@ -27,6 +29,7 @@ interface Props {
   disabled?: boolean
   type?: number
   typeMedia?: number
+  isDownload?: boolean
 }
 interface Emit {
   (e: 'update:fileFolder', value: any): void
@@ -48,7 +51,7 @@ const dataFile = ref<any>({
   fileFolder: null,
 })
 const isShowModalYoutube = ref(false)
-
+const fileUpload = ref([{ name: 'Real-Time', icon: 'tabler:file', size: 0, type: 0, processing: 95, statusDownload: 2, fileFolder: '', filePath: '' }])
 const typeFile = ref<any>()
 function onCancel() {
   isShowModalYoutube.value = false
@@ -82,7 +85,23 @@ function changeMedia(type: any, value: any) {
 async function getInfor(folder: any) {
   return await MethodsUtil.requestApiCustom(`${SERVERFILE}${ServerFileService.GetInforFile}${folder}`, TYPE_REQUEST.GET)
 }
+async function downloadFile(item: any, idx: number, unLoadComponent: any) {
+  console.log(item)
 
+  MethodsUtil.dowloadSampleFile(`${SERVERFILE}${item.filePath}`,
+    TYPE_REQUEST.GET, item.name || ' local').then((data: any) => {
+    unLoadComponent(idx)
+    if (data.status === 200)
+      return true
+
+    else
+      toast('WARNING', t('download-file-failed'))
+    unLoadComponent(idx)
+  })
+    .catch(() => {
+      unLoadComponent(idx)
+    })
+}
 async function uploadFileLocal(data: any, file: any) {
   if (data?.fileFolder) {
     await getInfor(data?.fileFolder).then((value: any) => {
@@ -92,6 +111,10 @@ async function uploadFileLocal(data: any, file: any) {
         dataFile.value.filePath = value.filePath
         dataFile.value.fileFolder = data.fileFolder
         dataFile.value.serverCode = data?.serverCode
+        fileUpload.value[0].name = value.fileName
+        fileUpload.value[0].type = 1
+        fileUpload.value[0].statusDownload = 3
+        fileUpload.value[0].size = value.fileSize
         emit('update:fileFolder', data?.fileFolder)
       }
     })
@@ -106,10 +129,13 @@ function uploadFile() {
       refUploadImg.value?.hanleClickImage()
       break
     case 2:
-      refUploadImg.value?.hanleClickImage()
+      inputFile.value?.openChooseFile()
       break
-
+    case 3:
+      inputFile.value?.openChooseFile()
+      break
     default:
+      inputFile.value?.openChooseFile()
       break
   }
 }
@@ -118,6 +144,17 @@ async function initData(val: any) {
     await getInfor(val).then(value => {
       if (value?.filePath) {
         typeFile.value = MethodsUtil.getMediaType(value.fileExtension)
+        fileUpload.value[0].name = value.fileName
+        fileUpload.value[0].type = 1
+        fileUpload.value[0].statusDownload = 3
+        fileUpload.value[0].size = value.fileSize
+        fileUpload.value[0].filePath = value.filePath
+        fileUpload.value[0].fileFolder = value.fileFolder
+        console.log(typeFile.value)
+
+        if (typeFile.value === 5 && !value.isSecure)
+          fileUpload.value[0].statusDownload = 1
+
         urlFile.value = value.filePath
         dataFile.value.filePath = value.filePath
         dataFile.value.fileFolder = val
@@ -150,6 +187,7 @@ defineExpose({
   openImage: () => refUploadImg.value?.hanleClickImage(),
   openVideo: () => inputFile.value?.openChooseFile(),
   openAudio: () => inputFile.value?.openChooseFile(),
+  openFile: () => inputFile.value?.openChooseFile(),
   openYoutube: () => onOpenYoutubeUrl(),
 })
 </script>
@@ -215,6 +253,18 @@ defineExpose({
         style="--width-ratio: 1;"
         class="imageFull"
       >
+    </div>
+    <div
+      v-if="typeFile === MediaType.OTHER_FILE && !!urlFile"
+      class="d-flex justify-center"
+    >
+      <CmItemFileUpload
+        v-if="fileUpload[0].type === 1"
+        :files="fileUpload"
+        :type="0"
+        class="w-100"
+        @downloadFile="downloadFile"
+      />
     </div>
     <div
       v-if="urlFile && !disabled"

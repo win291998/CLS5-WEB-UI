@@ -73,8 +73,6 @@ function exportGuide(idx: number, unload: any) {
 }
 
 async function customSettingChange(e: any) {
-  console.log(e)
-
   if (!e) {
     MethodsUtil.requestApiCustom('EmailConfiguration', TYPE_REQUEST.GET).then((result: any) => {
       const {

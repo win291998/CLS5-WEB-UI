@@ -24,7 +24,7 @@ interface Props {
   isRounded?: boolean
   icon?: string
   variant?: typeof typeVariant[number]
-  size?: string
+  size?: string | number
   textColor?: string
   disabled?: boolean
   className?: string

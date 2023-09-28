@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import CpMediaContent from '@/components/page/gereral/CpMediaContent.vue'
 import CmRadio from '@/components/common/CmRadio.vue'
+import CmButton from '@/components/common/CmButton.vue'
 
 /**
  * Xem chi tiết các loại câu hỏi
@@ -17,6 +18,18 @@ interface Props {
   showMedia: boolean
   showAnswerTrue: boolean
   listCurrentId: number
+  disabled?: boolean // trạng thái chọn
+  isShuffle?: boolean
+  isShowAnsTrue: boolean // hiện thị câu đúng
+  isShowAnsFalse: boolean // hiện thị câu sai
+  isSentence?: boolean // trạng thái câu
+  isHideNotChoose?: boolean // ẩn hiện thị đáp án các câu không chọn
+  typeShow?: number // trạng thái hiện thị
+  numberQuestion?: number | null
+  totalPoint?: number | null
+  point?: number | null
+  customKeyValue?: string
+  isReview?: boolean
 }
 const props = withDefaults(defineProps<Props>(), ({
   data: () => ({
@@ -28,7 +41,24 @@ const props = withDefaults(defineProps<Props>(), ({
   showMedia: true,
   showAnswerTrue: false,
   listCurrentId: 1,
+  disabled: false,
+  isShuffle: true,
+  isSentence: false,
+  isShowAnsTrue: false,
+  isShowAnsFalse: false,
+  isHideNotChoose: false,
+  isReview: false,
+  numberQuestion: 0,
+  totalPoint: 0,
+  point: 0,
+  customKeyValue: 'answeredValue',
 }))
+const emit = defineEmits<Emit>()
+interface Emit {
+  (e: 'update:model-value', val: any): void
+  (e: 'update:data', val: any): void
+  (e: 'saveLocalData', val: any): void
+}
 const { t } = window.i18n()
 const listCurrent = ref(1)
 function getIndex(position: number) {
@@ -52,26 +82,73 @@ function attachClickEvent() {
     })
   })
 }
-props.data.answers.forEach((item: any, index: number) => {
+const questionValue = ref(window._.cloneDeep(props.data))
+function changeValue(value: any) {
+  console.log(value)
+  const contentSelect = ref()
+  questionValue.value.answers.forEach((item: any) => {
+    console.log(item.position === listCurrent.value)
+
+    if (item.position === listCurrent.value)
+      item[props.customKeyValue] = item.answerId === value.answerId ? listCurrent.value : null
+    if (item.answerId === value.answerId)
+      contentSelect.value = item
+  })
+  updateContent(contentSelect.value)
+  emit('update:data', questionValue.value)
+}
+function updateContent(val: any) {
+  console.log(val)
+  const ans = listAnserView.value[listCurrent.value].findIndex((item: any) => item.answerId === val.answerId)
+  const answerSelect = contentBlankRef.value?.querySelectorAll('.answer-select')[listCurrent.value - 1]
+  const answerSpans = answerSelect.getElementsByClassName('select-content')[0]
+  console.log(answerSpans)
+
+  answerSpans.innerHTML = `Đáp án ${getIndex(ans)}`
+}
+watch(() => props.data, val => {
+  questionValue.value = val
+}, { immediate: true, deep: true })
+
+questionValue.value.answers.forEach((item: any, index: number) => {
   if (!listAnserView.value[item.position])
     listAnserView.value[item.position] = [toRaw(item)]
   else
     listAnserView.value[item.position].push(item)
 })
+function checkAnsTrueClass(detalAns: any) {
+  return (props.isShowAnsTrue && detalAns.isTrue && (!props.isHideNotChoose || (props.isHideNotChoose && detalAns[props.customKeyValue])))
+}
+function checkAnsFalseClass(detalAns: any) {
+  return (props.isShowAnsFalse && !detalAns.isTrue && detalAns[props.customKeyValue])
+}
+
 onMounted(() => {
-  const result = ref(props.data.content)
+  const result = ref(questionValue.value.content)
 
   const tempElement = document.createElement('div')
-  tempElement.innerHTML = props.data.content
+  tempElement.innerHTML = questionValue.value.content
   const spanElements = tempElement.querySelectorAll('.answer-select')
 
   // Lặp qua từng phần tử và xóa nội dung bên trong
   spanElements.forEach((spanElement, idx) => {
     const isTrue = listAnserView.value[idx + 1].findIndex((item: any) => item.isTrue)
     spanElement.innerHTML = ''
-
-    spanElement.innerHTML = `<span style="display: inline-flex;" class="${!props.showAnswerTrue ? 'chooseAnsPld' : ''}">${props.showAnswerTrue ? `Đáp án ${getIndex(isTrue)}` : `Lựa chọn ${idx + 1}`} <svg xmlns="http://www.w3.org/2000/svg" style="margin-top: 5px;" width="1em" height="1em" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m6 9l6 6l6-6"></path></svg>
+    const svg = '<svg xmlns="http://www.w3.org/2000/svg" style="margin-top: 5px;" width="1em" height="1em" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m6 9l6 6l6-6"></path></svg>'
+    if (props.isReview) {
+      const ans = listAnserView.value[idx + 1].findIndex((item: any) => item.answeredValue === idx + 1)
+      spanElement.setAttribute('id', questionValue.value.id)
+      const detalAns = listAnserView.value[idx + 1][ans]
+      if (checkAnsTrueClass(detalAns))
+        spanElement.classList.add('ansTrue')
+      if (checkAnsFalseClass(detalAns))
+        spanElement.classList.add('ansFalse')
+      spanElement.innerHTML = `<span style="display: inline-flex;" class="${ans < 0 ? 'chooseAnsPld' : ''}"><span class="select-content">${ans < 0 ? `Lựa chọn ${idx + 1}` : `Đáp án ${getIndex(ans)}`}</span>${svg}</span>`
+    }
+    else {
+      spanElement.innerHTML = `<span style="display: inline-flex;" class="${!props.showAnswerTrue ? 'chooseAnsPld' : ''}">${props.showAnswerTrue ? `Đáp án ${getIndex(isTrue)}` : `<span class="select-content">Lựa chọn ${idx + 1}`}</span> <svg xmlns="http://www.w3.org/2000/svg" style="margin-top: 5px;" width="1em" height="1em" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m6 9l6 6l6-6"></path></svg>
     </span>`
+    }
   })
 
   contentBlank.value = tempElement.innerHTML
@@ -85,32 +162,56 @@ watch(() => props.listCurrentId, (val: number) => {
 <template>
   <div class="content-view">
     <div
+      v-if="isSentence"
+      class="mb-4 mt-8"
+    >
+      <span class="text-bold-md color-primary">{{ t('sentence') }} {{ numberQuestion }} - {{ point }}/{{ totalPoint }} {{ t('scores') }}</span>
+      <CmButton
+        :disabled="disabled"
+        class="ml-3"
+        icon="ic:round-bookmark-border"
+        :color="questionValue.isMark ? 'warning' : 'secondary'"
+        is-rounded
+        :size="36"
+        :size-icon="20"
+      />
+    </div>
+    <div
       v-if="showContent"
       ref="contentBlankRef"
-      class="text-medium-md mb-5"
+      class="text-medium-md mb-5 color-text-900"
       v-html="contentBlank"
     />
     <div
-      v-if="showMedia && data.urlFile"
-      class="view-media mb-5"
+      v-if="showMedia && questionValue.urlFile"
+      class="flex-center"
     >
-      <CpMediaContent
-        :disabled="true"
-        :src="data.urlFile"
-      />
+      <div
+        class="view-media mb-5 "
+      >
+        <CpMediaContent
+          :disabled="true"
+          :src="questionValue.urlFile"
+        />
+      </div>
     </div>
     <div
       v-for="(item, idx) in listAnserView[listCurrent]"
       :key="item.id"
       class="item-answer w-100"
+      :class="{
+        ansTrue: checkAnsTrueClass(item),
+        ansFalse: checkAnsFalseClass(item),
+      }"
     >
       <CmRadio
         :type="1"
-        :model-value="showAnswerTrue ? item.isTrue : false"
-        :disabled="true"
-        :name="`bl2-${data.id}`"
+        :model-value="showAnswerTrue ? item.isTrue : ((isShowAnsFalse && !isShowAnsTrue && item.isTrue) ? null : !!item[customKeyValue]) "
+        :disabled="disabled"
+        :name="`bl2-${questionValue.id}`"
         :value="true"
         class="mr-3"
+        @update:model-value="changeValue(item)"
       />
       <div class="w-100">
         <span class="mr-1">{{ getIndex(idx) }} </span>
@@ -134,7 +235,22 @@ watch(() => props.listCurrentId, (val: number) => {
   .item-answer:last-child {
     margin-bottom: unset;
   }
-
+  .item-answer.ansTrue {
+    border: 1px solid rgb(var(--v-success-600));
+    color:rgb(var(--v-success-600));
+  }
+  .item-answer.ansFalse {
+    border: 1px solid rgb(var(--v-error-600));
+    color:rgb(var(--v-error-600));
+  }
+  .answer-select.ansTrue {
+    border: 1px solid rgb(var(--v-success-600));
+    color:rgb(var(--v-success-600));
+  }
+  .answer-select.ansFalse {
+    border: 1px solid rgb(var(--v-error-600));
+    color:rgb(var(--v-error-600));
+  }
   .view-media{
     width: 60%;
   }
