@@ -356,6 +356,7 @@ const actionAdd = [
                 :show-media="false"
                 :is-survey="true"
                 :max-width="dataCol.width"
+                show-answer-true
               />
             </CpQuestionName>
           </div>

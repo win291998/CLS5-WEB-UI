@@ -68,7 +68,7 @@ export const contentManagerStore = defineStore('contentManager', () => {
   /** method */
   function handleUpdateThematic() {
     contentDataEdit.value.courseId = Number(route.params?.id)
-    MethodsUtil.requestApiCustom(courseContentId.value ? CourseService.PostUpdateRefer : CourseService.PostAddRefer, TYPE_REQUEST.POST, contentDataEdit.value).then((value: any) => {
+    MethodsUtil.requestApiCustom(courseContentId.value ? CourseService.PostUpdateRefer : CourseService.PostCreateContent, TYPE_REQUEST.POST, contentDataEdit.value).then((value: any) => {
       toast('SUCCESS', t(value?.message))
       getListContentCourse()
     }).catch((error: any) => {

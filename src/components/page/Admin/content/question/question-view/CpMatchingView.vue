@@ -14,6 +14,7 @@ interface Props {
   showContent: boolean
   showMedia: boolean
   showAnswerTrue: boolean
+  isShuffle: boolean
 }
 const props = withDefaults(defineProps<Props>(), ({
   data: () => ({
@@ -23,6 +24,7 @@ const props = withDefaults(defineProps<Props>(), ({
   showContent: true,
   showMedia: true,
   showAnswerTrue: true,
+  isShuffle: true,
 }))
 const { t } = window.i18n()
 function getIndex(position: number) {
@@ -60,7 +62,7 @@ watch(() => props.data, val => {
   <div class="content-view">
     <div
       v-if="showContent"
-      class="text-medium-md mb-5"
+      class="text-medium-md mb-5 color-text-900"
       v-html="dataValue.content"
     />
     <div
@@ -88,7 +90,10 @@ watch(() => props.data, val => {
           <div
             v-html="item.left.content"
           />
-          <div :title="item?.left?.isShuffle ? t('allowed-shuffle') : t('not-allowed-shuffle')">
+          <div
+            v-if="isShuffle"
+            :title="item?.left?.isShuffle ? t('allowed-shuffle') : t('not-allowed-shuffle')"
+          >
             <VIcon
               icon="iconamoon:playlist-shuffle-light"
               :size="20"
@@ -109,7 +114,10 @@ watch(() => props.data, val => {
           <div
             v-html="item.right.content"
           />
-          <div :title="item?.right?.isShuffle ? t('allowed-shuffle') : t('not-allowed-shuffle')">
+          <div
+            v-if="isShuffle"
+            :title="item?.right?.isShuffle ? t('allowed-shuffle') : t('not-allowed-shuffle')"
+          >
             <VIcon
               icon="iconamoon:playlist-shuffle-light"
               :size="20"

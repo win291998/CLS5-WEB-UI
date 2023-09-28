@@ -63,7 +63,7 @@ function getIndex(position: number) {
         <span class="mr-1">{{ getIndex(item.position) }} </span>
         <span v-html="item.content" />
         <div
-          v-if="showMedia"
+          v-if="showMedia && item.urlMedia"
           class="view-media mt-2"
         >
           <CpMediaContent

@@ -87,15 +87,12 @@ onMounted(async () => {
 const isShowModalCoppy = ref(false)
 const coppyDataId = ref()
 function actionItem(type: any) {
-  console.log(type)
   switch (type[0]?.name) {
     case 'ActionEdit':
       router.push({ name: 'exam-edit', params: { id: type[1]?.id }, query: { tab: 'info' } })
 
       break
     case 'copy':
-      console.log(type)
-
       isShowModalCoppy.value = true
       coppyDataId.value = type[1].id
       break

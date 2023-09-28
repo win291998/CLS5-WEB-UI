@@ -53,7 +53,6 @@ const queryParams = reactive<any>({
 const listUser = ref<Any[]>([])
 const totalRecord = ref<number>(0)
 async function fetchDataModal() {
-  console.log(window._.isEmpty(props.payload))
   let params
   if (!window._.isEmpty(props.payload)) {
     params = {

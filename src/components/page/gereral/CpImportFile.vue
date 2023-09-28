@@ -255,6 +255,7 @@ async function closeDetail(dataQs: any) {
                     :data="context"
                     :show-content="false"
                     :show-media="false"
+                    show-answer-true
                   />
                 </CpQuestionName>
               </div>

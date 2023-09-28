@@ -33,18 +33,32 @@ interface Props {
   showAnswerTrue: boolean
   isSurvey?: boolean
   disabled?: boolean
+  isReview?: boolean
   maxWidth?: number
   listCurrentId?: number // vị trí hiện thị của danh sách đám án click câu đk loại 2
+  isShuffle?: boolean // cờ  hiện thị nút xáo trộn
+  isSentence?: boolean // cờ  hiện thị thông tin dạng câu x
+  isShowAnsTrue?: boolean // cờ  hiện thị đáp án đúng
+  isShowAnsFalse?: boolean // cờ  hiện thị đáp án sai
+  isHideNotChoose?: boolean // cờ tắt hiện thị đáp án đúng khi chưa chọn
+  numberQuestion?: number // số thứ tự câu hỏi
+  totalPoint?: number // tong diem
 }
 const props = withDefaults(defineProps<Props>(), ({
   type: 1,
   showContent: true,
   showMedia: true,
-  showAnswerTrue: true,
+  showAnswerTrue: false,
   isSurvey: false,
   disabled: false,
+  isReview: false,
+  isShuffle: false,
+  isSentence: false,
+  isShowAnsTrue: false,
+  isShowAnsFalse: false,
+  isHideNotChoose: false,
 }))
-
+const dataValue = ref(props.data)
 function checkTypeQuestion() {
   switch (props.type) {
     case 1:
@@ -105,24 +119,35 @@ function checkTypeSurvey() {
       return CpSingleChoiseSvView
   }
 }
+
+watch(() => props.data, (val: any) => dataValue.value = val)
 </script>
 
 <template>
   <div class="w-100">
     <Component
       :is="isSurvey ? checkTypeSurvey() : checkTypeQuestion()"
-      v-if="!data?.isGroup || isSurvey"
-      :data="data"
+      v-if="!dataValue?.isGroup || isSurvey"
+      v-model:data="dataValue"
       :show-content="showContent"
       :show-media="showMedia"
       :show-answer-true="showAnswerTrue"
       :list-current-id="listCurrentId"
       :max-width="maxWidth"
       :disabled="disabled"
+      :number-question="numberQuestion"
+      :point="dataValue.unitPoint"
+      :total-point="totalPoint"
+      :is-review="isReview"
+      :is-shuffle="isShuffle"
+      :is-sentence="isSentence"
+      :is-show-ans-true="isShowAnsTrue"
+      :is-show-ans-false="isShowAnsFalse"
+      :is-hide-not-choose="isHideNotChoose"
     />
-    <div v-else-if="data?.isGroup">
+    <div v-else-if="dataValue?.isGroup">
       <div
-        v-for="qsItem in data?.questions"
+        v-for="qsItem in dataValue?.questions"
         :key="qsItem.id"
         class="mb-5"
       >

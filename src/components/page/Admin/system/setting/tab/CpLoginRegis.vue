@@ -113,8 +113,6 @@ async function getComboboxProvider() {
   if (!window._.isEmpty(comboboxProvider.value))
     return
   await MethodsUtil.requestApiCustom(SystemService.LoginProvider, TYPE_REQUEST.GET).then((result: any) => {
-    console.log(result)
-
     comboboxProvider.value = result.data.map((item: any) => ({
       key: item,
       value: item,
@@ -127,10 +125,7 @@ async function getExternalLogin() {
   })
 }
 function handleChangeProvider(val: any) {
-  console.log(val)
-
   const selectProvider = externalLoginList.value.find((x: any) => x.provider === val)
-  console.log(selectProvider)
   if (selectProvider) {
     selectedProvider.value = selectProvider
     return
@@ -206,8 +201,6 @@ const { titleUserCombobox, groupUserCombobox } = storeToRefs(store)
 const { fetchTitlesUsersCombobox, fetchGroupUserCombobox } = store
 const comboboxUserType = ref<any[]>([])
 async function getComboboxUserType() {
-  console.log(comboboxUserType.value.length)
-
   if (comboboxUserType.value.length)
     return
   const { data } = await MethodsUtil.requestApiCustom(apiPermission.comboboxUserType, TYPE_REQUEST.GET)

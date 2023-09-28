@@ -670,7 +670,7 @@ onUnmounted(() => {
           >
             <CmAudio
               v-model:time="timeDuration"
-              width="100"
+              width="100%"
               :src="contentData?.url"
             />
           </VCol>

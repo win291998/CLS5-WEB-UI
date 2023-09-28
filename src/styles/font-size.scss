@@ -433,11 +433,17 @@
 }
 
 //text
-.text-label-default{
+.text-label-default {
   color: $color-gray-700;
   font-family: Inter;
   font-size: 14px;
   font-style: normal;
   font-weight: 500 !important;
   line-height: 20px;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
