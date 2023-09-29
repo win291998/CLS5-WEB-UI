@@ -141,7 +141,7 @@ getQuestionListTest()
       <div class="flex-center text-semibold-md color-primary">
         Thời gian thi: 100 phút
       </div>
-      <div class="mt-content">
+      <div class="mt-content mt-8">
         <div
           v-for="(qs, pos) in questions"
           :key="qs.id"
@@ -157,7 +157,6 @@ getQuestionListTest()
               is-sentence
               :is-show-ans-false="isReview"
               :is-show-ans-true="isReview"
-              :is-hide-not-choose="isReview"
             />
             <!--
               disabled

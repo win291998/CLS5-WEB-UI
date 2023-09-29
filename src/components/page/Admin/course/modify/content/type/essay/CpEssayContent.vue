@@ -163,11 +163,9 @@ function saveAndUpdate(idx: any, isUpdate: boolean) {
 
 // cập nhật dữ liệu chỉnh sửa
 async function getDetailDocContent() {
-  if (contentData.value.url && contentData.value.url !== null) {
-    if (contentData.value.time) {
-      time.value.selfMinute = Math.floor(contentData.value.time / 60)
-      time.value.selfSecond = Math.floor(contentData.value.time % 60)
-    }
+  if (contentData.value.time) {
+    time.value.selfMinute = Math.floor(contentData.value.time / 60)
+    time.value.selfSecond = Math.floor(contentData.value.time % 60)
     isLoadingFile.value = false
   }
   else { time.value.selfMinute = 5 }

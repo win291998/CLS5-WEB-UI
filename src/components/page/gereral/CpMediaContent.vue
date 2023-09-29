@@ -86,8 +86,6 @@ async function getInfor(folder: any) {
   return await MethodsUtil.requestApiCustom(`${SERVERFILE}${ServerFileService.GetInforFile}${folder}`, TYPE_REQUEST.GET)
 }
 async function downloadFile(item: any, idx: number, unLoadComponent: any) {
-  console.log(item)
-
   MethodsUtil.dowloadSampleFile(`${SERVERFILE}${item.filePath}`,
     TYPE_REQUEST.GET, item.name || ' local').then((data: any) => {
     unLoadComponent(idx)
@@ -150,8 +148,6 @@ async function initData(val: any) {
         fileUpload.value[0].size = value.fileSize
         fileUpload.value[0].filePath = value.filePath
         fileUpload.value[0].fileFolder = value.fileFolder
-        console.log(typeFile.value)
-
         if (typeFile.value === 5 && !value.isSecure)
           fileUpload.value[0].statusDownload = 1
 

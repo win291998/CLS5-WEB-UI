@@ -253,7 +253,7 @@ watch(() => props.data, val => {
   <div class="content-view">
     <div
       v-if="isSentence"
-      class="mb-4 mt-8"
+      class="mb-4"
     >
       <span class="text-bold-md color-primary">{{ t('sentence') }} {{ numberQuestion }} - {{ point }}/{{ totalPoint }} {{ t('scores') }}</span>
       <CmButton
@@ -261,6 +261,7 @@ watch(() => props.data, val => {
         class="ml-3"
         icon="ic:round-bookmark-border"
         :color="questionValue.isMark ? 'warning' : 'secondary'"
+        color-icon="white"
         is-rounded
         :size="36"
         :size-icon="20"

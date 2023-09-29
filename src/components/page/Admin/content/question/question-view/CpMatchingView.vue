@@ -15,6 +15,16 @@ interface Props {
   showMedia: boolean
   showAnswerTrue: boolean
   isShuffle: boolean
+  disabled?: boolean // trạng thái chọn
+  isShowAnsTrue: boolean // hiện thị câu đúng
+  isShowAnsFalse: boolean // hiện thị câu sai
+  isSentence?: boolean // trạng thái câu
+  isHideNotChoose?: boolean // ẩn hiện thị đáp án các câu không chọn
+  typeShow?: number // trạng thái hiện thị
+  numberQuestion?: number | null
+  totalPoint?: number | null
+  point?: number | null
+  customKeyValue?: string
 }
 const props = withDefaults(defineProps<Props>(), ({
   data: () => ({
@@ -25,67 +35,122 @@ const props = withDefaults(defineProps<Props>(), ({
   showMedia: true,
   showAnswerTrue: true,
   isShuffle: true,
+  disabled: false,
+  isSentence: false,
+  isShowAnsTrue: false,
+  isShowAnsFalse: false,
+  isHideNotChoose: false,
+  numberQuestion: 0,
+  totalPoint: 0,
+  point: 0,
+  customKeyValue: 'answeredValue',
 }))
+const emit = defineEmits<Emit>()
+interface Emit {
+  (e: 'update:model-value', val: any): void
+  (e: 'update:data', val: any): void
+}
 const { t } = window.i18n()
 function getIndex(position: number) {
   return `${String.fromCharCode(65 + position - 1)}.`
 }
 
-const dataValue = ref<question>({
+const questionValue = ref<question>({
   content: '',
   answers: [],
 })
+function checkAnsTrueClass(detalAns: any) {
+  console.log(detalAns)
+
+  return (props.isShowAnsTrue && (detalAns.answerValue === detalAns[props.customKeyValue]) && (!props.isHideNotChoose || (props.isHideNotChoose && detalAns[props.customKeyValue])))
+}
+function checkAnsFalseClass(detalAns: any) {
+  return (props.isShowAnsFalse && !detalAns.isTrue && detalAns[props.customKeyValue])
+}
 watch(() => props.data, val => {
   const answers: any[] = []
   const temp = window._.cloneDeep(val)
+
   temp?.answers.forEach((element: any) => {
     const position = element.position - 1
     if (position > -1) {
+      console.log(answers[position])
       if (answers[position] === undefined) {
         answers[position] = {
-          left: null,
-          right: null,
+          left: null as any,
+          right: null as any,
         }
       }
-      if (element.isTrue === false)
+      if (element.isTrue === false) {
         answers[position].left = element
-      else answers[position].right = element
+      }
+      else {
+        answers[position].right = element
+        console.log(answers[position].right)
+        setTimeout(() => {
+          answers[position].right.matched = !!answers[position].right.answeredValue
+          answers[position].left.matched = !!answers[position].right.answeredValue
+        }, 0)
+      }
     }
   })
 
   temp.answers = answers
-  dataValue.value = temp
+  questionValue.value = temp
 }, { immediate: true, deep: true })
 </script>
 
 <template>
   <div class="content-view">
     <div
+      v-if="isSentence"
+      class="mb-4"
+    >
+      <span class="text-bold-md color-primary">{{ t('sentence') }} {{ numberQuestion }} - {{ point }}/{{ totalPoint }} {{ t('scores') }}</span>
+      <CmButton
+        class="ml-3"
+        icon="ic:round-bookmark-border"
+        :color="questionValue.isMark ? 'warning' : 'secondary'"
+        color-icon="white"
+        is-rounded
+        :size="36"
+        :size-icon="20"
+      />
+    </div>
+    <div
       v-if="showContent"
       class="text-medium-md mb-5 color-text-900"
-      v-html="dataValue.content"
+      v-html="questionValue.content"
     />
     <div
-      v-if="showMedia && dataValue.urlFile"
+      v-if="showMedia && questionValue.urlFile"
       class="view-media mb-5"
     >
       <CpMediaContent
         :disabled="true"
-        :src="dataValue.urlFile"
+        :src="questionValue.urlFile"
       />
     </div>
     <div
-      v-for="item in dataValue.answers"
+      v-for="item in questionValue.answers"
       :key="item.id"
       class="w-100"
     >
       <div
         class="box-answer"
-        :class="{ hidden: !showAnswerTrue }"
+        :class="
+          {
+            ansTrue: checkAnsTrueClass(item),
+            ansFalse: checkAnsFalseClass(item),
+          }
+        "
       >
         <div
           v-if="item.left"
           class="box-left d-flex justify-space-between"
+          :class="{
+            matched: false,
+          }"
         >
           <div
             v-html="item.left.content"
@@ -168,7 +233,7 @@ watch(() => props.data, val => {
       width: 50%;
     }
   }
-  .box-answer.hidden{
+  .box-answer.matched{
     display: flex;
     width: 100%;
     justify-content: space-between;
