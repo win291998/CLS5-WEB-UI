@@ -18,6 +18,24 @@ import CpEssaySvView from '@/components/page/Admin/content/survey/survey-view/Cp
 import CpMatrixSingleSvView from '@/components/page/Admin/content/survey/survey-view/CpMatrixSingleSvView.vue'
 import CpMatrixMultiSvView from '@/components/page/Admin/content/survey/survey-view/CpMatrixMultiSvView.vue'
 
+import CpSpliterView from '@/components/page/gereral/CpSpliterView.vue'
+
+const props = withDefaults(defineProps<Props>(), ({
+  type: 1,
+  showContent: true,
+  showMedia: true,
+  showAnswerTrue: false,
+  isSurvey: false,
+  disabled: false,
+  isReview: false,
+  isShuffle: false,
+  isSentence: false,
+  isShowAnsTrue: false,
+  isShowAnsFalse: false,
+  isHideNotChoose: false,
+}))
+const { t } = window.i18n()
+
 /**
  * Xem chi tiết các loại câu hỏi
  */
@@ -41,23 +59,9 @@ interface Props {
   isShowAnsTrue?: boolean // cờ  hiện thị đáp án đúng
   isShowAnsFalse?: boolean // cờ  hiện thị đáp án sai
   isHideNotChoose?: boolean // cờ tắt hiện thị đáp án đúng khi chưa chọn
-  numberQuestion?: number // số thứ tự câu hỏi
+  numberQuestion?: number | string // số thứ tự câu hỏi
   totalPoint?: number // tong diem
 }
-const props = withDefaults(defineProps<Props>(), ({
-  type: 1,
-  showContent: true,
-  showMedia: true,
-  showAnswerTrue: false,
-  isSurvey: false,
-  disabled: false,
-  isReview: false,
-  isShuffle: false,
-  isSentence: false,
-  isShowAnsTrue: false,
-  isShowAnsFalse: false,
-  isHideNotChoose: false,
-}))
 const dataValue = ref(props.data)
 function checkTypeQuestion() {
   switch (props.type) {
@@ -129,6 +133,7 @@ watch(() => props.data, (val: any) => dataValue.value = val)
       :is="isSurvey ? checkTypeSurvey() : checkTypeQuestion()"
       v-if="!dataValue?.isGroup || isSurvey"
       v-model:data="dataValue"
+      class="mb-8"
       :show-content="showContent"
       :show-media="showMedia"
       :show-answer-true="showAnswerTrue"
@@ -146,17 +151,40 @@ watch(() => props.data, (val: any) => dataValue.value = val)
       :is-hide-not-choose="isHideNotChoose"
     />
     <div v-else-if="dataValue?.isGroup">
-      <div
-        v-for="qsItem in dataValue?.questions"
-        :key="qsItem.id"
-        class="mb-5"
+      <CpSpliterView
+        :id="dataValue.id"
+        orientation="vertical"
+        class="mb-2"
       >
-        <CpContentView
-          :type="qsItem.typeId"
-          :data="qsItem"
-          :show-media="false"
-        />
-      </div>
+        <template #first-element>
+          <div class="mb-1">
+            <div>
+              {{ t('general-request') }}
+            </div>
+            <div v-html="dataValue.content" />
+          </div>
+        </template>
+        <template #second-element>
+          <div
+            v-for="(qsItem, index) in dataValue?.questions"
+            :key="qsItem.id"
+            class="mb-5"
+          >
+            <CpContentView
+              :type="qsItem.typeId"
+              :data="qsItem"
+              :show-media="false"
+              :number-question="`${numberQuestion}.${index + 1}`"
+              :disabled="isReview"
+              :is-review="isReview"
+              :total-point="totalPoint"
+              is-sentence
+              :is-show-ans-false="isReview"
+              :is-show-ans-true="isReview"
+            />
+          </div>
+        </template>
+      </CpSpliterView>
     </div>
   </div>
 </template>

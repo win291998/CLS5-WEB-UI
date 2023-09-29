@@ -117,9 +117,14 @@ questionValue.value.answers.forEach((item: any, index: number) => {
     listAnserView.value[item.position].push(item)
 })
 function checkAnsTrueClass(detalAns: any) {
+  if (!detalAns)
+    return false
+
   return (props.isShowAnsTrue && detalAns.isTrue && (!props.isHideNotChoose || (props.isHideNotChoose && detalAns[props.customKeyValue])))
 }
 function checkAnsFalseClass(detalAns: any) {
+  if (!detalAns)
+    return false
   return (props.isShowAnsFalse && !detalAns.isTrue && detalAns[props.customKeyValue])
 }
 
@@ -163,7 +168,7 @@ watch(() => props.listCurrentId, (val: number) => {
   <div class="content-view">
     <div
       v-if="isSentence"
-      class="mb-4 mt-8"
+      class="mb-4"
     >
       <span class="text-bold-md color-primary">{{ t('sentence') }} {{ numberQuestion }} - {{ point }}/{{ totalPoint }} {{ t('scores') }}</span>
       <CmButton
@@ -171,6 +176,7 @@ watch(() => props.listCurrentId, (val: number) => {
         class="ml-3"
         icon="ic:round-bookmark-border"
         :color="questionValue.isMark ? 'warning' : 'secondary'"
+        color-icon="white"
         is-rounded
         :size="36"
         :size-icon="20"
@@ -206,7 +212,7 @@ watch(() => props.listCurrentId, (val: number) => {
     >
       <CmRadio
         :type="1"
-        :model-value="showAnswerTrue ? item.isTrue : ((isShowAnsFalse && !isShowAnsTrue && item.isTrue) ? null : !!item[customKeyValue]) "
+        :model-value="showAnswerTrue ? item?.isTrue : ((isShowAnsFalse && !isShowAnsTrue && item?.isTrue) ? null : !!item[customKeyValue]) "
         :disabled="disabled"
         :name="`bl2-${questionValue.id}`"
         :value="true"

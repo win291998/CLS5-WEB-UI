@@ -22,7 +22,7 @@ interface Props {
   isSentence?: boolean // trạng thái câu
   isHideNotChoose?: boolean // ẩn hiện thị đáp án các câu không chọn
   typeShow?: number // trạng thái hiện thị
-  numberQuestion?: number | null
+  numberQuestion?: number | null | string
   totalPoint?: number | null
   point?: number | null
   customKeyValue?: string
@@ -72,7 +72,7 @@ watch(() => props.data, val => {
   <div class="content-view">
     <div
       v-if="isSentence"
-      class="mb-4 mt-8"
+      class="mb-4"
     >
       <span class="text-bold-md color-primary">{{ t('sentence') }} {{ numberQuestion }} - {{ point }}/{{ totalPoint }} {{ t('scores') }}</span>
       <CmButton
@@ -80,6 +80,7 @@ watch(() => props.data, val => {
         icon="ic:round-bookmark-border"
         :color="questionValue.isMark ? 'warning' : 'secondary'"
         is-rounded
+        color-icon="white"
         :size="36"
         :size-icon="20"
       />

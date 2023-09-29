@@ -134,6 +134,7 @@ defineExpose({
             v-if="props.icon"
             :icon="props.icon"
             :size="props.sizeIcon"
+            :color="colorIcon"
             :class="[props.colorIcon]"
           />
           <span
