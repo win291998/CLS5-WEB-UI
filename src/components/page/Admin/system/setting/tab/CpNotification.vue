@@ -49,9 +49,10 @@ const listTab: Tab[] = [
     title: 'configuration-mail',
   },
 ]
-
+const isGeneral = ref(true)
 const configuration = ref()
 function getDataDetail(val: Any) {
+  isGeneral.value = false
   getDetailNotify(val.id)
   configuration.value.getListKeyword({ ...val, type: type.value })
 }
@@ -92,8 +93,6 @@ async function updateNotify(unload: any) {
   })
   unload()
 }
-const isGeneral = ref(true)
-const route = useRoute()
 </script>
 
 <template>
@@ -101,6 +100,7 @@ const route = useRoute()
     class="mt-2"
   >
     <CmMenu
+      style="min-height: 500px;"
       :items="listMenu"
       @change="getDataDetail"
     >
@@ -109,6 +109,7 @@ const route = useRoute()
           variant="tonal"
           class="w-100"
           :title="t('configuration')"
+          @click=" isGeneral = true"
         />
       </template>
       <template #content>

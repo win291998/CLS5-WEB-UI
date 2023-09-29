@@ -25,7 +25,10 @@ const drawer = ref(true)
 const idxbf = ref<any>(-1)
 function handleActiveNavItem(idx: number, item: Item, idxParent: number) {
   const position = `${idxParent}${idx}`
-  if (idxbf.value === idx)
+  console.log('position', position)
+  console.log('idxbf', idxbf.value)
+
+  if (idxbf.value === position)
     return
   const element = document.getElementById(`nav-item${position}`)
   if (idxbf.value !== -1) {
@@ -33,8 +36,8 @@ function handleActiveNavItem(idx: number, item: Item, idxParent: number) {
     el?.classList.remove('nav-item-active')
   }
   element?.classList.add('nav-item-active')
-  emit('change', item)
   idxbf.value = position
+  emit('change', item)
 }
 
 function showChildren(idx: number, val: boolean) {
@@ -113,48 +116,53 @@ function showChildren(idx: number, val: boolean) {
 .cm-menu {
   height: inherit;
   width: inherit;
-  .v-navigation-drawer {
+  .v-layout {
+    overflow: unset !important;
+    .v-navigation-drawer {
     background: transparent !important;
-    .v-navigation-drawer__content {
-      .v-list {
-        background: $color-white !important;
-        border: 1px solid $color-gray-200;
-        border-radius: $border-radius-xs;
-        margin-top: 24px;
-        padding: 0 !important;
-        .v-list-item {
-          padding: 16px;
-          margin-bottom: 0 !important;
-          border-bottom-left-radius: unset;
-          border-bottom-right-radius: unset;
-        }
-        .v-list-item--active {
-          background-color: $color-gray-100 !important;
-            box-shadow: unset !important;
-            border: unset;
-          .v-list-item__overlay {
-            background-color: transparent;
-            box-shadow: unset !important;
-            border: unset;
+      .v-navigation-drawer__content {
+        overflow: unset;
+        .v-list {
+          background: $color-white !important;
+          border: 1px solid $color-gray-200;
+          border-radius: $border-radius-xs;
+          margin-top: 24px;
+          padding: 0 !important;
+          .v-list-item {
+            padding: 16px;
+            margin-bottom: 0 !important;
+            border-bottom-left-radius: unset;
+            border-bottom-right-radius: unset;
           }
-          .v-list-item__underlay {
-            display: none;
+          .v-list-item--active {
+            background-color: $color-gray-100 !important;
+              box-shadow: unset !important;
+              border: unset;
+            .v-list-item__overlay {
+              background-color: transparent;
+              box-shadow: unset !important;
+              border: unset;
+            }
+            .v-list-item__underlay {
+              display: none;
+            }
           }
-        }
-        .nav-group-children {
-          [id*=nav-item] {
-            cursor: pointer;
-            padding: 12px 16px;
-          }
-          .nav-item-active {
-            background-color: $color-primary-50;
-            border-left: 4px solid $color-primary-600;
-          }
+          .nav-group-children {
+            [id*=nav-item] {
+              cursor: pointer;
+              padding: 12px 16px;
+            }
+            .nav-item-active {
+              background-color: $color-primary-50;
+              border-left: 4px solid $color-primary-600;
+            }
 
+          }
         }
       }
     }
   }
+
 }
 @keyframes fadeIn{
   0%{

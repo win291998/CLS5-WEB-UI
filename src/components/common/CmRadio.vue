@@ -78,7 +78,7 @@ watch(() => props.modelValue, val => {
   height: 20px;
   border-radius: 11px;
   border: 1px solid rgb(var(--v-gray-300)) !important;
-  background-color: transparent;
+  background-color: rgb(var(--v-theme-surface));
 }
 .radio-item label.disabled:before {
   content: " ";

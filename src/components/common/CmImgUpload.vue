@@ -10,7 +10,6 @@ import {
 } from '@/constant/Globals'
 import type { typeVariant } from '@/typescript/enums/enums'
 import ServerFileService from '@/api/server-file/index'
-import constant from '@/constant/constant'
 
 interface Props {
   src?: string
@@ -83,7 +82,7 @@ async function uploadFile(model: any) {
   try {
     const res = await MethodsUtil.requestApiCustom(`${SERVERFILE}${ServerFileService.UploadFile}`, TYPE_REQUEST.POST, formData,
       {
-        Authorization: constant.TOKEN_SV_FILE,
+        Authorization: window.TOKEN_SV_FILE,
       }).then((value: any) => value)
     if (res.filePath)
       toast('SUCCESS', t('upload-file-success'))

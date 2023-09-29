@@ -133,7 +133,30 @@ export default [
           },
         ],
       },
+      {
+        path: 'content-repository',
+        name: 'content-repository',
+        redirect: { name: 'content-repository-list' },
+        component: () => import('@/pages/admin/content/question/Index.vue'),
+        children: [
+          {
+            path: '',
+            name: 'content-repository-list',
+            component: () => import('@/pages/admin/content/content-repository/ContentRepository.vue'),
+          },
+          {
+            path: ':type/add',
+            name: 'content-repository-add',
+            component: () => import('@/pages/admin/content/content-repository/edit-content/EditContent.vue'),
+          },
+          {
+            path: ':type/edit/:id',
+            name: 'content-repository-edit',
+            component: () => import('@/pages/admin/content/content-repository/edit-content/EditContent.vue'),
+          },
 
+        ],
+      },
     ],
   },
 ]

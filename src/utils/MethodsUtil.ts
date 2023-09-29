@@ -1,6 +1,5 @@
 import jwt_decode from 'jwt-decode'
 import JSZip from 'jszip'
-import type { Any } from '@/typescript/interface'
 import { ActionType } from '@/constant/data/actionType.json'
 import { typeFile } from '@/constant/data/typeFile.json'
 import { StatusTypeUser } from '@/constant/data/status.json'
@@ -20,15 +19,9 @@ const SERVERFILE = process.env.VUE_APP_BASE_SERVER_FILE
 type CallbackFunction = (key: string) => any
 
 export default class MethodsUtil {
-  static getListInforUser = (listId: number, params?: Any) => {
-    const payload = {
-      userIds: [],
-      pageSize: 1,
-      pageNumber: 1,
-      ...params,
-    }
-    const { data } = MethodsUtil.requestApiCustom(UserService.GetListInforUser, TYPE_REQUEST.GET, payload)
-    return data
+  static getListInforUser = async (listId: number[]) => {
+    const { data } = await MethodsUtil.requestApiCustom(UserService.GetListInforUser, TYPE_REQUEST.GET, { userIds: listId })
+    return data?.pageLists
   }
 
   /**

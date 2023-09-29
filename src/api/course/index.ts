@@ -49,11 +49,13 @@ const CourseService = {
   GetUserEvaluation: '/course/get-paging-user-evaluation',
   GetCriteriaEvaluation: '/course/get-course-evaluation-criteria',
   GetCheckUserExist: '/course/check-user-exist',
+  GetExportExcelArchiveContent: '/ContentArchive/export-excel-archive-content-report',
 
   /** learner */
   GetLnCheckCourseRequire: '/learner/check-course-require',
   GetLnCourseProfRequire: '/learner/get-course-proficiency-require',
   GetLnCheckCourseProfRequire: '/learner/check-course-proficiency-require',
+  GetContentArchiveById: '/contentarchive/get-by-id',
 
   /** Post */
   PostAddCourseOrg: '/course/add-course-to-organizational-structures',
@@ -116,6 +118,7 @@ const CourseService = {
   PostDelCheckinCourse: (id: number | string) => `/course/${id}/checkin/delete`, // Lấy danh sách điểm danh khóa học
   PostAddCheckinCourse: (id: number | string) => `/course/${id}/checkin`, // Thêm điểm danh khóa học
   PostlRegisterCourse: '/learner/register-course',
+  PostDeleteContentArchive: '/contentarchive/delete',
 
   /** Delete */
   DeleteUserReg: 'courseuser/delete-register',
