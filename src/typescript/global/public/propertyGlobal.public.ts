@@ -99,7 +99,7 @@ const windowDefineConstProperty = ()=> {
     hideAllPageLoading,
     notificationApiStatus: MethodsUtil.notificationApiStatus,
     SERVER_FILE: process.env.VUE_APP_BASE_SERVER_FILE,
-    TOKEN_SV_FILE:localStorage.getItem(jwtDefaultConfig.storageTokenKeyName) ||  constant.TOKEN_SV_FILE,
+    TOKEN_SV_FILE: `Bearer ${localStorage.getItem(jwtDefaultConfig.storageTokenKeyName) ||  constant.TOKEN_SV_FILE}`,
   }
   defineProperty(global, 'const')
 }

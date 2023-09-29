@@ -5,7 +5,6 @@ import ServerFileService from '@/api/server-file'
 import toast from '@/plugins/toast'
 import AuthUtil from '@/auth'
 import { load } from '@/stores/loadComponent.js'
-import constant from '@/constant/constant'
 
 const props = withDefaults(defineProps<Props>(), ({
   accept: '',
@@ -175,7 +174,7 @@ async function upFileServer(file: any) {
     },
     headers: {
       // Authorization: `Bearer ${token}`,
-      Authorization: constant.TOKEN_SV_FILE,
+      Authorization: window.TOKEN_SV_FILE,
     },
 
   })

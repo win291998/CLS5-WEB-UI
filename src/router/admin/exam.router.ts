@@ -5,10 +5,6 @@ export default [
     name: 'exam-question-stock-list',
   },
   {
-    path: 'content-repository',
-    name: 'content-repository',
-  },
-  {
     path: 'library-management',
     name: 'library-management',
   },

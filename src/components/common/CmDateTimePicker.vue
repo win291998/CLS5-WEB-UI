@@ -117,7 +117,10 @@ const temp = ref()
 
 function updateInput(val: any, isUpdate: any) {
   if (isUpdate) {
-    emit('update:modelValue', moment(val).format('YYYY-MM-DD HH:mm:ss'))
+    if (val)
+      emit('update:modelValue', moment(val).format('YYYY-MM-DD HH:mm:ss'))
+    else
+      emit('update:modelValue', null)
     if (props.range && val) {
       emit('update:fromDate', val[0] ? val[0] : null)
       emit('update:toDate', val[1] ? val[1] : null)
