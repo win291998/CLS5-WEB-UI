@@ -90,8 +90,8 @@ function changeValue(value: any) {
     console.log(item.position === listCurrent.value)
 
     if (item.position === listCurrent.value)
-      item[props.customKeyValue] = item.answerId === value.answerId ? listCurrent.value : null
-    if (item.answerId === value.answerId)
+      item[props.customKeyValue] = item.id === value.id ? listCurrent.value : null
+    if (item.id === value.id)
       contentSelect.value = item
   })
   updateContent(contentSelect.value)
@@ -99,7 +99,7 @@ function changeValue(value: any) {
 }
 function updateContent(val: any) {
   console.log(val)
-  const ans = listAnserView.value[listCurrent.value].findIndex((item: any) => item.answerId === val.answerId)
+  const ans = listAnserView.value[listCurrent.value].findIndex((item: any) => item.id === val.id)
   const answerSelect = contentBlankRef.value?.querySelectorAll('.answer-select')[listCurrent.value - 1]
   const answerSpans = answerSelect.getElementsByClassName('select-content')[0]
   console.log(answerSpans)

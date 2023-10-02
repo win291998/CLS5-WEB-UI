@@ -85,7 +85,7 @@ function formatDataInit() {
     const ans = questionValue.value.answers.find((item: any) => item.answeredValue === index + 1)
     if (!window._.isEmpty(ans)) {
       spanElement.innerHTML = props.showAnswerTrue ? `<span >${questionValue.value?.answerBlank[index]?.content}</span>` : `<span>${ans.content}</span>`
-      spanElement.setAttribute('data-answer', ans.answerId)
+      spanElement.setAttribute('data-answer', ans.id)
     }
     else { spanElement.innerHTML = props.showAnswerTrue ? `<span >${questionValue.value?.answerBlank[index]?.content}</span>` : '<span class="chooseAnsPld">Lựa chọn</span>' }
   })
@@ -217,7 +217,7 @@ function saveDataLocal() {
       const dataAnswer = element.getAttribute('data-answer')
       if (dataAnswer) {
         const answer = questionValue.value.answers.find(
-          x => x.answerId === Number(dataAnswer),
+          x => x.id === Number(dataAnswer),
         )
         if (answer)
           answer.answeredValue = i + 1
@@ -227,7 +227,7 @@ function saveDataLocal() {
   const answers: any[] = []
   questionValue.value.answers.forEach(element => {
     answers.push({
-      id: element.answerId,
+      id: element.id,
       value: element.answeredValue,
     })
   })
@@ -302,10 +302,10 @@ watch(() => props.data, val => {
           <template
             #badge-content
           >
-            {{ item.answerValue }}
+            {{ item.correctAnswer }}
           </template>
           <div
-            :id="`answer${item.answerId}`"
+            :id="`answer${item.id}`"
             class="drag-item line-blank text-regular-md "
             :draggable="!isReview && !disabled"
             :class="{

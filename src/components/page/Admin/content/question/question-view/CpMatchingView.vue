@@ -60,9 +60,7 @@ const questionValue = ref<question>({
   answers: [],
 })
 function checkAnsTrueClass(detalAns: any) {
-  console.log(detalAns)
-
-  return (props.isShowAnsTrue && (detalAns.answerValue === detalAns[props.customKeyValue]) && (!props.isHideNotChoose || (props.isHideNotChoose && detalAns[props.customKeyValue])))
+  return (props.isShowAnsTrue && (detalAns.correctAnswer === detalAns[props.customKeyValue]) && (!props.isHideNotChoose || (props.isHideNotChoose && detalAns[props.customKeyValue])))
 }
 function checkAnsFalseClass(detalAns: any) {
   return (props.isShowAnsFalse && !detalAns.isTrue && detalAns[props.customKeyValue])
@@ -74,7 +72,6 @@ watch(() => props.data, val => {
   temp?.answers.forEach((element: any) => {
     const position = element.position - 1
     if (position > -1) {
-      console.log(answers[position])
       if (answers[position] === undefined) {
         answers[position] = {
           left: null as any,
@@ -86,10 +83,12 @@ watch(() => props.data, val => {
       }
       else {
         answers[position].right = element
-        console.log(answers[position].right)
+
         setTimeout(() => {
-          answers[position].right.matched = !!answers[position].right.answeredValue
-          answers[position].left.matched = !!answers[position].right.answeredValue
+          if (!window._.isEmpty(answers[position].right))
+            answers[position].right.matched = !!answers[position].right.answeredValue
+          if (!window._.isEmpty(answers[position].left))
+            answers[position].left.matched = !!answers[position].right.answeredValue
         }, 0)
       }
     }

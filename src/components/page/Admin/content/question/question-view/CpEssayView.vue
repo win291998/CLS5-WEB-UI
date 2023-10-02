@@ -88,7 +88,7 @@ function hanleUploadFileContent(val: any) {
 const questionValue = ref(window._.cloneDeep(props.data))
 function changeValue(value: any) {
   questionValue.value.answers.forEach((item: any) => {
-    item[props.customKeyValue] = item.answerId === value.answerId ? true : null
+    item[props.customKeyValue] = item.id === value.id ? true : null
   })
 
   emit('update:data', questionValue.value)

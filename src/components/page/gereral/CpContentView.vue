@@ -34,7 +34,11 @@ const props = withDefaults(defineProps<Props>(), ({
   isShowAnsFalse: false,
   isHideNotChoose: false,
 }))
+const emit = defineEmits<Emit>()
 const { t } = window.i18n()
+interface Emit {
+  (e: 'loaded'): void
+}
 
 /**
  * Xem chi tiết các loại câu hỏi
@@ -123,7 +127,9 @@ function checkTypeSurvey() {
       return CpSingleChoiseSvView
   }
 }
-
+onMounted(() => {
+  emit('loaded')
+})
 watch(() => props.data, (val: any) => dataValue.value = val)
 </script>
 
@@ -154,7 +160,7 @@ watch(() => props.data, (val: any) => dataValue.value = val)
       <CpSpliterView
         :id="dataValue.id"
         orientation="vertical"
-        class="mb-2"
+        class="mb-5"
       >
         <template #first-element>
           <div class="mb-1">

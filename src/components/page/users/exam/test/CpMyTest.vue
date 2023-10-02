@@ -3,13 +3,22 @@ import { VBottomSheet } from 'vuetify/labs/VBottomSheet'
 import CmChip from '@/components/common/CmChip.vue'
 import CpContentView from '@/components/page/gereral/CpContentView.vue'
 import { fetchData } from '@/mock/exam/'
+import CmButton from '@/components/common/CmButton.vue'
 
+const emit = defineEmits<Emit>()
+interface Emit {
+  (e: 'loaded'): void
+}
+
+const { t } = window.i18n()
+const route = useRoute()
+const router = useRouter()
 const sheet = ref(false)
 const layoutMobile = ref(false)
 
 function handleResize() {
   // Kiểm tra kích thước màn hình và cập nhật giá trị visibleItems
-  if (window.innerWidth >= 666)
+  if (window.innerWidth >= 769)
     layoutMobile.value = false // Giá trị cho màn hình md trở lên
   else
     layoutMobile.value = true // Giá trị cho màn hình mobile
@@ -30,8 +39,8 @@ onUnmounted(() => {
 //     answers:
 //       [{
 //         answeredValue: null,
-//         answerId: 2248258,
-//         answerValue: null,
+//         id: 2248258,
+//         correctAnswer: null,
 //         content: '<span>1.1</span>',
 //         essayContent: '',
 //         urlFile: '',
@@ -39,9 +48,9 @@ onUnmounted(() => {
 //         isTrue: false,
 //         position: 1,
 //       },
-//       { answeredValue: null, answerId: 2248261, answerValue: null, content: '<span>đã sửa</span>', essayContent: '', urlFile: '', isCorrect: null, isTrue: false, position: 2 },
-//       { answeredValue: true, answerId: 2248260, answerValue: null, isTrue: true, content: '<span>7.5</span>', essayContent: '', urlFile: '', isCorrect: null, position: 3 },
-//       { answeredValue: null, answerId: 2248259, answerValue: null, content: '<span>ddđ</span>', essayContent: '', urlFile: '', isCorrect: null, isTrue: false, position: 4 }],
+//       { answeredValue: null, id: 2248261, correctAnswer: null, content: '<span>đã sửa</span>', essayContent: '', urlFile: '', isCorrect: null, isTrue: false, position: 2 },
+//       { answeredValue: true, id: 2248260, correctAnswer: null, isTrue: true, content: '<span>7.5</span>', essayContent: '', urlFile: '', isCorrect: null, position: 3 },
+//       { answeredValue: null, id: 2248259, correctAnswer: null, content: '<span>ddđ</span>', essayContent: '', urlFile: '', isCorrect: null, isTrue: false, position: 4 }],
 //     content: '<p>Được thêm từ file</p>',
 //     isCorrect: false,
 //     questionId: 43309313,
@@ -59,8 +68,8 @@ onUnmounted(() => {
 //     answers:
 //       [{
 //         answeredValue: null,
-//         answerId: 2248265,
-//         answerValue: null,
+//         id: 2248265,
+//         correctAnswer: null,
 //         content: '<span>1</span>',
 //         essayContent: '',
 //         urlFile: '',
@@ -68,10 +77,10 @@ onUnmounted(() => {
 //         isTrue: false,
 //         position: 1,
 //       },
-//       { answeredValue: true, answerId: 2248264, answerValue: null, content: '<span>2</span>', essayContent: '', urlFile: '', isCorrect: null, isTrue: false, position: 2 },
-//       { answeredValue: null, answerId: 2248263, answerValue: null, content: '<span>3</span>', essayContent: '', urlFile: '', isCorrect: null, isTrue: true, position: 3 },
-//       { answeredValue: null, answerId: 2248262, answerValue: null, content: '<span>4</span>', essayContent: '', urlFile: '', isCorrect: null, isTrue: false, position: 4 },
-//       { answeredValue: null, answerId: 2248266, answerValue: null, content: '<span>hhhhhhhhhhhhhhh</span>', essayContent: '', urlFile: '', isCorrect: null, isTrue: false, position: 5 }],
+//       { answeredValue: true, id: 2248264, correctAnswer: null, content: '<span>2</span>', essayContent: '', urlFile: '', isCorrect: null, isTrue: false, position: 2 },
+//       { answeredValue: null, id: 2248263, correctAnswer: null, content: '<span>3</span>', essayContent: '', urlFile: '', isCorrect: null, isTrue: true, position: 3 },
+//       { answeredValue: null, id: 2248262, correctAnswer: null, content: '<span>4</span>', essayContent: '', urlFile: '', isCorrect: null, isTrue: false, position: 4 },
+//       { answeredValue: null, id: 2248266, correctAnswer: null, content: '<span>hhhhhhhhhhhhhhh</span>', essayContent: '', urlFile: '', isCorrect: null, isTrue: false, position: 5 }],
 //     content: '<p>tự tạo ngày 11 đã sửa</p>',
 //     isCorrect: false,
 //     questionId: 43309314,
@@ -87,8 +96,8 @@ onUnmounted(() => {
 //     isQuestionGroup: false,
 //     answers: [{
 //       answeredValue: null,
-//       answerId: 2248267,
-//       answerValue: null,
+//       id: 2248267,
+//       correctAnswer: null,
 //       content: '<span>1</span>',
 //       essayContent: '',
 //       urlFile: '',
@@ -96,9 +105,9 @@ onUnmounted(() => {
 //       isTrue: false,
 //       position: 1,
 //     },
-//     { answeredValue: null, answerId: 2248268, answerValue: null, content: '<span>2</span>', essayContent: '', urlFile: '', isCorrect: null, isTrue: false, position: 2 },
-//     { answeredValue: null, answerId: 2248269, answerValue: null, content: '<span>thêm mới hihi</span>', essayContent: '', urlFile: '', isCorrect: null, isTrue: false, position: 3 },
-//     { answeredValue: null, answerId: 2248270, answerValue: null, content: '<span>đ</span>', essayContent: '', urlFile: '', isCorrect: null, isTrue: true, position: 4 }],
+//     { answeredValue: null, id: 2248268, correctAnswer: null, content: '<span>2</span>', essayContent: '', urlFile: '', isCorrect: null, isTrue: false, position: 2 },
+//     { answeredValue: null, id: 2248269, correctAnswer: null, content: '<span>thêm mới hihi</span>', essayContent: '', urlFile: '', isCorrect: null, isTrue: false, position: 3 },
+//     { answeredValue: null, id: 2248270, correctAnswer: null, content: '<span>đ</span>', essayContent: '', urlFile: '', isCorrect: null, isTrue: true, position: 4 }],
 //     content: '<p>media vs hinh ảnh</p>',
 //     isCorrect: false,
 //     questionId: 43309315,
@@ -119,12 +128,19 @@ async function getQuestionListTest() {
 }
 
 const isReview = ref(true)
+
+onMounted(() => {
+  console.log('123')
+})
 getQuestionListTest()
 </script>
 
 <template>
   <div class="mt">
-    <div class="mt-left">
+    <div
+      class="mt-left"
+      :class="{ 'w-100': layoutMobile }"
+    >
       <div class="flex-center">
         <CmChip
           color="success"
@@ -157,6 +173,7 @@ getQuestionListTest()
               is-sentence
               :is-show-ans-false="isReview"
               :is-show-ans-true="isReview"
+              @loaded="emit('loaded')"
             />
             <!--
               disabled
@@ -182,47 +199,55 @@ getQuestionListTest()
                 is-show-ans-false
                 is-hide-not-choose
                 :number-question="pos + 1"
+                @loaded="emit('loaded')"
               />
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="mt-right">
-      a
-    </div>
-
-    <div class="mt-mb">
-      <VBtn
-        v-if="layoutMobile"
-        size="x-large"
-        text="Click Me"
-        @click="sheet = !sheet"
+    <div
+      v-if="!layoutMobile"
+      class="mt-right"
+    >
+      <CmButton
+        color="secondary"
+        variant="outlined"
+        :title="t('Màn hình kết quả')"
+        @click="router.push({ name: 'my-test-result', params: { id: route.params.id } })"
       />
-
-      <VBottomSheet v-model="sheet">
-        <VCard
-          class="text-center"
-          height="200"
-        >
-          <VCardText>
-            <VBtn
-              variant="text"
-              @click="sheet = !sheet"
-            >
-              close
-            </VBtn>
-
-            <br>
-            <br>
-
-            <div>
-              This is a bottom sheet using the controlled by v-model instead of activator
-            </div>
-          </VCardText>
-        </VCard>
-      </VBottomSheet>
     </div>
+  </div>
+  <div class="mt-mb">
+    <VBtn
+      v-if="layoutMobile"
+      size="x-large"
+      text="Click Me"
+      @click="sheet = !sheet"
+    />
+
+    <VBottomSheet v-model="sheet">
+      <VCard
+        class="text-center"
+        height="200"
+      >
+        <VCardText>
+          <VBtn
+            variant="text"
+            @click="sheet = !sheet"
+          >
+            close
+          </VBtn>
+
+          <br>
+          <br>
+
+          <div>
+            Chào mừng đến với bình nguyên vô tận
+          </div>
+        </VCardText>
+      </VCard>
+    </VBottomSheet>
   </div>
 </template>
 
@@ -235,8 +260,12 @@ getQuestionListTest()
   }
   .mt-right{
     width: 30% ;
-    background-color: aqua;
     margin-left: 12px;
   }
+}
+.mt-mb{
+  position: fixed;
+  top: 2rem;
+  right: 0;
 }
 </style>
