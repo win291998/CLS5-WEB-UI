@@ -81,11 +81,24 @@ export default [
     ],
   },
   {
-    path: '/learner/exam/my-test/:id',
-    name: 'my-test',
+    path: '/learner/exam/my-test',
+    name: 'test',
     meta: {
       layout: 'blank',
     },
-    component: () => import('@/pages/users/exam/test/MyTest.vue'),
+    redirect: { name: 'my-test' },
+    children: [
+      {
+        path: ':id',
+        component: () => import('@/pages/users/exam/test/MyTest.vue'),
+        name: 'my-test',
+      },
+      {
+        path: 'result/:id',
+        name: 'my-test-result',
+        component: () => import('@/pages/users/exam/test/MyTestResult.vue'),
+      },
+    ],
   },
+
 ]

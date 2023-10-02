@@ -256,6 +256,8 @@ export default class MethodsUtil {
     const configControl = configStore()
     const { defaultThemeValue } = storeToRefs(configControl)
     return (key: any) => {
+      console.log(defaultThemeValue.value)
+
       const themeItemValue = defaultThemeValue.value?.items?.find(el => el.key === key)
       if (themeItemValue)
         return themeItemValue.value

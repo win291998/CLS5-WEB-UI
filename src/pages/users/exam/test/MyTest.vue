@@ -1,21 +1,36 @@
 <script setup lang="ts">
-import CpIntroduce from '@/components/page/users/exam/test/CpIntroduce.vue'
-import CpMyTest from '@/components/page/users/exam/test/CpMyTest.vue'
+const CpIntroduce: any = defineAsyncComponent(() => import('@/components/page/users/exam/test/CpIntroduce.vue'))
+const CpMyTest: any = defineAsyncComponent(() => import('@/components/page/users/exam/test/CpMyTest.vue'))
 
 const isInroduceView = ref(true)
+const isTestRender = ref(false)
+const isProgress = ref(false)
 function startExam() {
   isInroduceView.value = false
 }
+function myTestRendered() {
+  console.log('redner2')
+  isProgress.value = true
+}
+onMounted(() => {
+  isTestRender.value = true
+})
 </script>
 
 <template>
   <div class="containter-light flex-center">
     <div class="containter-white">
-      <div v-if="isInroduceView">
-        <CpIntroduce @startExam="startExam" />
+      <div v-show="isInroduceView">
+        <CpIntroduce
+          :is-progress="isProgress"
+          @startExam="startExam"
+        />
       </div>
-      <div v-else>
-        <CpMyTest />
+      <div
+        v-if="isTestRender"
+        v-show="!isInroduceView"
+      >
+        <CpMyTest @loaded="myTestRendered" />
       </div>
     </div>
   </div>

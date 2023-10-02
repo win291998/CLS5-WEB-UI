@@ -32,6 +32,7 @@ interface Props {
   colorIcon?: string
   sizeIcon?: number
   propsBlind?: any
+  padding?: any
 }
 
 const props = withDefaults(defineProps<Props>(), ({
@@ -110,6 +111,7 @@ defineExpose({
     :rounded="!isRounded ? rounded : ''"
     :icon="isRounded ? icon : null"
     v-bind="propsBlind"
+    :style="{ padding }"
     :class="[color, outlined, className, !isRounded ? 'text-style-btn' : '', color === 'white' ? 'border-button' : '']"
     @click.stop="handleClick"
   >
@@ -158,7 +160,8 @@ defineExpose({
 
 .text-style-btn {
   border-radius: 8px;
-  height: $button-default-height !important;
+  height: auto !important;
+  min-height: $button-default-height !important;
   font-size: 14px;
   font-style: normal;
   font-weight: 600;

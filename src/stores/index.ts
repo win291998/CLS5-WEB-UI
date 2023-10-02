@@ -5,6 +5,7 @@ import SystemService from '@/api/system/index'
 import MethodsUtil from '@/utils/MethodsUtil'
 import { TYPE_REQUEST } from '@/typescript/enums/enums'
 import { connectionStore } from '@/stores/connections'
+import { Themes } from '@/typescript/class/Theme'
 
 export const configStore = defineStore('appConfig', () => {
   /** store */
@@ -28,7 +29,7 @@ export const configStore = defineStore('appConfig', () => {
     await MethodsUtil.requestApiCustom(SystemService.SettingDefaultSystem, TYPE_REQUEST.GET).then((value: any) => {
       if (value?.data?.length > 0)
         settingDefaults.value = value.data
-
+      Themes.setDataTheme(value.data)
       const isLoginOneDeviceStatus = value.data.find((x: any) => x.typeId === 5)
       if (isLoginOneDeviceStatus && isLoginOneDeviceStatus.value === 1)
         isLoginOneDevice.value = true

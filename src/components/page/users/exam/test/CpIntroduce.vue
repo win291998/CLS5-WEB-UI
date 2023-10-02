@@ -4,7 +4,14 @@ import CmAudio from '@/components/common/CmAudio.vue'
 import CmButton from '@/components/common/CmButton.vue'
 import CmVideoUpload from '@/components/common/CmVideoUpload.vue'
 
+const props = withDefaults(defineProps<Props>(), ({
+  isProgress: false,
+}))
+
 const emit = defineEmits<Emit>()
+interface Props {
+  isProgress?: boolean
+}
 
 /** ** Interface */
 interface Emit {
@@ -18,7 +25,6 @@ const route = useRoute()
 const SERVERFILE = process.env.VUE_APP_BASE_SERVER_FILE
 
 const urlFile = ref('')
-
 function startExam() {
   emit('startExam')
 }
@@ -201,11 +207,18 @@ function startExam() {
     </div>
     <div class="flex-center mt-8">
       <CmButton
-        title="Bắt đầu làm bài"
-        color="primary"
+        :disabled="!isProgress"
+        :title="!isProgress ? 'Đang tạo đề' : 'Bắt đầu làm bài'"
+        :color="!isProgress ? 'warning' : 'primary'"
         is-load
         @click="startExam"
       />
+    </div>
+    <div
+      v-if="!isProgress"
+      class="color-warning flex-center text-medium-sm mt-1"
+    >
+      Vui lòng chờ trong ít phút
     </div>
   </div>
 </template>
