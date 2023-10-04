@@ -407,17 +407,10 @@ function activeTab(val: any) {
     </div>
   </div>
   <div v-if="route.query.tabThematic === 'test-thematic'">
-    <CpTestThematicList :type-id="2" />
-    <div class="mt-6 d-flex justify-end">
-      <CmButton
-        bg-color="bg-white"
-        color="white"
-        text-color="color-dark"
-        @click="cancel"
-      >
-        {{ t('come-back') }}
-      </CmButton>
-    </div>
+    <CpTestThematicList
+      :type="2"
+      @cancel="cancel"
+    />
   </div>
   <div v-if="route.query.tabThematic === 'poetry'">
     <CpShiftTest @cancel="cancel" />

@@ -125,9 +125,7 @@ watch(() => props.data, val => {
 
       <div class="w-100 item-content">
         <span class="mr-1">{{ getIndex(item.position) }} </span>
-        <span>
-          {{ t(item.content) }}
-        </span>
+        <span v-html="item.content" />
       </div>
     </div>
   </div>

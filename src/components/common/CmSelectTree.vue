@@ -128,7 +128,7 @@ watch(() => props.options, val => {
     called.value = true
   optionValue.value = props.options
   updateValue()
-})
+}, { immediate: true })
 function waitForTrueValue() {
   return new Promise((resolve: any) => {
     const intervalId = setInterval(() => {

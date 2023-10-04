@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import CpTestThematic from './CpTestThematic.vue'
 import CpHeaderAction from '@/components/page/gereral/CpHeaderAction.vue'
 import CmTable from '@/components/common/CmTable.vue'
 import MethodsUtil from '@/utils/MethodsUtil'
@@ -9,17 +10,21 @@ import DateUtil from '@/utils/DateUtil'
 import CmAccodion from '@/components/common/CmAccodion.vue'
 import CpActionHeaderPage from '@/components/page/gereral/CpActionHeaderPage.vue'
 import CpConfirmDialog from '@/components/page/gereral/CpConfirmDialog.vue'
-import CpMdAddTypeUser from '@/components/page/gereral/asign-user/modal/CpMdAddTypeUser.vue'
 import toast from '@/plugins/toast'
 import ExamService from '@/api/exam'
 import { tableStore } from '@/stores/table'
 import CmButton from '@/components/common/CmButton.vue'
+import CpActionFooterEdit from '@/components/page/gereral/CpActionFooterEdit.vue'
 
-// const props = withDefaults(defineProps<Props>(), ({
-// }))
-// interface Props {
-
-// }
+const props = withDefaults(defineProps<Props>(), ({
+}))
+const emit = defineEmits<Emit>()
+interface Props {
+  type: any
+}
+interface Emit {
+  (e: 'cancel'): void
+}
 
 /** lib */
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
@@ -76,7 +81,6 @@ function handleClickBtn(type: string) {
   }
 }
 const isShowDialogNotiDelete = ref(false)
-const isShowDialogAddTeacher = ref(false)
 
 // Function to handle when click button Delete
 function deleteItem(id: number) {
@@ -134,7 +138,7 @@ function getListTeacher() {
     content: [],
   }
   queryParams.value.examId = Number(route.params.id)
-  queryParams.value.typeId = props.typeId
+  queryParams.value.typeId = props.type
   queryParams.value.testId = Number(route.params.thematicId)
   MethodsUtil.requestApiCustom(QuestionService.PostGetListInfobyTest, TYPE_REQUEST.POST, queryParams.value).then((result: any) => {
     result.data.pageLists.forEach((element: any) => {
@@ -181,31 +185,19 @@ async function actionItem(type: any) {
       break
   }
 }
+
+const isShowAdd = ref(false)
 function handlerActionHeader(type: any) {
   switch (type) {
     case 'handlerAddButton':
-      isShowDialogAddTeacher.value = true
+      isShowAdd.value = true
       break
 
     default:
       break
   }
 }
-async function handleAddTeacher(data: any) {
-  const params = {
-    examId: Number(route.params.id),
-    testId: Number(route.params.thematicId),
-    userModel: data,
-  }
-  await MethodsUtil.requestApiCustom(ExamService.PostCreatePeople, TYPE_REQUEST.POST, params).then((result: any) => {
-    getListTeacher()
-    toast('SUCCESS', t(result.message))
-    isShowDialogAddTeacher.value = false
-  })
-    .catch((err: any) => {
-      toast('ERROR', window.getErrorsMessage(err.response.data.errors, t))
-    })
-}
+
 onMounted(() => {
   const { callBackAction } = storeToRefs(storeTable)
   callBackAction.value = actionItem
@@ -216,7 +208,7 @@ watch(queryParams.value, (val: any) => {
 </script>
 
 <template>
-  <div>
+  <div v-if="!isShowAdd">
     <div class="mt-6">
       <CpActionHeaderPage
         :title="t('list-tests')"
@@ -356,9 +348,11 @@ watch(queryParams.value, (val: any) => {
       :confirmation-msg="t('delete-teacher')"
       @confirm="confirmDialogDelete"
     />
-    <CpMdAddTypeUser
-      v-model:is-dialog-visible="isShowDialogAddTeacher"
-      @confirm="handleAddTeacher"
+    <CpActionFooterEdit
+      @on-cancel="emit('cancel')"
     />
+  </div>
+  <div v-else>
+    <CpTestThematic v-model:isShowAdd="isShowAdd" />
   </div>
 </template>

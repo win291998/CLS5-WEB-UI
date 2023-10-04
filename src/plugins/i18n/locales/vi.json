@@ -3658,5 +3658,7 @@
   "QUE_FromDateBiggerStartDateTestExam": "Ngày bắt đầu lớn hơn ngày bắt đầu chuyên đề thi",
   "QUE_ToDateBiggerEndDateTestExam": "Ngày kết thúc lớn hơn ngày kết thúc chuyên đề thi",
   "QUE_SuperVisorInShiftNotDelete": "Giám sát thi đã tồn tại trong ca thi",
-  "confirm-delete-certification": "Bạn có chắc chắn muốn xóa mẫu chứng nhận này không ?"
+  "confirm-delete-certification": "Bạn có chắc chắn muốn xóa mẫu chứng nhận này không ?",
+  "persistent-status": "Cho phép duy trì trạng thái đang thi khi thời gian kỳ thi kết thúc",
+  "auto-request-face": "Tự động gửi yêu cầu nhận diện học viên"
 }

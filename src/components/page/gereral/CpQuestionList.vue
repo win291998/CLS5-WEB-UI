@@ -2,6 +2,8 @@
 import CpHeaderAction from './CpHeaderAction.vue'
 import CpActionHeaderPage from './CpActionHeaderPage.vue'
 import CpMdQuestionBank from './CpMdQuestionBank.vue'
+import CpContentView from './CpContentView.vue'
+import CpQuestionName from './CpQuestionName.vue'
 import type { Any } from '@/typescript/interface'
 import CmDropDown from '@/components/common/CmDropDown.vue'
 import CmButton from '@/components/common/CmButton.vue'
@@ -36,6 +38,8 @@ interface Props {
 }
 interface Emit {
   (e: 'update:items', data: Any[] | undefined): void
+  (e: 'clickAddQuestion'): void
+  (e: 'editItem', val: Any): void
 }
 const selected = ref<Any[]>([])
 
@@ -54,6 +58,9 @@ function actionItem([{ id, name }, content]: [Any, Any]) {
   switch (id) {
     case 2:
       deleteItem(content)
+      break
+    case 1:
+      emit('editItem', content)
       break
     default:
       break
@@ -143,6 +150,7 @@ function updatePoint(val: number, row: Any) {
     emit('update:items', listQuestions.value)
   }
 }
+const isShowDetailAll = ref(false)
 </script>
 
 <template>
@@ -151,6 +159,7 @@ function updatePoint(val: number, row: Any) {
       :title="t('questions')"
       :is-custom-add-btn="true"
       :title-custom-add="t('create-question')"
+      @click="emit('clickAddQuestion')"
     >
       <template #actions>
         <CmDropDown
@@ -193,7 +202,21 @@ function updatePoint(val: number, row: Any) {
       >
         <template #rowItem="{ col, context }">
           <div v-if="col === 'questions'">
-            {{ context.contentBasic }}
+            <CpQuestionName
+              :status="context.statusId"
+              :content-basic="context.isExpand && [3, 6, 7].includes(context.typeId) ? context.content : context.basic"
+              :is-expand="isShowDetailAll || context.isExpand"
+            >
+              <CpContentView
+                :type="context.typeId"
+                :data="context"
+                :show-content="false"
+                :list-current-id="context.listCurrentId"
+                :show-media="false"
+                disabled
+                show-answer-true
+              />
+            </CpQuestionName>
           </div>
           <div v-if="col === 'unitPoint'">
             <CmTextField

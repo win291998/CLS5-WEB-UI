@@ -3,13 +3,14 @@ import { validatorStore } from '@/stores/validatator'
 import { configStore } from '@/stores/index'
 import CmTextField from '@/components/common/CmTextField.vue'
 import CmCheckBox from '@/components/common/CmCheckBox.vue'
-import CmRadio from '@/components/common/CmRadio.vue'
 import MethodsUtil from '@/utils/MethodsUtil'
+import CmRadio from '@/components/common/CmRadio.vue'
 
 const props = withDefaults(defineProps<Props>(), {})
+
 const emit = defineEmits<Emit>()
 const storeValidate = validatorStore()
-const { schemaOption, Field, Form, useForm, yup } = storeValidate
+const { schemaOption, Field, Form, useForm, yup, ruleMessage } = storeValidate
 const configControl = configStore()
 const { settingDefaults } = storeToRefs(configControl)
 
@@ -21,261 +22,110 @@ const LABEL = Object.freeze({
   LABEL2: t('ratio-req'),
   LABEL3: t('ratio-complete-point'),
 })
-
 interface Props {
-  testConfigModel: TestConfig
   totalQuestion: number
-  isNumberPerPageModel?: boolean
-  isShowRandomModel?: boolean
-  isTimeOfWorkModel?: boolean
-  isAutoLogModel?: boolean
-  isAllowRetakeModel?: boolean
-  isViewDetailModel?: boolean
 }
 
-interface TestConfig {
-  pointRatio: number
-  courseContentId: number | null
-  isShuffleQuestion: boolean
-  requiredPointRatio: number
-  totalQuestionDisplayInPage: number
-  randomQuestion: number
-  minuteOfWork: number
-  writeLogMinute: number
-  numberOfRetake: number
-  retakeResultType: number
-  reviewId: any
-  isRequiredRetest: boolean
-  isDisplayPoint: boolean
-  isDisplayResult: boolean
-  isCorrectAnswer: boolean
-  timeFinish: number
-  isPreserveTime: boolean
-  isReviewTheTest: boolean
-  isMaintainStatus: boolean
-  isCompleteEnoughPoints: boolean
-  isDisplayFalseAnswer: boolean
-  [e: string]: any
-}
-
-const testConfig = ref<TestConfig>({
-  pointRatio: 0,
-  courseContentId: null,
-  isShuffleQuestion: false,
-  requiredPointRatio: 80,
-  totalQuestionDisplayInPage: 0,
-  randomQuestion: 0,
-  minuteOfWork: 0,
-  writeLogMinute: 0,
-  numberOfRetake: 0,
-  retakeResultType: 0,
-  reviewId: null,
-  isRequiredRetest: false,
-  isDisplayPoint: false,
-  isDisplayResult: false,
-  isCorrectAnswer: false,
-  timeFinish: 0,
-  isPreserveTime: false,
-  isReviewTheTest: false,
-  isMaintainStatus: false,
-  isCompleteEnoughPoints: false,
-  isDisplayFalseAnswer: false,
-})
 interface Emit {
-  (e: 'update:testConfigModel', data: any): void
-  (e: 'update:isNumberPerPageModel', data: any): void
-  (e: 'update:isShowRandomModel', data: any): void
-  (e: 'update:isTimeOfWorkModel', data: any): void
-  (e: 'update:isAutoLogModel', data: any): void
-  (e: 'update:isAllowRetakeModel', data: any): void
+  (e: string, value: any): void
 }
-watch(() => props.testConfigModel, val => {
-  testConfig.value = {
-    ...val,
-  }
-  loadDataEdit()
-}, { immediate: true })
 
 const isNumberPerPage = ref(false)
-const isShowRandom = ref(false)
 const isTimeOfWork = ref(false)
 const isAutoLog = ref(false)
 const isViewDetail = ref(false)
 const isAllowRetake = ref(false)
+const isCompleteEnoughPoints = ref(false)
+const isPreserveTime = ref(false)
+const minuteOfWork = ref(false)
 const minuteWork = ref<any>(null)
-const myFormConditions = ref()
+const myFormConfig = ref()
+
+// biến model
+const pointRatio = ref(0)
+const courseContentId = ref(null)
+const requiredPointRatio = ref(80)
+const totalQuestionDisplayInPage = ref(0)
+const writeLogMinute = ref(0)
+const numberOfRetake = ref(0)
+const retakeResultType = ref(0)
+const reviewId = ref(null)
+const isRequiredRetest = ref(false)
+const isDisplayPoint = ref(false)
+const isDisplayResult = ref(false)
+const isCorrectAnswer = ref(false)
+const timeFinish = ref(0)
+const isReviewTheTest = ref(false)
+const isMaintainStatus = ref(false)
+const isDisplayFalseAnswer = ref(false)
 const secondWork = ref<any>(null)
 
-watchEffect(() => {
-  isNumberPerPage.value = props.isNumberPerPageModel
-  isShowRandom.value = props.isShowRandomModel
-  isTimeOfWork.value = props.isTimeOfWorkModel
-  isAutoLog.value = props.isAutoLogModel
-  isAllowRetake.value = props.isAllowRetakeModel
-  isViewDetail.value = props.isViewDetailModel
-})
-const count = ref(2)
+// state mới
+const isShuffle = ref(false)
+const pageSize = ref<number>(0)
+const randomQuestion = ref<number>(0)
+const countDown = ref<number>(0)
+const persistentStatus = ref<boolean>(false)
+const persistentTime = ref<boolean>(false)
+const authRequest = ref<boolean>(false)
+
+// state dùng trên component
+const isShowPageSize = ref(false)
+const isShowRandom = ref(false)
+const isCountDown = ref(false)
+const isAuthRequest = ref(false)
+
 const schema = computed(() => ({
   pointRatio: schemaOption.defaultNumber100YubNoRequire,
-  ...(isNumberPerPage.value ? ({ totalQuestionDisplayInPage: schemaOption.defaultNumberNoReqPosNoNull }) : {}),
+  ...(isShowPageSize.value ? ({ totalQuestionDisplayInPage: schemaOption.defaultNumberNoReqPosNoNull }) : {}),
   ...(isShowRandom.value ? ({ randomQuestion: schemaOption.defaultNumberNoReqPosNoNulls(props.totalQuestion) }) : {}),
   ...(isTimeOfWork.value ? ({ minuteWork: schemaOption.defaultNumberNoReqPosNoNull }) : {}),
   ...(isTimeOfWork.value ? ({ secondWork: schemaOption.defaultNumberTime }) : {}),
   ...(isAutoLog.value ? ({ writeLogMinute: schemaOption.defaultNumberNoReqPosNoNull }) : {}),
   ...(isAllowRetake.value ? ({ numberOfRetake: schemaOption.defaultNumberNoReqPosNoNullNot0 }) : {}),
+  authRequest: yup.number().typeError(ruleMessage.typeNumber).test('positive', ruleMessage.positive, (value: any) => value >= 0).nullable().required(ruleMessage.required()).max(16, 'Số mốc nhỏ hơn hoặc bằng 16'),
 }))
 
-async function getDefaultSetting() {
-  const defaultRatioPoints = settingDefaults.value.find(item => item.typeId === 4)
-  testConfig.value.isCompleteEnoughPoints = !!defaultRatioPoints?.value
-  emit('update:testConfigModel', testConfig.value)
+function updateValue(val: any, text: string) {
+  // value[text] = val
+  // emit('update:testConfigModel', testConfig.value)
 }
 
-// load dữ liệu cập nhật
-function loadDataEdit() {
-  if (testConfig.value.minuteOfWork) {
-    minuteWork.value = Math.floor(testConfig.value.minuteOfWork / 60) || 0
-    secondWork.value = (testConfig.value.minuteOfWork % 60) || 0
-    isTimeOfWork.value = true
-  }
-  if (testConfig.value.totalQuestionDisplayInPage > 0) {
-    isNumberPerPage.value = true
-    emit('update:isNumberPerPageModel', isNumberPerPage.value)
-  }
-
-  if (testConfig.value.randomQuestion > 0) {
-    isShowRandom.value = true
-    emit('update:isShowRandomModel', isShowRandom.value)
-  }
-  if (testConfig.value.writeLogMinute > 0) {
-    isAutoLog.value = true
-    emit('update:isAutoLogModel', isAutoLog.value)
-  }
-  if (testConfig.value.numberOfRetake > 0) {
-    isAllowRetake.value = true
-    emit('update:isAllowRetakeModel', isAllowRetake.value)
-  }
+function allowRetakeChange(val: boolean) {
+  if (retakeResultType.value === 0)
+    retakeResultType.value = 1
 }
-
-// thời gian làm bài thay đổi
 function timeOfWorkChange() {
-  testConfig.value.minuteOfWork = Number(minuteWork.value) * 60 + secondWork.value
-
+  minuteOfWork.value = Number(minuteWork.value) * 60 + secondWork.value
   if (isTimeOfWork.value && minuteWork.value !== null && secondWork.value !== null) {
     if (!(Number(minuteWork.value) * 60 + Number(secondWork.value) > 0))
-      testConfig.value.isPreserveTime = false
+      isPreserveTime.value = false
   }
   else {
-    testConfig.value.isPreserveTime = false
+    isPreserveTime.value = false
   }
-  emit('update:testConfigModel', testConfig.value)
-}
-
-// cho phép làm lại thay đổi
-function allowRetakeChange(val: boolean) {
-  emit('update:isAllowRetakeModel', val)
-  if (testConfig.value.retakeResultType === 0) {
-    testConfig.value.retakeResultType = 1
-    emit('update:testConfigModel', testConfig.value)
-  }
-}
-function changeCompleteEnoughPoints(valuePoint: any) {
-  testConfig.value.isCompleteEnoughPoints = valuePoint
-  if (valuePoint === null)
-    testConfig.value.isCompleteEnoughPoints = true
-  else
-    testConfig.value.isCompleteEnoughPoints = valuePoint
-  emit('update:testConfigModel', testConfig.value)
 }
 function changeReviewMode(val: any, type: any) {
-  testConfig.value[type] = val
+  [type] = val
   if (type === 'isDisplayFalseAnswer' && val) {
-    testConfig.value.isCorrectAnswer = false
-    testConfig.value.isDisplayResult = false
+    isCorrectAnswer.value = false
+    isDisplayResult.value = false
   }
   if (val && ['isCorrectAnswer', 'isDisplayResult'].includes(type))
-    testConfig.value.isDisplayFalseAnswer = false
-
-  emit('update:testConfigModel', testConfig.value)
+    isDisplayFalseAnswer.value = false
 }
-
-function updateValue(val: any, text: string) {
-  testConfig.value[text] = val
-  emit('update:testConfigModel', testConfig.value)
-}
-
-loadDataEdit()
-if (!route.params.contentId)
-  getDefaultSetting()
 
 defineExpose({
-  myFormConditions,
+  myFormConfig,
 })
 </script>
 
 <template>
   <div class="mt-6">
     <Form
-      ref="myFormConditions"
+      ref="myFormConfig"
       :validation-schema="schema"
     >
-      <VRow>
-        <VCol
-          cols="12"
-        >
-          <div class="d-flex align-center mb-4">
-            <div
-              class="d-flex align-center mr-4 text-medium-md"
-            >
-              <div>{{ LABEL.LABEL2 }}</div>
-            </div>
-            <div>
-              <div class="d-flex align-center">
-                <Field
-                  v-slot="{ field, errors }"
-                  :disabled="isViewDetail"
-                  :model-value="testConfig.pointRatio"
-                  type="number"
-                  name="pointRatio"
-                >
-                  <div class="mr-6">
-                    <div class="d-flex align-center">
-                      <div class="mr-1 conditon-input">
-                        <CmTextField
-                          v-model="testConfig.pointRatio"
-                          :field="field"
-                          type="number"
-                          :disabled="isViewDetail"
-                          style="width: 80px;"
-                          :min="0"
-                          :max="100"
-                          @update:model-value="updateValue($event, 'pointRatio')"
-                        />
-                      </div>
-                      <span class="text-regular-md">%</span>
-                    </div>
-                    <div
-                      v-if="errors.length"
-                      class="styleError text-errors"
-                    >
-                      {{ t(MethodsUtil.showErrorsYub(errors)) }}
-                    </div>
-                  </div>
-                </Field>
-                <div class="mr-3 conditon-input">
-                  <CmCheckBox
-                    v-model="testConfig.isCompleteEnoughPoints"
-                    :disabled="isViewDetail"
-                    :label="LABEL.LABEL3"
-                    @change="changeCompleteEnoughPoints"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </VCol>
-      </VRow>
-
       <VRow>
         <VCol class="d-flex align-center mr-4 text-semibold-md">
           <div>{{ t('setting-custom') }}</div>
@@ -285,9 +135,9 @@ defineExpose({
       <VRow>
         <VCol>
           <CmCheckBox
-            :model-value="testConfig.isShuffleQuestion"
+            :model-value="isShuffle"
             :disabled="isViewDetail"
-            @update:model-value="updateValue($event, 'isShuffleQuestion')"
+            @update:model-value="updateValue($event, 'isShuffle')"
           >
             <span class="ml-2">{{ t('shuffer-question') }}</span>
           </CmCheckBox>
@@ -300,9 +150,8 @@ defineExpose({
         >
           <div>
             <CmCheckBox
-              v-model:model-value="isNumberPerPage"
+              v-model:model-value="isShowPageSize"
               :disabled="isViewDetail"
-              @update:model-value=" emit('update:isNumberPerPageModel', $event)"
             >
               <div class="ml-2 mr-4 text-medium-md">
                 {{ t('number-pages') }}
@@ -311,21 +160,21 @@ defineExpose({
           </div>
 
           <div
-            v-if="isNumberPerPage"
+            v-if="isShowPageSize"
             class="d-flex align-center h-100"
           >
             <div class="mr-3">
               <Field
                 v-slot="{ field, errors }"
                 :disabled="isViewDetail"
-                :model-value="testConfig.totalQuestionDisplayInPage"
+                :model-value="pageSize"
                 name="totalQuestionDisplayInPage"
                 type="number"
               >
                 <div class="d-flex align-center h-100">
                   <div class="mr-3 conditon-input">
                     <CmTextField
-                      v-model="testConfig.totalQuestionDisplayInPage"
+                      v-model="pageSize"
                       :field="field"
                       type="number"
                       style="width: 90px;"
@@ -370,7 +219,7 @@ defineExpose({
             <div class="mr-3">
               <Field
                 v-slot="{ field, errors }"
-                :model-value="testConfig.randomQuestion"
+                :model-value="randomQuestion"
                 :disabled="isViewDetail"
                 name="randomQuestion"
                 type="number"
@@ -379,7 +228,7 @@ defineExpose({
                   <div class="d-flex align-center">
                     <div class="mr-3 conditon-input">
                       <CmTextField
-                        v-model="testConfig.randomQuestion"
+                        v-model="randomQuestion"
                         :field="field"
                         type="number"
                         :disabled="isViewDetail"
@@ -387,7 +236,7 @@ defineExpose({
                         @update:model-value="updateValue($event, 'randomQuestion')"
                       />
                     </div>
-                    <span class="text-regular-md">{{ t('over') }} {{ 2 }} {{ t('question').toLowerCase() }}</span>
+                    <span class="text-regular-md">{{ t('over') }} {{ totalQuestion }} {{ t('question').toLowerCase() }}</span>
                   </div>
                   <div
                     v-if="errors.length"
@@ -402,6 +251,64 @@ defineExpose({
         </VCol>
       </VRow>
 
+      <VRow>
+        <VCol class="d-flex align-center">
+          <CmCheckBox
+            v-model:model-value="isCountDown"
+            :disabled="isViewDetail"
+          >
+            <div class="ml-2 mr-4 text-medium-md">
+              {{ t('countdown-on-exam') }}
+            </div>
+          </CmCheckBox>
+          <div
+            v-if="isCountDown"
+            class="d-flex align-center"
+          >
+            <div class="mr-3">
+              <Field
+                v-slot="{ field, errors }"
+                :disabled="isViewDetail"
+                :model-value="minuteWork"
+                name="minuteWork"
+                type="number"
+              >
+                <div class="mr-3">
+                  <div class="d-flex align-center">
+                    <div class="mr-3 conditon-input">
+                      <CmTextField
+                        v-model="countDown"
+                        :field="field"
+                        type="number"
+                        :disabled="isViewDetail"
+                        :min="0"
+                        :max="59"
+                        @change="timeOfWorkChange"
+                      />
+                    </div>
+                    <span class="text-regular-md">{{ t('minutes').toLowerCase() }}</span>
+                  </div>
+                  <div
+                    v-if="errors.length"
+                    class="styleError text-errors"
+                  >
+                    {{ t(MethodsUtil.showErrorsYub(errors)) }}
+                  </div>
+                </div>
+              </Field>
+            </div>
+          </div>
+        </VCol>
+      </VRow>
+      <VRow>
+        <VCol>
+          <CmCheckBox v-model:model-value="persistentStatus">
+            <div class="ml-2 mr-4 text-medium-md">
+              {{ t('persistent-status') }}
+            </div>
+          </CmCheckBox>
+        </VCol>
+      </VRow>
       <VRow>
         <VCol class="d-flex align-center">
           <CmCheckBox
@@ -449,38 +356,64 @@ defineExpose({
                 </div>
               </Field>
             </div>
-            <div class="mr-3">
-              <Field
-                v-slot="{ field, errors }"
-                :model-value="secondWork"
-                :disabled="isViewDetail"
-                name="secondWork"
-                type="number"
-              >
-                <div class="mr-6">
-                  <div class="d-flex align-center">
-                    <div class="mr-3 conditon-input">
-                      <CmTextField
-                        v-model="secondWork"
-                        :field="field"
-                        type="number"
-                        :disabled="isViewDetail"
-                        :min="0"
-                        :max="59"
-                        @change="timeOfWorkChange"
-                      />
-                    </div>
-                    <span class="text-regular-md">{{ t('seconds').toLowerCase() }}</span>
-                  </div>
-                  <div
-                    v-if="errors.length"
-                    class="styleError text-errors"
-                  >
-                    {{ t(MethodsUtil.showErrorsYub(errors)) }}
-                  </div>
-                </div>
-              </Field>
+          </div>
+        </VCol>
+      </VRow>
+      <VRow>
+        <VCol>
+          <CmCheckBox v-model:model-value="persistentTime">
+            <div class="ml-2 mr-4 text-medium-md">
+              {{ t('preserving-time') }}
             </div>
+          </CmCheckBox>
+        </VCol>
+      </VRow>
+      <VRow>
+        <VCol cols="3">
+          <CmCheckBox
+            v-model:model-value="isAuthRequest"
+            :disabled="isViewDetail"
+          >
+            <div class="ml-2 mr-4 text-medium-md">
+              {{ t('auto-request-face') }}
+            </div>
+          </CmCheckBox>
+        </VCol>
+        <VCol
+          v-if="isAuthRequest"
+          class="d-flex align-center"
+        >
+          <div class="mr-3">
+            <Field
+              v-slot="{ field, errors }"
+              :model-value="authRequest"
+              :disabled="isViewDetail"
+              name="authRequest"
+              type="number"
+            >
+              <div class="mr-3">
+                <div class="d-flex align-center">
+                  <div class="mr-3 conditon-input">
+                    <CmTextField
+                      :model-value="authRequest"
+                      :field="field"
+                      type="number"
+                      style="width:7rem"
+                      :disabled="isViewDetail"
+                      :min="0"
+                      @update:model-value="updateValue($event, 'authRequest')"
+                    />
+                  </div>
+                  <span class="text-regular-md">{{ t('minutes').toLowerCase() }}</span>
+                </div>
+                <div
+                  v-if="errors.length"
+                  class="styleError text-errors"
+                >
+                  {{ t(MethodsUtil.showErrorsYub(errors)) }}
+                </div>
+              </div>
+            </Field>
           </div>
         </VCol>
       </VRow>
@@ -502,7 +435,7 @@ defineExpose({
             <div class="mr-3">
               <Field
                 v-slot="{ field, errors }"
-                :model-value="testConfig.writeLogMinute"
+                :model-value="writeLogMinute"
                 :disabled="isViewDetail"
                 name="writeLogMinute"
                 type="number"
@@ -511,7 +444,7 @@ defineExpose({
                   <div class="d-flex align-center">
                     <div class="mr-3 conditon-input">
                       <CmTextField
-                        :model-value="testConfig.writeLogMinute"
+                        :model-value="writeLogMinute"
                         :field="field"
                         type="number"
                         style="width:7rem"
@@ -555,7 +488,7 @@ defineExpose({
               <div class="mr-3">
                 <Field
                   v-slot="{ field, errors }"
-                  :model-value="testConfig.numberOfRetake"
+                  :model-value="numberOfRetake"
                   :disabled="isViewDetail"
                   name="numberOfRetake"
                   type="number"
@@ -564,7 +497,7 @@ defineExpose({
                     <div class="d-flex align-center">
                       <div class="mr-3 conditon-input">
                         <CmTextField
-                          v-model="testConfig.numberOfRetake"
+                          v-model="numberOfRetake"
                           :field="field"
                           type="number"
                           :disabled="isViewDetail"
@@ -593,7 +526,7 @@ defineExpose({
           >
             <div class="d-flex align-center mr-4">
               <CmRadio
-                v-model="testConfig.retakeResultType"
+                v-model="retakeResultType"
                 :disabled="isViewDetail"
                 name="retakeResultType"
                 :type="1"
@@ -611,7 +544,7 @@ defineExpose({
           >
             <div class="d-flex align-center mr-4">
               <CmRadio
-                :model-value="testConfig.retakeResultType"
+                :model-value="retakeResultType"
                 :disabled="isViewDetail"
                 name="retakeResultType"
                 :type="1"
@@ -628,7 +561,7 @@ defineExpose({
             class="ml-9 mt-2 d-flex align-center"
           >
             <CmCheckBox
-              :model-value="testConfig.isRequiredRetest"
+              :model-value="isRequiredRetest"
               :disabled="isViewDetail"
               @update:model-value="updateValue($event, 'isRequiredRetest')"
             >
@@ -643,7 +576,7 @@ defineExpose({
       <VRow>
         <VCol>
           <CmCheckBox
-            :model-value="testConfig.isDisplayPoint"
+            :model-value="isDisplayPoint"
             :disabled="isViewDetail"
             @update:model-value="updateValue($event, 'isDisplayPoint')"
           >
@@ -668,7 +601,7 @@ defineExpose({
           <div class=" d-flex align-center">
             <div class="d-flex align-center mr-4">
               <CmRadio
-                :model-value="testConfig.reviewId"
+                :model-value="reviewId"
                 name="time"
                 :type="1"
                 :value="1"
@@ -682,7 +615,7 @@ defineExpose({
           <div class="mt-3 d-flex align-center">
             <div class="d-flex align-center mr-4">
               <CmRadio
-                :model-value="testConfig.reviewId"
+                :model-value="reviewId"
                 name="time"
                 :type="1"
                 :value="2"
@@ -696,7 +629,7 @@ defineExpose({
           <div class="mt-3 d-flex align-center">
             <div class="d-flex align-center mr-4">
               <CmRadio
-                :model-value="testConfig.reviewId"
+                :model-value="reviewId"
                 name="time"
                 :type="1"
                 :value="3"
@@ -708,11 +641,11 @@ defineExpose({
             </div>
           </div>
           <div
-            v-if="testConfig.reviewId === 3"
+            v-if="reviewId === 3"
             class="ml-9 mt-2 d-flex align-center"
           >
             <CmCheckBox
-              v-model:model-value="testConfig.isCorrectAnswer"
+              v-model:model-value="isCorrectAnswer"
               :disabled="isViewDetail"
               @change="changeReviewMode($event, 'isCorrectAnswer')"
             >
@@ -722,11 +655,11 @@ defineExpose({
             </CmCheckBox>
           </div>
           <div
-            v-if="testConfig.reviewId === 3"
+            v-if="reviewId === 3"
             class="ml-9 mt-2 d-flex align-center"
           >
             <CmCheckBox
-              v-model:model-value="testConfig.isDisplayResult"
+              v-model:model-value="isDisplayResult"
               :disabled="isViewDetail"
               @change="changeReviewMode($event, 'isDisplayResult')"
             >
@@ -736,11 +669,11 @@ defineExpose({
             </CmCheckBox>
           </div>
           <div
-            v-if="testConfig.reviewId === 3"
+            v-if="reviewId === 3"
             class="ml-9 mt-2 d-flex align-center"
           >
             <CmCheckBox
-              v-model:model-value="testConfig.isDisplayFalseAnswer"
+              v-model:model-value="isDisplayFalseAnswer"
               :disabled="isViewDetail"
               @change="changeReviewMode($event, 'isDisplayFalseAnswer')"
             >

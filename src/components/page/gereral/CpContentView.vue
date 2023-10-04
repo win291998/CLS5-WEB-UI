@@ -157,7 +157,34 @@ watch(() => props.data, (val: any) => dataValue.value = val)
       :is-hide-not-choose="isHideNotChoose"
     />
     <div v-else-if="dataValue?.isGroup">
+      <div v-if="!isSentence">
+        <div class="mb-1">
+          <div>
+            {{ t('general-request') }}
+          </div>
+          <div v-html="dataValue.content" />
+        </div>
+        <div
+          v-for="(qsItem, index) in dataValue?.questions"
+          :key="qsItem.id"
+          class="mb-5"
+        >
+          <CpContentView
+            :type="qsItem.typeId"
+            :data="qsItem"
+            :show-media="false"
+            :number-question="`${numberQuestion}.${index + 1}`"
+            :disabled="isReview"
+            :is-review="isReview"
+            :total-point="totalPoint"
+            :is-sentence="isSentence"
+            :is-show-ans-false="isReview"
+            :is-show-ans-true="isReview"
+          />
+        </div>
+      </div>
       <CpSpliterView
+        v-else
         :id="dataValue.id"
         orientation="vertical"
         class="mb-5"
@@ -184,7 +211,7 @@ watch(() => props.data, (val: any) => dataValue.value = val)
               :disabled="isReview"
               :is-review="isReview"
               :total-point="totalPoint"
-              is-sentence
+              :is-sentence="isSentence"
               :is-show-ans-false="isReview"
               :is-show-ans-true="isReview"
             />
