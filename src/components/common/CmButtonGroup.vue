@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// eslint-disable-next-line vue/no-dupe-keys
 import type { size } from '@/typescript/enums/enums'
 
 /**
@@ -13,8 +14,8 @@ import type { size } from '@/typescript/enums/enums'
  * }
  * icon: icon hiển thị của prepend button
  * isBorder: có hiển thị border giữa 2 button
- * isDiabledPrepend: boolean này tự hiểu
- * isDiabledAppend: boolean này tự hiểu
+ * isDisabledPrepend: boolean này tự hiểu
+ * isDisabledAppend: boolean này tự hiểu
  * size: 'x-small', 'small', 'default', 'large', 'x-large'
 */
 
@@ -23,8 +24,8 @@ interface Props {
   icon?: string
   color?: string
   isBorder?: boolean
-  isDiabledPrepend?: boolean
-  isDiabledAppend?: boolean
+  isDisabledPrepend?: boolean
+  isDisabledAppend?: boolean
   size?: typeof size[any]
   title: string
   type?: string

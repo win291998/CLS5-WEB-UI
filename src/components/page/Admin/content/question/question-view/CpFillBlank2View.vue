@@ -86,7 +86,7 @@ const questionValue = ref(window._.cloneDeep(props.data))
 function changeValue(value: any) {
   console.log(value)
   const contentSelect = ref()
-  questionValue.value.answers.forEach((item: any) => {
+  questionValue.value.answers?.forEach((item: any) => {
     console.log(item.position === listCurrent.value)
 
     if (item.position === listCurrent.value)
@@ -110,7 +110,7 @@ watch(() => props.data, val => {
   questionValue.value = val
 }, { immediate: true, deep: true })
 
-questionValue.value.answers.forEach((item: any, index: number) => {
+questionValue.value.answers?.forEach((item: any, index: number) => {
   if (!listAnserView.value[item.position])
     listAnserView.value[item.position] = [toRaw(item)]
   else

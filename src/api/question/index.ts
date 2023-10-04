@@ -71,6 +71,7 @@ const QuestionService = {
   GetListQuestionV5: '/questions',
   GetListQuestionDetailV5: '/questions/with-detail',
   AddQuestion: '/questions',
+  AddTest: '/testCodes',
 
 }
 

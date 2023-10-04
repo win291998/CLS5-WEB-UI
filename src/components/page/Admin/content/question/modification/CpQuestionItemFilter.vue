@@ -139,9 +139,10 @@ function changeValue(key: string, value: any) {
 }
 
 onMounted(() => {
-  if (props.isEdit)
-    getComboboxQuestionLevel()
-
+  watch(() => props.isEdit, val => {
+    if (val)
+      getComboboxQuestionLevel()
+  }, { immediate: true })
   isAutoApprove.value = MethodsUtil.checkPermission(null, 'QuestionManaging', 128) || true
   emit('update:isAutoApprove', isAutoApprove.value)
 })

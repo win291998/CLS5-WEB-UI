@@ -70,6 +70,23 @@ export default [
         },
         component: () => import('@/pages/admin/exam/edit/EditExam.vue'),
       },
+      {
+        path: 'edit/:id/thematic/:thematicId/test/add',
+        name: 'add-test-exam',
+        meta: {
+          breadcrumb: [
+            {
+              title: 'exam-list',
+              to: { name: 'list-exam' },
+            },
+            {
+              title: 'QuestionService.ActionEdit',
+              active: true,
+            },
+          ],
+        },
+        component: () => import('@/pages/admin/exam/edit/EditExam.vue'),
+      },
     ],
   },
 ]

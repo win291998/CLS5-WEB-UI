@@ -1,6 +1,6 @@
 <!-- eslint-disable indent -->
 <script setup lang="ts">
-import CpQuestionListCondition from './CpQuestionListCondition.vue'
+import CpQuestionListCondition from './CpQuestionList.vue'
 import CpConfiguration from './CpConfiguration.vue'
 import { validatorStore } from '@/stores/validatator'
 import CourseService from '@/api/course/index'

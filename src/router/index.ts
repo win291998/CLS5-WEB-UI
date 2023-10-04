@@ -44,17 +44,17 @@ const checkPortal: any = async (next: any, to: any) => {
   store.$dispose()
   const isLoggedIn = isUserLoggedIn()
 
-  if (to.meta.requireAuth) {
-    const requireAuth: any = to.meta.requireAuth || {}
-    const key: string = requireAuth.permissionKey || ''
-    if (!isUserLoggedIn())
-      return next({ name: 'login' })
+  // if (to.meta.requireAuth) {
+  //   const requireAuth: any = to.meta.requireAuth || {}
+  //   const key: string = requireAuth.permissionKey || ''
+  //   if (!isUserLoggedIn())
+  //     return next({ name: 'login' })
 
-    if ((Number(permission[key]) & requireAuth.permissionValue) !== requireAuth.permissionValue)
-      return next({ name: 'error-403' })
+  //   if ((Number(permission[key]) & requireAuth.permissionValue) !== requireAuth.permissionValue)
+  //     return next({ name: 'error-403' })
 
-    return next()
-  }
+  //   return next()
+  // }
   if (canNavigate(to)) {
     if (!isLoggedIn) {
       try {

@@ -103,6 +103,7 @@ interface Emit {
 
 const storeTable = tableStore()
 const { handleActionTable } = storeTable
+const { callBackAction } = storeToRefs(storeTable)
 
 // $ref dataTable
 const dataTable = ref()

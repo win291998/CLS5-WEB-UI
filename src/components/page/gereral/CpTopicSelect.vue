@@ -66,10 +66,11 @@ function change() {
   }
   emit('update:modelValue', topicIds.value)
 }
-onMounted(() => {
-  if (props.type && !window._.isEmpty(props.modelValue))
-    getComboboxTopic(props.type)
-})
+
+// onMounted(() => {
+//   if (props.type && !window._.isEmpty(props.modelValue))
+//     getComboboxTopic(props.type)
+// })
 
 const isShowModalEdit = ref(false)
 interface DataInput {

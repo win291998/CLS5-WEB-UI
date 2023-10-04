@@ -186,7 +186,7 @@ function startDrag(event: any) {
 
 /* kết thúc kéo thả */
 function dragEnd(event: any) {
-  dragElement.value.parentNode.removeChild(dragElement.value)
+  dragElement.value?.parentNode.removeChild(dragElement.value)
   dragElement.value = null
   if (event.target.classList.contains('droped'))
     event.target.style.display = ''
