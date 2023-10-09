@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { VBottomSheet } from 'vuetify/labs/VBottomSheet'
+import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 import CmChip from '@/components/common/CmChip.vue'
-import CpContentView from '@/components/page/gereral/CpContentView.vue'
-import { fetchData } from '@/mock/exam/'
-import CmButton from '@/components/common/CmButton.vue'
+import CpContentView from '@/components/page/gereral/page/user/CpContentView.vue'
+import CpControlQuestionNumber from '@/components/page/users/exam/test/CpControlQuestionNumber.vue'
+import { myExamManagerStore } from '@/stores/user/exam/exam'
+import CpConfirmDialog from '@/components/page/gereral/CpConfirmDialog.vue'
 
 const emit = defineEmits<Emit>()
 interface Emit {
@@ -15,7 +17,13 @@ const route = useRoute()
 const router = useRouter()
 const sheet = ref(false)
 const layoutMobile = ref(false)
-
+const myExamManagerManager = myExamManagerStore()
+const { questionStore, totalPoint, isShowModalSubmit } = storeToRefs(myExamManagerManager)
+const { submitExam } = myExamManagerManager
+const config = ref({
+  wheelPropagation: false,
+  suppressScrollX: true,
+})
 function handleResize() {
   // Kiểm tra kích thước màn hình và cập nhật giá trị visibleItems
   if (window.innerWidth >= 769)
@@ -118,21 +126,8 @@ onUnmounted(() => {
 //     isAnswered: false,
 //   },
 // ])
-const questions = ref()
-const totalPoint = ref()
-async function getQuestionListTest() {
-  await fetchData().then((value: any) => {
-    questions.value = value.data.questions
-    totalPoint.value = value.data.totalPoint
-  })
-}
 
-const isReview = ref(true)
-
-onMounted(() => {
-  console.log('123')
-})
-getQuestionListTest()
+const isReview = ref(false)
 </script>
 
 <template>
@@ -157,67 +152,51 @@ getQuestionListTest()
       <div class="flex-center text-semibold-md color-primary">
         Thời gian thi: 100 phút
       </div>
-      <div class="mt-content mt-8">
+      <PerfectScrollbar
+        :options="config"
+        style="max-height: 100vh;"
+      >
         <div
-          v-for="(qs, pos) in questions"
-          :key="qs.id"
+          id="mt-content"
+          class="mt-content mt-8"
         >
-          <div v-if="qs.typeId !== 10">
-            <CpContentView
-              :type="qs.typeId"
-              :data="qs"
-              :number-question="pos + 1"
-              :disabled="isReview"
-              :is-review="isReview"
-              :total-point="totalPoint"
-              is-sentence
-              :is-show-ans-false="isReview"
-              :is-show-ans-true="isReview"
-              @loaded="emit('loaded')"
-            />
-            <!--
-              disabled
-              is-show-ans-true
-              is-show-ans-false
-              is-hide-not-choose
-            -->
-          </div>
-          <div v-if="qs.typeId === 10 && qs">
-            <div class="text-medium-md text-cluse-title">
-              Yêu cầu chung: Nội dung câu hỏi chùm câu hỏi chùm câu hỏi chùm
-            </div>
-            <div
-              v-for="(qsItem, pos) in qs.questions"
-              :key="qsItem.id"
-              class="mb-5"
-            >
+          <div
+            v-for="(qs, pos) in questionStore"
+            :key="qs.id"
+          >
+            <div>
               <CpContentView
+                v-model:data="questionStore[pos]"
                 :type="qs.typeId"
-                :data="qs"
-                is-sentence
-                is-show-ans-true
-                is-show-ans-false
-                is-hide-not-choose
                 :number-question="pos + 1"
+                :disabled="isReview"
+                :is-review="isReview"
+                :total-point="totalPoint"
+                is-sentence
+                :is-show-ans-false="isReview"
+                :is-show-ans-true="isReview"
                 @loaded="emit('loaded')"
               />
             </div>
           </div>
         </div>
-      </div>
+      </PerfectScrollbar>
     </div>
     <div
       v-if="!layoutMobile"
       class="mt-right"
     >
-      <CmButton
-        color="secondary"
-        variant="outlined"
-        :title="t('Màn hình kết quả')"
-        @click="router.push({ name: 'my-test-result', params: { id: route.params.id } })"
-      />
+      <CpControlQuestionNumber />
     </div>
   </div>
+  <CpConfirmDialog
+    v-model:is-dialog-visible="isShowModalSubmit"
+    :type="1"
+    variant="outlined"
+    :confirmation-msg-sub-title="t('confirm-submit')"
+    :confirmation-msg="t('submit')"
+    @confirm="submitExam(2)"
+  />
   <div class="mt-mb">
     <VBtn
       v-if="layoutMobile"
@@ -251,7 +230,7 @@ getQuestionListTest()
   </div>
 </template>
 
-<style scoped lang="scss">
+<style  lang="scss">
 .mt{
   display: flex;
   .mt-left{
@@ -261,6 +240,35 @@ getQuestionListTest()
   .mt-right{
     width: 30% ;
     margin-left: 12px;
+    .mt-point{
+      padding: 24px;
+      border-radius: 8px;
+      border: 1px solid rgb(var(--v-gray-300));
+      background:  rgb(var(--v-gray-50));
+    .mt-point-list{
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+
+      .mt-point-item{
+        cursor: pointer;
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        border: 2px solid rgb(var(--v-gray-500));
+        background: #fff;
+        margin: 8px ;
+        &.item-select{
+          color: #fff;
+          border: 2px solid rgb(var(--v-primary-600));
+          background:  rgb(var(--v-primary-600));
+        }
+        &.item-flag{
+          border: 2px solid rgb(var(--v-warning-500));
+        }
+      }
+    }
+    }
   }
 }
 .mt-mb{

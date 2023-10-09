@@ -36,6 +36,7 @@ interface propertyGlobal {
   TYPE_REQUEST?: any,
   formatFullName?: any,
   SERVER_FILE?: string,
+  SERVER_SIGNAL?: string,
   TOKEN_SV_FILE?: string,
   userData?: any,
   notificationApiStatus?: any
@@ -51,7 +52,7 @@ const showAllPageLoading = (type:  typeof typeLoading[number] =null)=> {
         break;
       case 'FULL-OPACITY':
         htmlLoading?.style.setProperty("z-index", "9999", "important");
-        htmlLoading?.style.setProperty("opacity", "0.8", "important");
+        htmlLoading?.style.setProperty("opacity", "0.7", "important");
         break;
       case 'COMPONENT':
         htmlLoading?.style.setProperty("z-index", "999", "important");
@@ -100,6 +101,7 @@ const windowDefineConstProperty = ()=> {
     notificationApiStatus: MethodsUtil.notificationApiStatus,
     SERVER_FILE: process.env.VUE_APP_BASE_SERVER_FILE,
     TOKEN_SV_FILE: `Bearer ${localStorage.getItem(jwtDefaultConfig.storageTokenKeyName) ||  constant.TOKEN_SV_FILE}`,
+    SERVER_SIGNAL: process.env.VUE_APP_BASE_SERVER_SIGNAL,
   }
   defineProperty(global, 'const')
 }

@@ -48,7 +48,7 @@ const queryParams = ref<any>({
 })
 const headers = ref([
   { text: '', value: 'checkbox', width: 50 },
-  { text: t('question'), value: 'name', type: 'custom', width: 650 },
+  { text: t('question'), value: 'name', type: 'custom', width: 550 },
   { text: t('question-type'), value: 'type', type: 'custom' },
   { text: '', value: 'actions', width: 150 },
 ])
@@ -167,7 +167,6 @@ function standardizedDataInitSingle(valueQs: any) {
     const answers: any[] = []
     const answerBlank: any[] = []
     valueQs.answersClone = window._.cloneDeep(valueQs.answers)
-
     valueQs.answers.forEach((element: any) => {
       if (element.isTrue)
         answerBlank[answerBlank.length] = element
@@ -460,7 +459,9 @@ function getContentNameRef(context: any) {
             </CpQuestionName>
           </div>
           <div v-if="col === 'type'">
-            <div>{{ t((QuestionType as any)[context?.typeId.toString()]) }}</div>
+            <div class="text-noWrap">
+              {{ t((QuestionType as any)[context?.typeId.toString()]) }}
+            </div>
             <div
               v-if="context.isGroup"
               class="text-primary"

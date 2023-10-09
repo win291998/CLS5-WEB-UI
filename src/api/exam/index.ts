@@ -6,6 +6,13 @@ const ExamService = {
   GetPeopleInShiftById: '/examTest/get-paging-people-in-shift',
   GetNumberPeopleInShiftAuto: '/examtest/get-number-user-shift-auto',
   GetListTestCodeShift: '/examtest/get-paging-list-test-code-shift',
+  GetExamInfo: '/examtest/get-examinee-info',
+  GetExamResultInfo: '/getExamResultInfo',
+  GetViolationUser: '/ExamSupervising/get-violation-learner',
+  GetSupervisions: '/myexam/get-supervisor-test-exam',
+  GetQuestionResult: '/examtest/get-test-code-question-result',
+  GetQuestionExamId: '/examtest/get-test-code-question',
+  GetStudentExamLog: '/exam/get-pagging-student-exam-logs',
   GetGroupExamTestCombobox: (id: number) => `/examTest/${id}/combobox`,
 
   /** Post */
@@ -29,6 +36,8 @@ const ExamService = {
   PostCreateGroupUser: '/examtest/create-group-user',
   PostDeleteUserGroup: '/ExamTest/delete-list-group',
   PostDeleteOrgTest: '/examtest/create-organizational-structures',
+  PostSaveUserAnswer: '/examtest/set-answer-question',
+  PostStudentExamLog: '/exam/create-student-exam-log',
 
   /** Delete */
 

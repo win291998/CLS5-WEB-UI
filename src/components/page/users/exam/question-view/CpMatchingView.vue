@@ -27,6 +27,8 @@ interface Props {
   point?: number | null
   customKeyValue?: string
   isReview?: boolean
+  isGroup?: boolean // câu trong nhóm
+
 }
 const props = withDefaults(defineProps<Props>(), ({
   data: () => ({
@@ -128,9 +130,7 @@ function drop(evt) {
       // check parent node để thay đổi trạng thái giao diện nối hay không nối
       const dropParent = dropItem.parentNode
       const dragParent = dragItem.parentNode
-      dragParent.classList.add('unMatched')
-      if (dropParent.classList.contains('unMatched'))
-        dropParent.classList.remove('unMatched')
+
       target.classList.remove('hover')
 
       // check vị trí kéo (posDrag) và vị trí thả (posDrop) để lưu vị trí thay đổi answeredValue
@@ -154,6 +154,7 @@ function drop(evt) {
       })
 
       const cloneDataDrop = window._.cloneDeep(cloneData.answers[indexDrop])
+
       cloneData.answers[indexDrop] = {
         ...cloneData.answers[indexDrop],
         content: cloneData.answers[indexDrag].content,
@@ -161,12 +162,13 @@ function drop(evt) {
         answeredValue: posDrop,
         matched: true,
       }
+
       cloneData.answers[indexDrag] = {
         ...cloneData.answers[indexDrag],
         content: cloneDataDrop.content,
         id: cloneDataDrop.id,
         answeredValue: posDrag,
-        matched: false,
+        matched: cloneData.answers[indexDrag].matched,
       }
 
       // cập nhật dữ liệu câu hỏi
@@ -271,7 +273,7 @@ watch(() => props.data, val => {
   questionValue.value = temp
   questionValue.value.isAnswered = questionValue.value.answers.filter((item: any) => item.right.matched).length
   emit('update:isAnswered', questionValue.value.isAnswered)
-}, { immediate: true, deep: true })
+}, { immediate: true })
 </script>
 
 <template>
@@ -323,7 +325,7 @@ watch(() => props.data, val => {
             {
               ansTrue: checkAnsTrueClass(item),
               ansFalse: checkAnsFalseClass(item),
-              unMatched: showAnswerTrue ? false : !item.matched,
+              unMatched: showAnswerTrue ? false : !item.right.matched,
             }
           "
         >

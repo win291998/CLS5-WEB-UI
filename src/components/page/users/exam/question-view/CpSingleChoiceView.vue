@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import CpMediaContent from '@/components/page/gereral/CpMediaContent.vue'
 import CmRadio from '@/components/common/CmRadio.vue'
+import CpMediaContent from '@/components/page/gereral/CpMediaContent.vue'
 import CmButton from '@/components/common/CmButton.vue'
 import MethodsUtil from '@/utils/MethodsUtil'
 
@@ -9,14 +9,13 @@ import MethodsUtil from '@/utils/MethodsUtil'
  */
 interface question {
   content: string
-  answers: Array<any>
   [name: string]: any
 }
 interface Props {
   data: question
-  showContent: boolean
-  showMedia: boolean
-  showAnswerTrue: boolean
+  showContent?: boolean
+  showMedia?: boolean
+  showAnswerTrue?: boolean
   disabled?: boolean // trạng thái chọn
   isShuffle?: boolean
   isShowAnsTrue: boolean // hiện thị câu đúng
@@ -24,15 +23,16 @@ interface Props {
   isSentence?: boolean // trạng thái câu
   isHideNotChoose?: boolean // ẩn hiện thị đáp án các câu không chọn
   typeShow?: number // trạng thái hiện thị
-  numberQuestion?: number | null
+  numberQuestion?: number | null | string
   totalPoint?: number | null
   point?: number | null
   customKeyValue?: string
+  isGroup?: boolean // câu trong nhóm
+
 }
 const props = withDefaults(defineProps<Props>(), ({
   data: () => ({
     content: '',
-    answers: [],
   }),
   showContent: true,
   showMedia: true,
@@ -53,9 +53,9 @@ interface Emit {
   (e: 'update:model-value', val: any): void
   (e: 'update:data', val: any): void
   (e: 'update:isAnswered', val: any): void
-
 }
 const { t } = window.i18n()
+
 function getIndex(position: number) {
   return `${String.fromCharCode(65 + position - 1)}.`
 }
@@ -65,13 +65,14 @@ function changeValue(value: any) {
     item[props.customKeyValue] = item.id === value.id ? true : null
   })
   questionValue.value.isAnswered = true
-  emit('update:isAnswered', true)
   emit('update:data', questionValue.value)
+  emit('update:isAnswered', true)
 }
-const idRandom = ref(MethodsUtil.createRandomId(5))
 function handlePinQs() {
   questionValue.value.isMark = !questionValue.value.isMark
 }
+
+const idRandom = ref(MethodsUtil.createRandomId(5))
 
 watch(() => props.data, val => {
   questionValue.value = val
@@ -92,8 +93,8 @@ watch(() => props.data, val => {
         class="ml-3"
         icon="ic:round-bookmark-border"
         :color="questionValue.isMark ? 'warning' : 'secondary'"
-        color-icon="white"
         is-rounded
+        color-icon="white"
         :size="36"
         :size-icon="20"
         @click="handlePinQs"
@@ -119,7 +120,7 @@ watch(() => props.data, val => {
     </div>
     <div
       v-for="item in questionValue.answers"
-      :key="item"
+      :key="item.id"
       class="item-answer w-100"
       :class="{
         ansTrue: isShowAnsTrue && item.isTrue && (!isHideNotChoose || isHideNotChoose && item[customKeyValue]),
@@ -130,15 +131,38 @@ watch(() => props.data, val => {
         :type="1"
         :model-value="showAnswerTrue ? item.isTrue : ((isShowAnsFalse && !isShowAnsTrue && item.isTrue) ? null : item[customKeyValue]) "
         :disabled="disabled"
-        :name="`TF-${idRandom}-${questionValue.id}`"
+        :name="`single-${idRandom}-${questionValue.id}`"
         :value="true"
         class="mr-3"
         @update:model-value="changeValue(item)"
       />
-
-      <div class="w-100 item-content">
-        <span class="mr-1">{{ getIndex(item.position) }} </span>
-        <span v-html="item.content" />
+      <div
+        class="w-100"
+      >
+        <span class="item-content mr-1">{{ getIndex(item.position) }} </span>
+        <span
+          class="item-content"
+          v-html="item.content"
+        />
+        <div
+          v-if="showMedia && item.urlFile"
+          class="view-media mt-2"
+        >
+          <CpMediaContent
+            :disabled="true"
+            :src="item.urlFile"
+          />
+        </div>
+      </div>
+      <div
+        v-if="isShuffle"
+        :title="item?.isShuffle ? t('allowed-shuffle') : t('not-allowed-shuffle')"
+      >
+        <VIcon
+          icon="iconamoon:playlist-shuffle-light"
+          :size="20"
+          :color="item.isShuffle ? 'primary' : ''"
+        />
       </div>
     </div>
   </div>

@@ -28,6 +28,8 @@ interface Props {
   totalPoint?: number | null
   point?: number | null
   customKeyValue?: string
+  isGroup?: boolean // câu trong nhóm
+
 }
 const props = withDefaults(defineProps<Props>(), ({
   data: () => ({

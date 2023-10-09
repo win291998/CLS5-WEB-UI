@@ -32,6 +32,8 @@ interface Props {
   point?: number | null
   customKeyValue?: string
   isReview?: boolean
+  isGroup?: boolean // câu trong nhóm
+
 }
 const props = withDefaults(defineProps<Props>(), ({
   data: () => ({
@@ -256,7 +258,7 @@ function handlePinQs() {
 watch(() => props.data, val => {
   questionValue.value = val
 
-  // questionValue.value.answersClone = window._.cloneDeep(questionValue.value.answers)
+  questionValue.value.answersClone = window._.cloneDeep(questionValue.value.answers)
   contentBlank.value = formatDataInit()
   attachClickEvent()
   questionValue.value.isAnswered = !!questionValue.value.answers.map((item: any) => item[props.customKeyValue] !== null).length
@@ -309,7 +311,7 @@ watch(() => props.data, val => {
       </div>
       <div class="line-ans">
         <CmBadge
-          v-for="(item, index) in (showAnswerTrue || !isReview && sentence ? questionValue.answers : questionValue.answersClone)"
+          v-for="(item, index) in (!isReview && sentence ? questionValue.answers : questionValue.answersClone)"
           :key="item.id"
           location="top right"
           color="success"

@@ -31,6 +31,8 @@ interface Props {
   point?: number | null
   customKeyValue?: string
   isReview?: boolean
+  isGroup?: boolean // câu trong nhóm
+
 }
 const props = withDefaults(defineProps<Props>(), ({
   data: () => ({

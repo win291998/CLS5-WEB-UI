@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import CpMediaContent from '@/components/page/gereral/CpMediaContent.vue'
 import CmRadio from '@/components/common/CmRadio.vue'
+import CpMediaContent from '@/components/page/gereral/CpMediaContent.vue'
 import CmButton from '@/components/common/CmButton.vue'
 import MethodsUtil from '@/utils/MethodsUtil'
 
@@ -9,7 +9,6 @@ import MethodsUtil from '@/utils/MethodsUtil'
  */
 interface question {
   content: string
-  answers: Array<any>
   [name: string]: any
 }
 interface Props {
@@ -28,11 +27,12 @@ interface Props {
   totalPoint?: number | null
   point?: number | null
   customKeyValue?: string
+  isGroup?: boolean // câu trong nhóm
+
 }
 const props = withDefaults(defineProps<Props>(), ({
   data: () => ({
     content: '',
-    answers: [],
   }),
   showContent: true,
   showMedia: true,
@@ -53,7 +53,6 @@ interface Emit {
   (e: 'update:model-value', val: any): void
   (e: 'update:data', val: any): void
   (e: 'update:isAnswered', val: any): void
-
 }
 const { t } = window.i18n()
 function getIndex(position: number) {
@@ -119,7 +118,7 @@ watch(() => props.data, val => {
     </div>
     <div
       v-for="item in questionValue.answers"
-      :key="item"
+      :key="item.id"
       class="item-answer w-100"
       :class="{
         ansTrue: isShowAnsTrue && item.isTrue && (!isHideNotChoose || isHideNotChoose && item[customKeyValue]),
@@ -130,12 +129,11 @@ watch(() => props.data, val => {
         :type="1"
         :model-value="showAnswerTrue ? item.isTrue : ((isShowAnsFalse && !isShowAnsTrue && item.isTrue) ? null : item[customKeyValue]) "
         :disabled="disabled"
-        :name="`TF-${idRandom}-${questionValue.id}`"
+        :name="`UL-${idRandom}-${questionValue.id}`"
         :value="true"
         class="mr-3"
         @update:model-value="changeValue(item)"
       />
-
       <div class="w-100 item-content">
         <span class="mr-1">{{ getIndex(item.position) }} </span>
         <span v-html="item.content" />

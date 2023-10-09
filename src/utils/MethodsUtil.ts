@@ -241,7 +241,19 @@ export default class MethodsUtil {
     for (let i = 0; i < length; i += 1)
       result += characters.charAt(Math.floor(Math.random() * charactersLength))
 
-    return `randomId-${result}`
+    return `${result}`
+  }
+
+  // kiểm tra loại thiết bị đang dùng
+  static deviceType = () => {
+    const ua = navigator.userAgent
+    if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua))
+      return 'tablet'
+
+    if (/Mobile|Android|iP(hone|od)|IEMobile|BlackBerry|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(ua))
+      return 'mobile'
+
+    return 'desktop'
   }
 
   static getRandomImage = (type = 0) => {
@@ -256,8 +268,6 @@ export default class MethodsUtil {
     const configControl = configStore()
     const { defaultThemeValue } = storeToRefs(configControl)
     return (key: any) => {
-      console.log(defaultThemeValue.value)
-
       const themeItemValue = defaultThemeValue.value?.items?.find(el => el.key === key)
       if (themeItemValue)
         return themeItemValue.value

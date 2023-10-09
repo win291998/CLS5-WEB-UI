@@ -14,6 +14,7 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<Emit>()
 interface Emit {
   (e: 'cancel', value: any): void
+  (e: 'deletes', value: any): void
   (e: 'downloadFile', value?: any, idbtn: number, unload: any): void
   (e: 'refesh', value?: any): void
 }
@@ -40,6 +41,9 @@ const config = ref({
 })
 async function cancel(index: any) {
   emit('cancel', index)
+}
+async function deletes(index: any) {
+  emit('deletes', index)
 }
 async function dowloadItems(item: any, idx: number, unload: any) {
   emit('downloadFile', item, idx, unload)
@@ -123,13 +127,14 @@ watch(() => props.files, val => {
               icon="tabler:x"
               :size-icon="20"
               variant="text"
+              @click="cancel(i)"
             />
             <CmButton
-              v-if="item.type === 0"
+              v-if="item.statusDelete"
               color="infor"
               icon="tabler:trash"
               variant="text"
-              @click="cancel(i)"
+              @click="deletes(i)"
             />
           </template>
           <VListItemTitle>
@@ -143,7 +148,7 @@ watch(() => props.files, val => {
               {{ item.size ? MethodsUtil.formatCapacity(item.size) : t("undefined") }}
             </div>
             <div
-              v-if="item.type === 0"
+              v-if="item.type === 3"
               class="ml-3 text-regular-sm"
             >
               <VProgressLinear

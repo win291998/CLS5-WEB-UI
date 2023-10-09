@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import CmRadio from '@/components/common/CmRadio.vue'
 import CpMediaContent from '@/components/page/gereral/CpMediaContent.vue'
+import MethodsUtil from '@/utils/MethodsUtil'
+import CmButton from '@/components/common/CmButton.vue'
 
 /**
  * Xem chi tiết các loại câu hỏi
@@ -48,6 +50,8 @@ const emit = defineEmits<Emit>()
 interface Emit {
   (e: 'update:model-value', val: any): void
   (e: 'update:data', val: any): void
+  (e: 'update:isAnswered', val: any): void
+
 }
 const { t } = window.i18n()
 function getIndex(position: number) {
@@ -56,11 +60,20 @@ function getIndex(position: number) {
 const questionValue = ref(window._.cloneDeep(props.data))
 function changeValue(pos: any, value: boolean) {
   questionValue.value.answers[pos][props.customKeyValue] = value
+  questionValue.value.isAnswered = true
+  emit('update:isAnswered', true)
   emit('update:data', questionValue.value)
 }
+const idRandom = ref(MethodsUtil.createRandomId(5))
+function handlePinQs() {
+  questionValue.value.isMark = !questionValue.value.isMark
+}
+
 watch(() => props.data, val => {
   questionValue.value = val
-}, { immediate: true, deep: true })
+  questionValue.value.isAnswered = !!questionValue.value.answers.filter((item: any) => item[props.customKeyValue] !== null).length
+  emit('update:isAnswered', questionValue.value.isAnswered)
+}, { immediate: true })
 </script>
 
 <template>
@@ -71,6 +84,7 @@ watch(() => props.data, val => {
     >
       <span class="text-bold-md color-primary">{{ t('sentence') }} {{ numberQuestion }} - {{ point }}/{{ totalPoint }} {{ t('scores') }}</span>
       <CmButton
+        v-if="!isGroup"
         class="ml-3"
         icon="ic:round-bookmark-border"
         :color="questionValue.isMark ? 'warning' : 'secondary'"
@@ -78,6 +92,7 @@ watch(() => props.data, val => {
         is-rounded
         :size="36"
         :size-icon="20"
+        @click="handlePinQs"
       />
     </div>
     <div
@@ -119,7 +134,7 @@ watch(() => props.data, val => {
         :type="1"
         :model-value="showAnswerTrue ? item.isTrue : ((isShowAnsFalse && !isShowAnsTrue && item.isTrue) ? null : item[customKeyValue]) "
         :disabled="disabled"
-        :name="`clauseTF${item.position}-${questionValue.id}`"
+        :name="`clauseTF${idRandom}${item.position}-${questionValue.id}`"
         :value="true"
         class="mr-7"
         @update:model-value="changeValue(pos, true)"
@@ -128,7 +143,7 @@ watch(() => props.data, val => {
         :type="1"
         :model-value="showAnswerTrue ? item.isTrue : ((isShowAnsFalse && !isShowAnsTrue && item.isTrue) ? null : item[customKeyValue]) "
         :disabled="disabled"
-        :name="`clauseTF${item.position}-${questionValue.id}`"
+        :name="`clauseTF${idRandom}${item.position}-${questionValue.id}`"
         :value="false"
         class="mr-3"
         @update:model-value="changeValue(pos, false)"

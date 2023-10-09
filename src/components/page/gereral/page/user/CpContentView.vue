@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import CpSingleChoiceView from '@/components/page/Admin/content/question/question-view/CpSingleChoiceView.vue'
-import CpMultiChoiseView from '@/components/page/Admin/content/question/question-view/CpMultiChoiseView.vue'
-import CpUnderlinedView from '@/components/page/Admin/content/question/question-view/CpUnderlinedView.vue'
-import CpTrueFalseView from '@/components/page/Admin/content/question/question-view/CpTrueFalseView.vue'
-import CpClauseTrueFalseView from '@/components/page/Admin/content/question/question-view/CpClauseTrueFalseView.vue'
-import CpEssayView from '@/components/page/Admin/content/question/question-view/CpEssayView.vue'
-import CpMatchingView from '@/components/page/Admin/content/question/question-view/CpMatchingView.vue'
-import CpFillBlankView from '@/components/page/Admin/content/question/question-view/CpFillBlankView.vue'
-import CpFillBlank2View from '@/components/page/Admin/content/question/question-view/CpFillBlank2View.vue'
+import CpSingleChoiceView from '@/components/page/users/exam/question-view/CpSingleChoiceView.vue'
+import CpMultiChoiseView from '@/components/page/users/exam/question-view/CpMultiChoiseView.vue'
+import CpUnderlinedView from '@/components/page/users/exam/question-view/CpUnderlinedView.vue'
+import CpTrueFalseView from '@/components/page/users/exam/question-view/CpTrueFalseView.vue'
+import CpClauseTrueFalseView from '@/components/page/users/exam/question-view/CpClauseTrueFalseView.vue'
+import CpEssayView from '@/components/page/users/exam/question-view/CpEssayView.vue'
+import CpMatchingView from '@/components/page/users/exam/question-view/CpMatchingView.vue'
+import CpFillBlankView from '@/components/page/users/exam/question-view/CpFillBlankView.vue'
+import CpFillBlank2View from '@/components/page/users/exam/question-view/CpFillBlank2View.vue'
 
 // survey
 import CpSingleChoiseSvView from '@/components/page/Admin/content/survey/survey-view/CpSingleChoiseSvView.vue'
@@ -19,6 +19,7 @@ import CpMatrixSingleSvView from '@/components/page/Admin/content/survey/survey-
 import CpMatrixMultiSvView from '@/components/page/Admin/content/survey/survey-view/CpMatrixMultiSvView.vue'
 
 import CpSpliterView from '@/components/page/gereral/CpSpliterView.vue'
+import CmButton from '@/components/common/CmButton.vue'
 
 const props = withDefaults(defineProps<Props>(), ({
   type: 1,
@@ -39,6 +40,7 @@ const { t } = window.i18n()
 interface Emit {
   (e: 'loaded'): void
   (e: 'update:isAnsweredGroup'): void
+  (e: 'update:data', val: any): void
 }
 
 /**
@@ -141,6 +143,13 @@ function updateAnsweredGroup(value: any, data: any) {
 function checkPointGroup(listQs: any) {
   return listQs.reduce((totalPoint, currentValue) => totalPoint + currentValue.unitPoint, 0)
 }
+function handlePinQs() {
+  dataValue.value.isMark = !dataValue.value.isMark
+}
+function handleUpdateData(val) {
+  emit('update:data', val)
+}
+
 onMounted(() => {
   emit('loaded')
 })
@@ -148,11 +157,14 @@ watch(() => props.data, (val: any) => dataValue.value = val)
 </script>
 
 <template>
-  <div class="w-100">
+  <div
+    :id="dataValue.id"
+    class="w-100"
+  >
     <Component
       :is="isSurvey ? checkTypeSurvey() : checkTypeQuestion()"
       v-if="!dataValue?.isGroup || isSurvey"
-      v-model:data="dataValue"
+      :data="dataValue"
       class="mb-8"
       :show-content="showContent"
       :show-media="showMedia"
@@ -169,7 +181,9 @@ watch(() => props.data, (val: any) => dataValue.value = val)
       :is-show-ans-true="isShowAnsTrue"
       :is-show-ans-false="isShowAnsFalse"
       :is-hide-not-choose="isHideNotChoose"
+      :is-group="isGroup"
       @update:isAnswered="($value) => updateAnswered($value, dataValue)"
+      @update:data="handleUpdateData"
     />
     <div v-else-if="dataValue?.isGroup">
       <div v-if="!isSentence">
@@ -185,10 +199,11 @@ watch(() => props.data, (val: any) => dataValue.value = val)
           class="mb-5"
         >
           <CpContentView
+            :data="dataValue.questions[index]"
             :type="qsItem.typeId"
-            :data="qsItem"
             :show-media="false"
             :show-content="true"
+            :is-group="isGroup"
             :number-question="`${numberQuestion}.${index + 1}`"
             :disabled="disabled || isReview"
             :is-review="isReview"
@@ -218,10 +233,12 @@ watch(() => props.data, (val: any) => dataValue.value = val)
             <CmButton
               class="ml-3"
               icon="ic:round-bookmark-border"
+              :color="dataValue.isMark ? 'warning' : 'secondary'"
               is-rounded
               color-icon="white"
               :size="36"
               :size-icon="20"
+              @click="handlePinQs"
             />
             <div class="mb-1">
               <div>
@@ -238,8 +255,8 @@ watch(() => props.data, (val: any) => dataValue.value = val)
             class="mb-5"
           >
             <CpContentView
+              v-model:data="dataValue.questions[index]"
               :type="qsItem.typeId"
-              :data="qsItem"
               :show-media="false"
               :number-question="`${numberQuestion}.${index + 1}`"
               :disabled="isReview"
