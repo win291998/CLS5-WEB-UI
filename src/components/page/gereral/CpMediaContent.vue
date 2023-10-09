@@ -118,8 +118,8 @@ async function uploadFileLocal(data: any, file: any) {
     })
   }
 }
-function handleDelteFile() {
-  emit('deleteFile')
+function handleDelteFile(val: any) {
+  emit('deleteFile', val)
 }
 function uploadFile() {
   switch (typeFile.value) {
@@ -143,8 +143,9 @@ async function initData(val: any) {
       if (value?.filePath) {
         typeFile.value = MethodsUtil.getMediaType(value.fileExtension)
         fileUpload.value[0].name = value.fileName
-        fileUpload.value[0].type = 1
+        fileUpload.value[0].type = 0
         fileUpload.value[0].statusDownload = 3
+        fileUpload.value[0].statusDelete = !props.disabled
         fileUpload.value[0].size = value.fileSize
         fileUpload.value[0].filePath = value.filePath
         fileUpload.value[0].fileFolder = value.fileFolder
@@ -255,11 +256,12 @@ defineExpose({
       class="d-flex justify-center"
     >
       <CmItemFileUpload
-        v-if="fileUpload[0].type === 1"
+        v-if="fileUpload[0].type === 0"
         :files="fileUpload"
         :type="0"
         class="w-100"
         @downloadFile="downloadFile"
+        @deletes="handleDelteFile"
       />
     </div>
     <div

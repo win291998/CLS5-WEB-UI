@@ -56,11 +56,14 @@ const SERVERFILE = process.env.VUE_APP_BASE_SERVER_FILE
 interface Emit {
   (e: 'update:model-value', val: any): void
   (e: 'update:data', val: any): void
+  (e: 'update:isAnswered', val: any): void
+
 }
 const { t } = window.i18n()
 async function getInfor(folder: any) {
   return await MethodsUtil.requestApiCustom(`${SERVERFILE}${ServerFileService.GetInforFile}${folder}`, TYPE_REQUEST.GET)
 }
+const questionValue = ref(window._.cloneDeep(props.data))
 
 const typeFile = ref<any>()
 const dataFile = ref<any>({
@@ -76,6 +79,7 @@ async function uploadFileLocal(data: any, file: any) {
         dataFile.value.filePath = value.filePath
         dataFile.value.fileFolder = data.fileFolder
         dataFile.value.serverCode = data?.serverCode
+        questionValue.value.answers[0].urlFile = data.fileFolder
       }
     })
   }
@@ -85,16 +89,25 @@ function hanleUploadFileContent(val: any) {
   inputFile.value?.openChooseFile()
 }
 
-const questionValue = ref(window._.cloneDeep(props.data))
 function changeValue(value: any) {
-  questionValue.value.answers.forEach((item: any) => {
-    item[props.customKeyValue] = item.id === value.id ? true : null
-  })
-
+  questionValue.value.answers[0][props.customKeyValue] = value
+  questionValue.value.isAnswered = questionValue.value.answers.filter((item: any) => item[props.customKeyValue] !== null || item.urlFile).length
   emit('update:data', questionValue.value)
 }
+function deleteFile(value: any) {
+  questionValue.value.answers[0].urlFile = null
+  questionValue.value.isAnswered = !!questionValue.value.answers.filter((item: any) => item[props.customKeyValue] !== null || item.urlFile).length
+  emit('update:isAnswered', questionValue.value.isAnswered)
+  emit('update:data', questionValue.value)
+}
+function handlePinQs() {
+  questionValue.value.isMark = !questionValue.value.isMark
+}
+
 watch(() => props.data, val => {
   questionValue.value = val
+  questionValue.value.isAnswered = !!questionValue.value.answers.filter((item: any) => item[props.customKeyValue] !== null || item.urlFile).length
+  emit('update:isAnswered', questionValue.value.isAnswered)
 }, { immediate: true, deep: true })
 </script>
 
@@ -106,6 +119,7 @@ watch(() => props.data, val => {
     >
       <span class="text-bold-md color-primary">{{ t('sentence') }} {{ numberQuestion }} - {{ point }}/{{ totalPoint }} {{ t('scores') }}</span>
       <CmButton
+        v-if="!isGroup"
         class="ml-3"
         icon="ic:round-bookmark-border"
         :color="questionValue.isMark ? 'warning' : 'secondary'"
@@ -113,6 +127,7 @@ watch(() => props.data, val => {
         is-rounded
         :size="36"
         :size-icon="20"
+        @click="handlePinQs"
       />
     </div>
     <div
@@ -141,27 +156,20 @@ watch(() => props.data, val => {
         :model-value="questionValue.answers[0][customKeyValue]"
         :text="t('answers')"
         :disabled="disabled"
+        @update:model-value="changeValue"
       />
       <div
         v-if="!isReview"
-        class="mt-6"
+        class="mt-6 mb-4"
       >
         <CpInputFileDrop
           ref="inputFile"
-          v-model:src="questionValue.answers[0].urlFile"
+          v-model="questionValue.answers[0].urlFile"
           :disabled="disabled"
           class="w-100 "
           :is-btn-download="false"
           @change="uploadFileLocal"
-        />
-      </div>
-
-      <div
-        v-if="questionValue.answers[0].urlFile"
-      >
-        <CpMediaContent
-          :disabled="true"
-          :src="questionValue.answers[0].urlFile"
+          @deleteFile="deleteFile"
         />
       </div>
     </div>

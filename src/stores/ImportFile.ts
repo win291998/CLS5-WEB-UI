@@ -152,7 +152,7 @@ export const useImportFileStore = defineStore('importFile', () => {
     const listData: any = []
     readXlsxFile(input).then(rows => {
       if (rows.length <= 2) {
-        // console.log('error')
+        toast('WARNING', t('file-error'))
       }
       else {
         for (let i = 2; i < rows.length; i += 1) {

@@ -8,4 +8,12 @@ export default [
     },
     component: () => import('@/pages/errors/Error403.vue'),
   },
+  {
+    path: '/error-404',
+    name: 'error-404',
+    meta: {
+      layout: 'blank',
+    },
+    component: () => import('@/pages/errors/Error404.vue'),
+  },
 ]

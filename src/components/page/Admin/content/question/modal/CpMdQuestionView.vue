@@ -33,9 +33,9 @@ async function onCancel() {
 async function onConfirm() {
   //
 }
-
+const dataClone = ref()
 watch(() => props.isShowModal, isShow => {
-//
+  dataClone.value = window._.cloneDeep(props.data)
 })
 </script>
 
@@ -49,27 +49,24 @@ watch(() => props.isShowModal, isShow => {
       @cancel="onCancel"
       @confirm="onConfirm"
     >
-      <div v-if="data.typeId !== 10">
+      <div v-if="dataClone.typeId !== 10">
         <CpContentView
-          :type="data.typeId"
-          :data="data"
-          is-review
-          :show-answer-true="false"
+          :type="dataClone.typeId"
+          :data="dataClone"
         />
       </div>
-      <div v-if="data.typeId === 10 && data">
+      <div v-if="dataClone.typeId === 10 && dataClone">
         <div class="text-medium-md text-cluse-title">
           Yêu cầu chung: Nội dung câu hỏi chùm câu hỏi chùm câu hỏi chùm
         </div>
         <div
-          v-for="qsItem in data?.questions"
+          v-for="qsItem in dataClone?.questions"
           :key="qsItem.id"
           class="mb-5"
         >
           <CpContentView
             :type="qsItem.typeId"
             :data="qsItem"
-            :show-answer-true="false"
           />
         </div>
       </div>

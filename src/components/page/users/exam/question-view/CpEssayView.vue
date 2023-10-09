@@ -1,15 +1,17 @@
 <script setup lang="ts">
 import CpMediaContent from '@/components/page/gereral/CpMediaContent.vue'
-import CmRadio from '@/components/common/CmRadio.vue'
-import CmButton from '@/components/common/CmButton.vue'
+import CmInputEditor from '@/components/common/inputEditor/CmInputEditor.vue'
+import CpInputFileDrop from '@/components/page/gereral/CpInputFileDrop.vue'
 import MethodsUtil from '@/utils/MethodsUtil'
+import { TYPE_REQUEST } from '@/typescript/enums/enums'
+import ServerFileService from '@/api/server-file/index'
+import CmButton from '@/components/common/CmButton.vue'
 
 /**
  * Xem chi tiết các loại câu hỏi
  */
 interface question {
   content: string
-  answers: Array<any>
   [name: string]: any
 }
 interface Props {
@@ -28,11 +30,13 @@ interface Props {
   totalPoint?: number | null
   point?: number | null
   customKeyValue?: string
+  isReview?: boolean
+  isGroup?: boolean // câu trong nhóm
+
 }
 const props = withDefaults(defineProps<Props>(), ({
   data: () => ({
     content: '',
-    answers: [],
   }),
   showContent: true,
   showMedia: true,
@@ -49,6 +53,8 @@ const props = withDefaults(defineProps<Props>(), ({
   customKeyValue: 'answeredValue',
 }))
 const emit = defineEmits<Emit>()
+const urlFile = ref()
+const SERVERFILE = process.env.VUE_APP_BASE_SERVER_FILE
 interface Emit {
   (e: 'update:model-value', val: any): void
   (e: 'update:data', val: any): void
@@ -56,28 +62,55 @@ interface Emit {
 
 }
 const { t } = window.i18n()
-function getIndex(position: number) {
-  return `${String.fromCharCode(65 + position - 1)}.`
+async function getInfor(folder: any) {
+  return await MethodsUtil.requestApiCustom(`${SERVERFILE}${ServerFileService.GetInforFile}${folder}`, TYPE_REQUEST.GET)
 }
 const questionValue = ref(window._.cloneDeep(props.data))
+
+const typeFile = ref<any>()
+const dataFile = ref<any>({
+  filePath: null,
+  fileFolder: null,
+})
+async function uploadFileLocal(data: any, file: any) {
+  if (data?.fileFolder) {
+    await getInfor(data?.fileFolder).then((value: any) => {
+      if (value?.filePath) {
+        typeFile.value = MethodsUtil.getMediaType(value.fileExtension)
+        urlFile.value = value.filePath
+        dataFile.value.filePath = value.filePath
+        dataFile.value.fileFolder = data.fileFolder
+        dataFile.value.serverCode = data?.serverCode
+        questionValue.value.answers[0].urlFile = data.fileFolder
+      }
+    })
+  }
+}
+const inputFile = ref<any>(null)
+function hanleUploadFileContent(val: any) {
+  inputFile.value?.openChooseFile()
+}
+
 function changeValue(value: any) {
-  questionValue.value.answers.forEach((item: any) => {
-    item[props.customKeyValue] = item.id === value.id ? true : null
-  })
-  questionValue.value.isAnswered = true
-  emit('update:isAnswered', true)
+  questionValue.value.answers[0][props.customKeyValue] = value
+  questionValue.value.isAnswered = questionValue.value.answers.filter((item: any) => item[props.customKeyValue] !== null || item.urlFile).length
   emit('update:data', questionValue.value)
 }
-const idRandom = ref(MethodsUtil.createRandomId(5))
+function deleteFile(value: any) {
+  questionValue.value.answers[0].urlFile = null
+  questionValue.value.isAnswered = !!questionValue.value.answers.filter((item: any) => item[props.customKeyValue] !== null || item.urlFile).length
+  emit('update:isAnswered', questionValue.value.isAnswered)
+  emit('update:data', questionValue.value)
+}
 function handlePinQs() {
   questionValue.value.isMark = !questionValue.value.isMark
 }
 
 watch(() => props.data, val => {
   questionValue.value = val
-  questionValue.value.isAnswered = !!questionValue.value.answers.filter((item: any) => item[props.customKeyValue]).length
+  questionValue.value.isAnswered = !!questionValue.value.answers.filter((item: any) => item[props.customKeyValue] !== null || item.urlFile).length
   emit('update:isAnswered', questionValue.value.isAnswered)
-}, { immediate: true })
+}, { immediate: true, deep: true })
 </script>
 
 <template>
@@ -118,28 +151,35 @@ watch(() => props.data, val => {
       </div>
     </div>
     <div
-      v-for="item in questionValue.answers"
-      :key="item"
-      class="item-answer w-100"
-      :class="{
-        ansTrue: isShowAnsTrue && item.isTrue && (!isHideNotChoose || isHideNotChoose && item[customKeyValue]),
-        ansFalse: isShowAnsFalse && !item.isTrue && item[customKeyValue],
-      }"
+      v-if="!showAnswerTrue"
     >
-      <CmRadio
-        :type="1"
-        :model-value="showAnswerTrue ? item.isTrue : ((isShowAnsFalse && !isShowAnsTrue && item.isTrue) ? null : item[customKeyValue]) "
+      <CmInputEditor
+        class="mb-4"
+        :model-value="questionValue.answers[0][customKeyValue]"
+        :text="t('answers')"
         :disabled="disabled"
-        :name="`TF-${idRandom}-${questionValue.id}`"
-        :value="true"
-        class="mr-3"
-        @update:model-value="changeValue(item)"
+        @update:model-value="changeValue"
       />
-
-      <div class="w-100 item-content">
-        <span class="mr-1">{{ getIndex(item.position) }} </span>
-        <span v-html="item.content" />
+      <div
+        v-if="!isReview"
+        class="mt-6 mb-4"
+      >
+        <CpInputFileDrop
+          ref="inputFile"
+          v-model="questionValue.answers[0].urlFile"
+          :disabled="disabled"
+          class="w-100 "
+          :is-btn-download="false"
+          @change="uploadFileLocal"
+          @deleteFile="deleteFile"
+        />
       </div>
+    </div>
+    <div
+      v-if="isReview"
+      class="flex-center text-semibold-md"
+    >
+      {{ t('scores-essay', { point: 8 }) }}
     </div>
   </div>
 </template>
@@ -155,30 +195,6 @@ watch(() => props.data, val => {
     background: #FFF;
     padding: 1rem;
     margin-bottom: 12px;
-  }
-  .item-answer.ansTrue {
-    display:flex;
-    width: 100%;
-    border-radius: 8px;
-    border: 1px solid rgb(var(--v-success-600));
-    background: #FFF;
-    padding: 1rem;
-    margin-bottom: 12px;
-    .item-content{
-      color:rgb(var(--v-success-600));
-    }
-  }
-  .item-answer.ansFalse {
-    display:flex;
-    width: 100%;
-    border-radius: 8px;
-    border: 1px solid rgb(var(--v-error-600));
-    background: #FFF;
-    padding: 1rem;
-    margin-bottom: 12px;
-    .item-content{
-      color:rgb(var(--v-error-600));
-    }
   }
   .item-answer:last-child {
     margin-bottom: unset;

@@ -2,6 +2,7 @@
 import CmRadio from '@/components/common/CmRadio.vue'
 import CpMediaContent from '@/components/page/gereral/CpMediaContent.vue'
 import CmButton from '@/components/common/CmButton.vue'
+import MethodsUtil from '@/utils/MethodsUtil'
 
 /**
  * Xem chi tiết các loại câu hỏi
@@ -49,6 +50,7 @@ const emit = defineEmits<Emit>()
 interface Emit {
   (e: 'update:model-value', val: any): void
   (e: 'update:data', val: any): void
+  (e: 'update:isAnswered', val: any): void
 }
 const { t } = window.i18n()
 
@@ -60,12 +62,21 @@ function changeValue(value: any) {
   questionValue.value.answers.forEach((item: any) => {
     item[props.customKeyValue] = item.id === value.id ? true : null
   })
-
+  questionValue.value.isAnswered = true
   emit('update:data', questionValue.value)
+  emit('update:isAnswered', true)
 }
+function handlePinQs() {
+  questionValue.value.isMark = !questionValue.value.isMark
+}
+
+const idRandom = ref(MethodsUtil.createRandomId(5))
+
 watch(() => props.data, val => {
   questionValue.value = val
-}, { immediate: true, deep: true })
+  questionValue.value.isAnswered = !!questionValue.value.answers.filter((item: any) => item[props.customKeyValue]).length
+  emit('update:isAnswered', questionValue.value.isAnswered)
+}, { immediate: true })
 </script>
 
 <template>
@@ -76,6 +87,7 @@ watch(() => props.data, val => {
     >
       <span class="text-bold-md color-primary">{{ t('sentence') }} {{ numberQuestion }} - {{ point }}/{{ totalPoint }} {{ t('scores') }}</span>
       <CmButton
+        v-if="!isGroup"
         class="ml-3"
         icon="ic:round-bookmark-border"
         :color="questionValue.isMark ? 'warning' : 'secondary'"
@@ -83,6 +95,7 @@ watch(() => props.data, val => {
         color-icon="white"
         :size="36"
         :size-icon="20"
+        @click="handlePinQs"
       />
     </div>
     <div
@@ -116,7 +129,7 @@ watch(() => props.data, val => {
         :type="1"
         :model-value="showAnswerTrue ? item.isTrue : ((isShowAnsFalse && !isShowAnsTrue && item.isTrue) ? null : item[customKeyValue]) "
         :disabled="disabled"
-        :name="`single-${questionValue.id}`"
+        :name="`single-${idRandom}-${questionValue.id}`"
         :value="true"
         class="mr-3"
         @update:model-value="changeValue(item)"

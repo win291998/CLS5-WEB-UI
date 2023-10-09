@@ -25,8 +25,8 @@ const router = useRouter()
 
 const isPasswordVisible = ref(false)
 
-const email = ref('sinhtv')
-const password = ref('123123')
+const email = ref('456456')
+const password = ref('456456')
 const rememberMe = ref(false)
 const captcha = ref({})
 const deviceUUID = ref()

@@ -27,6 +27,7 @@ interface Emit {
   (e: 'update:acceptDownload', value: any): void
   (e: 'change', value: any, file?: any): void
   (e: 'haveFile', value: any): void
+  (e: 'deleteFile', value?: any): void
   (e: 'update:fileUpload', value: any): void
 }
 const store = load()
@@ -140,6 +141,27 @@ async function onFileSelected(event: any) {
 
 const uploadRequests = ref<any>([])
 const cancelTokenSource = axios.CancelToken.source()
+function handleDelteFile(val: any) {
+  emit('deleteFile', val)
+}
+async function getInfor(folder: any) {
+  return await MethodsUtil.requestApiCustom(`${SERVERFILE}${ServerFileService.GetInforFile}${folder}`, TYPE_REQUEST.GET)
+}
+async function initData(val: any) {
+  if (val?.includes('fol-')) {
+    await getInfor(val).then(value => {
+      if (value?.filePath) {
+        fileUpload.value[0].name = value.fileName
+        fileUpload.value[0].type = 0
+        fileUpload.value[0].statusDownload = 3
+        fileUpload.value[0].size = value.fileSize
+        fileUpload.value[0].filePath = value.filePath
+        fileUpload.value[0].fileFolder = value.fileFolder
+        fileUpload.value[0].statusDownload = 1
+      }
+    })
+  }
+}
 
 // upload file to serve file
 async function upFileServer(file: any) {
@@ -166,7 +188,6 @@ async function upFileServer(file: any) {
 
   formData.append('IsBackground', params.value.isBackground)
   const token = AuthUtil.getToken()
-
   const uploadRequest = axios.post(`${SERVERFILE}${ServerFileService.UploadFile}`, formData, {
     cancelToken: cancelTokenSource.token,
     onUploadProgress: (progressEvent: any) => {
@@ -192,8 +213,8 @@ async function upFileServer(file: any) {
         fileUpload.value[0].name = fileNameInput.value
         fileUpload.value[0].size = filesData.value.size
         fileUpload.value[0].processing = 100
-        fileUpload.value[0].type = 1
-
+        fileUpload.value[0].type = 0
+        fileUpload.value[0].statusDownload = 1
         toast('SUCCESS', t('up-file'))
         haveFile.value = true
         emit('update:fileUpload', filesData.value)
@@ -218,17 +239,22 @@ function cancelProcessing(index: any) {
     uploadRequests.value.splice(index, 1)
   }
 }
-async function dowloadFile(idx: any) {
-  MethodsUtil.dowloadSampleFile(
-    `${SERVERFILE}${filesData.value.filePath}`,
-    'GET',
-    filesData.value.name,
-  ).then(value => {
-    setTimeout(() => {
-      unLoadComponent(idx)
-    }, 1000)
+async function downloadFile(item: any, idx: number, unLoad: any) {
+  MethodsUtil.dowloadSampleFile(`${SERVERFILE}${item.filePath}`,
+    TYPE_REQUEST.GET, item.name || ' local').then((data: any) => {
+    unLoadComponent(idx)
+    if (data.status === 200)
+      return true
+
+    else
+      toast('WARNING', t('download-file-failed'))
+    unLoadComponent(idx)
   })
+    .catch(() => {
+      unLoadComponent(idx)
+    })
 }
+
 watch(() => props.isSecure, (val: any) => {
   params.value.isSecure = val
 })
@@ -250,8 +276,11 @@ watch(() => props.modelValue, (val: any) => {
       fileOrigin: '',
       fileFolder: '',
     }
+    fileUpload.value[0].type = null
   }
-})
+
+  initData(val)
+}, { immediate: true })
 defineExpose({
   openChooseFile,
 })
@@ -289,17 +318,20 @@ defineExpose({
           </div>
         </div>
       </div>
-      <div>
+      <div
+        v-if="fileUpload[0].type === 0"
+        class="mxn-3"
+      >
         <CmItemFileUpload
-          v-if="fileUpload[0].type === 1"
           :files="fileUpload"
+          @deletes="handleDelteFile"
+          @downloadFile="downloadFile"
         />
       </div>
     </div>
     <div class="d-flex cm-input-file">
       <VFileInput
         ref="inputFile"
-        v-model="dataFile"
         :error="errors?.length > 0 ?? false"
         :error-messages="messageError"
         class="mr-3 d-none"

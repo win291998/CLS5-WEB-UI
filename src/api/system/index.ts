@@ -8,6 +8,7 @@ const SystemService = {
   ConfigExternalLogin: 'portal/external-login',
   GetRegisterConfig: '/RegistryConfiguration/get',
   UpdateRegisterConfig: '/RegistryConfiguration/create',
+  TimeServer: '/ConfigEvent/get-date-now',
 }
 
 export default SystemService

@@ -81,8 +81,6 @@ function getDetailContent() {
 }
 
 onMounted(() => {
-  console.log(route.params.id)
-
   if (route.params.id)
     getDetailContent()
 })

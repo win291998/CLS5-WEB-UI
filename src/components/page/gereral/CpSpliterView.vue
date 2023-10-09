@@ -27,7 +27,7 @@ function init() {
   splitter.value = document.getElementById(`splitter${props.id}`)
   firstEl.value = document.getElementById(`first-content${props.id}`)
   secondEl.value = document.getElementById(`second-content${props.id}`)
-  splitter.value.addEventListener('mousedown', onMouseDown, false)
+  splitter.value?.addEventListener('mousedown', onMouseDown, false)
   if ('ontouchstart' in window)
     splitter.value.addEventListener('touchstart', onTouchStart, false)
 }

@@ -1,36 +1,85 @@
 <script setup lang="ts">
+import { myExamManagerStore } from '@/stores/user/exam/exam'
+
 const CpIntroduce: any = defineAsyncComponent(() => import('@/components/page/users/exam/test/CpIntroduce.vue'))
 const CpMyTest: any = defineAsyncComponent(() => import('@/components/page/users/exam/test/CpMyTest.vue'))
 
-const isInroduceView = ref(true)
+const myExamManagerManager = myExamManagerStore()
+const { examData, isReview, isSuspendedExam, isComplete, isDoing } = storeToRefs(myExamManagerManager)
+const { handleStartExam, getExamInfo, handleSuspendUser, getTestQuestion, fetchQuestion, fetchSupervisions, updateAmountAnswered, getExamQuestions } = myExamManagerManager
+const isInTroduceView = ref(true)
 const isTestRender = ref(false)
 const isProgress = ref(false)
+const isloading = ref(false)
+const route = useRoute()
+const router = useRouter()
+async function initData() {
+  if (
+    route.name === 'my-test'
+  ) {
+    isReview.value = false
+    await getExamInfo().then(async () => {
+      if (isSuspendedExam.value) { // lấy danh sách bị đình chỉ
+        isloading.value = false
+        handleSuspendUser()
+        return
+      }
+      if (isComplete.value) {
+        router.push({ name: 'list-my-exam' })
+        return
+      }
+      await getTestQuestion()
+      fetchQuestion()
+      fetchSupervisions()
+      updateAmountAnswered()
+      if (examData.value.examineeStartTime !== null)
+        isDoing.value = true
+    })
+  }
+  else {
+    // xem lại kì thi hoặc kì khảo sát
+    isReview.value = true
+    isInTroduceView.value = false
+    await getExamQuestions()
+    updateAmountAnswered()
+    fetchQuestion()
+  }
+  isloading.value = false
+}
 function startExam() {
-  isInroduceView.value = false
+  isInTroduceView.value = false
+  isTestRender.value = true
+  window.showAllPageLoading('FULL-OPACITY')
+  handleStartExam()
 }
 function myTestRendered() {
-  console.log('redner2')
-  isProgress.value = true
+  window.hideAllPageLoading()
+
+  setTimeout(() => {
+    isProgress.value = true
+  }, 1000)
 }
 onMounted(() => {
-  isTestRender.value = true
+  initData()
 })
 </script>
 
 <template>
   <div class="containter-light flex-center">
     <div class="containter-white">
-      <div v-show="isInroduceView">
+      <div v-show="isInTroduceView">
         <CpIntroduce
-          :is-progress="isProgress"
+          :is-progress="true"
           @startExam="startExam"
         />
       </div>
       <div
         v-if="isTestRender"
-        v-show="!isInroduceView"
+        v-show="!isInTroduceView && isProgress"
       >
-        <CpMyTest @loaded="myTestRendered" />
+        <CpMyTest
+          @loaded="myTestRendered"
+        />
       </div>
     </div>
   </div>
