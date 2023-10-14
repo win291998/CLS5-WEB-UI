@@ -35,6 +35,7 @@ interface Emit {
   (e: 'cancel', type?: string): void
   (e: 'confirm', idx?: any, data?: any): void
   (e: 'show'): void
+  (e: 'shown'): void
   (e: 'hide'): void
 }
 
@@ -103,11 +104,12 @@ const sizeModal = computed(() => {
   >
     <VDialog
       class="cm-dialogs"
-      :content-class="`cm-dialogs ${appendToBody ? 'appendToBody' : ''}`"
+      content-class="cm-dialogs "
       :model-value="props.isDialogVisible"
       :width="sizeModal"
       :height="height"
       scrollable
+      :attach="appendToBody"
       :persistent="props.persistent"
       @update:model-value="onCancel"
       @before-enter="onDialogShown"
@@ -161,27 +163,33 @@ const sizeModal = computed(() => {
             :class="`justify-${justify}`"
           >
             <slot name="actions" />
-            <CmButton
-              v-if="isCancle"
-              variant="outlined"
-              color="secondary"
-              :disabled="disabledCancel"
-              @click="onCancel"
+            <div
+              v-if="isCancle || isOk"
+              class="d-flex  w-100 py-2"
+              :class="`justify-${justify}`"
             >
-              {{ t(buttonCancleName) }}
-            </CmButton>
+              <CmButton
+                v-if="isCancle"
+                variant="outlined"
+                color="secondary"
+                :disabled="disabledCancel"
+                @click="onCancel"
+              >
+                {{ t(buttonCancleName) }}
+              </CmButton>
 
-            <CmButton
-              v-if="isOk"
-              ref="buttonOk"
-              variant="elevated"
-              :disabled="disabledOk"
-              :color="color"
-              is-load
-              @click="(idx: any) => onConfirmation(idx)"
-            >
-              {{ t(buttonOkName) }}
-            </CmButton>
+              <CmButton
+                v-if="isOk"
+                ref="buttonOk"
+                variant="elevated"
+                :disabled="disabledOk"
+                :color="color"
+                is-load
+                @click="(idx: any) => onConfirmation(idx)"
+              >
+                {{ t(buttonOkName) }}
+              </CmButton>
+            </div>
           </div>
         </template>
       </CmCard>

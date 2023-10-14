@@ -13,6 +13,7 @@ const ExamService = {
   GetQuestionResult: '/examtest/get-test-code-question-result',
   GetQuestionExamId: '/examtest/get-test-code-question',
   GetStudentExamLog: '/exam/get-pagging-student-exam-logs',
+  GetCheckConnect: '/user/check-connect',
   GetGroupExamTestCombobox: (id: number) => `/examTest/${id}/combobox`,
 
   /** Post */
@@ -38,14 +39,20 @@ const ExamService = {
   PostDeleteOrgTest: '/examtest/create-organizational-structures',
   PostSaveUserAnswer: '/examtest/set-answer-question',
   PostStudentExamLog: '/exam/create-student-exam-log',
+  PostContinueExam: '/user/re-start-exam',
+  PostSaveImageViolateUser: '/learner/add-violate-image-user',
+  PostCreateSupervisions: '/examsupervising/create-supervision',
+  PostJoinAgainExam: '/learner/add-violate-user-join-again-exam',
+  PostVertificate: '/examtest/submit-verification-url',
 
   /** Delete */
 
   /** Put */
+  PutUpdateImageIdentified: '/Learner/update-violate-image-user',
 
   /** Update */
   /** patch */
-
+  PatchStartExam: 'examtest/start-exam',
 }
 
 export default ExamService

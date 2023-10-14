@@ -25,8 +25,6 @@ const drawer = ref(true)
 const idxbf = ref<any>(-1)
 function handleActiveNavItem(idx: number, item: Item, idxParent: number) {
   const position = `${idxParent}${idx}`
-  console.log('position', position)
-  console.log('idxbf', idxbf.value)
 
   if (idxbf.value === position)
     return

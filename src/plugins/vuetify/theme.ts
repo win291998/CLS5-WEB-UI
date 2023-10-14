@@ -30,7 +30,6 @@ const theme: VuetifyOptions['theme'] = {
         'surface': '#FFFFFF',
         'perfect-scrollbar-thumb': '#DBDADE',
         'white': '#ffffff',
-
       },
       variables: {
         'default': '#1849a9',

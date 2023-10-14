@@ -51,6 +51,7 @@ const props = withDefaults(defineProps<Props>(), ({
 const emit = defineEmits<Emit>()
 interface Emit {
   (e: 'update:model-value', val: any): void
+  (e: 'update:isDataChange', val?: any): void
   (e: 'update:data', val: any): void
   (e: 'update:isAnswered', val: any): void
 }
@@ -67,6 +68,7 @@ function changeValue(value: any) {
   questionValue.value.isAnswered = true
   emit('update:data', questionValue.value)
   emit('update:isAnswered', true)
+  emit('update:isDataChange', true)
 }
 function handlePinQs() {
   questionValue.value.isMark = !questionValue.value.isMark

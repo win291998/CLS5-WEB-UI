@@ -62,6 +62,7 @@ interface Emit {
   (e: 'update:data', val: any): void
   (e: 'saveLocalData', val: any): void
   (e: 'update:isAnswered', val: any): void
+  (e: 'update:isDataChange', val?: any): void
 
 }
 const { t } = window.i18n()
@@ -99,6 +100,7 @@ function changeValue(value: any) {
   updateContent(contentSelect.value)
   questionValue.value.isAnswered = true
   emit('update:isAnswered', true)
+  emit('update:isDataChange', true)
   emit('update:data', questionValue.value)
 }
 function updateContent(val: any) {
@@ -111,15 +113,17 @@ function updateContent(val: any) {
 watch(() => props.data, val => {
   questionValue.value = val
   questionValue.value.isAnswered = !!questionValue.value.answers.filter((item: any) => item[props.customKeyValue] !== null).length
+  questionValue.value.answers?.forEach((item: any, index: number) => {
+    if (!listAnserView.value[item.position])
+      listAnserView.value[item.position] = [toRaw(item)]
+    else
+      listAnserView.value[item.position].push(item)
+  })
+  console.log(listAnserView)
+
   emit('update:isAnswered', questionValue.value.isAnswered)
 }, { immediate: true })
 
-questionValue.value.answers?.forEach((item: any, index: number) => {
-  if (!listAnserView.value[item.position])
-    listAnserView.value[item.position] = [toRaw(item)]
-  else
-    listAnserView.value[item.position].push(item)
-})
 function checkAnsTrueClass(detalAns: any) {
   if (!detalAns)
     return false
@@ -155,7 +159,11 @@ onMounted(() => {
       spanElement.innerHTML = `<span style="display: inline-flex;" ><span class="select-content ${ans < 0 ? 'chooseAnsPld' : ''}">${ans < 0 ? `Lựa chọn ${idx + 1}` : `Đáp án ${getIndex(ans)}`}</span>${svg}</span>`
     }
     else {
-      spanElement.innerHTML = `<span style="display: inline-flex;" ><span class="select-content ${!props.showAnswerTrue ? 'chooseAnsPld' : ''}">${!props.showAnswerTrue ? `Lựa chọn ${idx + 1}` : `Đáp án ${getIndex(isTrue)}`}</span>${svg}</span>`
+      const ans = listAnserView.value[idx + 1].findIndex((item: any) => item.answeredValue)
+      console.log(spanElement)
+      console.log(ans)
+
+      spanElement.innerHTML = `<span style="display: inline-flex;" ><span class="select-content ${ans < 0 ? 'chooseAnsPld' : ''}">${ans < 0 ? `Lựa chọn ${idx + 1}` : `Đáp án ${getIndex(ans)}`}</span>${svg}</span>`
     }
   })
 
@@ -222,7 +230,7 @@ watch(() => props.listCurrentId, (val: number) => {
     >
       <CmRadio
         :type="1"
-        :model-value="showAnswerTrue ? item?.isTrue : ((isShowAnsFalse && !isShowAnsTrue && item?.isTrue) ? null : !!item[customKeyValue]) "
+        :model-value=" (isShowAnsFalse && !isShowAnsTrue && item?.isTrue) ? null : !!item[customKeyValue] "
         :disabled="disabled"
         :name="`bl2-${idRandom}-${questionValue.id}`"
         :value="true"

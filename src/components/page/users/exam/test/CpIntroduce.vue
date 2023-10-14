@@ -29,12 +29,12 @@ const router = useRouter()
 const route = useRoute()
 const SERVERFILE = process.env.VUE_APP_BASE_SERVER_FILE
 const myExamManagerManager = myExamManagerStore()
-const { examData, timeServer, totalQuestion, cameraRef, isSharingCamera, isSharingFullScreen } = storeToRefs(myExamManagerManager)
+const { examData, timeServer, totalQuestion, cameraRef, isSharingCamera, isSharingFullScreen, isDoing } = storeToRefs(myExamManagerManager)
 const { grantPermissionsCamera, grantSharingScreenPermission } = myExamManagerManager
 const urlFile = ref('')
 
 const time = ref(0)
-const totalTime = ref()
+const totalTime = ref(0)
 const isStart = ref(false)
 const prettyTime = computed(() => {
   const thour: number = time.value / 3600
@@ -53,7 +53,6 @@ function initData() {
   const startTime: any = new Date(examData.value.startTime)
   const currentTime: any = timeServer.value ? new Date(timeServer.value) : new Date()
   const duration = Math.floor((startTime - currentTime) / 1000)
-
   if (duration > 0) {
     totalTime.value = duration
     time.value = duration
@@ -79,8 +78,11 @@ function startTimer() {
     }, 1000)
   }
 }
-function startExam() {
+function startExam(idx: number, unload: any) {
   emit('startExam')
+  setTimeout(() => {
+    unload(idx)
+  }, 1000)
 }
 function openPermissionsCamera(idx: number, unload: any) {
   grantPermissionsCamera()
@@ -96,8 +98,12 @@ function openPermissionsScreen(idx: number, unload: any) {
 }
 
 const video = ref()
+
 onMounted(() => {
-  initData()
+  watch(examData, val => {
+    if (!window._.isEmpty(val))
+      initData()
+  }, { immediate: true })
   cameraRef.value = video.value
 })
 </script>
@@ -304,10 +310,13 @@ onMounted(() => {
         </VCol>
       </VRow>
     </div>
-    <div class="flex-center mt-8">
+    <div
+      v-show="!isProgress || isStart"
+      class="flex-center mt-8"
+    >
       <CmButton
         :disabled="!isProgress"
-        :title="!isProgress ? 'Đang tạo đề' : 'Bắt đầu làm bài'"
+        :title="!isProgress ? 'Đang tạo đề' : (isStart && !isDoing ? t('start-exam') : t('continue-exam'))"
         :color="!isProgress ? 'warning' : 'primary'"
         is-load
         @click="startExam"

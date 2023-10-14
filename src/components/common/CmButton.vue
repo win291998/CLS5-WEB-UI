@@ -16,6 +16,7 @@ import type { typeVariant } from '@/typescript/enums/enums'
 
 interface Props {
   title?: string
+  tooltip?: string
   isLoad?: boolean
   block?: boolean
   color?: string
@@ -137,6 +138,7 @@ defineExpose({
             :icon="props.icon"
             :size="props.sizeIcon"
             :color="colorIcon"
+            title="aaaa"
             :class="[props.colorIcon]"
           />
           <span
@@ -145,6 +147,12 @@ defineExpose({
           >{{ title }}</span>
         </span>
       </div>
+      <VTooltip
+        v-if="tooltip"
+        activator="parent"
+      >
+        <span v-html="tooltip" />
+      </VTooltip>
     </template>
     <template
       v-if="$slots.append"
