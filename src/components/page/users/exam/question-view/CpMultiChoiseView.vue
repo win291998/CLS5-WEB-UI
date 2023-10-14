@@ -51,7 +51,7 @@ interface Emit {
   (e: 'update:model-value', val: any): void
   (e: 'update:data', val: any): void
   (e: 'update:isAnswered', val: any): void
-
+  (e: 'update:isDataChange', val?: any): void
 }
 const { t } = window.i18n()
 
@@ -60,10 +60,15 @@ function getIndex(position: number) {
 }
 const questionValue = ref(window._.cloneDeep(props.data))
 function changeValue(pos: any, value: any) {
+  console.log(pos, value)
+
   questionValue.value.answers[pos][props.customKeyValue] = value
   questionValue.value.isAnswered = !!questionValue.value.answers.filter((item: any) => item[props.customKeyValue]).length
   emit('update:isAnswered', questionValue.value.isAnswered)
   emit('update:data', questionValue.value)
+  nextTick(() => {
+    emit('update:isDataChange', true)
+  })
 }
 function handlePinQs() {
   questionValue.value.isMark = !questionValue.value.isMark

@@ -62,6 +62,7 @@ interface Emit {
   (e: 'update:data', val: any): void
   (e: 'saveLocalData', val: any): void
   (e: 'update:isAnswered', val: any): void
+  (e: 'update:isDataChange', val?: any): void
 
 }
 const { t } = window.i18n()
@@ -144,7 +145,7 @@ function handleSpanDrop(event: any) {
     .replace('drag', '')
   const contain = event.target.closest('.fill-blank-container')
   if (contain) {
-    let dataAnswer = null
+    let dataAnswer: any = null
     if (event.target.className === 'hover')
       dataAnswer = event.target.parentNode.getAttribute('data-answer')
     else
@@ -246,7 +247,10 @@ function saveDataLocal() {
     typeId: questionValue.value.questionTypeId,
   })
   questionValue.value.isAnswered = !!questionValue.value.answers.filter((item: any) => item[props.customKeyValue] !== null).length
+  console.log(questionValue.value.isAnswered)
+
   emit('update:isAnswered', questionValue.value.isAnswered)
+  emit('update:isDataChange')
   emit('update:data', questionValue.value)
 }
 
@@ -261,7 +265,12 @@ watch(() => props.data, val => {
   questionValue.value.answersClone = window._.cloneDeep(questionValue.value.answers)
   contentBlank.value = formatDataInit()
   attachClickEvent()
-  questionValue.value.isAnswered = !!questionValue.value.answers.map((item: any) => item[props.customKeyValue] !== null).length
+  questionValue.value.isAnswered = !!questionValue.value.answers.filter((item: any) => item[props.customKeyValue] !== null).length
+  console.log(questionValue.value.isAnswered)
+  questionValue.value.answers.forEach((item: any) => {
+    console.log(item[props.customKeyValue] !== null)
+  })
+  console.log(questionValue.value.answers.filter((item: any) => item[props.customKeyValue] !== null))
   emit('update:isAnswered', questionValue.value.isAnswered)
 }, { immediate: true })
 </script>
@@ -311,18 +320,16 @@ watch(() => props.data, val => {
       </div>
       <div class="line-ans">
         <CmBadge
-          v-for="(item, index) in (!isReview && sentence ? questionValue.answers : questionValue.answersClone)"
+          v-for="(item, index) in (!isReview && isSentence ? questionValue.answers : questionValue.answersClone)"
           :key="item.id"
           location="top right"
           color="success"
           :offset-x="20"
-          :hide="!(isReview && isShowAnsTrue && item.isTrue && (!isHideNotChoose || isHideNotChoose && item[customKeyValue]))"
+          :hide="!(isReview && item.isTrue && (!isHideNotChoose || isHideNotChoose && item[customKeyValue]))"
         >
           <template
             #badge-content
-          >
-            {{ item.correctAnswer }}
-          </template>
+          />
           <div
             :id="`answer${item.id}`"
             class="drag-item line-blank text-regular-md "
@@ -330,7 +337,7 @@ watch(() => props.data, val => {
             :class="{
               'ansTrue': isReview && isShowAnsTrue && item.isTrue && (!isHideNotChoose || isHideNotChoose && item[customKeyValue]),
               'ansFalse': isReview && isShowAnsFalse && !item.isTrue && item[customKeyValue],
-              'droped': isReview ? false : item.answeredValue === index + 1,
+              'droped': isReview ? false : item.answeredValue,
               'cursor-move': !isReview && !disabled,
             }"
             @dragstart="startDrag($event)"

@@ -59,7 +59,7 @@ const props = withDefaults(defineProps<Props>(), ({
   block-size: auto;
 }
 .hide .v-badge__badge {
-  display: none;
+  display: none !important;
 }
 
 .v-badge__badge .v-icon {

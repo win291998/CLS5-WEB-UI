@@ -70,20 +70,21 @@ const propsValue = withDefaults(defineProps<Props>(), ({
 }))
 
 const emit = defineEmits<Emit>()
-const checkbox = ref(propsValue.modelValue)
+const checkbox = ref()
 function onChangeChecked(val: boolean) {
   emit('update:modelValue', val)
 }
 function change(val: any) {
   emit('change', checkbox.value)
 }
-
+onMounted(() => {
+  emit('update:modelValue', propsValue.modelValue)
+})
 watch(() => propsValue.modelValue, value => {
   checkbox.value = window._.cloneDeep(propsValue.modelValue)
-  emit('update:modelValue', value)
 
   // emit('change', value)
-})
+}, { immediate: true })
 </script>
 
 <template>

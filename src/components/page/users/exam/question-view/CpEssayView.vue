@@ -59,7 +59,7 @@ interface Emit {
   (e: 'update:model-value', val: any): void
   (e: 'update:data', val: any): void
   (e: 'update:isAnswered', val: any): void
-
+  (e: 'update:isDataChange', val?: any): void
 }
 const { t } = window.i18n()
 async function getInfor(folder: any) {
@@ -82,6 +82,8 @@ async function uploadFileLocal(data: any, file: any) {
         dataFile.value.fileFolder = data.fileFolder
         dataFile.value.serverCode = data?.serverCode
         questionValue.value.answers[0].urlFile = data.fileFolder
+        emit('update:isAnswered', true)
+        emit('update:isDataChange')
       }
     })
   }
@@ -95,22 +97,26 @@ function changeValue(value: any) {
   questionValue.value.answers[0][props.customKeyValue] = value
   questionValue.value.isAnswered = questionValue.value.answers.filter((item: any) => item[props.customKeyValue] !== null || item.urlFile).length
   emit('update:data', questionValue.value)
+  emit('update:isAnswered', questionValue.value.isAnswered)
+  emit('update:isDataChange')
 }
 function deleteFile(value: any) {
   questionValue.value.answers[0].urlFile = null
   questionValue.value.isAnswered = !!questionValue.value.answers.filter((item: any) => item[props.customKeyValue] !== null || item.urlFile).length
   emit('update:isAnswered', questionValue.value.isAnswered)
+  emit('update:isDataChange')
   emit('update:data', questionValue.value)
 }
 function handlePinQs() {
   questionValue.value.isMark = !questionValue.value.isMark
 }
-
+onMounted(() => {
+  emit('update:isAnswered', questionValue.value.isAnswered)
+})
 watch(() => props.data, val => {
   questionValue.value = val
   questionValue.value.isAnswered = !!questionValue.value.answers.filter((item: any) => item[props.customKeyValue] !== null || item.urlFile).length
-  emit('update:isAnswered', questionValue.value.isAnswered)
-}, { immediate: true, deep: true })
+}, { immediate: true })
 </script>
 
 <template>

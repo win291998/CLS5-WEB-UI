@@ -39,7 +39,8 @@ const emit = defineEmits<Emit>()
 const { t } = window.i18n()
 interface Emit {
   (e: 'loaded'): void
-  (e: 'update:isAnsweredGroup'): void
+  (e: 'update:isAnsweredGroup', val?: any): void
+  (e: 'saveLocalData', val?: any, data?: any): void
   (e: 'update:data', val: any): void
 }
 
@@ -137,6 +138,13 @@ function updateAnswered(value: any, data: any) {
   else
     dataValue.value.isAnswered = value
 }
+function updateIsDataChange(value: any, data?: any) {
+  if (!props.isGroup)
+    dataValue.value.isDataChange = value
+  console.log(data)
+
+  emit('saveLocalData', value, data)
+}
 function updateAnsweredGroup(value: any, data: any) {
   dataValue.value.isAnswered = value
 }
@@ -153,7 +161,10 @@ function handleUpdateData(val) {
 onMounted(() => {
   emit('loaded')
 })
-watch(() => props.data, (val: any) => dataValue.value = val)
+watch(() => props.data, (val: any) => {
+  dataValue.value = val
+  console.log(val)
+})
 </script>
 
 <template>
@@ -164,6 +175,7 @@ watch(() => props.data, (val: any) => dataValue.value = val)
     <Component
       :is="isSurvey ? checkTypeSurvey() : checkTypeQuestion()"
       v-if="!dataValue?.isGroup || isSurvey"
+      v-model:isDataChange="dataValue.isDataChange"
       :data="dataValue"
       class="mb-8"
       :show-content="showContent"
@@ -183,6 +195,7 @@ watch(() => props.data, (val: any) => dataValue.value = val)
       :is-hide-not-choose="isHideNotChoose"
       :is-group="isGroup"
       @update:isAnswered="($value) => updateAnswered($value, dataValue)"
+      @update:isDataChange="($value) => updateIsDataChange($value, dataValue)"
       @update:data="handleUpdateData"
     />
     <div v-else-if="dataValue?.isGroup">
@@ -267,6 +280,7 @@ watch(() => props.data, (val: any) => dataValue.value = val)
               :is-show-ans-true="isReview"
               is-group
               @update:isAnsweredGroup="($value) => updateAnsweredGroup($value, dataValue)"
+              @saveLocalData="updateIsDataChange"
             />
           </div>
         </template>

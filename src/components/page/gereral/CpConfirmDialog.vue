@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import CmButton from '@/components/common/CmButton.vue'
 import { DialogType } from '@/constant/data/notification.json'
+import type { sizeDialog } from '@/typescript/enums/enums'
 
 interface Props {
   keyModal?: string
@@ -17,6 +18,12 @@ interface Props {
   buttonOkName?: string
   buttonCancleName?: string
   isHideFooter?: boolean
+  persistent?: boolean // ngăn không cho tắt modal
+  size?: typeof sizeDialog[] | string
+  isOk?: boolean
+  isCancle?: boolean
+  appendToBody?: boolean
+
 }
 
 interface Emit {
@@ -30,8 +37,13 @@ const props = withDefaults(defineProps<Props>(), ({
   buttonOkName: 'ok-title',
   buttonCancleName: 'cancel-title',
   isHideFooter: false,
+  persistent: false,
   minWidth: 400,
   maxWidth: 400,
+  size: 'sm',
+  isOk: true,
+  isCancle: true,
+  appendToBody: false,
 }))
 
 const emit = defineEmits<Emit>()
@@ -62,19 +74,35 @@ function onCancel() {
   // emit('confirm', false)
   emit('update:isDialogVisible', false)
 }
+const sizeModal = computed(() => {
+  switch (props.size) {
+    case 'sm':
+      return 500
+    case 'md':
+      return 700
+    case 'lg':
+      return 800
+    case 'xl':
+      return 1162
+    default:
+      break
+  }
+})
 </script>
 
 <template>
   <!-- 👉 Confirm Dialog -->
   <VDialog
-    :min-width="minWidth"
-    :max-width="maxWidth"
+    :width="sizeModal"
+    :min-width="sizeModal"
+    :max-width="sizeModal"
     :model-value="props.isDialogVisible"
-    close-on-back
+    :persistent="persistent"
+    :attach="appendToBody"
     @update:model-value="updateModelValue"
   >
-    <VCard class="text-center pa-6">
-      <VCardText class="noti-content">
+    <VCard class=" pa-6">
+      <VCardText class="text-center noti-content">
         <div class="d-flex justify-center mb-5">
           <div class="icon-noti-lg">
             <VIcon
@@ -96,12 +124,18 @@ function onCancel() {
         </div>
 
         <div class="text-semibold-lg text-title-noti mb-2">
-          {{ props.confirmationMsg }}
+          <span v-html="props.confirmationMsg" />
         </div>
         <div class="text-regular-sm text-title-sub-noti">
-          {{ props.confirmationMsgSubTitle }}
-          <slot name="sub-title" />
+          <div v-html="props.confirmationMsgSubTitle" />
+          <div>
+            <slot name="sub-title" />
+          </div>
         </div>
+      </VCardText>
+
+      <VCardText>
+        <slot />
       </VCardText>
 
       <VCardActions
@@ -109,6 +143,7 @@ function onCancel() {
         class="align-center justify-center gap-2 noti-content"
       >
         <CmButton
+          v-if="isCancle"
           variant="outlined"
           bg-color="bg-white"
           color="dark"
@@ -120,6 +155,7 @@ function onCancel() {
         </CmButton>
 
         <CmButton
+          v-if="isOk"
           variant="elevated"
           class="w-50"
           :color="color || checkTypeDialog(type).color"

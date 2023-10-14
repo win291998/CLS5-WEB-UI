@@ -156,7 +156,6 @@ async function loadOptions({ action }: any) {
     >{{ props.text }}</label>
   </div>
   <div
-    :key="render"
     :dir="rtl ? 'rtl' : 'ltr'"
   >
     <Treeselect

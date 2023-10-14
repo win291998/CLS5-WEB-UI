@@ -2,14 +2,15 @@
 import CmButton from '@/components/common/CmButton.vue'
 import { myExamManagerStore } from '@/stores/user/exam/exam'
 
-const props = withDefaults(defineProps<Props>(), ({
-}))
+// const props = withDefaults(defineProps<Props>(), ({
+// }))
 
 const emit = defineEmits<Emit>()
-interface Props {
 
-  // questions?: any
-}
+// interface Props {
+
+//   // questions?: any
+// }
 
 /** ** Interface */
 interface Emit {
@@ -19,43 +20,11 @@ const { t } = window.i18n()
 const route = useRoute()
 const router = useRouter()
 const myExamManagerManager = myExamManagerStore()
-const { questions, questionStore, pageOption, quantityFileUploading, totalQuestion } = storeToRefs(myExamManagerManager)
-const { fetchQuestion, confirmSubmit } = myExamManagerManager
-const timerScrollQuestion = ref<any>(null)
-const questionGoTo = ref<any>(null)
+const { questionStore, totalQuestion } = storeToRefs(myExamManagerManager)
+const { confirmSubmit, handleClickQuestion } = myExamManagerManager
+
 function totalIsAnswered() {
-  return questionStore.value.filter((item: any) => item.isAnswered).length
-}
-async function handleClickQuestion(question: any, isConfirm?: boolean) {
-  const idQuestion = question.id
-
-  if (question === null)
-    return
-  if (!questions.value.includes(question)) {
-    if (quantityFileUploading.value && !isConfirm) {
-      questionGoTo.value = question
-
-      // this.$bvModal.show(this.confirmUploadingModalId)
-      return
-    }
-    const index = questionStore.value.indexOf(question)
-    pageOption.value.pageNumber = Math.floor(index / pageOption.value.pageSize) + 1
-    fetchQuestion()
-    nextTick(() => {
-      clearTimeout(timerScrollQuestion.value)
-      timerScrollQuestion.value = null
-      timerScrollQuestion.value = setTimeout(() => {
-        const el = document.getElementById(`${idQuestion}`)
-        const top = el.offsetTop
-        el.offsetParent.scrollTop = top
-      }, 500)
-    })
-  }
-  else {
-    const el = document.getElementById(`${idQuestion}`)
-    const top = el.offsetTop
-    el.offsetParent.scrollTop = top
-  }
+  return questionStore.value?.filter((item: any) => item.isAnswered).length
 }
 </script>
 

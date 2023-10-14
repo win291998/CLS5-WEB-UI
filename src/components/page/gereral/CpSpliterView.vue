@@ -63,8 +63,6 @@ function endMove(e: any, isTouch = false) {
 
 function onMouseDown(e: any) {
   startMove(e)
-  console.log(e)
-
   last_position.value = e[`${mouseOrient.value}`]
   splitter.value.removeEventListener('mousedown', onMouseDown)
   window.addEventListener('mousemove', onMouseMove, false)
@@ -195,7 +193,7 @@ if (props.orientation === 'horizontal')
   display: flex;
 
   .slitter-view-content {
-    max-height: 60vh;
+    max-height: 70vh;
     .ps__rail-x {
       height: 10px;
 

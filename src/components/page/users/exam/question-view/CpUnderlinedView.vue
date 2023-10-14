@@ -53,6 +53,7 @@ interface Emit {
   (e: 'update:model-value', val: any): void
   (e: 'update:data', val: any): void
   (e: 'update:isAnswered', val: any): void
+  (e: 'update:isDataChange', val?: any): void
 }
 const { t } = window.i18n()
 function getIndex(position: number) {
@@ -66,6 +67,7 @@ function changeValue(value: any) {
   questionValue.value.isAnswered = true
   emit('update:isAnswered', true)
   emit('update:data', questionValue.value)
+  emit('update:isDataChange', true)
 }
 const idRandom = ref(MethodsUtil.createRandomId(5))
 function handlePinQs() {

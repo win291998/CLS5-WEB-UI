@@ -34,12 +34,13 @@ const emit = defineEmits<Emit>()
 // Cấu trúc Emit
 interface Emit {
   (e: 'handlePageClick', pageSize: number): void
-  (e: 'pageClick', currentPape: number, pageSize: number): void
+  (e: 'pageClick', currentPape: number, pageSize: number, pageOld?: number): void
 }
 
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
-const pageSizeCurrent = ref(props.pageSize) // Khởi tạo biến kích thước page hiện tại
+const pageSizeCurrent = ref<number>(10) // Khởi tạo biến kích thước page hiện tại
 const selectedPage = ref(props.currentPage) // Khởi tạo biến kích page đang chọn
+const pageOld = ref(1)
 
 // Hiện pagination khi có items
 const showPagination = computed(() => {
@@ -54,7 +55,7 @@ const totalItemsLength = computed(() => {
 // Xử lý chuyển trang
 function handlePageClick(page: number) {
   emit('handlePageClick', page)
-  emit('pageClick', page, pageSizeCurrent.value)
+  emit('pageClick', page, pageSizeCurrent.value, pageOld.value)
 }
 
 // Xử lý chuyển kích thước items trang
@@ -79,6 +80,14 @@ onUnmounted(() => {
 // watch
 watch([() => props.currentPage], ([newValue]) => {
   selectedPage.value = newValue // cập nhật khi thay đổi prop current
+  pageOld.value = window._.clone(newValue)
+})
+watch(() => props.pageSize, (val: any) => {
+  if (props.pageSize)
+
+    pageSizeCurrent.value = val
+
+  else pageSizeCurrent.value = PAGINATION_PAGE_SIZE_DEFAULT
 })
 </script>
 

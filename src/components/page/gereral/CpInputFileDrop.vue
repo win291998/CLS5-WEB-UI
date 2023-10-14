@@ -5,6 +5,8 @@ import ServerFileService from '@/api/server-file'
 import toast from '@/plugins/toast'
 import AuthUtil from '@/auth'
 import { load } from '@/stores/loadComponent.js'
+import { TYPE_REQUEST } from '@/typescript/enums/enums'
+import { myExamManagerStore } from '@/stores/user/exam/exam'
 
 const props = withDefaults(defineProps<Props>(), ({
   accept: '',
@@ -21,7 +23,9 @@ const CmButton = defineAsyncComponent(() => import('@/components/common/CmButton
 const CpMdProcessing = defineAsyncComponent(() => import('@/components/page/gereral/modal/CpMdProcessing.vue'))
 const CpMdRequestInstall = defineAsyncComponent(() => import('@/components/page/gereral/modal/CpMdRequestInstall.vue'))
 const CmItemFileUpload = defineAsyncComponent(() => import('@/components/common/CmItemFileUpload.vue'))
-
+const myExamManagerManager = myExamManagerStore()
+const { disableAntiCheating } = storeToRefs(myExamManagerManager)
+const { setQuantityUploadingFile } = myExamManagerManager
 interface Emit {
   (e: 'onChangeFile', value: any): void
   (e: 'update:acceptDownload', value: any): void
@@ -57,7 +61,7 @@ const SERVERFILE = process.env.VUE_APP_BASE_SERVER_FILE
 const userData = JSON.parse(localStorage.getItem('userData') || '')
 const dataFile = ref(props.modelValue)
 const fileNameInput = ref(props.fileName)
-const fileUpload = ref([{ name: 'Real-Time', icon: 'tabler:file', size: 0, type: 0, processing: 95 }])
+const fileUpload = ref<any>([{ name: 'Real-Time', icon: 'tabler:file', size: 0, type: 0, processing: 95 }])
 
 const params = ref({
   files: null as any,
@@ -82,6 +86,7 @@ const filesData = ref(
 )
 
 function hanleClickInput(idx: any) {
+  disableAntiCheating.value = true
   if (props.disabled)
     return
   if (props.isRequestFileInstall) {
@@ -166,7 +171,7 @@ async function initData(val: any) {
 // upload file to serve file
 async function upFileServer(file: any) {
   isShowModalProcessing.value = true
-
+  setQuantityUploadingFile(1)
   intervalProgress.value = setInterval(() => {
     if (filesData.value.processing === 90) {
       clearInterval(intervalProgress.value)
@@ -219,6 +224,7 @@ async function upFileServer(file: any) {
         haveFile.value = true
         emit('update:fileUpload', filesData.value)
         emit('change', filesData.value, file)
+        setQuantityUploadingFile(-1)
       }
     })
     .catch(() => {

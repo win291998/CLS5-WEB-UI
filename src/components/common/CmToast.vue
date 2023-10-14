@@ -29,6 +29,10 @@ const props = withDefaults(defineProps<Props>(), ({
 .Vue-Toastification__toast {
   display: block;
   padding: $xl;
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 10000; /* Số lớn hơn giá trị `z-index` của modal */
 }
 
 .Vue-Toastification__close-button {
@@ -36,5 +40,9 @@ const props = withDefaults(defineProps<Props>(), ({
   color: $color-gray-700;
   inset-block-start: $xl;
   inset-inline-end: $xl;
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 10000; /* Số lớn hơn giá trị `z-index` của modal */
 }
 </style>

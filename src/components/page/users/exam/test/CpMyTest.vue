@@ -6,20 +6,27 @@ import CpContentView from '@/components/page/gereral/page/user/CpContentView.vue
 import CpControlQuestionNumber from '@/components/page/users/exam/test/CpControlQuestionNumber.vue'
 import { myExamManagerStore } from '@/stores/user/exam/exam'
 import CpConfirmDialog from '@/components/page/gereral/CpConfirmDialog.vue'
+import toast from '@/plugins/toast'
+import CmPagination from '@/components/common/CmPagination.vue'
 
+const props = withDefaults(defineProps<Props>(), {
+  isShow: false,
+})
 const emit = defineEmits<Emit>()
 interface Emit {
   (e: 'loaded'): void
 }
-
+interface Props {
+  isShow: boolean
+}
 const { t } = window.i18n()
 const route = useRoute()
 const router = useRouter()
 const sheet = ref(false)
 const layoutMobile = ref(false)
 const myExamManagerManager = myExamManagerStore()
-const { questionStore, totalPoint, isShowModalSubmit } = storeToRefs(myExamManagerManager)
-const { submitExam } = myExamManagerManager
+const { pageOption, pageNumberUploadingChange, questions, isShowModalUploading, isShowSubmitError, quantityFileUploading, questionStore, totalPoint, isShowModalSubmit, isConnected, isReview, captureStream, captureCamera, timer, connection, examData, isSubmitting } = storeToRefs(myExamManagerManager)
+const { saveLocalData, submitExam, fetchQuestion, handleConnected, handleFocusExam, handleDisconnected, handleChangeTab, mouseLeave, onFullScreenChange, autoCaptureCamera } = myExamManagerManager
 const config = ref({
   wheelPropagation: false,
   suppressScrollX: true,
@@ -39,148 +46,336 @@ onUnmounted(() => {
 
 // nội dung bài thi
 
-// const questions = ref<any>([
-//   {
-//     id: 43309313,
-//     isMark: false,
-//     isQuestionGroup: false,
-//     answers:
-//       [{
-//         answeredValue: null,
-//         id: 2248258,
-//         correctAnswer: null,
-//         content: '<span>1.1</span>',
-//         essayContent: '',
-//         urlFile: '',
-//         isCorrect: null,
-//         isTrue: false,
-//         position: 1,
-//       },
-//       { answeredValue: null, id: 2248261, correctAnswer: null, content: '<span>đã sửa</span>', essayContent: '', urlFile: '', isCorrect: null, isTrue: false, position: 2 },
-//       { answeredValue: true, id: 2248260, correctAnswer: null, isTrue: true, content: '<span>7.5</span>', essayContent: '', urlFile: '', isCorrect: null, position: 3 },
-//       { answeredValue: null, id: 2248259, correctAnswer: null, content: '<span>ddđ</span>', essayContent: '', urlFile: '', isCorrect: null, isTrue: false, position: 4 }],
-//     content: '<p>Được thêm từ file</p>',
-//     isCorrect: false,
-//     questionId: 43309313,
-//     typeId: 1,
-//     unitPoint: 1,
-//     urlFile: null,
-//     isDataChange: true,
-//     questionGroupContent: '',
-//     isAnswered: true,
-//   },
-//   {
-//     id: 43309314,
-//     isMark: false,
-//     isQuestionGroup: false,
-//     answers:
-//       [{
-//         answeredValue: null,
-//         id: 2248265,
-//         correctAnswer: null,
-//         content: '<span>1</span>',
-//         essayContent: '',
-//         urlFile: '',
-//         isCorrect: null,
-//         isTrue: false,
-//         position: 1,
-//       },
-//       { answeredValue: true, id: 2248264, correctAnswer: null, content: '<span>2</span>', essayContent: '', urlFile: '', isCorrect: null, isTrue: false, position: 2 },
-//       { answeredValue: null, id: 2248263, correctAnswer: null, content: '<span>3</span>', essayContent: '', urlFile: '', isCorrect: null, isTrue: true, position: 3 },
-//       { answeredValue: null, id: 2248262, correctAnswer: null, content: '<span>4</span>', essayContent: '', urlFile: '', isCorrect: null, isTrue: false, position: 4 },
-//       { answeredValue: null, id: 2248266, correctAnswer: null, content: '<span>hhhhhhhhhhhhhhh</span>', essayContent: '', urlFile: '', isCorrect: null, isTrue: false, position: 5 }],
-//     content: '<p>tự tạo ngày 11 đã sửa</p>',
-//     isCorrect: false,
-//     questionId: 43309314,
-//     typeId: 1,
-//     unitPoint: 1,
-//     urlFile: null,
-//     questionGroupContent: '',
-//     isAnswered: false,
-//   },
-//   {
-//     id: 43309315,
-//     isMark: false,
-//     isQuestionGroup: false,
-//     answers: [{
-//       answeredValue: null,
-//       id: 2248267,
-//       correctAnswer: null,
-//       content: '<span>1</span>',
-//       essayContent: '',
-//       urlFile: '',
-//       isCorrect: null,
-//       isTrue: false,
-//       position: 1,
-//     },
-//     { answeredValue: null, id: 2248268, correctAnswer: null, content: '<span>2</span>', essayContent: '', urlFile: '', isCorrect: null, isTrue: false, position: 2 },
-//     { answeredValue: null, id: 2248269, correctAnswer: null, content: '<span>thêm mới hihi</span>', essayContent: '', urlFile: '', isCorrect: null, isTrue: false, position: 3 },
-//     { answeredValue: null, id: 2248270, correctAnswer: null, content: '<span>đ</span>', essayContent: '', urlFile: '', isCorrect: null, isTrue: true, position: 4 }],
-//     content: '<p>media vs hinh ảnh</p>',
-//     isCorrect: false,
-//     questionId: 43309315,
-//     typeId: 1,
-//     unitPoint: 1,
-//     urlFile: 'fol-sfv4-037r6frlXs',
-//     questionGroupContent: '',
-//     isAnswered: false,
-//   },
-// ])
+function disableKeyboard(event: any) {
+  // if (event.keyCode === 123 || (event.ctrlKey && event.shiftKey && event.keyCode === 73))
+  //   event.preventDefault()
+}
+function disableRightMouse(event: any) {
+  event.preventDefault()
+}
+const time = ref(0)
+const halfTime = ref(0)
+const quaterTime = ref(0)
+const lastTime = ref(60)
+const endTime = ref(0) // thời gian kết thúc bộ đếm ngược
+const isWarningHalfTime = ref(false)
+const isWarningQuarter = ref(false)
+const isWarningLastTime = ref(false)
 
-const isReview = ref(false)
+const prettyTime = computed(() => {
+  const thour: number = time.value / 3600
+  const hours = parseInt(`${thour}`, 10)
+
+  const tminute = (time.value - hours * 3600) / 60
+  const minutes = parseInt(`${tminute}`, 10)
+  const secondes = time.value - hours * 3600 - minutes * 60
+  return `${hours > 9 ? hours : `0${hours}`}:${
+    minutes > 9 ? minutes : `0${minutes}`
+  }:${secondes > 9 ? secondes : `0${secondes}`}`
+})
+
+// bắt đầu làm bài
+function startExame() {
+  if (examData.value.timeRemaining > 0) {
+    const totalTime = Math.round(examData.value.minuteOfWork * 60)
+    time.value = Math.round(examData.value.timeRemaining * 60)
+    halfTime.value = totalTime / 2
+    quaterTime.value = totalTime / 4
+    if (time.value <= lastTime.value)
+      isWarningLastTime.value = true
+    else if (time.value <= quaterTime.value)
+      isWarningQuarter.value = true
+    else if (time.value <= halfTime.value)
+      isWarningHalfTime.value = true
+    if (time.value > 0)
+      startTimer()
+  }
+}
+
+// đếm thời gian làm bài
+const isStopTimer = ref(false)
+const documentHidden = ref(false)
+const reqAnimationFrameID = ref<any>(null)
+const timeCaptureCamera = ref() // mốc thời gian emit sự kiện tự động nhận diện
+function startTimer() {
+  document.addEventListener('visibilitychange', handleVisibilityChange)
+  isStopTimer.value = false
+  const totalSeconds = time.value
+  endTime.value = new Date().getTime() + totalSeconds * 1000
+  const requestAnimationFrame = window?.requestAnimationFrame
+                                  || (window as any)?.mozRequestAnimationFrame
+                                  || (window as any)?.webkitRequestAnimationFrame
+                                  || (window as any)?.msRequestAnimationFrame
+  if (requestAnimationFrame) {
+    const countDownTime = () => {
+      if (isStopTimer.value)
+        return
+      let timeLeft = Math.round((endTime.value - new Date().getTime()) / 1000)
+      if (timeLeft > 0) {
+        if (time.value !== timeLeft)
+          handleTrackingDownTimer()
+
+        time.value = timeLeft
+        reqAnimationFrameID.value = requestAnimationFrame(countDownTime)
+      }
+      else {
+        timeLeft = 0
+        time.value = 0
+        clearRequestAnimationFrame()
+        submitExam(1)
+      }
+    }
+    countDownTime()
+    return
+  }
+  handleDownTimer()
+}
+
+// dừng đến thời gian làm bài
+function stopTimerExam() {
+  document.removeEventListener('visibilitychange', handleVisibilityChange)
+  isStopTimer.value = true
+  if ((window as any)?.requestAnimationFrame) {
+    clearRequestAnimationFrame()
+    return
+  }
+  clearTimeout(timer.value)
+  timer.value = null
+}
+function clearRequestAnimationFrame() {
+  isStopTimer.value = true
+  if (reqAnimationFrameID.value) {
+    const cancelAnimationFrame = window.cancelAnimationFrame || (window as any).mozCancelAnimationFrame
+    cancelAnimationFrame(reqAnimationFrameID.value)
+  }
+  reqAnimationFrameID.value = null
+}
+function handleVisibilityChange() {
+  if (document.hidden) {
+    documentHidden.value = true
+    handleDownTimer()
+  }
+  else {
+    documentHidden.value = false
+  }
+}
+function handleDownTimer() {
+  if (!documentHidden.value)
+    return
+  if (isStopTimer.value)
+    return
+  const currentTime = Date.now()
+  const remainingTime = Math.max(0, endTime.value - currentTime)
+  time.value = Math.round(remainingTime / 1000)
+  if (remainingTime > 0) {
+    handleTrackingDownTimer()
+    const delay = 1000 - (currentTime % 1000)
+    timer.value = setTimeout(handleDownTimer, delay)
+  }
+  else {
+    clearTimeout(timer.value)
+    timer.value = null
+
+    submitExam(1)
+  }
+}
+function handleTrackingDownTimer() {
+  // tự động chụp ảnh camera
+  if (examData.value?.listTimeShot?.length) {
+    const equalTime = examData.value?.listTimeShot.find((item: any) => item === (examData.value.minuteOfWork * 60) - time.value)
+
+    if (equalTime >= 0 && timeCaptureCamera.value !== equalTime) {
+      timeCaptureCamera.value = equalTime
+      autoCaptureCamera()
+    }
+  }
+
+  // cảnh báo thời gian 1p
+  if (time.value <= lastTime.value && isWarningLastTime.value === false) {
+    toast('ERROR', t('warning-last-minutes'))
+    isWarningLastTime.value = true
+    return
+  }
+
+  // cảnh báo 1/4 thời gian
+  if (time.value <= quaterTime.value && isWarningQuarter.value === false && !isWarningLastTime.value) {
+    toast('ERROR', t('warning-quater-time'))
+    isWarningQuarter.value = true
+    return
+  }
+
+  // cảnh báo nữa thời gian
+  if (time.value <= halfTime.value && isWarningHalfTime.value === false && !isWarningLastTime.value && !isWarningQuarter.value) {
+    toast('ERROR', t('warning-haft-time'))
+    isWarningHalfTime.value = true
+  }
+}
+function pageChange(pageNumber: number, currentSizePage: number, pageOld: number) {
+  console.log(pageNumber, currentSizePage, pageOld)
+  toast('ERROR', t('warning-last-minutes'))
+  pageOption.value.pageNumber = pageNumber
+
+  if (quantityFileUploading.value) {
+    pageNumberUploadingChange.value = pageNumber
+    isShowModalUploading.value = true
+    nextTick().then(() => {
+      pageOption.value.pageNumber = pageOld
+    })
+    return
+  }
+  const el: any = document.getElementById('exam-test-content-scroll')
+  el.scrollTop = 0
+  fetchQuestion()
+}
+
+// variant time
+const timerVariant = computed(() => {
+  if (time.value <= lastTime.value)
+    return 'error'
+  if (time.value > halfTime.value)
+    return 'success'
+  if (time.value > quaterTime.value)
+    return 'warning'
+  return 'error'
+})
+watch(() => props.isShow, (val: any) => {
+  if (val) {
+    document.addEventListener('keydown', disableKeyboard)
+    document.addEventListener('contextmenu', disableRightMouse)
+
+    // document.addEventListener('keydown', e => {
+    //   if (e.key === 'F5')
+    //     e.preventDefault()
+    //   if (e.key === 'Escape')
+    //     e.preventDefault()
+    // })
+    if (!isReview.value) {
+      // Lắng nghe sự kiện kết nối mạng của trình duyệt
+      window.addEventListener('online', handleConnected)
+      window.addEventListener('offline', handleDisconnected)
+    }
+  }
+}, { immediate: true })
+onBeforeUnmount(async () => {
+  window.removeEventListener('online', handleConnected)
+  window.removeEventListener('offline', handleDisconnected)
+  window.removeEventListener('blur', handleChangeTab)
+  window.removeEventListener('focus', handleFocusExam)
+  document.removeEventListener('mouseleave', mouseLeave)
+  document.removeEventListener('fullscreenchange', onFullScreenChange)
+  document.removeEventListener('webkitfullscreenchange', onFullScreenChange)
+  document.removeEventListener('mozfullscreenchange', onFullScreenChange)
+  document.removeEventListener('msfullscreenchange', onFullScreenChange)
+  document.removeEventListener('keydown', disableKeyboard)
+  document.removeEventListener('contextmenu', disableRightMouse)
+
+  captureStream.value.stream?.getVideoTracks()[0].stop()
+  captureCamera.value.stream?.getVideoTracks()[0].stop()
+  captureStream.value.stream = null
+  captureCamera.value.stream = null
+
+  // if (this.$checkPortal(470))
+  //   unLockPreventUnexpectedAction()
+
+  clearInterval(timer.value)
+
+  // clearTimeout(this.timerScrollQuestion)
+  if (connection.value && connection.value !== null) {
+    // phát sing signal disconnect
+    await connection.value.invoke(
+      'DisConnectToExam',
+      examData.value.examineeId,
+      examData.value.testId,
+      examData.value.testShiftId !== null ? examData.value.testShiftId : 0,
+    )
+    if (connection.value?.stop())
+      connection.value?.stop()
+  }
+
+  isSubmitting.value = false
+
+  myExamManagerManager.$dispose()
+})
+
+defineExpose({
+  startExame,
+  startTimer,
+  stopTimerExam,
+})
 </script>
 
 <template>
-  <div class="mt">
+  <div
+    class="mt doing-exam-container h-inherit"
+  >
     <div
-      class="mt-left"
+      class="mt-left h-inherit"
       :class="{ 'w-100': layoutMobile }"
     >
-      <div class="flex-center">
-        <CmChip
-          color="success"
-          class="mb-2"
-        >
-          <div class="text-medium-md color-success">
-            00:00:35
-          </div>
-        </CmChip>
-      </div>
-      <div class="text-bold-lg flex-center">
-        Đề thi kiểm tra đề thi kiểm tra đề thi kiểm tra
-      </div>
-      <div class="flex-center text-semibold-md color-primary">
-        Thời gian thi: 100 phút
-      </div>
-      <PerfectScrollbar
-        :options="config"
-        style="max-height: 100vh;"
-      >
-        <div
-          id="mt-content"
-          class="mt-content mt-8"
+      <div>
+        <div class="flex-center">
+          <CmChip
+            :color="timerVariant"
+            class="mb-2"
+          >
+            <div
+              class="text-medium-md color-success"
+              :class="`color-${timerVariant}`"
+            >
+              {{ prettyTime }}
+            </div>
+          </CmChip>
+        </div>
+        <div class="text-bold-lg flex-center">
+          {{ examData?.testName }}
+        </div>
+        <div class="flex-center text-semibold-md color-primary mb-4">
+          <span>{{ t('time-exam') }}: {{ examData?.minuteOfWork === 0 ? t('empty-date') : (`${examData?.minuteOfWork} ${$t('minute').toLowerCase()}`) }}</span>
+        </div>
+        <PerfectScrollbar
+          id="exam-test-content-scroll"
+          :options="config"
+          style="height: 70vh;"
         >
           <div
-            v-for="(qs, pos) in questionStore"
-            :key="qs.id"
+            id="mt-content"
+            class="mt-content mt-8"
           >
-            <div>
-              <CpContentView
-                v-model:data="questionStore[pos]"
-                :type="qs.typeId"
-                :number-question="pos + 1"
-                :disabled="isReview"
-                :is-review="isReview"
-                :total-point="totalPoint"
-                is-sentence
-                :is-show-ans-false="isReview"
-                :is-show-ans-true="isReview"
-                @loaded="emit('loaded')"
-              />
+            <div
+              v-for="(qs, pos) in questions"
+              :key="qs.id"
+            >
+              <div>
+                <CpContentView
+                  v-model:data="questions[pos]"
+                  :type="qs.typeId"
+                  :number-question="(pageOption?.pageNumber - 1) * pageOption?.pageSize + pos + 1"
+                  :disabled="isReview"
+                  :is-review="isReview"
+                  :total-point="totalPoint"
+                  is-sentence
+                  :is-show-ans-false="isReview"
+                  :is-show-ans-true="isReview"
+                  @loaded="emit('loaded')"
+                  @saveLocalData="saveLocalData"
+                />
+              </div>
             </div>
           </div>
-        </div>
-      </PerfectScrollbar>
+        </PerfectScrollbar>
+      </div>
+      <div
+        v-if="isConnected"
+        class="exam-pagination"
+      >
+        <CmPagination
+          :type="3"
+          :total-items="questionStore?.length"
+          :current-page="pageOption?.pageNumber"
+          :page-size="pageOption?.pageSize"
+          @pageClick="pageChange"
+        />
+      </div>
     </div>
     <div
       v-if="!layoutMobile"
@@ -192,8 +387,27 @@ const isReview = ref(false)
   <CpConfirmDialog
     v-model:is-dialog-visible="isShowModalSubmit"
     :type="1"
+    append-to-body
     variant="outlined"
     :confirmation-msg-sub-title="t('confirm-submit')"
+    :confirmation-msg="t('submit')"
+    @confirm="submitExam(2)"
+  >
+    <template #sub-title>
+      <div
+        v-if="quantityFileUploading"
+        v-html="t('confirm-uploading-submit', { quantity: `${quantityFileUploading}` })"
+      />
+    </template>
+  </CpConfirmDialog>
+  <CpConfirmDialog
+    v-model:is-dialog-visible="isShowSubmitError"
+    :type="2"
+    append-to-body
+    persistent
+    variant="outlined"
+    :is-cancle="false"
+    :confirmation-msg-sub-title="t('submit-error')"
     :confirmation-msg="t('submit')"
     @confirm="submitExam(2)"
   />
@@ -231,11 +445,20 @@ const isReview = ref(false)
 </template>
 
 <style  lang="scss">
+.doing-exam-container{
+  background-color:  rgba(var(--v-theme-surface))
+}
+#doing-exam-container::backdrop {
+    position: relative;
+    inset: 0px;
+    background: black;
+}
 .mt{
   display: flex;
   .mt-left{
     width: 70% ;
     margin-right: 12px;
+    overflow: hidden;
   }
   .mt-right{
     width: 30% ;
