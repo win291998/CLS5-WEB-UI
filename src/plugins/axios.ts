@@ -12,7 +12,6 @@ const axiosIns = axios.create({
   // },
 })
 
-const token = AuthUtil.getToken()
 let isAlreadyFetchingAccessToken = false
 let isWaitingRefreshToken = false
 let subscribers: any = []
@@ -33,9 +32,11 @@ function addSubscriber(callback: (accessToken: any) => void) {
 
 axiosIns.interceptors.request.use(
   (config: any) => {
+    let token
+    if (!token)
+      token = AuthUtil.getToken()
     if (token)
       config.headers.Authorization = config.headers.Authorization ?? `Bearer ${token}`
-
     return config
   },
   (error: any) => {

@@ -25,8 +25,8 @@ const router = useRouter()
 
 const isPasswordVisible = ref(false)
 
-const email = ref('456456')
-const password = ref('456456')
+const email = ref('')
+const password = ref('')
 const rememberMe = ref(false)
 const captcha = ref({})
 const deviceUUID = ref()
@@ -118,7 +118,7 @@ function handleAfterLogin(response: any) {
         })
     }
     else {
-      router.push({ name: 'admin-organization-users' })
+      router.push({ name: 'dashboard' })
 
       // router.push(urlParams.has('redirect') ? urlParams.get('redirect') : getHomeRouteForLoggedInUser(userData.roles))
         .then(() => {
@@ -297,7 +297,7 @@ getDeviceUUID().then(uuid => {
               <VCol cols="12">
                 <VTextField
                   v-model="password"
-                  label="Password"
+                  label="Mật khẩu"
                   :rules="[requiredValidator]"
                   :type="isPasswordVisible ? 'text' : 'password'"
                   :append-inner-icon="isPasswordVisible ? 'tabler-eye-off' : 'tabler-eye'"

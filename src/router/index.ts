@@ -30,11 +30,10 @@ const generalRoutes = [
   ...learner,
 ]
 
-const token = localStorage.getItem('accessToken')
-
-const permission: any = token ? parseJwt(token) : null
-
 function isUserLoggedIn() {
+  const token = localStorage.getItem('accessToken')
+
+  const permission: any = token ? parseJwt(token) : null
   return !!permission
 }
 
