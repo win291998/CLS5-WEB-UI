@@ -13,6 +13,8 @@ function handleLogout() {
   localStorage.removeItem(jwtDefaultConfig.menuItems)
   localStorage.removeItem(jwtDefaultConfig.role)
   localStorage.removeItem(jwtDefaultConfig.userData)
+  localStorage.removeItem('portalIcon')
+  localStorage.removeItem('portalTitle')
   router.push('/login')
 }
 const { t } = window.i18n()
