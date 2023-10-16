@@ -152,6 +152,8 @@ export const myCourseManagerStore = defineStore('myCourseManager', () => {
         }
     }
   }
+
+  // video
   onMounted(() => {
     //
   })

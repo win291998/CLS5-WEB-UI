@@ -3,12 +3,12 @@ export default class ExamMethodsUtil {
   static standardizedDataReview = async (questionStore: any) => {
     // Nếu là câu hỏi
     questionStore.forEach((question: any) => {
-      question.listQuestions.forEach(element => {
+      question.listQuestions.forEach((element: any) => {
         switch (element.typeId) {
           // câu hỏi 2 lựa chọn
           case 1:
           case 3:
-            element.answers.forEach(answer => {
+            element.answers.forEach((answer: any) => {
               if (answer.answeredValue === 1)
                 answer.answeredValue = true
               if (answer.answerValue === 1)
@@ -20,7 +20,7 @@ export default class ExamMethodsUtil {
           case 4:
           case 2:
           case 5:
-            element.answers.forEach(answer => {
+            element.answers.forEach((answer: any) => {
               if (answer.answeredValue === 1)
                 answer.answeredValue = true
 
@@ -33,7 +33,7 @@ export default class ExamMethodsUtil {
             })
             break
           case 8:
-            element.answers.forEach(answer => {
+            element.answers.forEach((answer: any) => {
               if (answer.isTrue === false && answer.answeredValue !== null) {
                 const answerMatch = element.answers.find(x => x.isTrue === true && x.answeredValue === answer.answeredValue)
                 if (answerMatch)
@@ -171,38 +171,52 @@ export default class ExamMethodsUtil {
         case 6:
 
           element.answers.forEach((asw: any) => {
-            console.log(questionItem.answers.findIndex((item: any) => item === asw.id))
-            console.log(questionItem.answers, asw.id)
             const position = questionItem.answers.findIndex((item: any) => item === asw.id)
             asw.answeredValue = position >= 0 ? position + 1 : null
             asw.isTrue = position >= 0
           })
           break
 
-        // // câu hỏi ghép đôi
-        // case 8:
-        //   if (questionLocal.answers !== null) {
-        //     questionLocal?.answers?.forEach((answerLocal: any) => {
-        //       if (answerLocal && answerLocal.right !== null) {
-        //         const answer = element.answers.find(
-        //           (x: any) => x.answerId === answerLocal.right,
-        //         )
-        //         if (answer) {
-        //           answer.position = answerLocal.position
-        //           answer.answeredValue = answerLocal.position
-        //           answer.isMatched = answerLocal.isMatched
-        //         }
-        //       }
-        //       if (answerLocal && answerLocal.left !== null) {
-        //         const answer = element.answers.find(
-        //           (x: any) => x.answerId === answerLocal.left,
-        //         )
-        //         if (answer && answerLocal.right && answerLocal.isMatched)
-        //           answer.answeredValue = answerLocal.right
-        //       }
-        //     })
-        //   }
-        //   break
+        // câu hỏi ghép đôi
+        case 8:
+          console.log(element, questionItem)
+
+          const pos = 0
+          element.answers.forEach((asw: any) => {
+            // for (let i = 0; i < array.length; i++) {
+            //   const element = array[i];
+
+            // }
+            const position = questionItem.answers.findIndex((item: any) => item === asw.id)
+            console.log(position)
+
+            // asw.answeredValue = position >= 0 ? position + 1 : null
+            // asw.isTrue = position >= 0
+          })
+
+          // if (questionLocal.answers !== null) {
+          //   questionLocal?.answers?.forEach((answerLocal: any) => {
+          //     if (answerLocal && answerLocal.right !== null) {
+          //       const answer = element.answers.find(
+          //         (x: any) => x.answerId === answerLocal.right,
+          //       )
+          //       if (answer) {
+          //         answer.position = answerLocal.position
+          //         answer.answeredValue = answerLocal.position
+          //         answer.isMatched = answerLocal.isMatched
+          //       }
+          //     }
+          //     if (answerLocal && answerLocal.left !== null) {
+          //       const answer = element.answers.find(
+          //         (x: any) => x.answerId === answerLocal.left,
+          //       )
+          //       if (answer && answerLocal.right && answerLocal.isMatched)
+          //         answer.answeredValue = answerLocal.right
+          //     }
+          //   })
+          // }
+          break
+
         // case 9:
         //   if (element.answers.length > 0) {
         //     element.answers[0].essayContent = questionLocal?.essayContent || null
@@ -315,27 +329,42 @@ export default class ExamMethodsUtil {
         }
         break
 
-      //   // lưu danh sách vế trái câu hỏi điền khuyết
-      // case 8:
-      //   questionData.answers = []
-      //   // eslint-disable-next-line no-case-declarations
-      //   const rights: any = element.answers.filter((x: any) => x.isTrue)
-      //   // eslint-disable-next-line no-case-declarations
-      //   const lefts: any = element.answers.filter((x: any) => !x.isTrue)
-      //   for (let i = 0; i < lefts.length; i += 1) {
-      //     const left = lefts.find(x => x.position === i + 1)
-      //     const right = rights.find(x => x.answeredValue === i + 1)
-      //     if (left && right) {
-      //       const answer = {
-      //         left: left.answerId,
-      //         right: right.answerId,
-      //         isMatched: left.answeredValue === right.answerId,
-      //         position: i + 1,
-      //       }
-      //       questionData.answers.push(answer)
-      //     }
-      //   }
-      //   break
+      case 8:
+        console.log(element)
+        let posFalseMatch = 0
+        let posTrueMatch = 1
+        for (let i = 0; i < element.answers.length; i += 1) {
+          if (element.answers[i]?.matched) {
+            if (answerData === null)
+              answerData = []
+            answerData[posTrueMatch] = element.answers[i].id
+            answerData[posFalseMatch] = element.answers[i + 1].id
+            i++
+            posTrueMatch += 2
+            posFalseMatch += 2
+          }
+        }
+
+        // questionData.answers = []
+        // // eslint-disable-next-line no-case-declarations
+        // const rights: any = element.answers.filter((x: any) => x.isTrue)
+        // // eslint-disable-next-line no-case-declarations
+        // const lefts: any = element.answers.filter((x: any) => !x.isTrue)
+        // for (let i = 0; i < lefts.length; i += 1) {
+        //   const left = lefts.find(x => x.position === i + 1)
+        //   const right = rights.find(x => x.answeredValue === i + 1)
+        //   if (left && right) {
+        //     const answer = {
+        //       left: left.answerId,
+        //       right: right.answerId,
+        //       isMatched: left.answeredValue === right.answerId,
+        //       position: i + 1,
+        //     }
+        //     questionData.answers.push(answer)
+        //   }
+        // }
+        break
+
       // case 9:
       //   element.answers.forEach((answer: any) => {
       //     questionData.essayContent = answer.essayContent
@@ -355,6 +384,7 @@ export default class ExamMethodsUtil {
     if (!element.isGroup) {
       const localDataPos = localData.find((item: any) => item.id === element.id)
       localDataPos.answers = this.changeDataSaveLocal(element)
+      console.log(localDataPos.answers)
     }
   }
 

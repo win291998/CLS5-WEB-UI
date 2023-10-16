@@ -141,20 +141,18 @@ function updateAnswered(value: any, data: any) {
 function updateIsDataChange(value: any, data?: any) {
   if (!props.isGroup)
     dataValue.value.isDataChange = value
-  console.log(data)
-
   emit('saveLocalData', value, data)
 }
 function updateAnsweredGroup(value: any, data: any) {
   dataValue.value.isAnswered = value
 }
 function checkPointGroup(listQs: any) {
-  return listQs.reduce((totalPoint, currentValue) => totalPoint + currentValue.unitPoint, 0)
+  return listQs.reduce((totalPoint: any, currentValue: any) => totalPoint + currentValue.unitPoint, 0)
 }
 function handlePinQs() {
   dataValue.value.isMark = !dataValue.value.isMark
 }
-function handleUpdateData(val) {
+function handleUpdateData(val: any) {
   emit('update:data', val)
 }
 
@@ -163,7 +161,6 @@ onMounted(() => {
 })
 watch(() => props.data, (val: any) => {
   dataValue.value = val
-  console.log(val)
 })
 </script>
 

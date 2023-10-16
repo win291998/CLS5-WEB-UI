@@ -119,7 +119,6 @@ watch(() => props.data, val => {
     else
       listAnserView.value[item.position].push(item)
   })
-  console.log(listAnserView)
 
   emit('update:isAnswered', questionValue.value.isAnswered)
 }, { immediate: true })
@@ -160,9 +159,6 @@ onMounted(() => {
     }
     else {
       const ans = listAnserView.value[idx + 1].findIndex((item: any) => item.answeredValue)
-      console.log(spanElement)
-      console.log(ans)
-
       spanElement.innerHTML = `<span style="display: inline-flex;" ><span class="select-content ${ans < 0 ? 'chooseAnsPld' : ''}">${ans < 0 ? `Lựa chọn ${idx + 1}` : `Đáp án ${getIndex(ans)}`}</span>${svg}</span>`
     }
   })
