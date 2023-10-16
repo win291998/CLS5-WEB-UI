@@ -34,6 +34,7 @@ const props = withDefaults(defineProps<Props>(), ({
   isShowAnsTrue: false,
   isShowAnsFalse: false,
   isHideNotChoose: false,
+
 }))
 const emit = defineEmits<Emit>()
 const { t } = window.i18n()
