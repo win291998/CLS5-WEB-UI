@@ -54,6 +54,7 @@ interface Emit {
   (e: 'update:model-value', val: any): void
   (e: 'update:data', val: any): void
   (e: 'update:isAnswered', val: any): void
+  (e: 'update:isDataChange', val?: any): void
 }
 const { t } = window.i18n()
 function getIndex(position: number) {
@@ -77,12 +78,12 @@ const positions = ref<any>({
   x: null,
   y: null,
 })
-function dragDelta(evt) {
+function dragDelta(evt: any) {
   // console.log(evt)
 }
 
 // clone đối tượng kéo thêm vào đối tượng chứa
-function startDrag(evt) {
+function startDrag(evt: any) {
   if (props.isReview)
     return
 
@@ -93,7 +94,7 @@ function startDrag(evt) {
 }
 
 // kết thúc kéo thả
-function dragEnd(evt) {
+function dragEnd(evt: any) {
   // if (isReview.value || this.isPreview)
   //   return
   if (props.isReview)
@@ -105,9 +106,7 @@ function dragEnd(evt) {
 
 // thả
 
-function drop(evt) {
-  // console.log(evt)
-
+function drop(evt: any) {
   // if (this.isReview || this.isPreview)
   //   return
   // if (this.dragSelectedQuestionId !== this.questionId)
@@ -175,6 +174,9 @@ function drop(evt) {
       cloneData.isAnswered = !!cloneData.answers.filter((item: any) => item?.matched).length
       emit('update:isAnswered', cloneData.isAnswered)
       emit('update:data', cloneData)
+      nextTick(() => {
+        emit('update:isDataChange')
+      })
     }
   }
 
@@ -213,7 +215,7 @@ function drop(evt) {
 }
 
 // khi kéo qua đối tượng
-function dragOver(evt) {
+function dragOver(evt: any) {
   // if (this.isReview || this.isPreview) return
   // if (this.dragSelectedQuestionId !== this.questionId) return
   if (props.isReview)
@@ -224,7 +226,7 @@ function dragOver(evt) {
 }
 
 // khi kéo rời khỏi đối tượng
-function dragLeave(evt) {
+function dragLeave(evt: any) {
   // if (this.isReview || this.isPreview) return
   if (props.isReview)
     return

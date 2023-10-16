@@ -247,8 +247,6 @@ function saveDataLocal() {
     typeId: questionValue.value.questionTypeId,
   })
   questionValue.value.isAnswered = !!questionValue.value.answers.filter((item: any) => item[props.customKeyValue] !== null).length
-  console.log(questionValue.value.isAnswered)
-
   emit('update:isAnswered', questionValue.value.isAnswered)
   emit('update:isDataChange')
   emit('update:data', questionValue.value)
@@ -266,11 +264,6 @@ watch(() => props.data, val => {
   contentBlank.value = formatDataInit()
   attachClickEvent()
   questionValue.value.isAnswered = !!questionValue.value.answers.filter((item: any) => item[props.customKeyValue] !== null).length
-  console.log(questionValue.value.isAnswered)
-  questionValue.value.answers.forEach((item: any) => {
-    console.log(item[props.customKeyValue] !== null)
-  })
-  console.log(questionValue.value.answers.filter((item: any) => item[props.customKeyValue] !== null))
   emit('update:isAnswered', questionValue.value.isAnswered)
 }, { immediate: true })
 </script>
