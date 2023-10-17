@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { VBottomSheet } from 'vuetify/labs/VBottomSheet'
 import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 import CmChip from '@/components/common/CmChip.vue'
 import CpContentView from '@/components/page/gereral/page/user/CpContentView.vue'
@@ -8,6 +7,7 @@ import { myExamManagerStore } from '@/stores/user/exam/exam'
 import CpConfirmDialog from '@/components/page/gereral/CpConfirmDialog.vue'
 import toast from '@/plugins/toast'
 import CmPagination from '@/components/common/CmPagination.vue'
+import CmSheet from '@/components/common/CmSheet.vue'
 
 const props = withDefaults(defineProps<Props>(), {
   isShow: false,
@@ -22,7 +22,6 @@ interface Props {
 const { t } = window.i18n()
 const route = useRoute()
 const router = useRouter()
-const sheet = ref(false)
 const layoutMobile = ref(false)
 const myExamManagerManager = myExamManagerStore()
 const { pageOption, pageNumberUploadingChange, isShowModalUploading, isShowSubmitError, quantityFileUploading, questionStore, totalPoint, isShowModalSubmit, isConnected, isReview, captureStream, captureCamera, timer, connection, examData, isSubmitting } = storeToRefs(myExamManagerManager)
@@ -412,39 +411,8 @@ defineExpose({
     :confirmation-msg="t('submit')"
     @confirm="submitExam(2)"
   />
-  <div class="mt-mb">
-    <VBtn
-      v-if="layoutMobile"
-      size="x-large"
-      text="Click Me"
-      @click="sheet = !sheet"
-    />
-
-    <VBottomSheet
-      v-model="sheet"
-      location="right"
-    >
-      <VCard
-        class="text-center"
-        height="200"
-      >
-        <VCardText>
-          <VBtn
-            variant="text"
-            @click="sheet = !sheet"
-          >
-            close
-          </VBtn>
-
-          <br>
-          <br>
-
-          <div>
-            Chào mừng đến với bình nguyên vô tận
-          </div>
-        </VCardText>
-      </VCard>
-    </VBottomSheet>
+  <div>
+    <CmSheet />
   </div>
 </template>
 
@@ -502,5 +470,9 @@ defineExpose({
   position: fixed;
   top: 2rem;
   right: 0;
+}
+.controlQuestionNumberMb{
+  position: fixed;
+  bottom: 0;
 }
 </style>
