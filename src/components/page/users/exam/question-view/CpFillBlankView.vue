@@ -248,13 +248,14 @@ function saveDataLocal() {
   })
   questionValue.value.isAnswered = !!questionValue.value.answers.filter((item: any) => item[props.customKeyValue] !== null).length
   emit('update:isAnswered', questionValue.value.isAnswered)
-  emit('update:isDataChange')
+  emit('update:isDataChange', true)
   emit('update:data', questionValue.value)
 }
 
 ////////////////////////////////////////////////////////////////////
 function handlePinQs() {
   questionValue.value.isMark = !questionValue.value.isMark
+  emit('update:isDataChange', false)
 }
 
 watch(() => props.data, val => {
@@ -313,7 +314,7 @@ watch(() => props.data, val => {
       </div>
       <div class="line-ans">
         <CmBadge
-          v-for="(item, index) in (!isReview && isSentence ? questionValue.answers : questionValue.answersClone)"
+          v-for="item in (!isReview && isSentence ? questionValue.answers : questionValue.answersClone)"
           :key="item.id"
           location="top right"
           color="success"

@@ -23,7 +23,7 @@ const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 const route = useRoute()
 const router = useRouter()
 const myExamManagerManager = myExamManagerStore()
-const { } = storeToRefs(myExamManagerManager)
+const { isSharingFullScreen } = storeToRefs(myExamManagerManager)
 const { acceptAntiCheating } = myExamManagerManager
 function cancelModal() {
   emit('update:isShowModal', false)
@@ -125,10 +125,9 @@ watch(() => props.isShowModal, isShow => {
         <span>Số lần vi phạm: <span>{{ data.numberWarning }}</span>/<span>{{ data.maximumViolation }}</span></span>
       </p>
       <p
-        v-if="!isCourse"
         class="mb-25 text-center"
       >
-        <span>{{ $t('auto-switch-to-list-exam') }}</span>
+        <span>{{ t('auto-switch-to-list-exam') }}</span>
         <span class="time-down">{{ ` (${autoSwitchTime()}s)` }}</span>
       </p>
     </div>
@@ -137,24 +136,24 @@ watch(() => props.isShowModal, isShow => {
       class="px-4 anti-cheating-modal"
     >
       <p class="caption text-medium-md color-text-900">
-        {{ t('exam') }} {{ $t('no-cheating-title') }}
+        {{ t('exam') }} {{ t('no-cheating-title') }}
       </p>
       <div class="ml-6 mb-4">
         <ul>
           <li v-if="data?.notPageSwitching">
-            {{ $t('no-change-tab-noti') }}
+            {{ t('no-change-tab-noti') }}
           </li>
           <li v-if="data?.isFullScreen">
-            {{ $t('no-escape-fullscreen-noti') }}
+            {{ t('no-escape-fullscreen-noti') }}
           </li>
         </ul>
       </div>
       <p v-if="data.maximumViolation">
-        {{ $t('maximun-violation') }}
+        {{ t('maximun-violation') }}
         <span class="text-primary font-weight-bold">{{ data.maximumViolation }}</span>
-        {{ $t('violation-time') }}
+        {{ t('violation-time') }}
       </p>
-      <p>{{ $t('number-violation') }} <span class="text-primary">{{ data.numberWarning }}</span> <span v-if="data.maximumViolation">/ {{ data.maximumViolation }}</span></p>
+      <p>{{ t('number-violation') }} <span class="text-primary">{{ data.numberWarning }}</span> <span v-if="data.maximumViolation">/ {{ data.maximumViolation }}</span></p>
       <div
         v-if="data.notPageSwitching || data.isFullScreen"
         class="notify-hide-share-screen"
@@ -163,17 +162,17 @@ watch(() => props.isShowModal, isShow => {
           v-if="isSharingFullScreen"
           class="text-warning mb-50"
         >
-          {{ $t('please-hide-taskbar-share-screen') }}
+          {{ t('please-hide-taskbar-share-screen') }}
         </p>
         <p class="text-warning mb-25">
-          {{ $t('you-doing-exam') }}
+          {{ t('you-doing-exam') }}
         </p>
         <ul class="pl-2 ml-25 mb-0">
           <li class="text-warning mb-25">
-            {{ $t('you-will-be-violation-warning') }}
+            {{ t('you-will-be-violation-warning') }}
           </li>
           <li class="text-warning mb-0">
-            {{ $t('you-will-be-violation-report') }}
+            {{ t('you-will-be-violation-report') }}
           </li>
         </ul>
       </div>
@@ -184,32 +183,32 @@ watch(() => props.isShowModal, isShow => {
     >
       <div v-if="Object.keys(data).length">
         <p v-if="data.notPageSwitching && data.isFullScreen">
-          {{ $t('no-allow-violation') }}
+          {{ t('no-allow-violation') }}
         </p>
         <p v-else-if="data.notPageSwitching">
-          {{ $t('no-allow-violation-change-tab') }}
+          {{ t('no-allow-violation-change-tab') }}
         </p>
         <p v-else-if="data.isFullScreen">
-          {{ $t('no-allow-violation-no-fullscreen') }}
+          {{ t('no-allow-violation-no-fullscreen') }}
         </p>
       </div>
-      <p>{{ $t('number-violation') }} <span class="text-primary">{{ data.numberWarning }}</span> <span v-if="data.maximumViolation">/ {{ data.maximumViolation }}</span></p>
+      <p>{{ t('number-violation') }} <span class="text-primary">{{ data.numberWarning }}</span> <span v-if="data.maximumViolation">/ {{ data.maximumViolation }}</span></p>
       <p v-if="data.maximumViolation">
-        {{ $t('warning-maximum-violation') }}
+        {{ t('warning-maximum-violation') }}
       </p>
       <div
         v-if="data.notPageSwitching || data.isFullScreen"
         class="notify-hide-share-screen"
       >
         <p class="text-warning mb-50">
-          {{ $t('you-doing-exam') }}
+          {{ t('you-doing-exam') }}
         </p>
         <ul class="pl-2 ml-25 mb-0">
           <li class="text-warning mb-25">
-            {{ $t('you-will-be-violation-warning') }}
+            {{ t('you-will-be-violation-warning') }}
           </li>
           <li class="text-warning mb-0">
-            {{ $t('you-will-be-violation-report') }}
+            {{ t('you-will-be-violation-report') }}
           </li>
         </ul>
       </div>

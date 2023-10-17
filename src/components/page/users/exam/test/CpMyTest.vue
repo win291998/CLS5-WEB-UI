@@ -25,8 +25,8 @@ const router = useRouter()
 const sheet = ref(false)
 const layoutMobile = ref(false)
 const myExamManagerManager = myExamManagerStore()
-const { pageOption, pageNumberUploadingChange, questions, isShowModalUploading, isShowSubmitError, quantityFileUploading, questionStore, totalPoint, isShowModalSubmit, isConnected, isReview, captureStream, captureCamera, timer, connection, examData, isSubmitting } = storeToRefs(myExamManagerManager)
-const { saveLocalData, submitExam, fetchQuestion, handleConnected, handleFocusExam, handleDisconnected, handleChangeTab, mouseLeave, onFullScreenChange, autoCaptureCamera } = myExamManagerManager
+const { pageOption, pageNumberUploadingChange, isShowModalUploading, isShowSubmitError, quantityFileUploading, questionStore, totalPoint, isShowModalSubmit, isConnected, isReview, captureStream, captureCamera, timer, connection, examData, isSubmitting } = storeToRefs(myExamManagerManager)
+const { saveLocalData, submitExam, handleConnected, handleFocusExam, handleDisconnected, handleChangeTab, mouseLeave, onFullScreenChange, autoCaptureCamera } = myExamManagerManager
 const config = ref({
   wheelPropagation: false,
   suppressScrollX: true,
@@ -210,9 +210,11 @@ function handleTrackingDownTimer() {
     isWarningHalfTime.value = true
   }
 }
+function checkShowPage(pos: number) {
+  return (pageOption.value.pageNumber - 1) * pageOption.value.pageSize <= pos && pos < pageOption.value.pageNumber * pageOption.value.pageSize
+}
+
 function pageChange(pageNumber: number, currentSizePage: number, pageOld: number) {
-  console.log(pageNumber, currentSizePage, pageOld)
-  toast('ERROR', t('warning-last-minutes'))
   pageOption.value.pageNumber = pageNumber
 
   if (quantityFileUploading.value) {
@@ -225,7 +227,6 @@ function pageChange(pageNumber: number, currentSizePage: number, pageOld: number
   }
   const el: any = document.getElementById('exam-test-content-scroll')
   el.scrollTop = 0
-  fetchQuestion()
 }
 
 // variant time
@@ -342,14 +343,14 @@ defineExpose({
             class="mt-content mt-8"
           >
             <div
-              v-for="(qs, pos) in questions"
+              v-for="(qs, pos) in questionStore"
               :key="qs.id"
             >
-              <div>
+              <div v-show="checkShowPage(pos)">
                 <CpContentView
-                  v-model:data="questions[pos]"
+                  v-model:data="questionStore[pos]"
                   :type="qs.typeId"
-                  :number-question="(pageOption?.pageNumber - 1) * pageOption?.pageSize + pos + 1"
+                  :number-question="pos + 1"
                   :disabled="isReview"
                   :is-review="isReview"
                   :total-point="totalPoint"
@@ -419,7 +420,10 @@ defineExpose({
       @click="sheet = !sheet"
     />
 
-    <VBottomSheet v-model="sheet">
+    <VBottomSheet
+      v-model="sheet"
+      location="right"
+    >
       <VCard
         class="text-center"
         height="200"

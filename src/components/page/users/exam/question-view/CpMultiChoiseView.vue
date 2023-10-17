@@ -70,6 +70,7 @@ function changeValue(pos: any, value: any) {
 }
 function handlePinQs() {
   questionValue.value.isMark = !questionValue.value.isMark
+  emit('update:isDataChange', false)
 }
 
 watch(() => props.data, val => {

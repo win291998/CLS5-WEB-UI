@@ -70,11 +70,11 @@ function changeValue(value: any) {
   emit('update:isAnswered', true)
   emit('update:data', questionValue.value)
   emit('update:isDataChange', true)
-  console.log(123)
 }
 const idRandom = ref(MethodsUtil.createRandomId(5))
 function handlePinQs() {
   questionValue.value.isMark = !questionValue.value.isMark
+  emit('update:isDataChange', false)
 }
 
 watch(() => props.data, val => {

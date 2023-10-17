@@ -39,7 +39,7 @@ function totalIsAnswered() {
         :key="idx"
         class="mt-point-item flex-center"
         :class="{ 'item-select': item.isAnswered, 'item-flag': item.isMark }"
-        @click="handleClickQuestion(item)"
+        @click="handleClickQuestion(item, true, idx)"
       >
         {{ idx + 1 }}
       </div>

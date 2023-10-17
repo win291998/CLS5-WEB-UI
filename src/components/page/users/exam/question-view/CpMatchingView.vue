@@ -175,7 +175,7 @@ function drop(evt: any) {
       emit('update:isAnswered', cloneData.isAnswered)
       emit('update:data', cloneData)
       nextTick(() => {
-        emit('update:isDataChange')
+        emit('update:isDataChange', true)
       })
     }
   }
@@ -238,13 +238,15 @@ function dragLeave(evt: any) {
 /** **drag drop */
 function handlePinQs() {
   const dataClone = ref(props.data)
+  questionValue.value.isMark = !questionValue.value.isMark
   dataClone.value.isMark = !dataClone.value.isMark
+  emit('update:isDataChange', false)
+  emit('update:data', dataClone.value)
 }
 
 watch(() => props.data, val => {
   const answers: any[] = []
   const temp = window._.cloneDeep(val)
-
   temp?.answers.forEach((element: any) => {
     const position = element.position - 1
     if (position > -1) {
@@ -254,6 +256,7 @@ watch(() => props.data, val => {
           right: null as any,
         }
       }
+
       if (element.isTrue === false) {
         answers[position].left = element
       }
@@ -270,10 +273,9 @@ watch(() => props.data, val => {
       }
     }
   })
-
   temp.answers = answers
   questionValue.value = temp
-  questionValue.value.isAnswered = questionValue.value.answers.filter((item: any) => item.right.matched).length
+  questionValue.value.isAnswered = questionValue.value.answers.filter((item: any) => item.right?.matched).length
   emit('update:isAnswered', questionValue.value.isAnswered)
 }, { immediate: true })
 </script>
@@ -327,7 +329,7 @@ watch(() => props.data, val => {
             {
               ansTrue: checkAnsTrueClass(item),
               ansFalse: checkAnsFalseClass(item),
-              unMatched: showAnswerTrue ? false : !item.right.matched,
+              unMatched: showAnswerTrue ? false : !item.right?.matched,
             }
           "
         >

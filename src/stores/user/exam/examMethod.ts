@@ -35,7 +35,7 @@ export default class ExamMethodsUtil {
           case 8:
             element.answers.forEach((answer: any) => {
               if (answer.isTrue === false && answer.answeredValue !== null) {
-                const answerMatch = element.answers.find(x => x.isTrue === true && x.answeredValue === answer.answeredValue)
+                const answerMatch = element.answers.find((x: any) => x.isTrue === true && x.answeredValue === answer.answeredValue)
                 if (answerMatch)
                   answer.answeredValue = answerMatch.answerId
               }
@@ -67,8 +67,6 @@ export default class ExamMethodsUtil {
       // }
       // else {
       const childQuestionLog = this.findQuestionFromLog(element.id, logData)
-      console.log('childQuestionLog', element, logData, childQuestionLog)
-
       if (childQuestionLog) {
         this.synchronizedFromQuestionLog(element, childQuestionLog)
         element.isMark = childQuestionLog.isMark
@@ -142,18 +140,27 @@ export default class ExamMethodsUtil {
     }
   }
 
-  // lấy dữ liệu đã lưu trong local
+  static checkQuestionAnsweredLog(qs: any) {
+    return !!(qs?.answers?.length > 0 || qs?.answer || qs?.urlFile)
+  }
+
+  /** *lấy từ local -> question ************************************************************************************/
+  // format dữ liệu đã lưu trong local
   static formatDataFromLocal(element: any, questionItem: any) {
-    if (questionItem && questionItem.answers?.length) {
+    console.log(questionItem)
+    if (questionItem && (questionItem.answers?.length || questionItem.answer || questionItem.urlFile)) {
       switch (element.typeId) {
         case 1: // câu hỏi 1 lựa chọn
         case 3: // câu hỏi  gạch chân
-        case 4: // câu hỏi  gạch chân
+        case 4: // câu hỏi  true false
+          console.log(element, questionItem)
           const answer = element.answers.find(
             (x: any) => x.id === questionItem.answers[0],
           )
-          if (answer)
+          if (answer) {
             answer.answeredValue = true
+            element.isAnswered = true
+          }
           break
 
           // câu hỏi nhiều lựa chọn
@@ -162,11 +169,14 @@ export default class ExamMethodsUtil {
           element.answers.forEach((asw: any) => {
             asw.answeredValue = questionItem.answers.includes(asw.id)
           })
+          element.isAnswered = true
           break
         case 5:
           element.answers.forEach((asw: any) => {
-            asw.answeredValue = questionItem.answers.findIndex((item: any) => item === asw.id) % 2 === 0
+            const pos = questionItem.answers.findIndex((item: any) => item === asw.id)
+            asw.answeredValue = pos !== -1 ? pos % 2 === 0 : null
           })
+          element.answeredValue = true
           break
         case 6:
 
@@ -175,60 +185,37 @@ export default class ExamMethodsUtil {
             asw.answeredValue = position >= 0 ? position + 1 : null
             asw.isTrue = position >= 0
           })
+          element.answeredValue = true
           break
 
         // câu hỏi ghép đôi
         case 8:
-          console.log(element, questionItem)
-
-          const pos = 0
-          element.answers.forEach((asw: any) => {
-            // for (let i = 0; i < array.length; i++) {
-            //   const element = array[i];
-
-            // }
-            const position = questionItem.answers.findIndex((item: any) => item === asw.id)
-            console.log(position)
-
-            // asw.answeredValue = position >= 0 ? position + 1 : null
-            // asw.isTrue = position >= 0
-          })
-
-          // if (questionLocal.answers !== null) {
-          //   questionLocal?.answers?.forEach((answerLocal: any) => {
-          //     if (answerLocal && answerLocal.right !== null) {
-          //       const answer = element.answers.find(
-          //         (x: any) => x.answerId === answerLocal.right,
-          //       )
-          //       if (answer) {
-          //         answer.position = answerLocal.position
-          //         answer.answeredValue = answerLocal.position
-          //         answer.isMatched = answerLocal.isMatched
-          //       }
-          //     }
-          //     if (answerLocal && answerLocal.left !== null) {
-          //       const answer = element.answers.find(
-          //         (x: any) => x.answerId === answerLocal.left,
-          //       )
-          //       if (answer && answerLocal.right && answerLocal.isMatched)
-          //         answer.answeredValue = answerLocal.right
-          //     }
-          //   })
-          // }
+          for (let i = 0; i < questionItem.answers.length; i++) {
+            const elementCurrentPosLeft = element.answers.find((item: any) => item.id === questionItem.answers[i])
+            elementCurrentPosLeft.answeredValue = elementCurrentPosLeft.position
+            const elementCurrentPosRight = element.answers.find((item: any) => item.id === questionItem.answers[i + 1])
+            const elementCurrentPosRightCurent = element.answers.find((item: any) => item.position === elementCurrentPosLeft.position && item.isTrue)
+            elementCurrentPosRight.answeredValue = elementCurrentPosLeft.position
+            elementCurrentPosRightCurent.position = elementCurrentPosRight.position
+            elementCurrentPosRight.position = elementCurrentPosLeft.position
+            elementCurrentPosRight.matched = true
+            element.isAnswered = true
+            i++
+          }
           break
 
-        // case 9:
-        //   if (element.answers.length > 0) {
-        //     element.answers[0].essayContent = questionLocal?.essayContent || null
-        //     element.answers[0].urlFile = questionLocal?.urlFile || null
-        //   }
-        //   break
+        case 9:
+          element.answers[0].answeredValue = questionItem.answer
+          element.answers[0].urlFile = questionItem.urlFile
+          element.isAnswered = true
+          break
         default:
           break
       }
     }
   }
 
+  // lấy dữ liệu từ local vào question
   static getDataFromDataLocal(questionStore: any, localData: any) {
     // lưu local storage
     questionStore.forEach((element: any) => {
@@ -236,39 +223,57 @@ export default class ExamMethodsUtil {
       if (!element.isAnswered)
         element.isAnswered = false
       questionItem = localData.find((x: any) => x.id === element.id)
-
       if (questionItem) {
         element.isMark = questionItem.isMark
         element.isAnswered = questionItem.isAnswered
 
         // nếu là câu hỏi đơn
         if (!element.isGroup) {
+          if (this.checkQuestionAnsweredLog(questionItem) && !element.isAnswered)
+            element.isAnswered = true
           this.formatDataFromLocal(element, questionItem)
         }
         else {
+          console.log(questionItem, localData, this.checkQuestionAnsweredLog(questionItem))
+
           element.questions.forEach((question: any) => {
-            // this.formatDataFromLocal(question, questionItem)
+            questionItem = localData.find((x: any) => x.id === question.id)
+            this.formatDataFromLocal(question, questionItem)
           })
         }
       }
     })
+    console.log(questionStore)
   }
 
-  // lấy dữ liệu để lưu vào local
-  static getLocalDataFromQuestion(question: any, isMark?: boolean) {
+  /** *lấy từ local -> question ***********************************************************************************/
+
+  /** *lưu từ question -> local ***********************************************************************************/
+  // lấy dữ liệu từ câu hỏi để lưu vào local
+  static getLocalDataFromQuestion(question: any, isMark: boolean | null = null) {
+    console.log(question)
+
     let questions: any = null
     const localData = {
       id: question.id,
       isMark,
       answers: null as any,
+      answer: null as any,
+      urlFile: null as any,
       isAnswered: question.isAnswered,
     }
     if (!question.isGroup) {
       question.isAnswered = !!question.isAnswered
       questions = this.changeDataSaveLocal(question)
+      if (questions?.typeId && questions?.typeId !== 9)
+        localData.answers = questions
+
+      if (questions?.typeId && questions?.typeId === 9) {
+        localData.answer = questions.answer
+        localData.urlFile = questions.urlFile
+      }
     }
 
-    localData.answers = questions
     return localData
   }
 
@@ -277,6 +282,7 @@ export default class ExamMethodsUtil {
     if (!element.isAnswered)
       element.isAnswered = false
     let answerData: any = null
+    const isMark: any = null
 
     switch (element.typeId) {
       case 1: // câu hỏi 1 lựa chọn
@@ -330,64 +336,64 @@ export default class ExamMethodsUtil {
         break
 
       case 8:
-        console.log(element)
         let posFalseMatch = 0
         let posTrueMatch = 1
         for (let i = 0; i < element.answers.length; i += 1) {
-          if (element.answers[i]?.matched) {
+          if (element.answers[i]?.matched && element.answers[i]?.isTrue) {
             if (answerData === null)
               answerData = []
+            const leftEle = element.answers.find((item: any) => (item.position === element.answers[i].position) && item.isTrue === false)
+
             answerData[posTrueMatch] = element.answers[i].id
-            answerData[posFalseMatch] = element.answers[i + 1].id
+            answerData[posFalseMatch] = leftEle.id
             i++
             posTrueMatch += 2
             posFalseMatch += 2
           }
         }
-
-        // questionData.answers = []
-        // // eslint-disable-next-line no-case-declarations
-        // const rights: any = element.answers.filter((x: any) => x.isTrue)
-        // // eslint-disable-next-line no-case-declarations
-        // const lefts: any = element.answers.filter((x: any) => !x.isTrue)
-        // for (let i = 0; i < lefts.length; i += 1) {
-        //   const left = lefts.find(x => x.position === i + 1)
-        //   const right = rights.find(x => x.answeredValue === i + 1)
-        //   if (left && right) {
-        //     const answer = {
-        //       left: left.answerId,
-        //       right: right.answerId,
-        //       isMatched: left.answeredValue === right.answerId,
-        //       position: i + 1,
-        //     }
-        //     questionData.answers.push(answer)
-        //   }
-        // }
         break
 
-      // case 9:
-      //   element.answers.forEach((answer: any) => {
-      //     questionData.essayContent = answer.essayContent
-      //     questionData.urlFile = answer.urlFile
-      //   })
-      //   break
+      case 9:
+        if (answerData === null) {
+          answerData = {
+            answer: null as any,
+            urlFile: null as any,
+          }
+        }
+        answerData.answer = element.answers[0].answeredValue
+        answerData.urlFile = element.answers[0].urlFile
+        break
       default:
         break
     }
-    console.log('answerData', answerData)
 
     return answerData
   }
 
-  static saveLocalData(element: any, localData: any) {
-    // console.log(element, localData)
-    if (!element.isGroup) {
-      const localDataPos = localData.find((item: any) => item.id === element.id)
-      localDataPos.answers = this.changeDataSaveLocal(element)
-      console.log(localDataPos.answers)
+  // lưu dữ liệu vào local khi thay đổi lựa chọn
+  static saveLocalData(element: any, localData: any, isChangeAnser: boolean) {
+    const localDataPos = localData.find((item: any) => item.id === element.id)
+    console.log(element, localDataPos)
+
+    if (isChangeAnser) {
+      if (element.isGroup) {
+        localDataPos.isAnswered = element.isAnswered
+        return
+      }
+      const dataChangeQs = this.changeDataSaveLocal(element)
+      if (element.typeId !== 9) {
+        localDataPos.answers = dataChangeQs
+      }
+      else {
+        localDataPos.answer = dataChangeQs?.answer
+        localDataPos.urlFile = dataChangeQs?.urlFile
+      }
     }
+
+    localDataPos.isMark = element?.isMark
   }
 
+  // lấy dữ liệu log lưu lên server
   static getExamUserAnswerChange(questionStore: any, localStorageData: any) {
     // console.log('localStorageData', localStorageData)
     // console.log('questionStore', questionStore)
@@ -408,8 +414,8 @@ export default class ExamMethodsUtil {
     }
     questionStore.forEach((element: any) => {
       // chỉ lấy những câu hỏi có sự thay đổi đáp án
-      if (element.isDataChange === true || element.listQuestions?.find((x: any) => x.isDataChange === true)
-      || (listIdQuestionChange.length && element.listQuestions.find((x: any) => listIdQuestionChange.includes(x.questionId)))) {
+      if (element.isDataChange === true || element.questions?.find((x: any) => x.isDataChange === true)
+      || (listIdQuestionChange.length && element.questions.find((x: any) => listIdQuestionChange.includes(x.questionId)))) {
         let questionData = null
 
         questionData = {
@@ -437,11 +443,12 @@ export default class ExamMethodsUtil {
         element.isDataChange = false
       }
     })
-    console.log('model', model)
     return model
   }
 
-  // lấy danh sách câu trả lời của người dùng
+  /** *lưu từ question -> local ***********************************************************************************/
+
+  // lấy danh sách câu trả lời của người dùng theo từng loại
   static getListUserAnswer(question: any) {
     let listAnswer: any = null
     switch (question.typeId) {
@@ -501,8 +508,9 @@ export default class ExamMethodsUtil {
           if (question.answers[i]?.matched) {
             if (listAnswer === null)
               listAnswer = []
+            const leftEle = question.answers.find((item: any) => (item.position === question.answers[i].position) && item.isTrue === false)
             listAnswer[posTrueMatch] = question.answers[i].id
-            listAnswer[posFalseMatch] = question.answers[i + 1].id
+            listAnswer[posFalseMatch] = leftEle.id
             i++
             posTrueMatch += 2
             posFalseMatch += 2
@@ -524,7 +532,6 @@ export default class ExamMethodsUtil {
 
         break
     }
-    console.log('listAnswer', listAnswer)
 
     return listAnswer
   }
@@ -550,6 +557,7 @@ export default class ExamMethodsUtil {
     return questionData
   }
 
+  // lấy danh sách đáp án của người dùng khi nộp bài
   static getExamUserAnswer(questionStore: any) {
     const model: any = {
       listData: [],
@@ -566,7 +574,6 @@ export default class ExamMethodsUtil {
         if (listData?.length) {
           model.listData.push({
             id: element.id,
-            isMark: element.isMark,
             listAnswer: listData,
           })
         }
