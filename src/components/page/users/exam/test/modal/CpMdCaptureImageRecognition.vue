@@ -49,8 +49,6 @@ function open() {
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: false })
       .then(stream => {
-        console.log(stream)
-
         video.value.srcObject = stream
         video.value.play()
       })
@@ -112,7 +110,6 @@ function takepicture() {
         files: file,
         isSecure: false,
       }
-      console.log(imgDataBlob.value)
     }, 'image/jpeg', 1)
     const data = canvas.value.toDataURL('image/png')
     photo.value.setAttribute('src', data)
@@ -134,8 +131,6 @@ async function sendImage() {
   isHandling.value = true
 
   await MethodsUtil.uploadFile(imgDataBlob.value).then(value => {
-    console.log(value)
-
     if (value?.fileOrigin) {
       if (value && value?.fileOrigin) {
         submitIdentified(value?.fileOrigin)

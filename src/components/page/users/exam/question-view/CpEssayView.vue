@@ -83,7 +83,7 @@ async function uploadFileLocal(data: any, file: any) {
         dataFile.value.serverCode = data?.serverCode
         questionValue.value.answers[0].urlFile = data.fileFolder
         emit('update:isAnswered', true)
-        emit('update:isDataChange')
+        emit('update:isDataChange', true)
       }
     })
   }
@@ -98,17 +98,18 @@ function changeValue(value: any) {
   questionValue.value.isAnswered = questionValue.value.answers.filter((item: any) => item[props.customKeyValue] !== null || item.urlFile).length
   emit('update:data', questionValue.value)
   emit('update:isAnswered', questionValue.value.isAnswered)
-  emit('update:isDataChange')
+  emit('update:isDataChange', true)
 }
 function deleteFile(value: any) {
   questionValue.value.answers[0].urlFile = null
   questionValue.value.isAnswered = !!questionValue.value.answers.filter((item: any) => item[props.customKeyValue] !== null || item.urlFile).length
   emit('update:isAnswered', questionValue.value.isAnswered)
-  emit('update:isDataChange')
+  emit('update:isDataChange', true)
   emit('update:data', questionValue.value)
 }
 function handlePinQs() {
   questionValue.value.isMark = !questionValue.value.isMark
+  emit('update:isDataChange', false)
 }
 onMounted(() => {
   emit('update:isAnswered', questionValue.value.isAnswered)

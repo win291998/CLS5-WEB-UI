@@ -13,7 +13,7 @@ const {
   examControlRef, isShowModalSuspended, contentConfirmModal, quantityFileUploading, questionGoTo, pageOption, pageNumberUploadingChange,
   examData, isReview, isSuspendedExam, isComplete, isDoing, userViolation, isShowModalAntiCheat, isSharingFullScreen, isNotice, isConnected, isInTroduceView, isShowModalUploading,
 } = storeToRefs(myExamManagerManager)
-const { acceptCamera, handleClickQuestion, handleStartExam, setQuantityUploadingFile, getExamInfo, handleAcceptConfirmModal, handleSuspendUser, getTestQuestion, fetchQuestion, fetchSupervisions, updateAmountAnswered, getExamQuestions } = myExamManagerManager
+const { acceptCamera, handleClickQuestion, handleStartExam, setQuantityUploadingFile, getExamInfo, handleAcceptConfirmModal, handleSuspendUser, getTestQuestion, fetchSupervisions, updateAmountAnswered, getExamQuestions } = myExamManagerManager
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 
 const isTestRender = ref(false)
@@ -37,7 +37,6 @@ async function initData() {
         return
       }
       await getTestQuestion()
-      fetchQuestion()
       fetchSupervisions()
       updateAmountAnswered()
       if (examData.value.examineeStartTime !== null)
@@ -50,15 +49,12 @@ async function initData() {
     isInTroduceView.value = false
     await getExamQuestions()
     updateAmountAnswered()
-    fetchQuestion()
   }
   isloading.value = false
 }
 
 // bắt đầu làm bài
 function startExam() {
-  console.log(userViolation.value)
-
   if (!userViolation.value?.notPageSwitching && !userViolation.value?.isFullScreen) {
     isInTroduceView.value = false
     handleStartExam()
@@ -86,7 +82,6 @@ function handleAcceptUploadConfirmModal() {
   pageOption.value.pageNumber = pageNumberUploadingChange.value
   const el: any = document.getElementById('exam-test-content-scroll')
   el.scrollTop = 0
-  fetchQuestion()
   pageNumberUploadingChange.value = null
 }
 function handleCancelUploadConfirmModal() {

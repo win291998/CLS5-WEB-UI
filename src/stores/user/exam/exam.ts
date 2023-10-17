@@ -333,7 +333,6 @@ export const myExamManagerStore = defineStore('myExamManager', () => {
 
   // tính thời gian từ thời gian server trước đó
   function getTimeFormTimeServer() {
-    console.log(timeServer.value)
     if (!timeServer.value)
       return ''
     return new Date(new Date(timeServer.value)?.getTime() + ((new Date()?.getTime() - new Date(joinExamTime.value)?.getTime()))).toISOString()
@@ -430,11 +429,7 @@ export const myExamManagerStore = defineStore('myExamManager', () => {
 
   // lấy danh sách câu hỏi theo phân trang
   async function fetchQuestion() {
-    const begin = (pageOption.value.pageNumber - 1) * pageOption.value.pageSize
-    questions.value = questionStore.value.slice(
-      begin,
-      begin + pageOption.value.pageSize,
-    )
+    questions.value = questionStore.value
   }
 
   // cập nhật số câu trả lời
@@ -471,9 +466,12 @@ export const myExamManagerStore = defineStore('myExamManager', () => {
       }
       questionStore.value.forEach((element: any) => {
         if (element.isGroup) {
+          localData.value.questions.push(
+            ExamMethodsUtil.getLocalDataFromQuestion(element, element.isMark),
+          )
           element.questions.forEach((child: any) => {
             localData.value.questions.push(
-              ExamMethodsUtil.getLocalDataFromQuestion(child, element.isMark),
+              ExamMethodsUtil.getLocalDataFromQuestion(child),
             )
           })
         }
@@ -494,12 +492,13 @@ export const myExamManagerStore = defineStore('myExamManager', () => {
   }
   const questionGoTo = ref<any>(null)
   const timerScrollQuestion = ref<any>(null)
-  async function handleClickQuestion(question: any, isConfirm?: boolean) {
+  async function handleClickQuestion(question: any, isConfirm?: boolean, pos = 0) {
     const idQuestion = question.id
+    console.log((pageOption.value.pageNumber - 1) * pageOption.value.pageSize <= pos && pos < pageOption.value.pageNumber * pageOption.value.pageSize)
 
     if (question === null)
       return
-    if (!questions.value.includes(question)) {
+    if (!((pageOption.value.pageNumber - 1) * pageOption.value.pageSize <= pos && pos < pageOption.value.pageNumber * pageOption.value.pageSize)) {
       if (quantityFileUploading.value && !isConfirm) {
         questionGoTo.value = question
         isShowModalUploading.value = true
@@ -507,7 +506,7 @@ export const myExamManagerStore = defineStore('myExamManager', () => {
       }
       const index = questionStore.value.indexOf(question)
       pageOption.value.pageNumber = Math.floor(index / pageOption.value.pageSize) + 1
-      fetchQuestion()
+      console.log(pageOption.value)
       nextTick(() => {
         clearTimeout(timerScrollQuestion.value)
         timerScrollQuestion.value = null
@@ -551,13 +550,13 @@ export const myExamManagerStore = defineStore('myExamManager', () => {
 
   // lưu dữ liệu local khi trả lời đáp án
   function saveLocalData(value: any, data: any) {
-    console.log(2321)
-
     // updateAmountAnswered()
     ExamMethodsUtil.saveLocalData(
       data,
       localData.value.questions,
+      value,
     )
+    console.log(localData.value)
 
     localData.value.createdDate = getTimeFormTimeServer()
     localStorage.setItem(storageKey.value, JSON.stringify(localData.value))
@@ -987,7 +986,7 @@ export const myExamManagerStore = defineStore('myExamManager', () => {
     }
   }
 
-  // Lưu câu trả lời của người dùng
+  // Lưu câu trả lời của người dùng ghi log và submit
   async function saveUserAnswer(isSaveLog?: any, submitId?: any) {
     // !isSaveLog: Nộp bài; submitId(1: Hệ thống, 2: Người dùng)
     let data: any = null
@@ -1014,9 +1013,14 @@ export const myExamManagerStore = defineStore('myExamManager', () => {
         }
         MethodsUtil.requestApiCustom(ExamService.PostStudentExamLog, TYPE_REQUEST.POST, model).then((result: any) => {
           questionStore.value.forEach((element: any) => {
-            element.listQuestions.forEach((question: any) => {
-              question.isDataChange = false
-            })
+            if (element.isGroup) {
+              element.questions.forEach((question: any) => {
+                question.isDataChange = false
+              })
+            }
+            else {
+              element.isDataChange = false
+            }
           })
           if (localStorageData?.questions?.length) {
             localStorageData?.questions?.forEach((el: any) => {

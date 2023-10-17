@@ -135,8 +135,8 @@ function checkTypeSurvey() {
 function updateAnswered(value: any, data: any) {
   if (props.isGroup)
     emit('update:isAnsweredGroup', value)
-  else
-    dataValue.value.isAnswered = value
+
+  else dataValue.value.isAnswered = value
 }
 function updateIsDataChange(value: any, data?: any) {
   if (!props.isGroup)
@@ -144,13 +144,15 @@ function updateIsDataChange(value: any, data?: any) {
   emit('saveLocalData', value, data)
 }
 function updateAnsweredGroup(value: any, data: any) {
-  dataValue.value.isAnswered = value
+  dataValue.value.isAnswered = dataValue.value.questions.some((item: any) => item.isAnswered === true)
+  emit('saveLocalData', value, dataValue.value)
 }
 function checkPointGroup(listQs: any) {
   return listQs.reduce((totalPoint: any, currentValue: any) => totalPoint + currentValue.unitPoint, 0)
 }
 function handlePinQs() {
   dataValue.value.isMark = !dataValue.value.isMark
+  emit('saveLocalData', false, dataValue.value)
 }
 function handleUpdateData(val: any) {
   emit('update:data', val)

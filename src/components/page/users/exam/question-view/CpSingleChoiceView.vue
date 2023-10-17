@@ -72,14 +72,17 @@ function changeValue(value: any) {
 }
 function handlePinQs() {
   questionValue.value.isMark = !questionValue.value.isMark
+  emit('update:isDataChange', false)
 }
 
 const idRandom = ref(MethodsUtil.createRandomId(5))
 
-watch(() => props.data, val => {
-  questionValue.value = val
+onMounted(() => {
   questionValue.value.isAnswered = !!questionValue.value.answers.filter((item: any) => item[props.customKeyValue]).length
   emit('update:isAnswered', questionValue.value.isAnswered)
+})
+watch(() => props.data, val => {
+  questionValue.value = val
 }, { immediate: true })
 </script>
 

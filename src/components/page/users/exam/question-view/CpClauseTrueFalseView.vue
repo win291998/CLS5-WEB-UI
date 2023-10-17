@@ -72,6 +72,7 @@ function changeValue(pos: any, value: boolean) {
 const idRandom = ref(MethodsUtil.createRandomId(5))
 function handlePinQs() {
   questionValue.value.isMark = !questionValue.value.isMark
+  emit('update:isDataChange', false)
 }
 
 watch(() => props.data, val => {
