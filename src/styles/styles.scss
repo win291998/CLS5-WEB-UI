@@ -97,6 +97,9 @@ body {
 .color-warning-300 {
   color: $color-warning-300 !important;
 }
+.color-text-500 {
+  color: $color-gray-500 !important;
+}
 .color-text-900 {
   color: $color-gray-900 !important;
 }
@@ -252,7 +255,7 @@ body {
 }
 .b-container {
   border: 1px solid rgb(var(--v-gray-300));
-  background-color: #ffff;
+  background: rgb(var(--v-theme-surface));
   border-radius: 8px;
   overflow: hidden;
 }

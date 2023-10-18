@@ -127,7 +127,72 @@
         {
             "id": 0,
             "name": "CourseService.NoStart",
-            "color": "infor",
+            "color": "warning",
+            "icon": "",
+            "note": "Chưa bắt đầu"
+        },
+        {
+            "id": 1,
+            "name": "CourseService.LearnerEligible",
+            "color": "error",
+            "icon": "",
+            "note": "Có điều kiện"
+        },
+        {
+            "id": 2,
+            "name": "CourseService.LearnerHaveNotStudiedYet",
+            "color": "purple",
+            "icon": "",
+            "note": "Chưa bắt đầu học"
+        },
+        {
+            "id": 3,
+            "name": "CourseService.LearnerStudying",
+            "color": "primary",
+            "icon": "",
+            "note": "Đang học"
+        },
+        {
+            "id": 4,
+            "name": "CourseService.LearnerCompleted",
+            "color": "success",
+            "icon": "",
+            "note": "Đã hoàn thành"
+        },
+        {
+            "id": 5,
+            "name": "CourseService.LearnerNotCompleted",
+            "color": "error",
+            "icon": "",
+            "note": "Chưa hoàn thành"
+        },
+        {
+            "id": 6,
+            "name": "CourseService.WaitingMarkEssay",
+            "color": "primary-light",
+            "icon": "",
+            "note": "Chờ chấm điểm tự luận"
+        },
+        {
+            "id": 7,
+            "name": "CourseService.Suspended",
+            "color": "warning",
+            "icon": "",
+            "note": "Đình chỉ"
+        },
+        {
+            "id": 8,
+            "name": "CourseService.NoAssign",
+            "color": "info",
+            "icon": "",
+            "note": "Chưa được gán"
+        }
+    ],
+    "StatusTypeMyExam": [
+        {
+            "id": 0,
+            "name": "CourseService.NoStart",
+            "color": "warning",
             "note": "Chưa bắt đầu"
         },
         {
@@ -169,7 +234,7 @@
         {
             "id": 7,
             "name": "CourseService.Suspended",
-            "color": "error",
+            "color": "warning",
             "note": "Đình chỉ"
         },
         {
