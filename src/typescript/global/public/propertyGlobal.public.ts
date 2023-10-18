@@ -10,6 +10,7 @@ import { TYPE_REQUEST } from '@/typescript/enums/enums'
 import type { Any, typeToast } from '@/typescript/interface'
 import constant from '@/constant/constant'
 import jwtDefaultConfig from '@/auth/jwtDefaultConfig';
+import AuthUtil from '@/auth'
 
 //Cài đặt cố định
 declare global {
@@ -98,6 +99,7 @@ const windowDefineConstProperty = ()=> {
     axiosV5: axiosV5,
     showAllPageLoading,
     hideAllPageLoading,
+    userData: AuthUtil.getUserData(),
     notificationApiStatus: MethodsUtil.notificationApiStatus,
     SERVER_FILE: process.env.VUE_APP_BASE_SERVER_FILE,
     TOKEN_SV_FILE: `Bearer ${localStorage.getItem(jwtDefaultConfig.storageTokenKeyName) ||  constant.TOKEN_SV_FILE}`,

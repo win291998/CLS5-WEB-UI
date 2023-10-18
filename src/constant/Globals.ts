@@ -39,3 +39,54 @@ export const avatar = {
   offsetY: 30,
   size: 160,
 }
+
+export const LINE_HEIGHT_RATIOS = [
+  {
+    key: 'Times new roman',
+    value: 0.34,
+  },
+  {
+    key: 'Arial',
+    value: 0.34,
+  },
+  {
+    key: 'Montserrat, Helvetica, Arial, serif',
+    value: 0.23,
+  },
+  {
+    key: 'Noto Serif',
+    value: 0.34,
+  },
+  {
+    key: 'Barlow Condensed',
+    value: 0.34,
+  },
+  {
+    key: 'Dancing Script',
+    value: 0.34,
+  },
+  {
+    key: 'Style Script',
+    value: 0.34,
+  },
+  {
+    key: 'Source Serif Pro',
+    value: 0.34,
+  },
+  {
+    key: 'Carattere',
+    value: 0.34,
+  },
+  {
+    key: 'Bonheur Royale',
+    value: 0.34,
+  },
+  {
+    key: 'Corinthia',
+    value: 0.34,
+  },
+  {
+    key: 'VNF Chops',
+    value: 0.34,
+  },
+]

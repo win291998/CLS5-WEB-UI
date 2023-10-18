@@ -50,6 +50,10 @@ const CourseService = {
   GetCriteriaEvaluation: '/course/get-course-evaluation-criteria',
   GetCheckUserExist: '/course/check-user-exist',
   GetExportExcelArchiveContent: '/ContentArchive/export-excel-archive-content-report',
+  GetCertificateUserInfo: '/CertificationUser/get-detail',
+  GetCertificationDetail: '/certificationtemplate/get-detail',
+  GetCheckCertificateCondition: '/Course/get-list-course-by-ids',
+  GetListCertificationCourse: '/certification/get-certification-user',
 
   /** learner */
   GetLnCheckCourseRequire: '/learner/check-course-require',

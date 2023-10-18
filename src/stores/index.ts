@@ -29,7 +29,6 @@ export const configStore = defineStore('appConfig', () => {
     await MethodsUtil.requestApiCustom(SystemService.SettingDefaultSystem, TYPE_REQUEST.GET).then((value: any) => {
       if (value?.data?.length > 0)
         settingDefaults.value = value.data
-      Themes.setDataTheme(value.data)
       const isLoginOneDeviceStatus = value.data.find((x: any) => x.typeId === 5)
       if (isLoginOneDeviceStatus && isLoginOneDeviceStatus.value === 1)
         isLoginOneDevice.value = true
@@ -41,6 +40,9 @@ export const configStore = defineStore('appConfig', () => {
   const getThemeConfig = async () => {
     await MethodsUtil.requestApiCustom(SystemService.ThemeSystem, TYPE_REQUEST.GET).then((value: any) => {
       defaultThemeValue.value = value.data
+      console.log(value.data)
+
+      Themes.setDataTheme(value.data)
       localStorage.setItem('themeConfig', JSON.stringify(value.data))
     })
       .catch(() => {

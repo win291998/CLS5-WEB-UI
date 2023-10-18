@@ -8,6 +8,7 @@ import type { sizeDialog } from '@/typescript/enums/enums'
  * */
 interface Props {
   title?: string
+  id?: string
   subTitle?: string
   isDialogVisible: boolean
   type?: number
@@ -95,6 +96,11 @@ const sizeModal = computed(() => {
       break
   }
 })
+
+const dialogRef = ref()
+defineExpose({
+  dialogRef,
+})
 </script>
 
 <template>
@@ -103,6 +109,8 @@ const sizeModal = computed(() => {
     class="dialog-common ma-0"
   >
     <VDialog
+
+      ref="dialogRef"
       class="cm-dialogs"
       content-class="cm-dialogs "
       :model-value="props.isDialogVisible"
@@ -125,8 +133,10 @@ const sizeModal = computed(() => {
       </div>
       <CmCard
         v-else
+        :id="id"
         :class="{ 'modal-custom-divspace': isDivSpace }"
         backgroud="bg-white"
+        :hide-action="isHideFooter"
       >
         <template #title>
           <VCardTitle>
@@ -227,5 +237,6 @@ const sizeModal = computed(() => {
   position: absolute;
   top: 14px;
   right: 24px;
+  z-index: 999;
 }
 </style>
