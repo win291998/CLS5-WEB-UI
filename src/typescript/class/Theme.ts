@@ -7,7 +7,7 @@ import markIcon from '@/assets/images/exam/icon/Mark.png'
 
 interface DataThemesProps {
   examImages: any[] | []
-  themes: any[] | []
+  items: any[] | []
 }
 const SERVERFILE = process.env.VUE_APP_BASE_SERVER_FILE
 const EXAM_DEFAULT = defaultTheme.examImages
@@ -48,12 +48,13 @@ export class Themes {
     examVideo: '/testDevice/testVideo.mp4', // key = 29
   }
 
-  public static setDataTheme({ examImages, themes }: DataThemesProps) {
+  public static setDataTheme({ examImages, items }: DataThemesProps) {
     if (examImages && examImages.length > 0)
       this.examImage = examImages
+    console.log(examImages, items)
 
-    if (themes && themes.length > 0) {
-      themes.forEach((theme: any) => {
+    if (items && items.length > 0) {
+      items.forEach((theme: any) => {
         if (theme?.value) {
           switch (theme.key) {
             case 1:
