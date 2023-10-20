@@ -10,13 +10,13 @@ import CpFillBlankView from '@/components/page/users/exam/question-view/CpFillBl
 import CpFillBlank2View from '@/components/page/users/exam/question-view/CpFillBlank2View.vue'
 
 // survey
-import CpSingleChoiseSvView from '@/components/page/Admin/content/survey/survey-view/CpSingleChoiseSvView.vue'
-import CpMultiChoiseSvView from '@/components/page/Admin/content/survey/survey-view/CpMultiChoiseSvView.vue'
-import CpRangeSvView from '@/components/page/Admin/content/survey/survey-view/CpRangeSvView.vue'
-import CpEvaluateSvView from '@/components/page/Admin/content/survey/survey-view/CpEvaluateSvView.vue'
-import CpEssaySvView from '@/components/page/Admin/content/survey/survey-view/CpEssaySvView.vue'
-import CpMatrixSingleSvView from '@/components/page/Admin/content/survey/survey-view/CpMatrixSingleSvView.vue'
-import CpMatrixMultiSvView from '@/components/page/Admin/content/survey/survey-view/CpMatrixMultiSvView.vue'
+import CpSingleChoiseSvView from '@/components/page/gereral/page/user/surveyQuestion/CpSingleChoiseSvView.vue'
+import CpMultiChoiseSvView from '@/components/page/gereral/page/user/surveyQuestion/CpMultiChoiseSvView.vue'
+import CpRangeSvView from '@/components/page/gereral/page/user/surveyQuestion/CpRangeSvView.vue'
+import CpEvaluateSvView from '@/components/page/gereral/page/user/surveyQuestion/CpEvaluateSvView.vue'
+import CpEssaySvView from '@/components/page/gereral/page/user/surveyQuestion/CpEssaySvView.vue'
+import CpMatrixSingleSvView from '@/components/page/gereral/page/user/surveyQuestion/CpMatrixSingleSvView.vue'
+import CpMatrixMultiSvView from '@/components/page/gereral/page/user/surveyQuestion/CpMatrixMultiSvView.vue'
 
 import CpSpliterView from '@/components/page/gereral/CpSpliterView.vue'
 import CmButton from '@/components/common/CmButton.vue'
@@ -156,6 +156,8 @@ function handlePinQs() {
   emit('saveLocalData', false, dataValue.value)
 }
 function handleUpdateData(val: any) {
+  console.log(val)
+
   emit('update:data', val)
 }
 
@@ -169,7 +171,7 @@ watch(() => props.data, (val: any) => {
 
 <template>
   <div
-    :id="dataValue.id"
+    :id="dataValue.id || dataValue.questionId"
     class="w-100"
   >
     <Component

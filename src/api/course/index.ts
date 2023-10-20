@@ -54,6 +54,9 @@ const CourseService = {
   GetCertificationDetail: '/certificationtemplate/get-detail',
   GetCheckCertificateCondition: '/Course/get-list-course-by-ids',
   GetListCertificationCourse: '/certification/get-certification-user',
+  GetDetailContent: '/learner/get-course-content-detail',
+  GetQuestionSurvey: '/learner/get-test-survey-question',
+  GetSurveyStart: '/learner/get-test-survey-notice-result',
 
   /** learner */
   GetLnCheckCourseRequire: '/learner/check-course-require',
@@ -123,6 +126,7 @@ const CourseService = {
   PostAddCheckinCourse: (id: number | string) => `/course/${id}/checkin`, // Thêm điểm danh khóa học
   PostlRegisterCourse: '/learner/register-course',
   PostDeleteContentArchive: '/contentarchive/delete',
+  PostGenerateSurvey: '/learner/generate-data-survey',
 
   /** Delete */
   DeleteUserReg: 'courseuser/delete-register',
