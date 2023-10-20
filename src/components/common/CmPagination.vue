@@ -83,12 +83,8 @@ watch([() => props.currentPage], ([newValue]) => {
   pageOld.value = window._.clone(newValue)
 })
 watch(() => props.pageSize, (val: any) => {
-  if (props.pageSize)
-
-    pageSizeCurrent.value = val
-
-  else pageSizeCurrent.value = PAGINATION_PAGE_SIZE_DEFAULT
-})
+  pageSizeCurrent.value = val || PAGINATION_PAGE_SIZE_DEFAULT
+}, { immediate: true })
 </script>
 
 <template>
