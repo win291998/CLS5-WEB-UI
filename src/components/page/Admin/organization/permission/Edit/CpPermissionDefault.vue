@@ -74,23 +74,29 @@ function handleUnChecked(node: any, idx: number) {
 
 <style lang="scss">
 @use "/src/styles/style-global" as *;
+
 .edit-permission {
   .permission {
     display: flex;
     width: 100%;
+
     .content-permission {
       width: inherit;
-      padding: 24px;
-      box-shadow: 0px 4px 8px -2px rgba(16, 24, 40, 0.1), 0px 2px 4px -2px rgba(16, 24, 40, 0.06);
-      // Gray 200
-      border: 1px solid $color-gray-200;
-      border-radius: var(--v-border-sm);
       height: 100%;
+      padding: 24px;
+
+      // Gray 200
+
+      border: 1px solid $color-gray-200;
+      border-radius: var(--v-border-radius-xs);
+      box-shadow: 0 4px 8px -2px rgba(16, 24, 40, 10%), 0 2px 4px -2px rgba(16, 24, 40, 6%);
     }
+
     .content-permission:nth-child(n+2) {
       // margin-left: 24px;
     }
   }
+
   .button-edit-permission:nth-child(n+2) {
     margin-left: 12px;
   }

@@ -163,26 +163,28 @@ watch(() => props.data, (val: any) => {
 </template>
 
 <style lang="scss">
-.required-item{
-  cursor: pointer;
-  border-radius: var(--v-border-sm);
+.required-item {
+  display: flex;
+  flex-wrap: nowrap;
+  padding: 10px 16px;
   border: 1px solid rgb(var(--v-gray-300));
+  border-radius: var(--v-border-radius-xs);
   background: var(--white, #FFF);
 
   /* Shadow/xs */
-  box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
 
-  padding: 10px 16px;
+  box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 5%);
+  cursor: pointer;
   margin-inline: 16px;
-  display: flex;
-  flex-wrap: nowrap;
 }
-.required-item.selected{
-  border-radius: var(--v-border-sm);
+
+.required-item.selected {
   border: 1px solid rgb(var(--v-primary-50));
+  border-radius: var(--v-border-radius-xs);
   background: rgb(var(--v-primary-50));
 
   /* Shadow/xs focused 4px primary-100 */
-  box-shadow: 0px 0px 0px 4px #D1E9FF, 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+
+  box-shadow: 0 0 0 4px #D1E9FF, 0 1px 2px 0 rgba(16, 24, 40, 5%);
 }
 </style>

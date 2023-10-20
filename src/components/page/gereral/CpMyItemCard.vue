@@ -114,33 +114,39 @@ function handleClickButton() {
 </template>
 
 <style scoped>
-.my-course-card{
+.my-course-card {
   height: 100%;
-  .label-author{
+
+  .label-author {
     color:  rgb(var(--v-primary-700));
   }
-  .label-course{
+
+  .label-course {
     color:  rgb(var(--v-gray-900));
-    .label-course-name{
+
+    .label-course-name {
       display: -webkit-box;
-      -webkit-line-clamp: 2; /* Số hàng tối đa muốn hiển thị */
-      -webkit-box-orient: vertical;
       overflow: hidden;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2; /* Số hàng tối đa muốn hiển thị */
       text-overflow: ellipsis;
       white-space: pre-wrap;
     }
   }
-  .label-ratio{
+
+  .label-ratio {
     color:  rgb(var(--v-gray-700));
   }
-  .box-content{
+
+  .box-content {
     padding: 8px 16px;
   }
-  .button-action{
+
+  .button-action {
     position: absolute;
-    width: calc(100% - 48px) !important;
-    left: 24px;
     bottom: 24px;
+    left: 24px;
+    width: calc(100% - 48px) !important;
   }
 }
 </style>

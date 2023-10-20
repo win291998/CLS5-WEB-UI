@@ -4,7 +4,7 @@
 
 /* ---border--- */
 $table-border: $border-xs solid $color-line-default;
-$table-border-radius-size: $border-radius-xs;
+$table-border-radius-size: var(--v-border-radius-xs);
 $table-box-shadow: $box-shadow-md;
 
 /* ---header--- */

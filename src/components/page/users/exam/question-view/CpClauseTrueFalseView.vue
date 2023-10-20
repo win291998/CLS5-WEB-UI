@@ -189,59 +189,67 @@ watch(() => props.data, val => {
 </template>
 
 <style lang="scss">
-.content-view{
-  .title-TF{
-    .title{
+.content-view {
+  .title-TF {
+    .title {
       width: 50px;
     }
+
     display:flex;
     margin-bottom: 20px;
     color:rgb(var(--v-gray-900));
   }
-.item-answer-group{
-  display:flex;
-  margin-bottom: 12px;
-  .item-answer {
-    width: 100%;
-    border-radius: var(--v-border-sm);
-    border: 1px solid rgb(var(--v-gray-300));
-    background: #FFF;
-    padding: 1rem;
-  }
-  .item-answer:last-child {
-    margin-bottom: unset;
-  }
-}
-.item-answer-group.ansTrue{
-  .item-answer {
+
+  .item-answer-group {
     display:flex;
-    width: 100%;
-    border-radius: var(--v-border-sm);
-    border: 1px solid rgb(var(--v-success-600));
-    background: #FFF;
-    padding: 1rem;
     margin-bottom: 12px;
-    .item-content > span{
-      color: rgb(var(--v-success-600))!important;
+
+    .item-answer {
+      width: 100%;
+      padding: 1rem;
+      border: 1px solid rgb(var(--v-gray-300));
+      border-radius: var(--v-border-radius-xs);
+      background: #FFF;
+    }
+
+    .item-answer:last-child {
+      margin-bottom: unset;
     }
   }
 
-}
-.item-answer-group.ansFalse{
-  .item-answer {
-    display:flex;
-    width: 100%;
-    border-radius: var(--v-border-sm);
-    border: 1px solid rgb(var(--v-error-600));
-    background: #FFF;
-    padding: 1rem;
-    margin-bottom: 12px;
-    .item-content > span{
-      color: rgb(var(--v-error-600))  !important;
+  .item-answer-group.ansTrue {
+    .item-answer {
+      display:flex;
+      width: 100%;
+      padding: 1rem;
+      border: 1px solid rgb(var(--v-success-600));
+      border-radius: var(--v-border-radius-xs);
+      margin-bottom: 12px;
+      background: #FFF;
+
+      .item-content > span {
+        color: rgb(var(--v-success-600))!important;
+      }
     }
   }
-}
-  .view-media{
+
+  .item-answer-group.ansFalse {
+    .item-answer {
+      display:flex;
+      width: 100%;
+      padding: 1rem;
+      border: 1px solid rgb(var(--v-error-600));
+      border-radius: var(--v-border-radius-xs);
+      margin-bottom: 12px;
+      background: #FFF;
+
+      .item-content > span {
+        color: rgb(var(--v-error-600))  !important;
+      }
+    }
+  }
+
+  .view-media {
     width: 60%;
   }
 }

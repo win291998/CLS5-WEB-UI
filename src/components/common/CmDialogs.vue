@@ -116,6 +116,7 @@ defineExpose({
       :model-value="props.isDialogVisible"
       :width="sizeModal"
       :height="height"
+      no-click-animation
       scrollable
       :attach="appendToBody"
       :persistent="props.persistent"
@@ -214,7 +215,8 @@ defineExpose({
   padding-top: 12px;
   padding-bottom: 24px;
   padding-inline: 16px !important;
-  .v-btn{
+
+  .v-btn {
     padding: 10px 16px;
   }
 }
@@ -222,18 +224,21 @@ defineExpose({
 .modal-custom-divspace .v-card-item {
   border-block-end: 1px solid $color-line-default;
 }
+
 .cm-dialogs.appendToBody {
   .v-card {
     overflow: unset !important;
+
     .v-card-text {
       overflow: unset !important;
       overflow-y: unset !important;
+
       // max-height: 90vh;
     }
-
   }
 }
-.btn-close-x{
+
+.btn-close-x {
   position: absolute;
   top: 14px;
   right: 24px;

@@ -333,56 +333,65 @@ onMounted(() => {
 
 <style scoped lang="scss">
 @use "@/styles/variables/global" as *;
-.my-intro{
-  .video-content{
-    object-fit: cover;
+
+.my-intro {
+  .video-content {
     border: 4px solid $color-white;
+    border-radius: var(--v-border-radius-xs);
     box-shadow: $box-shadow-lg;
-    border-radius: var(--v-border-sm);
+    object-fit: cover;
   }
-  .mi{
+
+  .mi {
     display: flex;
     flex-wrap: wrap;
     margin-top: 1.5rem;
-    .mi-item{
+
+    .mi-item {
       width: 100%;
       padding: 1rem;
-      background-color:  rgb(var(--v-primary-50));
-      border-radius: var(--v-border-sm);
+      border-radius: var(--v-border-radius-xs);
       margin-bottom: 1rem;
+      background-color:  rgb(var(--v-primary-50));
       text-wrap: nowrap;
     }
-    .mi-item:not(:last-child){
+
+    .mi-item:not(:last-child) {
       margin-right: unset;
     }
   }
-  .desc{
-    .desc-text{
+
+  .desc {
+    .desc-text {
       text-align: justify;
     }
-    .screen-16-9{
+
+    .screen-16-9 {
       width: 100%;
       max-width: 30rem;
       height: 16rem;
     }
   }
 }
-@media (min-width: 376px) {
-  .my-intro{
-    .mi{
-      .mi-item{
+
+@media (width >= 376px) {
+  .my-intro {
+    .mi {
+      .mi-item {
         width: calc(( 100% - 1.5rem * 1 ) / 2 );
       }
-      .mi-item:not(:last-child):nth-of-type(odd){
+
+      .mi-item:not(:last-child):nth-of-type(odd) {
         margin-right: 1.5rem;
       }
     }
   }
 }
-@media (min-width: 576px) {
-  .my-intro{
-    .desc{
-      .screen-16-9{
+
+@media (width >= 576px) {
+  .my-intro {
+    .desc {
+      .screen-16-9 {
         width: 80%;
         max-width: 30rem;
         height: 16rem;
@@ -390,19 +399,23 @@ onMounted(() => {
     }
   }
 }
-@media (min-width: 767px) {
-  .my-intro{
-    .mi{
+
+@media (width >= 767px) {
+  .my-intro {
+    .mi {
       display: flex;
       justify-content: center;
-      .mi-item{
+
+      .mi-item {
         width: auto;
         min-width: calc(( 100% - 1.5rem * 5 ) / 6);
       }
-      .mi-item:not(:last-child){
+
+      .mi-item:not(:last-child) {
         margin-right: 1.5rem;
       }
-      .mi-item:not(:last-child):nth-of-type(even){
+
+      .mi-item:not(:last-child):nth-of-type(even) {
         margin-right: 1.5rem;
       }
     }

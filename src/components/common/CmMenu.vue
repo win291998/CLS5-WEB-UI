@@ -102,7 +102,7 @@ function showChildren(idx: number, val: boolean) {
           </div>
         </VList>
       </VNavigationDrawer>
-      <VMain style="height: 100% !important; width: 100%;">
+      <VMain style=" width: 100%;height: 100% !important;">
         <slot name="content" />
       </VMain>
     </VLayout>
@@ -111,70 +111,83 @@ function showChildren(idx: number, val: boolean) {
 
 <style lang="scss">
 @use '@/styles/style-global.scss' as *;
+
 .cm-menu {
-  height: inherit;
   width: inherit;
+  height: inherit;
+
   .v-layout {
     overflow: unset !important;
+
     .v-navigation-drawer {
-    background: transparent !important;
+      background: transparent !important;
+
       .v-navigation-drawer__content {
         overflow: unset;
+
         .v-list {
-          background: $color-white !important;
-          border: 1px solid $color-gray-200;
-          border-radius: $border-radius-xs;
-          margin-top: 24px;
           padding: 0 !important;
+          border: 1px solid $color-gray-200;
+          border-radius: var(--v-border-radius-xs);
+          margin-top: 24px;
+          background: $color-white !important;
+
           .v-list-item {
             padding: 16px;
             margin-bottom: 0 !important;
             border-bottom-left-radius: unset;
             border-bottom-right-radius: unset;
           }
+
           .v-list-item--active {
+            border: unset;
             background-color: $color-gray-100 !important;
-              box-shadow: unset !important;
-              border: unset;
+            box-shadow: unset !important;
+
             .v-list-item__overlay {
+              border: unset;
               background-color: transparent;
               box-shadow: unset !important;
-              border: unset;
             }
+
             .v-list-item__underlay {
               display: none;
             }
           }
+
           .nav-group-children {
-            [id*=nav-item] {
-              cursor: pointer;
+            [id*="nav-item"] {
               padding: 12px 16px;
-            }
-            .nav-item-active {
-              background-color: $color-primary-50;
-              border-left: 4px solid $color-primary-600;
+              cursor: pointer;
             }
 
+            .nav-item-active {
+              border-left: 4px solid $color-primary-600;
+              background-color: $color-primary-50;
+            }
           }
         }
       }
     }
   }
-
 }
-@keyframes fadeIn{
-  0%{
+
+@keyframes fadeIn {
+  0% {
     transform: translateY(-100%);
   }
-  100%{
+
+  100% {
     transform: translateY(0);
   }
 }
-@keyframes fadeOut{
-  0%{
+
+@keyframes fadeOut {
+  0% {
     transform: translateY(100%);
   }
-  100%{
+
+  100% {
     transform: translateY(0);
   }
 }

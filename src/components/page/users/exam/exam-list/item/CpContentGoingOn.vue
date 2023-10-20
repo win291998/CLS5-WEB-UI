@@ -17,7 +17,7 @@ const { t } = window.i18n()
     <div class="mr-2 d-flex align-center">
       <VIcon
         icon="tabler:calendar-cancel"
-        size="16"
+        size="18"
         color="success"
         class="my-2 mr-2"
       />
@@ -29,7 +29,7 @@ const { t } = window.i18n()
     <div class="mr-2 d-flex align-center">
       <VIcon
         icon="tabler:calendar-cancel"
-        size="16"
+        size="18"
         color="error"
         class="my-2 mr-2"
       />

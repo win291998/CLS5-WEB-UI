@@ -362,66 +362,71 @@ defineExpose({
 </template>
 
 <style lang="scss" scoped>
-  .input-math{
+  .input-math {
     position: relative;
-    padding: 10px;
-    margin-top: -1px;
-    border: 1px solid rgba(var(--v-border-color)) !important;
-    border-bottom-right-radius: 8px;
-    border-bottom-left-radius: 8px;
-    background-color: rgb(var(--v-theme-surface));
-    max-height: 500px;
     overflow: hidden;
-    overflow-y: auto;
+    max-height: 500px;
+    padding: 10px;
+    border: 1px solid rgba(var(--v-border-color)) !important;
+    margin-top: -1px;
+    background-color: rgb(var(--v-theme-surface));
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
     font-size: 14px;
+    overflow-y: auto;
   }
-  .input-math:focus{
+
+  .input-math:focus {
     outline: unset !important;
   }
-  .input-math-disable{
+
+  .input-math-disable {
     background-color:  rgb(var(--v-gray-100)) ;
   }
 </style>
 
 <style lang="scss">
 .input-math {
-    ol {
-        display: block;
-        list-style-type: decimal;
-        margin-block-start: 1em;
-        margin-block-end: 1em;
-        margin-inline-start: 0px;
-        margin-inline-end: 0px;
-        padding-inline-start: 40px !important;
-    }
-    ul {
-      display: block;
-      list-style-type: disc;
-      margin-block-start: 1em;
-      margin-block-end: 1em;
-      margin-inline-start: 0px;
-      margin-inline-end: 0px;
-      padding-inline-start: 40px;
-    }
- }
- .inputEditor{
-  border-radius: var(--v-border-sm);
- }
- .styleError.inputEditor{
+  ol {
+    display: block;
+    list-style-type: decimal;
+    margin-block-end: 1em;
+    margin-block-start: 1em;
+    margin-inline-end: 0;
+    margin-inline-start: 0;
+    padding-inline-start: 40px !important;
+  }
+
+  ul {
+    display: block;
+    list-style-type: disc;
+    margin-block-end: 1em;
+    margin-block-start: 1em;
+    margin-inline-end: 0;
+    margin-inline-start: 0;
+    padding-inline-start: 40px;
+  }
+}
+
+.inputEditor {
+  border-radius: var(--v-border-radius-xs);
+}
+
+.styleError.inputEditor {
   outline: 1px solid red;
 }
 
-[contenteditable][placeholder]:empty:before {
-  content: attr(placeholder);
+[contenteditable][placeholder]:empty::before {
   position: absolute;
-  color: gray;
   background-color: transparent;
+  color: gray;
+  content: attr(placeholder);
 }
 
 .custom-underline {
   u {
-    text-decoration: underline;
     color:  rgb(var(--v-primary-600)) !important;
+    text-decoration: underline;
   }
 }
 </style>

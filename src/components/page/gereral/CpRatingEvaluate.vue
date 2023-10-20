@@ -305,36 +305,43 @@ getData()
 </template>
 
 <style scoped lang="scss">
-.rt-box{
-  .rt-ratio{
+.rt-box {
+  .rt-ratio {
     color: rgb(var(--v-gray-700))
   }
-  .rt-rating-star{
+
+  .rt-rating-star {
     min-width: 120px;
-    margin: 16px 0 24px 0;
+    margin: 16px 0 24px;
   }
-  .rt-evaluate{
+
+  .rt-evaluate {
     color: rgb(var(--v-primary-600))
   }
-  .progress-item{
+
+  .progress-item {
     margin-top: 16px;
-    &:last-child{
+
+    &:last-child {
       margin-top: unset;
     }
-    .progress-label{
+
+    .progress-label {
       width: 30px;
       min-width: 30px;
     }
   }
-  .rt-list-eval{
-    .rt-content-eval{
-      border-radius: var(--v-border-sm);
+
+  .rt-list-eval {
+    .rt-content-eval {
+      padding: 8px 16px;
+      border-radius: var(--v-border-radius-xs);
+      margin-top: 12px;
       background: rgb(var(--v-gray-100));
 
       /* Shadow/sm */
-      box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.06), 0px 1px 3px 0px rgba(16, 24, 40, 0.10);
-      padding: 8px 16px;
-      margin-top: 12px;
+
+      box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 6%), 0 1px 3px 0 rgba(16, 24, 40, 10%);
     }
   }
 }

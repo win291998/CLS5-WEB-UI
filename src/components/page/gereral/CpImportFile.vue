@@ -373,30 +373,33 @@ async function closeDetail(dataQs: any) {
     margin-block-start: 40px;
   }
 }
+
 .button-import-file:nth-child(n+2) {
   margin-left: 8px;
 }
-.button-import-file {
-  border: 1px solid rgba(208, 213, 221, 1);
-  width: inherit;
-  padding: 16px 24px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: var(--v-border-sm);
-  flex-direction: column;
-  background-color: white;
-  margin-top: 24px;
-}
-.cp-import-file-action-footer {
-    display: flex;
-    justify-content: flex-end;
 
-    .cp-import-file-btn-footer {
-      display: flex;
-      align-items: center;
-      align-self: center;
-      width: max-content;
-    }
+.button-import-file {
+  display: flex;
+  width: inherit;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 24px;
+  border: 1px solid rgba(208, 213, 221, 100%);
+  border-radius: var(--v-border-radius-xs);
+  margin-top: 24px;
+  background-color: white;
+}
+
+.cp-import-file-action-footer {
+  display: flex;
+  justify-content: flex-end;
+
+  .cp-import-file-btn-footer {
+    display: flex;
+    width: max-content;
+    align-items: center;
+    align-self: center;
   }
+}
 </style>

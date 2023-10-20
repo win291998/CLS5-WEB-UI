@@ -134,14 +134,15 @@ function durationchange(e: any) {
 </template>
 
 <style lang="scss">
-.setting-control{
+.setting-control {
   width: 100%;
   padding: 16px;
-  border-radius:  var(--v-border-sm);
   border: 1px solid  #D0D5DD;
+  border-radius:  var(--v-border-radius-xs);
   background:  #F2F4F7;
 }
-.time-progress{
+
+.time-progress {
   color:  rgb(var(--v-primary-600));
 }
 </style>

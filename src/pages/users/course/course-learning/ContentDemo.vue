@@ -105,28 +105,31 @@ async function changeCurrentContent() {
 </template>
 
 <style lang="scss">
-.mycourse{
-  .box{
+.mycourse {
+  .box {
     background: rgb(var(--v-theme-surface));
-    .box-content{
-      background:  rgb(var(--v-gray-50));
-      padding: 1rem;
-      border-radius: var(--v-border-sm);
-      border: 1px solid rgb(var(--v-gray-300));
+
+    .box-content {
       max-width: 80%;
-      .mc-desc{
-        border-radius: var(--v-border-sm);
-        background-color: rgb(var(--v-primary-50));
+      padding: 1rem;
+      border: 1px solid rgb(var(--v-gray-300));
+      border-radius: var(--v-border-radius-xs);
+      background:  rgb(var(--v-gray-50));
+
+      .mc-desc {
         padding: 12px 16px;
-        text-align: center;
+        border-radius: var(--v-border-radius-xs);
+        background-color: rgb(var(--v-primary-50));
         margin-block: 16px;
+        text-align: center;
       }
-      .mc-about{
-        &.text-over-hide{
+
+      .mc-about {
+        &.text-over-hide {
           display: -webkit-box;
-          -webkit-line-clamp: 2; /* Số hàng tối đa muốn hiển thị */
-          -webkit-box-orient: vertical;
           overflow: hidden;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 2; /* Số hàng tối đa muốn hiển thị */
           text-overflow: ellipsis;
         }
       }

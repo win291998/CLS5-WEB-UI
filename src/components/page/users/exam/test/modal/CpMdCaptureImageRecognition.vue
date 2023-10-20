@@ -242,38 +242,44 @@ onMounted(() => {
     padding: 0;
   }
 }
+
 .capture-wrapper {
   position: relative;
   width: 500px;
-  height: 468px;
   max-width: 100%;
-  border-radius: var(--v-border-sm);
+  height: 468px;
+  border-radius: var(--v-border-radius-xs);
+
   .btn-close {
-    border: 0px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0.2rem 0.62rem;
+    border: 0;
+    border-radius: 0.357rem;
+    background-color: #fff;
+    box-shadow: 0 5px 20px 0 rgb(34 41 47 / 10%);
+    color: #5e5873;
     font-size: 2rem;
     font-weight: 400;
     line-height: 1;
-    color: #5e5873;
-    position: absolute;
-    top: 0px;
-    right: 0;
-    padding: 0.2rem 0.62rem;
-    background-color: #fff;
-    box-shadow: 0 5px 20px 0 rgb(34 41 47 / 10%);
-    border-radius: 0.357rem;
-    transform: translate(25%, -25%);
     opacity: 1;
+    transform: translate(25%, -25%);
+
     &:focus {
-      outline: 0px;
+      outline: 0;
     }
   }
+
   .capture-recognition {
-    padding: 10%;
-    height: 100%;
     position: relative;
+    height: 100%;
+    padding: 10%;
+
     .inner {
       width: 100%;
       height: 100%;
+
       .inner-top-left {
         position: absolute;
         top: 10%;
@@ -283,6 +289,7 @@ onMounted(() => {
         border-top: 2px solid var(--customPrimary);
         border-left: 2px solid var(--customPrimary);
       }
+
       .inner-top-right {
         position: absolute;
         top: 10%;
@@ -292,6 +299,7 @@ onMounted(() => {
         border-top: 2px solid var(--customPrimary);
         border-right: 2px solid var(--customPrimary);
       }
+
       .inner-bottom-left {
         position: absolute;
         bottom: 10%;
@@ -301,124 +309,142 @@ onMounted(() => {
         border-bottom: 2px solid var(--customPrimary);
         border-left: 2px solid var(--customPrimary);
       }
+
       .inner-bottom-right {
         position: absolute;
-        bottom: 10%;
         right: 10%;
+        bottom: 10%;
         width: 22px;
         height: 22px;
-        border-bottom: 2px solid var(--customPrimary);
         border-right: 2px solid var(--customPrimary);
+        border-bottom: 2px solid var(--customPrimary);
       }
+
       .camera-capture {
-        width: 42px;
-        height: 42px;
-        background: rgba(30, 30, 30, 0.12);
-        border-radius: 50%;
         position: absolute;
         bottom: 31px;
         left: 50%;
-        transform: translateX(-50%);
-        color: #fff;
         display: flex;
+        width: 42px;
+        height: 42px;
         align-items: center;
         justify-content: center;
+        border-radius: 50%;
+        background: rgba(30, 30, 30, 12%);
+        color: #fff;
+        transform: translateX(-50%);
+
         svg {
           width: 22px;
           height: 22px;
         }
       }
+
       .description {
-        color: #fff;
         position: absolute;
         bottom: -40px;
         display: flex;
+        width: 100%;
         align-items: center;
         justify-content: center;
-        width: 100%;
+        color: #fff;
         transform: translateX(-10%);
       }
     }
+
     .action {
-      display: flex;
-      justify-content: center;
-      align-items: center;
       position: absolute;
-      bottom: 10px;
-      width: 100%;
       right: 0;
+      bottom: 10px;
+      display: flex;
+      width: 100%;
+      align-items: center;
+      justify-content: center;
     }
   }
+
   .image-content {
     position: absolute;
-    width: 100%;
-    height: 100%;
     top: 0;
     left: 0%;
-    border-radius: 6px;
     overflow: hidden;
+    width: 100%;
+    height: 100%;
+    border-radius: 6px;
+
     .video-content {
       width: 100%;
       height: 100%;
     }
+
     .image-output {
+      display: flex;
       width: 100%;
       height: 100%;
-      display: flex;
       align-items: center;
     }
+
     .canvas-content {
       display: none;
     }
   }
+
   .mask {
     position: absolute;
-    background: rgba(30, 30, 30, 0.12);
+    background: rgba(30, 30, 30, 12%);
+
     &.top {
       top: 0;
       width: 100%;
       height: 15%;
     }
+
     &.right {
-      right: 0;
       top: 15%;
+      right: 0;
       width: 15%;
       height: 70%;
     }
+
     &.bottom {
       bottom: 0;
       width: 100%;
       height: 15%;
-      border-bottom-left-radius: 6px;
-      border-bottom-right-radius: 6px;
       background: linear-gradient(
         180deg,
-        rgba(30, 30, 30, 0.12) 0%,
-        rgba(0, 0, 0, 0.85) 100%
+        rgba(30, 30, 30, 12%) 0%,
+        rgba(0, 0, 0, 85%) 100%
       );
+      border-bottom-left-radius: 6px;
+      border-bottom-right-radius: 6px;
     }
+
     &.left {
-      left: 0;
       top: 15%;
+      left: 0;
       width: 15%;
       height: 70%;
     }
   }
 }
-@media (max-width: 375px) {
+
+@media (width <= 375px) {
   .capture-wrapper {
     .action {
       flex-direction: column;
+
       .btn-left {
-        margin-right: 0px !important;
+        margin-right: 0 !important;
       }
+
       .btn {
         margin-top: 10px;
       }
     }
   }
 }
-.capture .v-card-text{
-overflow-y: unset !important;
+
+.capture .v-card-text {
+  overflow-y: unset !important;
 }
 </style>

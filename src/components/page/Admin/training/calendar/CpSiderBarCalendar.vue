@@ -95,17 +95,21 @@ function filterCalendar() {
 
 .sidebar-calendar {
   // background-color: yellow;
+
   display: flex;
   flex-direction: column;
   padding: $xl;
   border: 1px solid rgb(var(--v-gray-300))!important;
-  border-bottom-left-radius: $border-radius-xs !important;
-  border-top-left-radius: $border-radius-xs !important;
   border-right: unset;
+  border-bottom-left-radius: var(--v-border-radius-xs) !important;
+  border-top-left-radius: var(--v-border-radius-xs) !important;
+
   .sidebar-filter {
     margin-top: $xl-3;
+
     .text-medium-sm {
       @extend .text-medium-sm;
+
       text-transform: uppercase;
     }
   }
