@@ -84,7 +84,7 @@ function handleUnChecked(node: any, idx: number) {
       box-shadow: 0px 4px 8px -2px rgba(16, 24, 40, 0.1), 0px 2px 4px -2px rgba(16, 24, 40, 0.06);
       // Gray 200
       border: 1px solid $color-gray-200;
-      border-radius: 8px;
+      border-radius: var(--v-border-sm);
       height: 100%;
     }
     .content-permission:nth-child(n+2) {

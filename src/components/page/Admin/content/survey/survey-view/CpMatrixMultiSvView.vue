@@ -244,7 +244,7 @@ watch(() => props.data.listAnswerMatrix, (val: any) => {
     &.tb-row-item{
       padding:16px;
       margin-block: 8px;
-      border-radius: 8px;
+      border-radius: var(--v-border-sm);
       border: 1px solid rgb(var(--v-gray-300));
     }
   }

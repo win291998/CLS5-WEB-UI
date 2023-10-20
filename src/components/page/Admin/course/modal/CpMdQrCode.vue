@@ -440,7 +440,7 @@ onMounted(() => {
         width: 48px;
         padding: 8px 12px;
         height: auto;
-        border-radius: 8px;
+        border-radius: var(--v-border-sm);
       }
     }
   }

@@ -166,7 +166,7 @@ defineExpose({
 .border-avatar {
   border: 4px solid $color-white;
   box-shadow: $box-shadow-lg;
-  border-radius: 8px;
+  border-radius: var(--v-border-sm);
 }
 .cm-video-upload{
   position: relative;

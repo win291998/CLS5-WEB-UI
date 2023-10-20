@@ -383,7 +383,7 @@ async function closeDetail(dataQs: any) {
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 8px;
+  border-radius: var(--v-border-sm);
   flex-direction: column;
   background-color: white;
   margin-top: 24px;

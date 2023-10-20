@@ -177,14 +177,14 @@ watch(() => props.files, val => {
   width: 100%;
   height: auto;
   border: 1px solid #2E90FA;
-  border-radius: 8px;
+  border-radius: var(--v-border-sm);
   padding: 16px !important;
 }
 .box-process-file.error{
   width: 100%;
   height: auto;
   border: 1px solid rgb(var(--v-error-300));
-  border-radius: 8px;
+  border-radius: var(--v-border-sm);
   padding: 16px !important;
   .text-title{
     color: rgb(var(--v-error-700))
@@ -195,7 +195,7 @@ watch(() => props.files, val => {
 }
 .box-items{
   padding: unset;
-  border-radius: 8px;
+  border-radius: var(--v-border-sm);
   // max-height: 546px;
   // overflow: auto;
   padding: 8px 12px;

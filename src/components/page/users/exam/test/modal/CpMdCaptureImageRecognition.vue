@@ -247,7 +247,7 @@ onMounted(() => {
   width: 500px;
   height: 468px;
   max-width: 100%;
-  border-radius: 8px;
+  border-radius: var(--v-border-sm);
   .btn-close {
     border: 0px;
     font-size: 2rem;

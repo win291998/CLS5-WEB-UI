@@ -328,7 +328,7 @@ getData()
   }
   .rt-list-eval{
     .rt-content-eval{
-      border-radius: 8px;
+      border-radius: var(--v-border-sm);
       background: rgb(var(--v-gray-100));
 
       /* Shadow/sm */

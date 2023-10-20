@@ -74,7 +74,7 @@ const labels = computed(() => props.data.answers.map((item: any) => item.content
   .item-answer-range {
     display:flex;
     width:auto;
-    border-radius: 8px;
+    border-radius: var(--v-border-sm);
     border: 1px solid rgb(var(--v-gray-300));
     background: #FFF;
     padding: 1rem;

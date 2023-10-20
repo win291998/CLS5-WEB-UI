@@ -338,7 +338,7 @@ onMounted(() => {
     object-fit: cover;
     border: 4px solid $color-white;
     box-shadow: $box-shadow-lg;
-    border-radius: 8px;
+    border-radius: var(--v-border-sm);
   }
   .mi{
     display: flex;
@@ -348,7 +348,7 @@ onMounted(() => {
       width: 100%;
       padding: 1rem;
       background-color:  rgb(var(--v-primary-50));
-      border-radius: 8px;
+      border-radius: var(--v-border-sm);
       margin-bottom: 1rem;
       text-wrap: nowrap;
     }

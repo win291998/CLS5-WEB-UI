@@ -205,12 +205,12 @@ watch(() => props.modelValue, val => {
   border: 1px solid red;
 }
 .v-field .v-field__field{
-  border-radius: 8px;
+  border-radius: var(--v-border-sm);
   overflow: hidden;
 }
 .cm-input-field .v-field:focus{
   border: 1px solid rgb(var(--v-primary-300));
-  border-radius: 8px;
+  border-radius: var(--v-border-sm);
 }
 .cm-input-field .v-field__outline{
   z-index: -1 !important;

@@ -170,7 +170,7 @@ watch(() => props.data, val => {
   .item-answer {
     display:flex;
     width: 100%;
-    border-radius: 8px;
+    border-radius: var(--v-border-sm);
     border: 1px solid rgb(var(--v-gray-300));
     background: #FFF;
     padding: 1rem;
@@ -179,7 +179,7 @@ watch(() => props.data, val => {
   .item-answer.ansTrue {
     display:flex;
     width: 100%;
-    border-radius: 8px;
+    border-radius: var(--v-border-sm);
     border: 1px solid rgb(var(--v-success-600));
     background: #FFF;
     padding: 1rem;
@@ -191,7 +191,7 @@ watch(() => props.data, val => {
   .item-answer.ansFalse {
     display:flex;
     width: 100%;
-    border-radius: 8px;
+    border-radius: var(--v-border-sm);
     border: 1px solid rgb(var(--v-error-600));
     background: #FFF;
     padding: 1rem;

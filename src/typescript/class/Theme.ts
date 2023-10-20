@@ -51,7 +51,6 @@ export class Themes {
   public static setDataTheme({ examImages, items }: DataThemesProps) {
     if (examImages && examImages.length > 0)
       this.examImage = examImages
-    console.log(examImages, items)
 
     if (items && items.length > 0) {
       items.forEach((theme: any) => {
