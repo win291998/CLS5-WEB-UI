@@ -350,38 +350,44 @@ watch(() => props.data, val => {
 </template>
 
 <style lang="scss">
-.content-view{
-  .line-ans{
+.content-view {
+  .line-ans {
     display: flex;
-    .line-blank{
-      border-radius: var(--v-border-sm);
-      margin-right: 16px;
-      border: 1px solid rgb(var(--v-gray-300));
-      padding: 10px 14px;
+
+    .line-blank {
       display: flex;
       align-items: center;
+      padding: 10px 14px;
+      border: 1px solid rgb(var(--v-gray-300));
+      border-radius: var(--v-border-radius-xs);
+      margin-right: 16px;
     }
-    .line-blank.ansTrue{
+
+    .line-blank.ansTrue {
       border: 1px solid rgb(var(--v-success-600));
       color:rgb(var(--v-success-600));
     }
   }
+
   .answer-fill-blank.text-success {
-    border-radius: var(--v-border-sm);
     border: 1px solid rgb(var(--v-success-600));
+    border-radius: var(--v-border-radius-xs);
     background: #FFF;
     color:rgb(var(--v-success-600));
   }
+
   .answer-fill-blank.text-danger {
-    border-radius: var(--v-border-sm);
     border: 1px solid rgb(var(--v-error-600));
+    border-radius: var(--v-border-radius-xs);
     background: #FFF;
     color:rgb(var(--v-error-600));
   }
-  .view-media{
+
+  .view-media {
     width: 60%;
   }
-  .drag-item{
+
+  .drag-item {
     &.droped {
       display: none !important;
     }

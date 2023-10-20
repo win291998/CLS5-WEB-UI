@@ -225,7 +225,7 @@ function expandRow(val: any) {
           <PerfectScrollbar
             v-if="paramsDocument?.length"
             :options="config"
-            style="max-height: 900px; min-height: 85px;"
+            style=" min-height: 85px;max-height: 900px;"
           >
             <VRow class="dc-box">
               <VCol
@@ -336,41 +336,48 @@ function expandRow(val: any) {
 </template>
 
 <style scoped lang="scss">
-.cm-detail{
-  .cm-intr-title{
+.cm-detail {
+  .cm-intr-title {
     color: rgb(var(--v-gray-900))
   }
-  .cm-intr-desc{
+
+  .cm-intr-desc {
     text-align: justify;
-    &.text-over-hide{
+
+    &.text-over-hide {
       display: -webkit-box;
-      -webkit-line-clamp: 3; /* Số hàng tối đa muốn hiển thị */
-      -webkit-box-orient: vertical;
       overflow: hidden;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 3; /* Số hàng tối đa muốn hiển thị */
       text-overflow: ellipsis;
       white-space: pre-wrap;
     }
   }
-  .box-content-course{
+
+  .box-content-course {
     border: 1px solid rgb(var(--v-gray-300));
+    border-radius: var(--v-border-radius-xs);
     margin-block: 24px;
-    border-radius: var(--v-border-sm);
   }
-  .dc-box{
-    .dc-item{
-      border-radius: var(--v-border-sm);
-      border: 1px solid rgb(var(--v-gray-300));
-      background:  #FFF;
+
+  .dc-box {
+    .dc-item {
       display: flex;
       padding: 1rem;
-      .dc-item-content{
+      border: 1px solid rgb(var(--v-gray-300));
+      border-radius: var(--v-border-radius-xs);
+      background:  #FFF;
+
+      .dc-item-content {
         width: 90%;
         max-width: 90%;
-        .dc-sub-title{
+
+        .dc-sub-title {
           color: rgb(var(--v-gray-500))
         }
       }
-      .dc-item-action{
+
+      .dc-item-action {
         width: 10%;
       }
     }
@@ -379,10 +386,11 @@ function expandRow(val: any) {
 </style>
 
 <style  lang="scss">
-.tableClass{
+.tableClass {
   border: unset !important;
   border-radius: unset !important;
-  th{
+
+  th {
     display: none;
   }
 }

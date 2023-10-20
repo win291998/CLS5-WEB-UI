@@ -167,35 +167,41 @@ defineExpose({
 @use "@/styles/style-global" as *;
 
 .text-style-btn {
-  border-radius:  var(--v-border-sm);
   height: auto !important;
   min-height: $button-default-height !important;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-family: inherit;
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
-  padding: 10px 16px;
-  text-transform: inherit;
-  font-family: inherit;
   letter-spacing: normal;
+  text-transform: inherit;
 }
+
 .v-btn--size-default {
   min-width: 36px;
 }
+
 // .text-button {
 //   box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05);
 // }
 .outlined-success {
   border: 1px solid rgb(var(--v-success-300)) !important;
 }
+
 .outlined-error {
   border: 1px solid rgb(var(--v-error-300)) !important;
 }
+
 .outlined-primary {
   border: 1px solid rgb(var(--v-primary-300)) !important;
 }
+
 .outlined-secondary {
   border: 1px solid rgb(var(--v-gray-300)) !important;
 }
+
 .outlined-warning {
   border: 1px solid rgb(var(--v-warning-300)) !important;
 }
@@ -203,7 +209,8 @@ defineExpose({
 .v-btn--variant-outlined {
   background-color: transparent !important;
 }
-.border-button{
+
+.border-button {
   border: 1px solid rgb(var(--v-gray-300));
 }
 </style>

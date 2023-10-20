@@ -43,9 +43,10 @@ const theme: VuetifyOptions['theme'] = {
         'shadow-key-umbra-opacity': 'rgba(var(--v-theme-on-surface), 0.08)',
         'shadow-key-penumbra-opacity': 'rgba(var(--v-theme-on-surface), 0.12)',
         'shadow-key-ambient-opacity': 'rgba(var(--v-theme-on-surface), 0.04)',
+        'max-width-page': '1440px',
 
         // border
-        'border-sm': '12px',
+        'border-radius-xs': '8px',
 
         'white': '#ffffff',
 

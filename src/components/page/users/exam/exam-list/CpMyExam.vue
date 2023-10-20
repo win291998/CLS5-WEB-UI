@@ -87,7 +87,7 @@ function pageChange(pageNumber: any) {
 
 //  Bấm nút vào nội dung khóa học
 async function clickDetail(item: any, actionClick?: any) {
-  router.push({ name: 'my-test', params: { id: item.examId } })
+  router.push({ name: 'my-test', params: { id: item.testId } })
 }
 function getImage(id: number): string {
   const result = MethodsUtil.getThemeItem(1)(id)

@@ -129,30 +129,33 @@ function clickItem(item: object) {
 
 <style lang="scss" scoped>
 @use "/src/styles/style-global" as *;
-.btn-group-style{
+
+.btn-group-style {
   display: flex;
   height: $button-default-height;
 }
+
 .button-group-prepend {
+  border-bottom-left-radius: var(--v-border-radius-xs);
   border-end-end-radius: unset;
   border-start-end-radius: unset;
-  border-top-left-radius: $border-radius-xs;
-  border-bottom-left-radius: $border-radius-xs;
+  border-top-left-radius: var(--v-border-radius-xs);
 }
 
 .button-group-append {
+  min-width: 40px;
+  border-bottom-right-radius: var(--v-border-radius-xs);
   border-end-start-radius: unset;
   border-start-start-radius: unset;
-  border-top-right-radius: $border-radius-xs;
-  border-bottom-right-radius: $border-radius-xs;
-  min-width: 40px;
-  &:focus{
+  border-top-right-radius: var(--v-border-radius-xs);
+
+  &:focus {
     box-shadow: none !important;
   }
 }
 
 .button-group {
- height:  -webkit-fill-available;
+  height:  auto;
 }
 
 // .text-style-btn {

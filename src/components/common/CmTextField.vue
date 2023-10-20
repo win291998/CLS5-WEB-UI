@@ -150,91 +150,110 @@ watch(() => props.modelValue, val => {
 
 <style lang="scss">
 @use "@/styles/style-global.scss" as *;
+
 .cm-input-field {
   height: auto;
   padding: 4px 0;
 }
-.vTextField .v-field{
-  color: $color-gray-900 !important;
-  /* Text md/Regular */
-  font-family: Inter, sans-serif;
-  font-size: 16px;
+
+.vTextField .v-field {
   height: 40px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 24px;
   border: $border-input;
   border-radius: $border-radius-input !important;
-}
- .vTextField .v-field--appended .v-field__input{
   color: $color-gray-900 !important;
+
   /* Text md/Regular */
+
   font-family: Inter, sans-serif;
   font-size: 16px;
-  height: 40px;
   font-style: normal;
   font-weight: 400;
   line-height: 24px;
+}
+
+.vTextField .v-field--appended .v-field__input {
+  height: 40px;
   border: unset !important;
   border-radius: $border-radius-input !important;
+  color: $color-gray-900 !important;
+
+  /* Text md/Regular */
+
+  font-family: Inter, sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
 }
+
 .cm-input-field .v-field--variant-outlined .v-field__outline__start {
-    border-radius: 8px 0 0 8px !important;
+  border-radius: 8px 0 0 8px !important;
 }
 
 .cm-input-field .v-field--variant-outlined .v-field__outline__end {
-    border-radius: 0 8px 8px 0  !important;
+  border-radius: 0 8px 8px 0  !important;
 }
+
 .vTextField .v-field__outline__end,
-.vTextField .v-field__outline__start{
+.vTextField .v-field__outline__start {
   // border: none !important;
 }
-.v-field--prepended{
-  .v-field__input{
+
+.v-field--prepended {
+  .v-field__input {
     border: none !important;
   }
+
   border: $border-input !important;
   border-radius: $border-radius-input !important;
+
   .v-field__outline__notch::before,
-  .v-field__outline__notch::after
-  {
+  .v-field__outline__notch::after {
     border: none !important;
   }
 }
-.cm-input-field-error .v-field{
+
+.cm-input-field-error .v-field {
   border: 1px solid red;
 }
-.v-field .v-field__field{
-  border-radius: var(--v-border-sm);
+
+.v-field .v-field__field {
   overflow: hidden;
+  border-radius: var(--v-border-radius-xs);
 }
-.cm-input-field .v-field:focus{
+
+.cm-input-field .v-field:focus {
   border: 1px solid rgb(var(--v-primary-300));
-  border-radius: var(--v-border-sm);
+  border-radius: var(--v-border-radius-xs);
 }
-.cm-input-field .v-field__outline{
+
+.cm-input-field .v-field__outline {
   z-index: -1 !important;
 }
-.cm-input-field .focus .v-field__outline{
-  border-radius:8px;
+
+.cm-input-field .focus .v-field__outline {
   border: 1px solid rgb(var(--v-primary-300)) !important;
-  box-shadow: 0px 0px 0px 4px rgb(var(--v-primary-100)), 0px 1px 2px 0px rgb(var(--v-primary-300));
-}
-.cm-input-field-error.cm-input-field .focus .v-field__outline{
   border-radius:8px;
-  border: 1px solid rgb(var(--v-error-300)) !important;
-  box-shadow: 0px 0px 0px 4px rgb(var(--v-error-100)), 0px 1px 2px 0px rgb(var(--v-gray-900)) !important;
+  box-shadow: 0 0 0 4px rgb(var(--v-primary-100)), 0 1px 2px 0 rgb(var(--v-primary-300));
 }
-.cm-input-field-error.cm-input-field .focus .v-field:focus{
-  border-radius:8px;
+
+.cm-input-field-error.cm-input-field .focus .v-field__outline {
   border: 1px solid rgb(var(--v-error-300)) !important;
-  box-shadow: 0px 0px 0px 4px rgb(var(--v-error-100)), 0px 1px 2px 0px rgb(var(--v-gray-900)) !important;
+  border-radius:8px;
+  box-shadow: 0 0 0 4px rgb(var(--v-error-100)), 0 1px 2px 0 rgb(var(--v-gray-900)) !important;
+}
+
+.cm-input-field-error.cm-input-field .focus .v-field:focus {
+  border: 1px solid rgb(var(--v-error-300)) !important;
+  border-radius:8px;
+  box-shadow: 0 0 0 4px rgb(var(--v-error-100)), 0 1px 2px 0 rgb(var(--v-gray-900)) !important;
 }
 
 .cm-input-field .v-field--variant-outlined .v-field__outline__start {
-    border: none
-  }
+  border: none
+}
+
 .cm-input-field .v-field--variant-outlined .v-field__outline__end {
-    border: none
-  }
+  border: none
+}
 </style>

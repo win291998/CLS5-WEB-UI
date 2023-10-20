@@ -456,62 +456,72 @@ defineExpose({
 </template>
 
 <style  lang="scss">
-.doing-exam-container{
-  background-color:  rgba(var(--v-theme-surface));
+.doing-exam-container {
   padding: 16px;
+  background-color:  rgba(var(--v-theme-surface));
 }
+
 #doing-exam-container::backdrop {
-    position: relative;
-    inset: 0px;
-    background: black;
+  position: relative;
+  background: black;
+  inset: 0;
 }
-.mt{
+
+.mt {
   display: flex;
-  .mt-left{
+
+  .mt-left {
+    overflow: hidden;
     width: 70% ;
     margin-right: 12px;
-    overflow: hidden;
   }
-  .mt-right{
+
+  .mt-right {
     width: 30% ;
     margin-left: 12px;
-    .mt-point{
-      padding: 24px;
-      border-radius: var(--v-border-sm);
-      border: 1px solid rgb(var(--v-gray-300));
-      background:  rgb(var(--v-gray-50));
-    .mt-point-list{
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
 
-      .mt-point-item{
-        cursor: pointer;
-        width: 40px;
-        height: 40px;
-        border-radius: var(--v-border-sm);
-        border: 2px solid rgb(var(--v-gray-500));
-        background: #fff;
-        margin: 8px ;
-        &.item-select{
-          color: #fff;
-          border: 2px solid rgb(var(--v-primary-600));
-          background:  rgb(var(--v-primary-600));
-        }
-        &.item-flag{
-          border: 2px solid rgb(var(--v-warning-500));
+    .mt-point {
+      padding: 24px;
+      border: 1px solid rgb(var(--v-gray-300));
+      border-radius: var(--v-border-radius-xs);
+      background:  rgb(var(--v-gray-50));
+
+      .mt-point-list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+
+        .mt-point-item {
+          width: 40px;
+          height: 40px;
+          border: 2px solid rgb(var(--v-gray-500));
+          border-radius: var(--v-border-radius-xs);
+          margin: 8px ;
+          background: #fff;
+          cursor: pointer;
+
+          &.item-select {
+            border: 2px solid rgb(var(--v-primary-600));
+            background:  rgb(var(--v-primary-600));
+            color: #fff;
+          }
+
+          &.item-flag {
+            border: 2px solid rgb(var(--v-warning-500));
+          }
         }
       }
     }
-    }
   }
 }
-.mt-mb{
+
+.mt-mb {
   position: fixed;
   top: 2rem;
   right: 0;
 }
-.controlQuestionNumberMb{
+
+.controlQuestionNumberMb {
   position: fixed;
   bottom: 0;
 }

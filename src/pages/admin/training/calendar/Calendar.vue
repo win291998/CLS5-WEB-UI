@@ -102,22 +102,28 @@ function handleEventClick({ event: clickedEvent }: Any) {
 
 <style lang="scss">
 @use "@/styles/style-global.scss" as *;
+
 .admin-calendar {
+  border-radius: var(--v-border-radius-xs) !important;
   box-shadow: $box-shadow-md;
-  border-radius: $border-radius-xs !important;
+
   .sidebar {
     height: auto;
   }
+
   .content {
     width: 100%;
   }
 }
-@media only screen and (max-width: 1200px) {
+
+@media only screen and (width <= 1200px) {
   .admin-calendar {
     position: relative;
+
     .sidebar {
       position: absolute;
     }
+
     .content {
 
     }

@@ -375,52 +375,60 @@ defineExpose({
 
 <style lang="scss">
 @use "@/styles/style-global.scss" as *;
+
 .cm-input-file .v-field--variant-outlined .v-field__outline__start {
-    border-radius: 8px 0 0 8px !important;
+  border-radius: 8px 0 0 8px !important;
 }
 
 .cm-input-file .v-field--variant-outlined .v-field__outline__end {
-    border-radius: 0 8px 8px 0  !important;
+  border-radius: 0 8px 8px 0  !important;
 }
-.v-file-input .v-input__details{
-  padding-inline-start: 16px !important;
-  padding-inline-end: 16px !important;
-}
-.cm-input-file .v-file-input .v-field__input{
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
-  display: inline;
 
+.v-file-input .v-input__details {
+  padding-inline-end: 16px !important;
+  padding-inline-start: 16px !important;
 }
+
+.cm-input-file .v-file-input .v-field__input {
+  display: inline;
+  overflow: hidden;
+  max-width: 100%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .cm-input-file .v-field--variant-outlined .v-field__outline__start {
-    border-radius: 8px 0 0 8px !important;
-    background-color:  rgb(var(--v-theme-surface));
-    opacity: 1;
-  }
-.cm-input-file .v-field__outline{
+  border-radius: 8px 0 0 8px !important;
+  background-color:  rgb(var(--v-theme-surface));
+  opacity: 1;
+}
+
+.cm-input-file .v-field__outline {
   z-index: -1 !important;
 }
-.cm-input-file .v-field--variant-outlined .v-field__outline__end {
-    border-radius: 0 8px 8px 0  !important;
-    background-color:  rgb(var(--v-theme-surface));
-    opacity: 1;
-  }
 
-  .input-drop-file{
-    position: relative;
-    .box-drop-input{
-      border-radius: var(--v-border-sm);
-      border: 1px solid rgb(var(--v-gray-300));
-      background: var(--white, #FFF);
-      padding: 16px 24px;
-      .box-action-left{
-        color: rgb(var(--v-primary-700))
-      }
-      .box-action-right{
-        color: rgb(var(--v-gray-500))
-      }
+.cm-input-file .v-field--variant-outlined .v-field__outline__end {
+  border-radius: 0 8px 8px 0  !important;
+  background-color:  rgb(var(--v-theme-surface));
+  opacity: 1;
+}
+
+.input-drop-file {
+  position: relative;
+
+  .box-drop-input {
+    padding: 16px 24px;
+    border: 1px solid rgb(var(--v-gray-300));
+    border-radius: var(--v-border-radius-xs);
+    background: var(--white, #FFF);
+
+    .box-action-left {
+      color: rgb(var(--v-primary-700))
+    }
+
+    .box-action-right {
+      color: rgb(var(--v-gray-500))
     }
   }
+}
 </style>

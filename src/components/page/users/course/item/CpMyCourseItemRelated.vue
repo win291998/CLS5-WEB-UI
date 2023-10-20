@@ -89,41 +89,46 @@ function goDetailCourse() {
 </template>
 
 <style lang="scss" scoped>
-  .course-related-card{
-    background-color: #fff;
-    border-radius: var(--v-border-sm);
-    box-shadow: 0px 2px 4px -2px rgba(16, 24, 40, 0.06), 0px 4px 8px -2px rgba(16, 24, 40, 0.10);
-    margin-block: 1.5rem;
-    padding: 1rem;
+  .course-related-card {
     display: flex;
-    .rl-left{
-      .rl-img{
+    padding: 1rem;
+    border-radius: var(--v-border-radius-xs);
+    background-color: #fff;
+    box-shadow: 0 2px 4px -2px rgba(16, 24, 40, 6%), 0 4px 8px -2px rgba(16, 24, 40, 10%);
+    margin-block: 1.5rem;
+
+    .rl-left {
+      .rl-img {
         width: 5.5rem;
         height: 5.5rem;
       }
     }
-    .rl-right{
-      margin-left: 1rem;
-      width: 100%;
+
+    .rl-right {
       position: relative;
       display: flex;
+      width: 100%;
       flex-direction: column;
       justify-content: space-between;
-     .rl-code{
-      color:  rgb(var(--v-primary-700));
-     }
-     .rl-name-course{
-      display: -webkit-box;
-      -webkit-line-clamp: 2; /* Số hàng tối đa muốn hiển thị */
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: pre-wrap;
-     }
-     .rl-review{
-      text-align: end;
-      color:  rgb(var(--v-primary-700));
-     }
+      margin-left: 1rem;
+
+      .rl-code {
+        color:  rgb(var(--v-primary-700));
+      }
+
+      .rl-name-course {
+        display: -webkit-box;
+        overflow: hidden;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2; /* Số hàng tối đa muốn hiển thị */
+        text-overflow: ellipsis;
+        white-space: pre-wrap;
+      }
+
+      .rl-review {
+        color:  rgb(var(--v-primary-700));
+        text-align: end;
+      }
     }
   }
 </style>

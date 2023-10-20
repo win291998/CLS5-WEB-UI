@@ -307,11 +307,16 @@ watchEffect(() => {
 
 <style lang="scss">
 @use "@/styles/style-global.scss" as *;
+
 :root {
   --dp-primary-color: rgb(var(--v-primary-600))
-  --dp-border-radius: $border-radius-xs
-  --height-top-month: v-bind(marginHeader)
+    --dp-border-radius: var(--v-border-radius-xs)
+    --height-top-month: v-bind(marginheader)
+
+
+
 }
+
 .cm-date-time-picker {
   .input-date-time {
     position: absolute;
@@ -319,276 +324,343 @@ watchEffect(() => {
     right: 28px;
     width: calc(100% - 56px);
     height: inherit;
+
     .v-field__field {
       height: 36px;
     }
-    .v-field{
-      border: unset !important;
+
+    .v-field {
       height: unset !important;
+      border: unset !important;
     }
+
     .v-field__input {
       border: unset !important;
-      border-radius: $border-radius-xs;
+      border-radius: var(--v-border-radius-xs);
+      box-shadow: unset !important;
       padding-inline-end: unset;
       padding-inline-start: 10px;
-      box-shadow: unset !important;
+
       &::placeholder {
-        font-size: 14px;
         width: 95px;
+        font-size: 14px;
       }
     }
+
     .focus {
       .v-field__outline {
-        box-shadow: unset !important;
         border: unset !important;
+        box-shadow: unset !important;
       }
-
     }
+
     .v-field__outline {
       --v-field-border-width: 0
+    
+    
+    
     }
   }
-
 }
-.dp__main {
-    height: 40px;
-    overflow: hidden;
-    .dp__input_icon_pad {
-      height: 40px;
-      border: 1px solid $color-gray-300;
-      border-radius: $border-radius-xs;
-    }
-  }
-  .errors.dp__main {
-    .dp__input_icon_pad {
-      border: 1px solid $color-error-300;
-      border-radius: $border-radius-xs;
-    }
-  }
-  .focus.dp__main {
-    .dp__input_icon_pad {
-      border: 1px solid $color-primary-300;
-      box-shadow: 0px 0px 0px 4px $color-primary-100, 0px 1px 2px 0px $color-gray-900;
-    }
-  }
-  .errors.focus.dp__main {
-    .dp__input_icon_pad {
-      border: 1px solid $color-error-300;
-      box-shadow: 0px 0px 0px 4px $color-error-100, 0px 1px 2px 0px $color-gray-900;
-    }
-  }
 
-  .dp__menu_inner {
-    width: 300px !important;
-    width: auto;
-    .dp__month_year_row{
-      margin-bottom: v-bind(marginHeader);
-    }
+.dp__main {
+  overflow: hidden;
+  height: 40px;
+
+  .dp__input_icon_pad {
+    height: 40px;
+    border: 1px solid $color-gray-300;
+    border-radius: var(--v-border-radius-xs);
   }
+}
+
+.errors.dp__main {
+  .dp__input_icon_pad {
+    border: 1px solid $color-error-300;
+    border-radius: var(--v-border-radius-xs);
+  }
+}
+
+.focus.dp__main {
+  .dp__input_icon_pad {
+    border: 1px solid $color-primary-300;
+    box-shadow: 0 0 0 4px $color-primary-100, 0 1px 2px 0 $color-gray-900;
+  }
+}
+
+.errors.focus.dp__main {
+  .dp__input_icon_pad {
+    border: 1px solid $color-error-300;
+    box-shadow: 0 0 0 4px $color-error-100, 0 1px 2px 0 $color-gray-900;
+  }
+}
+
+.dp__menu_inner {
+  width: 300px !important;
+  width: auto;
+
+  .dp__month_year_row {
+    margin-bottom: v-bind(marginheader);
+  }
+}
+
 .dp__calendar {
+  display: v-bind(displaycalendar);
   overflow: hidden;
   width: 100%;
-  display: v-bind(displayCalendar);
+
   .dp__calendar_item {
     width: 30px;
     height: 28px;
+
     .dp__cell_inner {
-      border-radius: 20px;
       width: 40px;
       height: 40px;
+      border-radius: 20px;
+
       &.dp__range_start {
         border-radius: 20px;
       }
     }
+
     .dp__date_hover:hover {
       background-color: unset;
       color: $color-primary-600;
     }
+
     .date-picker {
       position: absolute;
     }
-    .dp__range_start, .dp__range_end{
-      color: $color-white;
+
+    .dp__range_start, .dp__range_end {
       background-color: $color-primary-600 !important;
-    }
-    .dp__range_between {
-      background-color: $color-primary-50 !important;
-      border: 1px solid $color-primary-50;
-      color: $color-primary-600;
-    }
-  }
-    .dp__calendar_item:has(> .dp__range_start) {
-      background-color: $color-primary-50 !important;
-      border-bottom-left-radius: 20px;
-      border-top-left-radius: 20px;
-    }
-    .dp__calendar_item:has(> .dp__range_end) {
-      background-color: $color-primary-50 !important;
-      border-bottom-right-radius: 20px;
-      border-top-right-radius: 20px;
-    }
-    .dp__calendar_item:has(> .dp__range_between) {
-      background-color: $color-primary-50 !important;
-      border: 1px solid $color-primary-50;
-      color: $color-primary-600;
-      border-radius: 0;
-    }
-    .dp__calendar_item:has(> .dp__range_between):last-child {
-      border-bottom-right-radius: 20px;
-      border-top-right-radius: 20px;
-    }
-    .dp__calendar_item:has(> .dp__range_between):first-child {
-      border-bottom-left-radius: 20px;
-      border-top-left-radius: 20px;
-    }
-    .dp__calendar_item:has(> .dp__date_hover_end):hover {
-      background-color: $color-primary-50 !important;
-      border-bottom-right-radius: 20px;
-      border-top-right-radius: 20px;
-    }
-    .dp__calendar_item:has(> .dp__date_hover_start):hover {
-      background-color: $color-primary-50 !important;
-      border-bottom-left-radius: 20px;
-      border-top-left-radius: 20px;
+      color: $color-white;
     }
 
-  }
-  .dp__overlay {
-    height: 160px;
-    bottom: 0;
-    top: unset;
-    .dp__time_input {
-      width: 50% !important;
-      padding: 0;
-      .dp__time_col {
-        padding: 0;
-      }
-      .dp__button {
-        display: none;
-      }
+    .dp__range_between {
+      border: 1px solid $color-primary-50;
+      background-color: $color-primary-50 !important;
+      color: $color-primary-600;
     }
   }
-  .dp__action_button {
-    white-space: nowrap;
-    border-radius: var(--v-border-sm);
-    height: 40px !important;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 600;
-    padding: 10px 16px;
-    text-transform: inherit;
-    font-family: inherit;
+
+  .dp__calendar_item:has(> .dp__range_start) {
+    background-color: $color-primary-50 !important;
+    border-bottom-left-radius: 20px;
+    border-top-left-radius: 20px;
   }
-  .dp__action_row {
-    width: 100% !important;
-    border-top: 1px solid $color-gray-300;
+
+  .dp__calendar_item:has(> .dp__range_end) {
+    background-color: $color-primary-50 !important;
+    border-bottom-right-radius: 20px;
+    border-top-right-radius: 20px;
   }
-  .dp__action_select {
-    --v-theme-overlay-multiplier: var(--v-theme-primary-overlay-multiplier);
-    background-color: rgb(var(--v-theme-primary)) !important;
-    color: rgb(var(--v-theme-on-primary)) !important;
+
+  .dp__calendar_item:has(> .dp__range_between) {
+    border: 1px solid $color-primary-50;
+    border-radius: 0;
+    background-color: $color-primary-50 !important;
+    color: $color-primary-600;
   }
-  .dp__action_cancel {
-    --v-theme-overlay-multiplier: var(--v-theme-primary-overlay-multiplier);
-    background-color: transparent !important;
-    color: rgb(var(--v-theme-secondary)) !important;
-    border: 1px solid rgb(var(--v-gray-300)) !important;
+
+  .dp__calendar_item:has(> .dp__range_between):last-child {
+    border-bottom-right-radius: 20px;
+    border-top-right-radius: 20px;
   }
+
+  .dp__calendar_item:has(> .dp__range_between):first-child {
+    border-bottom-left-radius: 20px;
+    border-top-left-radius: 20px;
+  }
+
+  .dp__calendar_item:has(> .dp__date_hover_end):hover {
+    background-color: $color-primary-50 !important;
+    border-bottom-right-radius: 20px;
+    border-top-right-radius: 20px;
+  }
+
+  .dp__calendar_item:has(> .dp__date_hover_start):hover {
+    background-color: $color-primary-50 !important;
+    border-bottom-left-radius: 20px;
+    border-top-left-radius: 20px;
+  }
+}
+
+.dp__overlay {
+  top: unset;
+  bottom: 0;
+  height: 160px;
+
+  .dp__time_input {
+    width: 50% !important;
+    padding: 0;
+
+    .dp__time_col {
+      padding: 0;
+    }
+
+    .dp__button {
+      display: none;
+    }
+  }
+}
+
+.dp__action_button {
+  height: 40px !important;
+  padding: 10px 16px;
+  border-radius: var(--v-border-radius-xs);
+  font-family: inherit;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  text-transform: inherit;
+  white-space: nowrap;
+}
+
+.dp__action_row {
+  width: 100% !important;
+  border-top: 1px solid $color-gray-300;
+}
+
+.dp__action_select {
+  --v-theme-overlay-multiplier: var(--v-theme-primary-overlay-multiplier);
+
+  background-color: rgb(var(--v-theme-primary)) !important;
+  color: rgb(var(--v-theme-on-primary)) !important;
+}
+
+.dp__action_cancel {
+  --v-theme-overlay-multiplier: var(--v-theme-primary-overlay-multiplier);
+
+  border: 1px solid rgb(var(--v-gray-300)) !important;
+  background-color: transparent !important;
+  color: rgb(var(--v-theme-secondary)) !important;
+}
+
 .custom-time-picker-component {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+
   .select-input {
-    border: 1px solid rgb(var(--v-gray-300));
     padding: 8px 14px;
-    gap: 8px;
-    border-radius: $xs
+    border: 1px solid rgb(var(--v-gray-300));
+    border-radius: $xs;
+    gap: 8px
   }
+
   .select-input:focus-visible {
     // border: unset;
   }
 }
-  .dp__time_picker_inline_container {
+
+.dp__time_picker_inline_container {
   // .dp__time_input:first-child {
   //   border-right: 1px solid $color-gray-300;
   // }
-    .dp__flex {
-      width: 100%;
-    }
-    .dp__tp_inline_btn_top {
-      display: flex;
-      margin-bottom: 6px;
+  .dp__flex {
+    width: 100%;
+  }
+
+  .dp__tp_inline_btn_top {
+    display: flex;
+    margin-bottom: 6px;
+
     .dp__tp_inline_btn_bottom:hover .dp__tp_btn_in_l {
       transform: rotate(-12deg) scale(1.15) translateY(0);
     }
+
     .dp__tp_inline_btn_bottom:hover .dp__tp_btn_in_r {
       transform: rotate(12deg) scale(1.15) translateY(0);
     }
+
     .dp__tp_btn_in_l {
+      border-bottom-left-radius: var(--v-border-radius-xs);
+
       // transform: rotate(-12deg) scale(1.15) translateY(0);
-      border-top-left-radius: $border-radius-xs;
-      border-bottom-left-radius: $border-radius-xs;
+
+      border-top-left-radius: var(--v-border-radius-xs);
     }
+
     .dp__tp_btn_in_r {
+      border-bottom-right-radius: var(--v-border-radius-xs);
+
       // transform: rotate(12deg) scale(1.15) translateY(0);
-      border-top-right-radius: $border-radius-xs;
-      border-bottom-right-radius: $border-radius-xs;
+
+      border-top-right-radius: var(--v-border-radius-xs);
     }
   }
+
   .dp__tp_inline_btn_bottom {
     display: flex;
     margin-top: 5px;
+
     .dp__tp_btn_in_l {
+      border-bottom-left-radius: var(--v-border-radius-xs);
+
       // transform: rotate(12deg) scale(1.15) translateY(-2px);
-      border-top-left-radius: $border-radius-xs;
-      border-bottom-left-radius: $border-radius-xs;
+
+      border-top-left-radius: var(--v-border-radius-xs);
     }
+
     .dp__tp_btn_in_r {
+      border-bottom-right-radius: var(--v-border-radius-xs);
+
       // transform: rotate(-12deg) scale(1.15) translateY(-2px);
-      border-top-right-radius: $border-radius-xs;
-      border-bottom-right-radius: $border-radius-xs;
+
+      border-top-right-radius: var(--v-border-radius-xs);
     }
   }
+
   .dp__time_col_reg_inline {
     padding: 5px;
   }
+
   .dp__inc_dec_button_inline {
     display: flex;
-    justify-content: center;
     width: 16px  !important;
+    justify-content: center;
   }
+
   .dp__inc_dec_button_inline:focus {
     outline:none;
   }
+
   .dp__tp_inline_btn_bar {
     width: 10px;
     height: 3px !important;
   }
+
   .dp__time_display {
-    border: 1px solid $color-gray-300;
     padding: 8px 10px;
+    border: 1px solid $color-gray-300;
+  }
+}
+
+.dp__action_extra {
+  // position: absolute;
+
+  top: 39px;
+  width: 100%;
+
+  .action-extra {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
   }
 
-}
-  .dp__action_extra {
-    width: 100%;
-    // position: absolute;
-    top: 39px;
-    .action-extra {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px;
-    }
-    .time-preview {
-      width: 128px;
-      height: 40px;
-    }
+  .time-preview {
+    width: 128px;
+    height: 40px;
   }
+}
+
 .dp__month_year_row {
   margin-bottom: var(--height-top-month) !important;
 }
-.dp__disabled{
+
+.dp__disabled {
   background: $color-gray-100;
 }
 </style>

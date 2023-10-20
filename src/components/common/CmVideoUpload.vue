@@ -137,9 +137,9 @@ defineExpose({
       :class="{ 'w-100 h-100': isSizeFull, 'border-avatar': isClassicBorder }"
       class="cusor-pointer"
       style="
-        height: 100%;
-        max-width: 100%;
         width: 100%;
+        max-width: 100%;
+        height: 100%;
         object-fit: fill;
       "
       @click="hanleClickVideo"
@@ -163,29 +163,33 @@ defineExpose({
 
 <style lang="scss">
 @use "@/styles/variables/global" as *;
+
 .border-avatar {
   border: 4px solid $color-white;
+  border-radius: var(--v-border-radius-xs);
   box-shadow: $box-shadow-lg;
-  border-radius: var(--v-border-sm);
 }
-.cm-video-upload{
-  position: relative;
-  .cm-video-input{
-   position: absolute;
-  }
 
-}
-.cm-video-upload:hover{
-  .cm-video-input{
-   display: flex !important;
+.cm-video-upload {
+  position: relative;
+
+  .cm-video-input {
+    position: absolute;
   }
 }
-.icon-close{
+
+.cm-video-upload:hover {
+  .cm-video-input {
+    display: flex !important;
+  }
+}
+
+.icon-close {
   position: absolute;
-  right: 0;
-  top: 0;
-  padding: 8px;
   z-index: 999;
+  top: 0;
+  right: 0;
+  padding: 8px;
   cursor: pointer;
 }
 </style>

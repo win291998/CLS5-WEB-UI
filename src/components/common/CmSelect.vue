@@ -284,7 +284,9 @@ function withPopper(dropdownList: any, component: any, { width }: any) {
 
 <style lang="scss">
 @use "@/styles/style-global.scss" as *;
+
 @import "vue-select/dist/vue-select.css";
+
 .v-select-cls.is-invalid {
   // Vue Select
   &.v-select {
@@ -304,6 +306,7 @@ function withPopper(dropdownList: any, component: any, { width }: any) {
   &__dropdown-toggle {
     block-size: 40px;
   }
+
   &__search {
     color:  $color-gray-500;
   }
@@ -314,24 +317,29 @@ function withPopper(dropdownList: any, component: any, { width }: any) {
   padding-block: 6px 0;
   padding-inline: 16px;
 }
-.cm-select .vs__dropdown-toggle{
-  border-radius: $border-radius-xs;
+
+.cm-select .vs__dropdown-toggle {
+  border-radius: var(--v-border-radius-xs);
   background: $color-input-default;
 }
+
 .cm-select .vs--disabled .vs__dropdown-toggle, .vs--disabled .vs__clear, .vs--disabled .vs__search, .vs--disabled .vs__selected, .vs--disabled .vs__open-indicator {
   background-color: $color-gray-100;
 }
-.vs__dropdown-menu{
+
+.vs__dropdown-menu {
   z-index: 9999 !important;
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;
 }
+
 .vs__selected-options{
 }
-.vs__selected{
-  white-space: nowrap !important;
+
+.vs__selected {
   overflow: hidden !important;
   text-overflow: ellipsis !important;
+  white-space: nowrap !important;
 }
 
 // .cm-select {

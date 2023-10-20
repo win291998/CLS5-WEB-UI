@@ -175,56 +175,70 @@ watch(() => props.data.listAnswerMatrix, (val: any) => {
 </template>
 
 <style lang="scss">
-.view-Matrix-sg{
-  .tb-row{
-    padding:8px 16px;
+.view-Matrix-sg {
+  .tb-row {
     display: flex;
-    .tb-label{
+    padding:8px 16px;
+
+    .tb-label {
       width: 25%;
       color: rgb(var(--v-gray-900));
+
       /* Text md/Medium */
+
       font-family: Inter;
       font-size: 16px;
       font-style: normal;
       font-weight: 400;
       line-height: 24px; /* 150% */
     }
-    .tb-content{
+
+    .tb-content {
       display: flex;
       width: 75%;
-      .tb-label-content{
+
+      .tb-label-content {
+        display: flex;
         width: 100%;
-        text-align: center;
+        justify-content: center;
         color: rgb(var(--v-gray-900));
+
         /* Text md/Medium */
+
         font-family: Inter;
         font-size: 16px;
         font-style: normal;
         font-weight: 400;
         line-height: 24px; /* 150% */
-        display: flex;
-        justify-content: center;
+        text-align: center;
       }
     }
 
-    &.tb-row-th{
+    &.tb-row-th {
       background-color:  rgb(var(--v-primary-25));
     }
-    &.tb-row-catg{
+
+    &.tb-row-catg {
       padding:16px;
-      .tb-label{
+
+      .tb-label {
         color: rgb(var(--v-gray-900));
-        text-transform: uppercase;
+
         /* Text md/Medium */
+
         font-family: Inter;
         font-size: 16px;
         font-style: normal;
         font-weight: 500;
         line-height: 24px; /* 150% */
+        text-transform: uppercase;
       }
-      .tb-label-content{
+
+      .tb-label-content {
         color: rgb(var(--v-gray-900));
+
         /* Text md/Medium */
+
         font-family: Inter;
         font-size: 16px;
         font-style: normal;
@@ -232,22 +246,23 @@ watch(() => props.data.listAnswerMatrix, (val: any) => {
         line-height: 24px; /* 150% */
       }
     }
-    &.tb-row-group{
+
+    &.tb-row-group {
       padding-top: 16px;
-      padding-bottom: 0px;
-      .tb-label{
+      padding-bottom: 0;
+
+      .tb-label {
         width: 100%;
         color: rgb(var(--v-primary-600));
       }
-
     }
-    &.tb-row-item{
+
+    &.tb-row-item {
       padding:16px;
-      margin-block: 8px;
-      border-radius: var(--v-border-sm);
       border: 1px solid rgb(var(--v-gray-300));
+      border-radius: var(--v-border-radius-xs);
+      margin-block: 8px;
     }
   }
-
 }
 </style>

@@ -109,26 +109,33 @@ const messageError = computed(() => {
 
 <style lang="scss">
 @use "@/styles/style-global.scss" as *;
+
 .text-area {
   height: unset;
 }
+
 .v-textarea .v-field__input {
+  // border: $border-input;
+
+  border-radius: $border-radius-input !important;
   color: $color-gray-900 !important;
+
   /* Text md/Regular */
+
   font-family: Inter, sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
   line-height: 24px;
-  // border: $border-input;
-  border-radius: $border-radius-input !important;
 }
+
 .v-textarea .v-field__outline__end,
-.v-textarea .v-field__outline__start{
+.v-textarea .v-field__outline__start {
   // border: none !important;
 }
-.v-textarea .v-field__field{
+
+.v-textarea .v-field__field {
+  border-radius: var(--v-border-radius-xs);
   background: rgb(var(--v-theme-surface));
-  border-radius: $border-radius-xs;
 }
 </style>

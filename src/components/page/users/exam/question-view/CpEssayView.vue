@@ -192,21 +192,22 @@ watch(() => props.data, val => {
 </template>
 
 <style lang="scss">
-.content-view{
-
+.content-view {
   .item-answer {
     display:flex;
     width: 100%;
-    border-radius: var(--v-border-sm);
-    border: 1px solid rgb(var(--v-gray-300));
-    background: #FFF;
     padding: 1rem;
+    border: 1px solid rgb(var(--v-gray-300));
+    border-radius: var(--v-border-radius-xs);
     margin-bottom: 12px;
+    background: #FFF;
   }
+
   .item-answer:last-child {
     margin-bottom: unset;
   }
-  .view-media{
+
+  .view-media {
     width: 60%;
   }
 }

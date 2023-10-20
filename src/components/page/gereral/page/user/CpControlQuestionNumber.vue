@@ -93,30 +93,33 @@ function totalIsAnswered() {
 </template>
 
 <style lang="scss">
-  .cm-point{
-      padding: 24px;
-      border-radius: var(--v-border-sm);
-      border: 1px solid rgb(var(--v-gray-300));
-      background:  rgb(var(--v-gray-50));
-    .cm-point-list{
+  .cm-point {
+    padding: 24px;
+    border: 1px solid rgb(var(--v-gray-300));
+    border-radius: var(--v-border-radius-xs);
+    background:  rgb(var(--v-gray-50));
+
+    .cm-point-list {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
 
-      .cm-point-item{
-        cursor: pointer;
+      .cm-point-item {
         width: 40px;
         height: 40px;
-        border-radius: var(--v-border-sm);
         border: 2px solid rgb(var(--v-gray-500));
-        background: #fff;
+        border-radius: var(--v-border-radius-xs);
         margin: 8px ;
-        &.item-select{
-          color: #fff;
+        background: #fff;
+        cursor: pointer;
+
+        &.item-select {
           border: 2px solid rgb(var(--v-primary-600));
           background:  rgb(var(--v-primary-600));
+          color: #fff;
         }
-        &.item-flag{
+
+        &.item-flag {
           border: 2px solid rgb(var(--v-warning-500));
         }
       }

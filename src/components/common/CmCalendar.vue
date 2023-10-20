@@ -94,79 +94,100 @@ defineExpose({
 
 .cm-calender {
   position: relative;
-  border-top-right-radius: $border-radius-xs;
+  border-top-right-radius: var(--v-border-radius-xs);
+
   .content-calendar {
     tbody {
       tr {
         td:first-child {
-          border-bottom-right-radius: $border-radius-xs;
+          border-bottom-right-radius: var(--v-border-radius-xs);
         }
       }
 
-      border-bottom-right-radius: $border-radius-xs;
+      border-bottom-right-radius: var(--v-border-radius-xs);
     }
+
     .fc-toolbar-title {
       margin-left: 0 !important;
     }
+
     .fc-header-toolbar {
       height: 5rem;
-      margin-bottom: 0 !important;
       border: .0625rem solid $color-gray-300;
-      border-top-right-radius: $border-radius-xs;
+      margin-bottom: 0 !important;
+      border-top-right-radius: var(--v-border-radius-xs);
+
       .fc-toolbar-chunk {
         display: flex;
-        justify-content: center;
         align-items: center;
+        justify-content: center;
+
         .fc-button-group {
           .fc-prev-button,.fc-next-button {
-            background: transparent;
             border: unset !important;
+            background: transparent;
             color: $color-gray-700;
           }
-          [class^=fc-timeGrid] {
+
+          [class^="fc-timeGrid"] {
             border: $color-primary-600;
           }
+
           .fc-button {
-            background: transparent;
             border: unset;
+
             // border-right: .0625rem solid $color-primary-400;
+
             border: .0625rem solid $color-primary-400;
+            background: transparent;
           }
+
           .fc-button:first-child {
-            border-top-left-radius: $border-radius-xs;
-            border-bottom-left-radius: $border-radius-xs;
+            border-bottom-left-radius: var(--v-border-radius-xs);
+            border-top-left-radius: var(--v-border-radius-xs);
           }
+
           .fc-button:last-child {
-            border-top-right-radius: $border-radius-xs;
-            border-bottom-right-radius: $border-radius-xs;
+            border-bottom-right-radius: var(--v-border-radius-xs);
+            border-top-right-radius: var(--v-border-radius-xs);
           }
+
           .fc-button:first-child {
 
           }
+
           .fc-button-active {
             background-color: rgba(var(--v-primary-600), 0.0833333);
           }
         }
+
         .fc-button-group:last-child {
           margin-right: $xl;
         }
+
         .fc-toolbar-title {
           @extend .text-medium-xl
+        
+        
+        
         }
+
         .fc-sidebarToggle-button {
           display: none;
-          background: transparent;
           border: unset;
+          background: transparent;
         }
       }
+
       .fc-icon {
+        display: flex;
         align-items: center;
         font-size: 1.5em;
         vertical-align: middle;
-        display: flex;
       }
     }
   }
+
   .sidebarToggle {
     position: absolute;
     top: 1.125rem;
@@ -176,61 +197,80 @@ defineExpose({
   .fc-daygrid-event-harness {
 
   }
+
   .fc-event-main {
     @extend .text-medium-xs;
+
     color: inherit;
   }
+
   .bg-cm-calendar-light-error {
-    background-color: rgba(var(--v-error-600), 0.0833333) !important;
-    // background-color: rgb(var(--v-error-50)) !important;
-    color: rgb(var(--v-error-600)) !important;
     border: unset;
+    background-color: rgba(var(--v-error-600), 0.0833333) !important;
+
+    // background-color: rgb(var(--v-error-50)) !important;
+
+    color: rgb(var(--v-error-600)) !important;
   }
+
   .bg-cm-calendar-light-success {
+    border: unset;
     background-color: rgba(var(--v-success-600), 0.0833333) !important;
     color: rgb(var(--v-success-600)) !important;
-    border: unset;
   }
+
   .bg-cm-calendar-light-secondary {
+    border: unset;
     background-color: rgba(var(--v-gray-600), 0.0833333) !important;
     color: rgb(var(--v-gray-600)) !important;
-    border: unset;
   }
+
   .bg-cm-calendar-light-primary {
+    border: unset;
     background-color: rgba(var(--v-primary-600), 0.0833333) !important;
     color: rgb(var(--v-primary-600)) !important;
-    border: unset;
   }
+
   .bg-cm-calendar-light-info {
+    border: unset;
     background-color: rgba(var(--v-info-600), 0.0833333) !important;
     color: rgb(var(--v-info-600)) !important;
-    border: unset;
   }
+
   .bg-cm-calendar-light-warning {
+    border: unset;
     background-color: rgba(var(--v-warning-600), 0.0833333) !important;
     color: rgb(var(--v-warning-600)) !important;
-    border: unset;
   }
+
   .bg-cm-calendar-light-info {
+    border: unset;
     background-color: rgba(var(--v-info-600), 0.0833333) !important;
     color: rgb(var(--v-info-600)) !important;
-    border: unset;
   }
+
   .fc-col-header-cell-cushion {
     @extend .text-semibold-sm;
+
     color: $color-gray-700
   }
+
   .fc-daygrid-day-number {
     @extend .text-regular-md
+  
+  
+  
   }
+
   .fc-day-today {
     background-color: $color-primary-50 !important;
   }
 }
+
 :root {
   --fc-small-font-size: .85em;
   --fc-page-bg-color: #fff;
-  --fc-neutral-bg-color: hsla(0,0%,82%,.3);
+  --fc-neutral-bg-color: hsla(0deg,0%,82%,30%);
   --fc-neutral-text-color: grey;
   --fc-border-color: rgb(var(--v-gray-300));
   --fc-button-text-color: rgb(var(--v-primary-600)) !important;
@@ -243,17 +283,17 @@ defineExpose({
   --fc-event-bg-color: rgb(var(--v-primary-600));
   --fc-event-border-color: #3788d8;
   --fc-event-text-color: #fff;
-  --fc-event-selected-overlay-color: rgba(0,0,0,.25);
+  --fc-event-selected-overlay-color: rgba(0,0,0,25%);
   --fc-more-link-bg-color: #d0d0d0;
   --fc-more-link-text-color: inherit;
   --fc-event-resizer-thickness: .5rem;
   --fc-event-resizer-dot-total-width: .5rem;
   --fc-event-resizer-dot-border-width: .0625rem;
-  --fc-non-business-color: hsla(0,0%,84%,.3);
+  --fc-non-business-color: hsla(0deg,0%,84%,30%);
   --fc-bg-event-color: #8fdf82;
   --fc-bg-event-opacity: 0.3;
-  --fc-highlight-color: rgba(188,232,241,.3);
-  --fc-today-bg-color: rgba(255,220,40,.15);
+  --fc-highlight-color: rgba(188,232,241,30%);
+  --fc-today-bg-color: rgba(255,220,40,15%);
   --fc-now-indicator-color: red;
 }
 </style>

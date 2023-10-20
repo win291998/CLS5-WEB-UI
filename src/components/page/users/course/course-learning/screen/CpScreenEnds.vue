@@ -108,42 +108,48 @@ function getImage(): string {
 </template>
 
 <style scoped lang="scss">
-.containter-light{
-  background-color:  rgb(var(--v-gray-50));
+.containter-light {
+  width: 100vw;
   height: auto;
   min-height: 100vh;
-  width: 100vw;
   padding: 2rem;
-  .containter-white{
+  background-color:  rgb(var(--v-gray-50));
+
+  .containter-white {
     position: relative;
-    background-color: rgb(var(--v-theme-surface));
+    width: 100%;
     max-width: 1400px;
     height: 100%;
     min-height: calc(100vh - 4rem);
-    width: 100%;
     padding: 2rem;
-    box-shadow: 0px 2px 4px -2px rgba(16, 24, 40, 0.06), 0px 4px 8px -2px rgba(16, 24, 40, 0.10);
-    .ct-content{
+    background-color: rgb(var(--v-theme-surface));
+    box-shadow: 0 2px 4px -2px rgba(16, 24, 40, 6%), 0 4px 8px -2px rgba(16, 24, 40, 10%);
+
+    .ct-content {
       height: auto;
-      .ct-img{
+
+      .ct-img {
         width: auto;
+        max-width: 200px;
         height: auto;
         max-height: 200px;
-        max-width: 200px;
       }
-      .ct-icon{
+
+      .ct-icon {
         width: 48px;
         height: 48px;
       }
-      .ct-desc{
-        border-radius: var(--v-border-sm);
-        background-color: rgb(var(--v-primary-50));
+
+      .ct-desc {
         padding: 12px 16px;
-        text-align: center;
+        border-radius: var(--v-border-radius-xs);
         margin-top: 1rem;
+        background-color: rgb(var(--v-primary-50));
+        text-align: center;
       }
     }
-    .ct-btn-x{
+
+    .ct-btn-x {
       position: absolute;
       top: 24px;
       right: 24px;

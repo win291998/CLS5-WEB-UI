@@ -112,11 +112,11 @@ async function onConfirm() {
 </template>
 
 <style lang="scss">
-.box-process-file{
+.box-process-file {
   width: 100%;
   height: auto;
-  border: 1px solid #2E90FA;
-  border-radius: var(--v-border-sm);
   padding: 16px !important;
+  border: 1px solid #2E90FA;
+  border-radius: var(--v-border-radius-xs);
 }
 </style>

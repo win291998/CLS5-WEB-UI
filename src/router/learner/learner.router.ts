@@ -44,6 +44,7 @@ export default [
         name: 'course-detail',
         component: () => import('@/pages/users/course/course-detail/MyCourseDetail.vue'),
         meta: {
+          layout: 'blank',
           breadcrumb: [
             {
               title: 'my-course',
@@ -56,14 +57,13 @@ export default [
           ],
         },
       },
-      {
-        path: 'course-learning/:id',
-        name: 'course-learning',
-        component: () => import('@/pages/users/course/course-learning/CourseLearning.vue'),
-      },
+
       {
         path: 'course-review/:id',
         name: 'course-review',
+        meta: {
+          layout: 'blank',
+        },
         component: () => import('@/pages/users/course/course-learning/CourseLearning.vue'),
       },
       {
@@ -79,6 +79,14 @@ export default [
         name: 'list-library',
       },
     ],
+  },
+  {
+    path: '/learner/course-learning/:id',
+    meta: {
+      layout: 'blank',
+    },
+    name: 'course-learning',
+    component: () => import('@/pages/users/course/course-learning/CourseLearning.vue'),
   },
   {
     path: '/learner/exam/my-test',

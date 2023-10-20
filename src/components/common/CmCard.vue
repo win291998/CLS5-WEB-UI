@@ -77,11 +77,13 @@ const props = withDefaults(defineProps<Props>(), ({
   color: $color-gray-900;
   font-weight: $weight-md;
 }
-.v-card-img{
-  border-radius:  var(--v-border-sm);
+
+.v-card-img {
   overflow: hidden;
   min-height: 10rem;
-  img{
+  border-radius:  var(--v-border-radius-xs);
+
+  img {
     height: 100%;
     object-fit: cover;
   }

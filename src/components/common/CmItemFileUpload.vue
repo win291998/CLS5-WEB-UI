@@ -173,33 +173,40 @@ watch(() => props.files, val => {
 </template>
 
 <style lang="scss">
-.box-process-file{
+.box-process-file {
   width: 100%;
   height: auto;
+  padding: 16px !important;
   border: 1px solid #2E90FA;
-  border-radius: var(--v-border-sm);
-  padding: 16px !important;
+  border-radius: var(--v-border-radius-xs);
 }
-.box-process-file.error{
+
+.box-process-file.error {
   width: 100%;
   height: auto;
-  border: 1px solid rgb(var(--v-error-300));
-  border-radius: var(--v-border-sm);
   padding: 16px !important;
-  .text-title{
+  border: 1px solid rgb(var(--v-error-300));
+  border-radius: var(--v-border-radius-xs);
+
+  .text-title {
     color: rgb(var(--v-error-700))
   }
-  .text-title-sub{
+
+  .text-title-sub {
     color: rgb(var(--v-error-600))
   }
 }
-.box-items{
+
+.box-items {
   padding: unset;
-  border-radius: var(--v-border-sm);
+
   // max-height: 546px;
   // overflow: auto;
+
   padding: 8px 12px;
+  border-radius: var(--v-border-radius-xs);
 }
+
 .upload-file .ps {
   max-height: 400px;
 }

@@ -151,25 +151,26 @@ watch(() => props.data, val => {
 </template>
 
 <style lang="scss">
-.content-view{
-
+.content-view {
   .item-answer-range {
     display:flex;
     width:auto;
-    border-radius: var(--v-border-sm);
-    border: 1px solid rgb(var(--v-gray-300));
-    background: #FFF;
     padding: 1rem;
+    border: 1px solid rgb(var(--v-gray-300));
+    border-radius: var(--v-border-radius-xs);
+    background: #FFF;
   }
-  .item-range-number{
+
+  .item-range-number {
     display: flex;
     margin-inline: auto;
+
     .range-item {
       padding: 0.5rem;
     }
   }
 
-  .view-media{
+  .view-media {
     width: 60%;
   }
 }
