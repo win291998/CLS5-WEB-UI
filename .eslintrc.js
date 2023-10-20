@@ -157,6 +157,7 @@ module.exports = {
     // Internal Rules
     'valid-appcardcode-code-prop': 'error',
     'valid-appcardcode-demo-sfc': 'error',
+    'vue/v-on-event-hyphenation': 'off',
   },
   settings: {
     'import/resolver': {

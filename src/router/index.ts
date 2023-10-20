@@ -25,6 +25,16 @@ const generalRoutes = [
     },
     component: () => import('@/pages/login.vue'),
   },
+  {
+    path: '/pdf',
+    name: 'pdf',
+    meta: {
+      layout: 'blank',
+      parent: '',
+      pageTitle: '',
+    },
+    component: () => import('@/components/common/CmViewPdf.vue'),
+  },
   ...admin,
   ...error,
   ...learner,

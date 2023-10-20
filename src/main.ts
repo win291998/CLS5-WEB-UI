@@ -1,6 +1,5 @@
 import '@/@iconify/icons-bundle'
 import { createApp } from 'vue'
-import VueFeather from 'vue-feather'
 import Vue3EasyDataTable from 'vue3-easy-data-table'
 import Toast from 'vue-toastification'
 
@@ -76,7 +75,6 @@ app.use(pinia)
 
 app.provide('globals', globals)
 app.provide('globalsReadOnly', globalsReadOnly)
-app.component(VueFeather.name, VueFeather)
 
 windowDefineProperty(app)
 
