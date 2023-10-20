@@ -95,7 +95,7 @@ function totalIsAnswered() {
 <style lang="scss">
   .cm-point{
       padding: 24px;
-      border-radius: 8px;
+      border-radius: var(--v-border-sm);
       border: 1px solid rgb(var(--v-gray-300));
       background:  rgb(var(--v-gray-50));
     .cm-point-list{
@@ -107,7 +107,7 @@ function totalIsAnswered() {
         cursor: pointer;
         width: 40px;
         height: 40px;
-        border-radius: 8px;
+        border-radius: var(--v-border-sm);
         border: 2px solid rgb(var(--v-gray-500));
         background: #fff;
         margin: 8px ;

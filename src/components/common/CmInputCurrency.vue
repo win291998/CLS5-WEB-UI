@@ -190,7 +190,7 @@ function focusInput(params: boolean) {
 }
 .cm-input-field .v-field__input:focus{
   border: 1px solid rgb(var(--v-primary-300));
-  border-radius: 8px;
+  border-radius: var(--v-border-sm);
 }
 .cm-input-field .v-field__outline{
   z-index: -1 !important;

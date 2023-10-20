@@ -59,7 +59,6 @@ async function checkCertificate() {
 
   if (data && data.length > 0) {
     certificateInfo.value = data.find((item: any) => item.resourceId === props.courseId)
-    console.log(certificateInfo.value)
     if (certificateInfo)
       viewCertificationUser(certificateInfo.value.certificationId, certificateInfo.value.certificationTemplateId)
 
@@ -155,8 +154,6 @@ watch(() => props.isDialogVisible, async isShow => {
   if (isShow)
     await checkCertificate()
 })
-
-console.log(Themes.imageSystem)
 </script>
 
 <template>

@@ -57,6 +57,7 @@ const CourseService = {
   GetDetailContent: '/learner/get-course-content-detail',
   GetQuestionSurvey: '/learner/get-test-survey-question',
   GetSurveyStart: '/learner/get-test-survey-notice-result',
+  GetGetDataExam: '/learner/get-list-course-content-test-question',
 
   /** learner */
   GetLnCheckCourseRequire: '/learner/check-course-require',

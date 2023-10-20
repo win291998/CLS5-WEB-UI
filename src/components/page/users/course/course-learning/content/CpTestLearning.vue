@@ -2,8 +2,8 @@
 import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 import CmChip from '@/components/common/CmChip.vue'
 import CpContentView from '@/components/page/gereral/page/user/CpContentView.vue'
-import CpControlQuestionNumber from '@/components/page/users/exam/test/CpControlQuestionNumber.vue'
-import { myExamManagerStore } from '@/stores/user/exam/exam'
+import CpControlQuestionNumber from '@/components/page/gereral/page/user/CpControlQuestionNumber.vue'
+import { myExamCourseManagerStore } from '@/stores/user/course/courseExam'
 import CpConfirmDialog from '@/components/page/gereral/CpConfirmDialog.vue'
 import toast from '@/plugins/toast'
 import CmPagination from '@/components/common/CmPagination.vue'
@@ -23,9 +23,8 @@ const { t } = window.i18n()
 const route = useRoute()
 const router = useRouter()
 const layoutMobile = ref(false)
-const myExamManagerManager = myExamManagerStore()
-const { pageOption, pageNumberUploadingChange, isShowModalUploading, isShowSubmitError, quantityFileUploading, questionStore, totalPoint, isShowModalSubmit, isConnected, isReview, captureStream, captureCamera, timer, connection, examData, isSubmitting } = storeToRefs(myExamManagerManager)
-const { saveLocalData, submitExam, handleConnected, handleFocusExam, handleDisconnected, handleChangeTab, mouseLeave, onFullScreenChange, autoCaptureCamera } = myExamManagerManager
+const myExamCourseManagerManager = myExamCourseManagerStore()
+const { examData, questionStore, pageOption, isReview } = storeToRefs(myExamCourseManagerManager)
 const config = ref({
   wheelPropagation: false,
   suppressScrollX: true,
@@ -209,7 +208,41 @@ function handleTrackingDownTimer() {
     isWarningHalfTime.value = true
   }
 }
+async function handleClickQuestion(question: any, isConfirm?: boolean, pos = 0) {
+  const idQuestion = question.questionId
+  console.log((pageOption.value.pageNumber - 1) * pageOption.value.pageSize <= pos && pos < pageOption.value.pageNumber * pageOption.value.pageSize)
+  console.log(question, pos)
+
+  if (question === null)
+    return
+  if (!((pageOption.value.pageNumber - 1) * pageOption.value.pageSize <= pos && pos < pageOption.value.pageNumber * pageOption.value.pageSize)) {
+    // if (quantityFileUploading.value && !isConfirm) {
+    //   questionGoTo.value = question
+    //   isShowModalUploading.value = true
+    //   return
+    // }
+    const index = questionStore.value.indexOf(question)
+    pageOption.value.pageNumber = Math.floor(index / pageOption.value.pageSize) + 1
+    console.log(pageOption.value)
+    nextTick(() => {
+      clearTimeout(timerScrollQuestion.value)
+      timerScrollQuestion.value = null
+      timerScrollQuestion.value = setTimeout(() => {
+        const el: any = document.getElementById(`${idQuestion}`)
+        const top = el.offsetTop
+        el.offsetParent.scrollTop = top
+      }, 500)
+    })
+  }
+
+  else {
+    const el: any = document.getElementById(`${idQuestion}`)
+    const top = el.offsetTop
+    el.offsetParent.scrollTop = top
+  }
+}
 function checkShowPage(pos: number) {
+  console.log(pageOption.value)
   if (pageOption.value.pageSize === 0)
     return true
   return (pageOption.value.pageNumber - 1) * pageOption.value.pageSize <= pos && pos < pageOption.value.pageNumber * pageOption.value.pageSize
@@ -383,7 +416,11 @@ defineExpose({
       v-if="!layoutMobile"
       class="mt-right"
     >
-      <CpControlQuestionNumber />
+      <CpControlQuestionNumber
+        :question-store="questionStore"
+        :total-question="questionStore?.length"
+        @handle-click-question="handleClickQuestion"
+      />
     </div>
   </div>
   <CpConfirmDialog
@@ -420,7 +457,8 @@ defineExpose({
 
 <style  lang="scss">
 .doing-exam-container{
-  background-color:  rgba(var(--v-theme-surface))
+  background-color:  rgba(var(--v-theme-surface));
+  padding: 16px;
 }
 #doing-exam-container::backdrop {
     position: relative;

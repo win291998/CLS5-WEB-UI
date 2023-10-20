@@ -136,7 +136,7 @@ function getImage(): string {
         height: 48px;
       }
       .ct-desc{
-        border-radius: 8px;
+        border-radius: var(--v-border-sm);
         background-color: rgb(var(--v-primary-50));
         padding: 12px 16px;
         text-align: center;

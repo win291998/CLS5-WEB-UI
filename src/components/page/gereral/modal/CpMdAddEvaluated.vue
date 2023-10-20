@@ -165,7 +165,7 @@ watch(() => props.data, (val: any) => {
 <style lang="scss">
 .required-item{
   cursor: pointer;
-  border-radius: 8px;
+  border-radius: var(--v-border-sm);
   border: 1px solid rgb(var(--v-gray-300));
   background: var(--white, #FFF);
 
@@ -178,7 +178,7 @@ watch(() => props.data, (val: any) => {
   flex-wrap: nowrap;
 }
 .required-item.selected{
-  border-radius: 8px;
+  border-radius: var(--v-border-sm);
   border: 1px solid rgb(var(--v-primary-50));
   background: rgb(var(--v-primary-50));
 

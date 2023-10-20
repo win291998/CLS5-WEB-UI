@@ -470,7 +470,7 @@ watchEffect(() => {
   }
   .dp__action_button {
     white-space: nowrap;
-    border-radius: 8px;
+    border-radius: var(--v-border-sm);
     height: 40px !important;
     font-size: 14px;
     font-style: normal;

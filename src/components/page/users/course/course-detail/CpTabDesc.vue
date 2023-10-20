@@ -354,11 +354,11 @@ function expandRow(val: any) {
   .box-content-course{
     border: 1px solid rgb(var(--v-gray-300));
     margin-block: 24px;
-    border-radius: 8px;
+    border-radius: var(--v-border-sm);
   }
   .dc-box{
     .dc-item{
-      border-radius: 8px;
+      border-radius: var(--v-border-sm);
       border: 1px solid rgb(var(--v-gray-300));
       background:  #FFF;
       display: flex;

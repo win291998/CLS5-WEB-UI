@@ -354,7 +354,7 @@ watch(() => props.data, val => {
   .line-ans{
     display: flex;
     .line-blank{
-      border-radius: 8px;
+      border-radius: var(--v-border-sm);
       margin-right: 16px;
       border: 1px solid rgb(var(--v-gray-300));
       padding: 10px 14px;
@@ -367,13 +367,13 @@ watch(() => props.data, val => {
     }
   }
   .answer-fill-blank.text-success {
-    border-radius: 8px;
+    border-radius: var(--v-border-sm);
     border: 1px solid rgb(var(--v-success-600));
     background: #FFF;
     color:rgb(var(--v-success-600));
   }
   .answer-fill-blank.text-danger {
-    border-radius: 8px;
+    border-radius: var(--v-border-sm);
     border: 1px solid rgb(var(--v-error-600));
     background: #FFF;
     color:rgb(var(--v-error-600));

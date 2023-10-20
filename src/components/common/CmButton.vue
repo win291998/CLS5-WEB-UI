@@ -167,7 +167,7 @@ defineExpose({
 @use "@/styles/style-global" as *;
 
 .text-style-btn {
-  border-radius: 8px;
+  border-radius:  var(--v-border-sm);
   height: auto !important;
   min-height: $button-default-height !important;
   font-size: 14px;

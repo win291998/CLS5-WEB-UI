@@ -44,6 +44,9 @@ const theme: VuetifyOptions['theme'] = {
         'shadow-key-penumbra-opacity': 'rgba(var(--v-theme-on-surface), 0.12)',
         'shadow-key-ambient-opacity': 'rgba(var(--v-theme-on-surface), 0.04)',
 
+        // border
+        'border-sm': '12px',
+
         'white': '#ffffff',
 
         'info-25': '#F5FBFF',

@@ -10,8 +10,7 @@ export const myCourseManagerStore = defineStore('myCourseManager', () => {
   const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
   const router = useRouter()
   const route = useRoute()
-  const surveyData = ref()
-  const surveyQuestion = ref<any>([])
+
   const getStatusCourse = (
     registrationType?: number,
     statusId?: number,
@@ -205,18 +204,6 @@ export const myCourseManagerStore = defineStore('myCourseManager', () => {
   // lấy thông tin nội dung bài khảo sát của người dùng
   const isReTest = ref(false) // cờ làm lại
 
-  // lấy thông tin đề đã được tạo
-  async function getSurveyInfo() {
-    const params = {
-      courseContentId: contentCurrent.value.courseContentId,
-    }
-    await MethodsUtil.requestApiCustom(CourseService.GetQuestionSurvey, TYPE_REQUEST.GET, params).then((value: any) => {
-      surveyData.value = value.data
-      surveyQuestion.value = value.data?.listQuestions
-      pageOption.value.pageSize = value.data.totalQuestionDisplayInPage
-    })
-  }
-
   /*
       Lấy thông tin kết quả thực hiện bài kiểm tra của thí sinh.
       viewMode = 0: hiển thị kết quả theo cấu hình (lấy theo kết quả cao nhất hoặc cuối cùng tùy vào cài đặt)
@@ -231,7 +218,11 @@ export const myCourseManagerStore = defineStore('myCourseManager', () => {
     return await MethodsUtil.requestApiCustom(CourseService.GetSurveyStart, TYPE_REQUEST.GET, params)
   }
 
+  /// // video//////
+
   /// ////Khảo sát/////////////
+  const surveyData = ref()
+  const surveyQuestion = ref<any>([])
   async function checkSurveyInfo() {
     // không phải làm lại
     console.log(isReTest)
@@ -286,6 +277,20 @@ export const myCourseManagerStore = defineStore('myCourseManager', () => {
       })
     }
   }
+
+  // lấy thông tin đề đã được tạo
+  async function getSurveyInfo() {
+    const params = {
+      courseContentId: contentCurrent.value.courseContentId,
+    }
+    await MethodsUtil.requestApiCustom(CourseService.GetQuestionSurvey, TYPE_REQUEST.GET, params).then((value: any) => {
+      surveyData.value = value.data
+      surveyQuestion.value = value.data?.listQuestions
+      pageOption.value.pageSize = value.data.totalQuestionDisplayInPage
+    })
+  }
+
+  /// ////Kỳ thi/////////////
 
   /** ******************************************************************************************************************************** */
   onMounted(() => {

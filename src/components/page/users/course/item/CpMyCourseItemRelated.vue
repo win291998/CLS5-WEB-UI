@@ -91,7 +91,7 @@ function goDetailCourse() {
 <style lang="scss" scoped>
   .course-related-card{
     background-color: #fff;
-    border-radius: 8px;
+    border-radius: var(--v-border-sm);
     box-shadow: 0px 2px 4px -2px rgba(16, 24, 40, 0.06), 0px 4px 8px -2px rgba(16, 24, 40, 0.10);
     margin-block: 1.5rem;
     padding: 1rem;

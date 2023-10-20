@@ -78,7 +78,7 @@ const props = withDefaults(defineProps<Props>(), ({
   font-weight: $weight-md;
 }
 .v-card-img{
-  border-radius: 8px;
+  border-radius:  var(--v-border-sm);
   overflow: hidden;
   min-height: 10rem;
   img{

@@ -405,7 +405,7 @@ defineExpose({
     }
  }
  .inputEditor{
-  border-radius: 8px;
+  border-radius: var(--v-border-sm);
  }
  .styleError.inputEditor{
   outline: 1px solid red;
