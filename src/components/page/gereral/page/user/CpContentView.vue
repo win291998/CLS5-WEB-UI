@@ -156,8 +156,6 @@ function handlePinQs() {
   emit('saveLocalData', false, dataValue.value)
 }
 function handleUpdateData(val: any) {
-  console.log(val)
-
   emit('update:data', val)
 }
 

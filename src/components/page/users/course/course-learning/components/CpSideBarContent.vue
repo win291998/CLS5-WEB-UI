@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import CmList from '@/components/common/CmList.vue'
 import CmTab from '@/components/common/CmTab.vue'
 import CpListContent from '@/components/page/users/course/course-learning/components/CpListContent.vue'
 import CpComment from '@/components/page/users/course/course-learning/components/CpComment.vue'
@@ -19,7 +18,7 @@ const listTab = [
     key: 'comments',
     title: 'comments',
     component: CpComment,
-    isRendered: true,
+    isRendered: false,
   },
 ]
 </script>
@@ -27,11 +26,10 @@ const listTab = [
 <template>
   <div>
     <CmTab
-      :is-render="true"
+      :is-render="false"
       :list-tab="listTab"
       label="conditionPart"
-      type="underline"
+      type="button"
     />
-    <CmList />
   </div>
 </template>

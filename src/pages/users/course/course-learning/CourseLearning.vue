@@ -1,4 +1,5 @@
 <script setup lang="ts">
+
 // import CpScreenEnds from '@/components/page/users/course/course-learning/screen/CpScreenEnds.vue'
 import CpFrameLearning from '@/components/page/users/course/course-learning/components/CpFrameLearning.vue'
 import CmButton from '@/components/common/CmButton.vue'
@@ -14,18 +15,19 @@ const CpTestLearning = defineAsyncComponent(() => import('@/components/page/user
 const { t } = window.i18n() // Khởi tạo biến đa ngôn ngữ
 const myCourseManagerManager = myCourseManagerStore()
 const { contentCurrent } = storeToRefs(myCourseManagerManager)
-const { getDetailContent, checkSurveyInfo, getSurveyInfo } = myCourseManagerManager
+const { getDetailContent, checkSurveyInfo, getSurveyInfo, GetListContentCourseById } = myCourseManagerManager
 const myExamCourseManagerManager = myExamCourseManagerStore()
 const { } = storeToRefs(myExamCourseManagerManager)
 const { getExamInfo, getTestQuestion } = myExamCourseManagerManager
 const isShowDialogCert = ref(false)
+const route = useRoute()
 function openCertification() {
   isShowDialogCert.value = true
 }
 
 const course = ref({
   courseName: 'a',
-  courseId: 4089,
+  courseId: 2803,
 })
 const isShowContent = ref(false)
 const isRenderedContent = ref(false)
@@ -61,7 +63,8 @@ function componentContentCurrent() {
   }
 }
 onMounted(async () => {
-  await getDetailContent(15150)
+  await GetListContentCourseById(Number(route.params.id))
+  await getDetailContent(8611)
   await changeCurrentContent()
 })
 </script>
