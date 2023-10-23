@@ -24,11 +24,15 @@ const route = useRoute()
 const router = useRouter()
 const layoutMobile = ref(false)
 const myExamCourseManagerManager = myExamCourseManagerStore()
-const { examData, questionStore, pageOption, isReview } = storeToRefs(myExamCourseManagerManager)
+const { isConnected, examData, questionStore, pageOption, isReview, totalPoint, quantityFileUploading, connection, pageNumberUploadingChange, timer, isShowSubmitError, isShowModalUploading } = storeToRefs(myExamCourseManagerManager)
+const { onFullScreenChange, handleChangeTab, mouseLeave, handleFocusExam, submitExam, handleConnected, handleDisconnected } = myExamCourseManagerManager
 const config = ref({
   wheelPropagation: false,
   suppressScrollX: true,
 })
+
+const timerScrollQuestion = ref<any>(null)
+
 function handleResize() {
   // Kiểm tra kích thước màn hình và cập nhật giá trị visibleItems
   if (window.innerWidth >= 769)
@@ -182,10 +186,10 @@ function handleTrackingDownTimer() {
   if (examData.value?.listTimeShot?.length) {
     const equalTime = examData.value?.listTimeShot.find((item: any) => item === (examData.value.minuteOfWork * 60) - time.value)
 
-    if (equalTime >= 0 && timeCaptureCamera.value !== equalTime) {
+    if (equalTime >= 0 && timeCaptureCamera.value !== equalTime)
       timeCaptureCamera.value = equalTime
-      autoCaptureCamera()
-    }
+
+    // autoCaptureCamera()
   }
 
   // cảnh báo thời gian 1p
@@ -209,10 +213,7 @@ function handleTrackingDownTimer() {
   }
 }
 async function handleClickQuestion(question: any, isConfirm?: boolean, pos = 0) {
-  const idQuestion = question.questionId
-  console.log((pageOption.value.pageNumber - 1) * pageOption.value.pageSize <= pos && pos < pageOption.value.pageNumber * pageOption.value.pageSize)
-  console.log(question, pos)
-
+  const idQuestion = question.id
   if (question === null)
     return
   if (!((pageOption.value.pageNumber - 1) * pageOption.value.pageSize <= pos && pos < pageOption.value.pageNumber * pageOption.value.pageSize)) {
@@ -223,7 +224,6 @@ async function handleClickQuestion(question: any, isConfirm?: boolean, pos = 0) 
     // }
     const index = questionStore.value.indexOf(question)
     pageOption.value.pageNumber = Math.floor(index / pageOption.value.pageSize) + 1
-    console.log(pageOption.value)
     nextTick(() => {
       clearTimeout(timerScrollQuestion.value)
       timerScrollQuestion.value = null
@@ -236,9 +236,11 @@ async function handleClickQuestion(question: any, isConfirm?: boolean, pos = 0) 
   }
 
   else {
-    const el: any = document.getElementById(`${idQuestion}`)
-    const top = el.offsetTop
-    el.offsetParent.scrollTop = top
+    nextTick(() => {
+      const el: any = document.getElementById(`${idQuestion}`)
+      const top = el.offsetTop
+      el.offsetParent.scrollTop = top
+    })
   }
 }
 function checkShowPage(pos: number) {
@@ -304,10 +306,10 @@ onBeforeUnmount(async () => {
   document.removeEventListener('keydown', disableKeyboard)
   document.removeEventListener('contextmenu', disableRightMouse)
 
-  captureStream.value.stream?.getVideoTracks()[0].stop()
-  captureCamera.value.stream?.getVideoTracks()[0].stop()
-  captureStream.value.stream = null
-  captureCamera.value.stream = null
+  // captureStream.value.stream?.getVideoTracks()[0].stop()
+  // captureCamera.value.stream?.getVideoTracks()[0].stop()
+  // captureStream.value.stream = null
+  // captureCamera.value.stream = null
 
   // if (this.$checkPortal(470))
   //   unLockPreventUnexpectedAction()
@@ -341,7 +343,7 @@ defineExpose({
 
 <template>
   <div
-    class="mt doing-exam-container h-inherit"
+    class="mt doing-exam-container"
   >
     <div
       class="mt-left h-inherit"
@@ -414,7 +416,7 @@ defineExpose({
     </div>
     <div
       v-if="!layoutMobile"
-      class="mt-right"
+      class="mt-right h-inherit"
     >
       <CpControlQuestionNumber
         :question-store="questionStore"
@@ -479,13 +481,12 @@ defineExpose({
   .mt-right {
     width: 30% ;
     margin-left: 12px;
-
+    overflow: auto;
     .mt-point {
       padding: 24px;
       border: 1px solid rgb(var(--v-gray-300));
       border-radius: var(--v-border-radius-xs);
       background:  rgb(var(--v-gray-50));
-
       .mt-point-list {
         display: flex;
         flex-wrap: wrap;
@@ -511,6 +512,10 @@ defineExpose({
           }
         }
       }
+    }
+    .cm-point{
+      overflow: auto;
+      max-height: calc(100% - 100px);
     }
   }
 }

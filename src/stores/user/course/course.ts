@@ -198,6 +198,7 @@ export const myCourseManagerStore = defineStore('myCourseManager', () => {
     await MethodsUtil.requestApiCustom(CourseService.GetDetailContent, TYPE_REQUEST.GET, params).then((value: any) => {
       console.log(value)
       contentCurrent.value = value.data
+      router.replace({ name: 'course-learning', query: { contentId: contentCurrent.value.courseContentId } })
     })
   }
 

@@ -60,7 +60,9 @@ interface Emit {
           </div>
         </div>
         <div class="content-learning">
-          <slot name="content" />
+          <slot
+            name="content"
+          />
         </div>
       </div>
       <div class="sidebar">
@@ -133,11 +135,13 @@ interface Emit {
       .content-learning {
         display: flex;
         height: 100%;
+        max-height: calc(100% - 64px);
         align-items: center;
         justify-content: center;
         border: 1px solid $color-gray-300;
         border-radius: var(--v-border-radius-xs);
         background-color: $color-gray-200;
+        padding: 1rem;
       }
     }
 
