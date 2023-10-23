@@ -191,6 +191,16 @@ export const myCourseManagerStore = defineStore('myCourseManager', () => {
     isSpeed: null,
     comment: null,
   })
+  const courseData = ref()
+  async function GetListContentCourseById(courseId: number) {
+    const params = {
+      courseId,
+    }
+    await MethodsUtil.requestApiCustom(CourseService.GetListContentCourseById, TYPE_REQUEST.GET, params).then((value: any) => {
+      console.log(value)
+      courseData.value = value.data
+    })
+  }
   async function getDetailContent(courseContentId: number) {
     const params = {
       courseContentId,
@@ -305,11 +315,12 @@ export const myCourseManagerStore = defineStore('myCourseManager', () => {
     getStatusCourse,
 
     /** Khóa học của tôi */
+    courseData, // nội dung khóa học
     contentCurrent, // nội dung học hiện tại
     pageOption,
     isReview,
     getDetailContent, // lấy thông tin của nội dung theo id
-
+    GetListContentCourseById, // danh sách nội dung và chuyên  đề
     /** khảo sát */
     surveyData,
     surveyQuestion,

@@ -244,7 +244,6 @@ async function handleClickQuestion(question: any, isConfirm?: boolean, pos = 0) 
   }
 }
 function checkShowPage(pos: number) {
-  console.log(pageOption.value)
   if (pageOption.value.pageSize === 0)
     return true
   return (pageOption.value.pageNumber - 1) * pageOption.value.pageSize <= pos && pos < pageOption.value.pageNumber * pageOption.value.pageSize

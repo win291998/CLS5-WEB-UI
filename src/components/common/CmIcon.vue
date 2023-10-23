@@ -4,6 +4,7 @@ const propsValue = withDefaults(defineProps<Props>(), ({
   color: 'primary',
   size: 16,
   bgColor: '',
+  type: 1,
 }))
 
 /**
@@ -19,12 +20,21 @@ interface Props {
   icon?: string
   bgColor?: string
   size?: number
+  type?: number
 }
 const sizeIcon = computed(() => Number(propsValue.size) + 16)
 </script>
 
 <template>
+  <VIcon
+    v-if="type === 1"
+    :icon="icon"
+    :size="size"
+    :color="color"
+    variant="tonal"
+  />
   <VBtn
+    v-else
     :width="sizeIcon"
     :height="sizeIcon"
     :min-width="5"

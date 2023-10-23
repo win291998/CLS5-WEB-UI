@@ -288,6 +288,7 @@ watch(queryParams, (val: Any) => {
               <div class="mb-3">
                 <div class="d-flex flex-noWrap">
                   <CmIcon
+                    :type="2"
                     bg-color="warning"
                     color="warning"
                     icon="solar:pen-2-linear"
@@ -302,6 +303,7 @@ watch(queryParams, (val: Any) => {
               <div v-if="context.ratingScaleName">
                 <div class="d-flex flex-noWrap">
                   <CmIcon
+                    :type="2"
                     bg-color="success"
                     color="success"
                     icon="lucide:bar-chart"

@@ -147,13 +147,11 @@ export default class ExamMethodsUtil {
   /** *lấy từ local -> question ************************************************************************************/
   // format dữ liệu đã lưu trong local
   static formatDataFromLocal(element: any, questionItem: any) {
-    console.log(questionItem)
     if (questionItem && (questionItem.answers?.length || questionItem.answer || questionItem.urlFile)) {
       switch (element.typeId) {
         case 1: // câu hỏi 1 lựa chọn
         case 3: // câu hỏi  gạch chân
         case 4: // câu hỏi  true false
-          console.log(element, questionItem)
           const answer = element.answers.find(
             (x: any) => x.id === questionItem.answers[0],
           )
@@ -234,8 +232,6 @@ export default class ExamMethodsUtil {
           this.formatDataFromLocal(element, questionItem)
         }
         else {
-          console.log(questionItem, localData, this.checkQuestionAnsweredLog(questionItem))
-
           element.questions.forEach((question: any) => {
             questionItem = localData.find((x: any) => x.id === question.id)
             this.formatDataFromLocal(question, questionItem)
@@ -243,7 +239,6 @@ export default class ExamMethodsUtil {
         }
       }
     })
-    console.log(questionStore)
   }
 
   /** *lấy từ local -> question ***********************************************************************************/
@@ -251,8 +246,6 @@ export default class ExamMethodsUtil {
   /** *lưu từ question -> local ***********************************************************************************/
   // lấy dữ liệu từ câu hỏi để lưu vào local
   static getLocalDataFromQuestion(question: any, isMark: boolean | null = null) {
-    console.log(question)
-
     let questions: any = null
     const localData = {
       id: question.id,
@@ -373,7 +366,6 @@ export default class ExamMethodsUtil {
   // lưu dữ liệu vào local khi thay đổi lựa chọn
   static saveLocalData(element: any, localData: any, isChangeAnser: boolean) {
     const localDataPos = localData.find((item: any) => item.id === element.id)
-    console.log(element, localDataPos)
 
     if (isChangeAnser) {
       if (element.isGroup) {
