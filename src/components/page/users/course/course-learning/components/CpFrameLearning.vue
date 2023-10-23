@@ -91,7 +91,7 @@ interface Emit {
   padding: 32px;
   border-radius: 8px;
   margin: 32px;
-  background:  rba(--v-them-surface);
+  background: rba(--v-them-surface);
   box-shadow: 0 2px 4px -2px rgba(16, 24, 40, 6%), 0 4px 8px -2px rgba(16, 24, 40, 10%);
 
   .button-learning {
@@ -159,7 +159,8 @@ interface Emit {
 
     .content {
       .content-course {
-        // width: 100%;
+        width: 100%;
+        padding-right: unset;
       }
 
       .sidebar {
