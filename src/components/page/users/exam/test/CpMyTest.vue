@@ -420,7 +420,7 @@ defineExpose({
 
 <style  lang="scss">
 .doing-exam-container {
-  background-color:  rgba(var(--v-theme-surface))
+  background-color: rgba(var(--v-theme-surface))
 }
 
 #doing-exam-container::backdrop {
@@ -446,7 +446,7 @@ defineExpose({
       padding: 24px;
       border: 1px solid rgb(var(--v-gray-300));
       border-radius: var(--v-border-radius-xs);
-      background:  rgb(var(--v-gray-50));
+      background: rgb(var(--v-gray-50));
 
       .mt-point-list {
         display: flex;
@@ -464,7 +464,7 @@ defineExpose({
 
           &.item-select {
             border: 2px solid rgb(var(--v-primary-600));
-            background:  rgb(var(--v-primary-600));
+            background: rgb(var(--v-primary-600));
             color: #fff;
           }
 
