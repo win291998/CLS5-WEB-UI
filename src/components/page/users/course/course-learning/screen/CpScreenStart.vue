@@ -9,6 +9,7 @@ import type { Content } from '@/typescript/interface'
 const props = withDefaults(defineProps<Props>(), ({
   isCondition: false,
   isDescBox: false,
+  isRendered: false,
   status: 0,
   name: 'Tên chuyên đề khảo sát khảo sát khảo sát khảo sát',
   description: ' Nội dung khóa học khóa học Nội dung khóa học khóa học Nội dung khóa học khóa học Nội dung khóa học khóa học Nội dung khóa học khóa học Nội dung khóa học khóa học Nội dung khóa học khóa học Nội dung khóa học khóa học Nội dung khóa học khóa học Nội dung khóa học khóa học Nội dung khóa học khóa học Nội dung khóa học khóa học',
@@ -46,6 +47,7 @@ const emit = defineEmits<Emit>()
 interface Props {
   isCondition?: boolean
   isDescBox?: boolean
+  isRendered?: boolean
   listCondition?: string[]
   status?: number
   name?: string
@@ -179,8 +181,9 @@ function checkTypeDialog(type: number) {
       </div>
       <div class="my-6 flex-center">
         <CmButton
-          color="primary"
-          :title="checkTypeBtnSubmit().title"
+          :disabled="!isRendered"
+          :color="!isRendered ? 'warning' : 'primary'"
+          :title="!isRendered ? t('loading-content') : checkTypeBtnSubmit().title"
           @click="checkTypeBtnSubmit().action"
         />
       </div>

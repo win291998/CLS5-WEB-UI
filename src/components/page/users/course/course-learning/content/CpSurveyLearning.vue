@@ -111,9 +111,9 @@ function checkShowPage(pos: number) {
 </script>
 
 <template>
-  <div class="containter-white">
+  <div class="containter-white w-100 h-100">
     <div
-      class="mt doing-exam-container h-inherit"
+      class="mt doing-exam-container"
     >
       <div
         class="mt-left h-inherit"

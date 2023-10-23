@@ -169,21 +169,20 @@ onMounted(() => {
         @confirm="acceptCamera"
       />
       <!-- modal yêu cầu nhận diện -->
-      <CpMdCaptureImageRecognition
-        v-model:isShowModal="isShowMdCaptureImage"
-      />
+      <CpMdCaptureImageRecognition v-model:isShowModal="isShowMdCaptureImage" />
     </div>
   </div>
 </template>
 
 <style scoped lang="scss">
-.containter-light{
-  background-color:  rgb(var(--v-gray-50));
+.containter-light {
+  background-color: rgb(var(--v-gray-50));
   height: auto;
   min-height: 100vh;
   width: 100vw;
   padding: 2rem;
-  .containter-white{
+
+  .containter-white {
     background-color: rgb(var(--v-theme-surface));
     max-width: 1400px;
     height: 100%;
@@ -191,7 +190,7 @@ onMounted(() => {
     width: 100%;
     padding: 2rem;
     box-shadow: 0px 2px 4px -2px rgba(16, 24, 40, 0.06), 0px 4px 8px -2px rgba(16, 24, 40, 0.10);
-    margin:0 auto;
+    margin: 0 auto;
   }
 }
 </style>

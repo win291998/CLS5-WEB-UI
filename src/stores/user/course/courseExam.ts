@@ -356,7 +356,7 @@ export const myExamCourseManagerStore = defineStore('myExamCourseManager', () =>
   const pageNumberUploadingChange = ref()
   async function getTestQuestion() {
     // lấy đề
-    await fetchData().then(async (value: any) => {
+    return await fetchData().then(async (value: any) => {
       questionStore.value = value.data.questions
       if (!window._.isEmpty(examData.value)) {
         if (examData.value.totalQuestionDisplayInPage)
